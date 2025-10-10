@@ -87,7 +87,7 @@ const Chat = () => {
     setUserInput("");
   };
 
-  // --- Стили ---  
+  // --- Стили ---
   const bgColor = "#1C1C1C";
   const panelBg = "#171717";
   const assistantBubble = "#15151A";
