@@ -260,7 +260,7 @@ const Chat = () => {
         </div>
       )}
 
-      {/* Поле для сообщения и кнопка (круглая, справа в поле, снаружи одинаковый sidePad) */}
+      {/* Поле для сообщения и кнопка */}
       <form
         onSubmit={handleSubmit}
         style={{
@@ -304,7 +304,7 @@ const Chat = () => {
             background: "#fff",
             color: panelBg,
             border: "none",
-            borderRadius: BTN_SIZE / 2,
+            borderRadius: borderRadius,
             width: BTN_SIZE - 8,
             height: BTN_SIZE - 8,
             marginRight: sidePad,
