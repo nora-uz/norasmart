@@ -1,12 +1,13 @@
 import React, { useState, useEffect, useRef } from "react";
 
+// Новые иконки
 const ICONS = {
-  telegram: "https://user-gen-media-assets.s3.amazonaws.com/seedream_images/telegram.png",
-  phone: "https://user-gen-media-assets.s3.amazonaws.com/seedream_images/phone.png",
-  sun: "https://user-gen-media-assets.s3.amazonaws.com/seedream_images/sun1.png", // или sun2.png
-  moon: "https://user-gen-media-assets.s3.amazonaws.com/seedream_images/moon.png",
-  trash: "https://user-gen-media-assets.s3.amazonaws.com/seedream_images/trash.png",
-  arrow: "https://user-gen-media-assets.s3.amazonaws.com/seedream_images/arrow.png", // стрелка вверх, белый фон, темная
+  telegram: "https://cdn-icons-png.flaticon.com/512/9821/9821637.png", // Telegram/message
+  phone: "https://cdn-icons-png.flaticon.com/512/5068/5068703.png", // Phone call
+  sun: "https://cdn-icons-png.flaticon.com/512/16769/16769231.png", // Sun (night-day иконка)
+  moon: "https://cdn-icons-png.flaticon.com/512/16769/16769231.png", // Moon (night-day иконка)
+  trash: "https://cdn-icons-png.flaticon.com/512/3917/3917772.png", // Trash
+  arrow: "https://cdn-icons-png.flaticon.com/512/3916/3916848.png", // Arrow small up
 };
 
 // Главная фотография по центру
@@ -25,14 +26,21 @@ const Chat = () => {
   const [darkMode, setDarkMode] = useState(true);
   const messagesEndRef = useRef(null);
 
-  useEffect(() => { messagesEndRef.current?.scrollIntoView({ behavior: "smooth" }); }, [messages]);
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+  
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!userInput.trim()) return;
     setMessages(prev => [...prev, { role: "user", text: userInput }]);
-    setUserInput(""); setInputDisabled(false);
+    setUserInput("");
+    setInputDisabled(false);
   };
-  const clearChat = () => { setMessages([]); setUserInput(""); };
+  const clearChat = () => {
+    setMessages([]);
+    setUserInput("");
+  };
 
   const panelBg = "#171717", bgColor = "#1C1C1C";
 
@@ -95,14 +103,20 @@ const Chat = () => {
           style={{
             width: "100%",
             borderRadius: borderRadius,
-            display: "block", background: "none", boxShadow: "none"
+            display: "block",
+            background: "none",
+            boxShadow: "none"
           }}
         />
       </div>
       {/* Сообщения */}
       <div style={{
-        flex: 1, width: "100%", maxWidth: 650, margin: "0 auto",
-        boxSizing: "border-box", minHeight: "100vh",
+        flex: 1,
+        width: "100%",
+        maxWidth: 650,
+        margin: "0 auto",
+        boxSizing: "border-box",
+        minHeight: "100vh",
         padding: `20px ${sidePad}px 140px ${sidePad}px`,
       }}>
         {messages.map((msg, idx) => (
@@ -117,8 +131,10 @@ const Chat = () => {
               borderRadius: borderRadius,
               padding: "14px 20px",
               fontSize: 18,
-              lineHeight: 1.7, border: "none",
-              maxWidth: "86vw", minWidth: 54,
+              lineHeight: 1.7,
+              border: "none",
+              maxWidth: "86vw",
+              minWidth: 54,
               marginLeft: msg.role === "user" ? "auto" : 0,
               marginRight: msg.role === "assistant" ? "auto" : 0
             }}>
@@ -131,7 +147,9 @@ const Chat = () => {
       {/* Инпут и кнопка отправки */}
       <form onSubmit={handleSubmit} style={{
         position: "fixed",
-        left: sidePad, right: sidePad, bottom: sidePad,
+        left: sidePad,
+        right: sidePad,
+        bottom: sidePad,
         background: panelBg,
         borderRadius: borderRadius,
         height: panelHeight,
@@ -162,7 +180,7 @@ const Chat = () => {
           background: "#fff",
           color: panelBg,
           border: "none",
-          borderRadius: BTN_SIZE/2,
+          borderRadius: BTN_SIZE / 2,
           width: BTN_SIZE,
           height: BTN_SIZE,
           marginLeft: 10,
@@ -187,7 +205,7 @@ const iconBtn = (color) => ({
   cursor: "pointer",
   width: BTN_SIZE,
   height: BTN_SIZE,
-  borderRadius: BTN_SIZE/2,
+  borderRadius: BTN_SIZE / 2,
   padding: 0,
   display: "flex",
   alignItems: "center",
