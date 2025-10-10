@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 
-// Явная типизация ICONS для TypeScript, чтобы не было ошибки!
-const ICONS: { [key: string]: string } = {
+const ICONS = {
   telegram: "https://cdn-icons-png.flaticon.com/512/9821/9821637.png",
   phone: "https://cdn-icons-png.flaticon.com/512/5068/5068703.png",
   sun: "https://cdn-icons-png.flaticon.com/512/16769/16769231.png",
@@ -40,35 +39,20 @@ const Chat = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  // Высота для chat-зоны между панелью и полем ввода
+  const chatAreaHeight = `calc(100vh - ${(panelHeight + sidePad) * 2})`;
+
+  const handleSubmit = (e) => {
     e.preventDefault();
     if (!userInput.trim()) return;
     setMessages(prev => [...prev, { role: "user", text: userInput }]);
     setUserInput("");
     setInputDisabled(true);
-
     setTimeout(() => {
       const reply = FAKE_ANSWERS[Math.floor(Math.random() * FAKE_ANSWERS.length)];
       setMessages(prev => [...prev, { role: "assistant", text: reply }]);
       setInputDisabled(false);
     }, 700);
-
-    /*
-    // Для реального GPT backend:
-    try {
-      const response = await fetch("/api/gpt", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: userInput }),
-      });
-      if (!response.ok) throw new Error("Сервер не отвечает");
-      const data = await response.json();
-      setMessages(prev => [...prev, { role: "assistant", text: data.text || "Ошибка ответа от ассистента." }]);
-    } catch (err) {
-      setMessages(prev => [...prev, { role: "assistant", text: "Ошибка связи с сервером." }]);
-    }
-    setInputDisabled(false);
-    */
   };
 
   const clearChat = () => {
@@ -80,13 +64,13 @@ const Chat = () => {
     <div
       style={{
         background: bgColor,
-        minHeight: "100vh",
         width: "100vw",
+        height: "100vh",
         position: "relative",
         overflow: "hidden",
       }}
     >
-      {/* Фиксированная панель */}
+      {/* Панель сверху */}
       <div
         style={{
           position: "fixed",
@@ -123,23 +107,22 @@ const Chat = () => {
           </button>
         </div>
       </div>
-      
-      {/* Контейнер под панелью с правильным отступом */}
+      {/* Контент под панелью, адаптивная высота, fix отступ */}
       <div
         style={{
           width: "100%",
           maxWidth: maxWidth,
           margin: "0 auto",
+          marginTop: panelHeight + sidePad, // ровно sidePad после панели
           boxSizing: "border-box",
+          height: chatAreaHeight,
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          marginTop: sidePad + panelHeight, // строгий отступ под панелью
-          paddingBottom: panelHeight + sidePad * 2,
-          minHeight: `calc(100vh - ${panelHeight + sidePad * 3}px)`,
-          overflowY: "auto"
+          overflow: "hidden",
         }}
       >
+        {/* Баннер — всегда sidePad сверху и по бокам */}
         <div
           style={{
             width: `calc(100% - ${sidePad * 2}px)`,
@@ -164,35 +147,39 @@ const Chat = () => {
             }}
           />
         </div>
-        {/* Сообщения */}
-        <div style={{ width: "100%" }}>
+        {/* Сообщения — скролл внутри chatArea, не всей страницы */}
+        <div
+          style={{
+            width: "100%",
+            flex: 1,
+            overflowY: "auto",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "flex-start",
+          }}
+        >
           {messages.map((msg, idx) => (
-            <div
-              key={idx}
-              style={{
-                display: "flex",
-                justifyContent: msg.role === "assistant" ? "flex-start" : "flex-end",
-                marginBottom: 12,
-                width: "100%",
-              }}
-            >
-              <div
-                style={{
-                  background: msg.role === "assistant" ? panelBg : "none",
-                  color: "#fff",
-                  borderRadius: borderRadius,
-                  padding: "14px 20px",
-                  fontSize: 18,
-                  lineHeight: 1.7,
-                  border: "none",
-                  maxWidth: "70%",
-                  minWidth: 54,
-                  marginLeft: sidePad,
-                  marginRight: sidePad,
-                  wordBreak: "break-word",
-                  alignSelf: msg.role === "assistant" ? "flex-start" : "flex-end",
-                }}
-              >
+            <div key={idx} style={{
+              display: "flex",
+              justifyContent: msg.role === "assistant" ? "flex-start" : "flex-end",
+              marginBottom: 12,
+              width: "100%",
+            }}>
+              <div style={{
+                background: msg.role === "assistant" ? panelBg : "none",
+                color: "#fff",
+                borderRadius: borderRadius,
+                padding: "14px 20px",
+                fontSize: 18,
+                lineHeight: 1.7,
+                border: "none",
+                maxWidth: "70%",
+                minWidth: 54,
+                marginLeft: sidePad,
+                marginRight: sidePad,
+                wordBreak: "break-word",
+                alignSelf: msg.role === "assistant" ? "flex-start" : "flex-end",
+              }}>
                 {msg.text}
               </div>
             </div>
@@ -200,7 +187,6 @@ const Chat = () => {
           <div ref={messagesEndRef} />
         </div>
       </div>
-      
       {/* Фиксированное поле ввода снизу */}
       <form
         onSubmit={handleSubmit}
@@ -265,7 +251,7 @@ const Chat = () => {
   );
 };
 
-const iconBtn = (color: string) => ({
+const iconBtn = (color) => ({
   background: color,
   border: "none",
   cursor: "pointer",
