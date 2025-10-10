@@ -13,6 +13,10 @@ const icons = {
         <line x1="12" y1="20" x2="12" y2="23"/>
         <line x1="1" y1="12" x2="4" y2="12"/>
         <line x1="20" y1="12" x2="23" y2="12"/>
+        <line x1="4.2" y1="4.2" x2="6.5" y2="6.5"/>
+        <line x1="19.8" y1="19.8" x2="17.5" y2="17.5"/>
+        <line x1="19.8" y1="4.2" x2="17.5" y2="6.5"/>
+        <line x1="4.2" y1="19.8" x2="6.5" y2="17.5"/>
       </g>
     </svg>
   ),
@@ -51,50 +55,19 @@ const Chat = () => {
     }
   ]);
   const [inputDisabled, setInputDisabled] = useState(false);
-  const [threadId, setThreadId] = useState("");
-  const [darkMode, setDarkMode] = useState(true);
-  const messagesEndRef = useRef<HTMLDivElement | null>(null);
+  const messagesEndRef = useRef(null);
 
-  const scrollToBottom = () => {
+  useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
-
-  useEffect(() => {
-    scrollToBottom();
   }, [messages]);
-
-  useEffect(() => {
-    const createThread = async () => {
-      const res = await fetch(`/api/assistants/threads`, {
-        method: "POST",
-      });
-      const data = await res.json();
-      setThreadId(data.threadId);
-    };
-    createThread();
-  }, []);
-
-  const sendMessage = async (text) => {
-    const response = await fetch(
-      `/api/assistants/threads/${threadId}/messages`,
-      {
-        method: "POST",
-        body: JSON.stringify({ content: text }),
-      }
-    );
-    // ... если используете stream, добавьте обработчик
-  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!userInput.trim()) return;
-    sendMessage(userInput);
-    setMessages(prevMessages => [
-      ...prevMessages,
-      { role: "user", text: userInput }
-    ]);
+    setMessages(prev => [...prev, { role: "user", text: userInput }]);
     setUserInput("");
-    setInputDisabled(true);
+    setInputDisabled(false);
+    // Добавьте отправку сообщения, если требуется
   };
 
   const clearChat = () => {
@@ -114,12 +87,11 @@ const Chat = () => {
     setUserInput("");
   };
 
-  // ----- Стили -----
+  // --- Стили ---  
   const bgColor = "#1C1C1C";
   const panelBg = "#171717";
   const assistantBubble = "#15151A";
   const inputBg = "#171717";
-  const inputColor = "#fff";
   const borderRadius = 18;
 
   return (
@@ -131,8 +103,7 @@ const Chat = () => {
         flexDirection: "column",
         alignItems: "center",
         padding: 0,
-      }}
-    >
+      }}>
       {/* Панель */}
       <div
         style={{
@@ -149,11 +120,9 @@ const Chat = () => {
           justifyContent: "space-between",
           borderRadius: borderRadius,
           padding: "0 14px",
-        }}
-      >
+        }}>
         <div style={{ fontWeight: 600, fontSize: 15 }}>Nora AI</div>
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          <button onClick={() => setDarkMode(v => !v)} aria-label="Сменить тему" style={{background:"none", border:"none", cursor:"pointer"}}>{darkMode ? icons.moon : icons.sun}</button>
           <button onClick={clearChat} aria-label="Очистить чат" style={{background:"none", border:"none", cursor:"pointer"}}>{icons.refresh}</button>
           <button aria-label="Telegram" style={{background:"none", border:"none", cursor:"pointer"}} onClick={() => window.open("https://t.me/", "_blank")}>{icons.telegram}</button>
           <button aria-label="Позвонить" style={{background:"none", border:"none", cursor:"pointer"}} onClick={() => window.open("tel:+1234567890")}>{icons.phone}</button>
@@ -169,8 +138,8 @@ const Chat = () => {
         minHeight: "100vh",
         padding: "85px 15px 70px 15px"
       }}>
-        {messages.map((msg, index) => (
-          <div key={index} style={{
+        {messages.map((msg, idx) => (
+          <div key={idx} style={{
             display: "flex",
             justifyContent: msg.role === "assistant" ? "flex-start" : "flex-end",
             marginBottom: 12,
@@ -234,7 +203,7 @@ const Chat = () => {
             padding: "0 13px",
             fontSize: 17,
             background: inputBg,
-            color: inputColor,
+            color: "#fff",
             outline: "none"
           }}
           value={userInput}
