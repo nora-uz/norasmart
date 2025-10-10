@@ -176,39 +176,55 @@ const Chat = ({
     });
   };
 
-  // === UI code ===
+  // --- UI CODE ---
   return (
-    <div style={{ minHeight: "100vh", background: "#f7fafb", paddingTop: 40, paddingBottom: 40 }}>
-      <div style={{
-        maxWidth: "680px",
-        margin: "0 auto",
-        background: "#fff",
-        borderRadius: "20px",
-        boxShadow: "0 2px 16px rgba(34,48,115,0.07)",
-        padding: "32px",
-        minHeight: "60vh",
-      }}>
-        <div>
+    <div
+      style={{
+        minHeight: "100vh",
+        background: "#f7fafb",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+        padding: "0 8px"
+      }}
+    >
+      <div
+        style={{
+          width: "100%",
+          maxWidth: 680,
+          padding: "16px 0 0",
+          margin: "0 auto",
+          display: "flex",
+          flexDirection: "column",
+          minHeight: "80vh"
+        }}
+      >
+        <div style={{ flex: 1 }}>
           {messages.map((msg, index) => (
             <div
               key={index}
               style={{
                 display: "flex",
-                justifyContent: msg.role === "assistant" ? "flex-start" : "flex-end",
+                justifyContent: msg.role === "assistant" ? "flex-start" : "flex-end"
               }}
             >
-              <div style={{
-                background: msg.role === "assistant" ? "#F4F6FC" : "#F8FAFC",
-                color: "#222",
-                borderRadius: "16px",
-                padding: "12px 18px",
-                margin: "8px 0",
-                maxWidth: "70%",
-                boxShadow: "0 1px 4px rgba(0,0,0,0.04)"
-              }}>
+              <div
+                style={{
+                  background: msg.role === "assistant" ? "#F4F6FC" : "#fff",
+                  color: "#222",
+                  borderRadius: "16px",
+                  padding: "11px 17px",
+                  margin: "9px 0",
+                  maxWidth: "78%",
+                  wordBreak: "break-word",
+                  fontSize: 17,
+                  boxShadow: "0 1px 4px rgba(0,0,0,0.04)"
+                }}
+              >
                 {msg.role === "code"
                   ? msg.text.split("\n").map((line, idx) => (
-                      <div key={idx}><span>{`${idx + 1}. `}</span>{line}</div>
+                      <div key={idx}><span style={{ color: "#ccc" }}>{`${idx + 1}. `}</span>{line}</div>
                     ))
                   : <Markdown>{msg.text}</Markdown>
                 }
@@ -221,8 +237,9 @@ const Chat = ({
           onSubmit={handleSubmit}
           style={{
             display: "flex",
-            gap: "12px",
-            marginTop: "32px",
+            gap: 11,
+            marginTop: 32,
+            paddingBottom: 20
           }}
         >
           <input
@@ -230,10 +247,10 @@ const Chat = ({
             style={{
               flex: 1,
               border: "1px solid #e5e7eb",
-              borderRadius: "12px",
-              padding: "10px 16px",
-              fontSize: "17px",
-              background: "#FAFBFC",
+              borderRadius: 11,
+              padding: "14px 14px",
+              fontSize: 17,
+              background: "#fff"
             }}
             value={userInput}
             onChange={(e) => setUserInput(e.target.value)}
@@ -246,11 +263,11 @@ const Chat = ({
               background: "#2646FC",
               color: "#fff",
               border: "none",
-              borderRadius: "10px",
+              borderRadius: 10,
               padding: "0 24px",
-              fontSize: "17px",
+              fontSize: 17,
               cursor: inputDisabled ? "not-allowed" : "pointer",
-              opacity: inputDisabled ? 0.6 : 1,
+              opacity: inputDisabled ? 0.65 : 1
             }}
             disabled={inputDisabled}
           >
