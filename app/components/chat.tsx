@@ -93,38 +93,7 @@ const Chat = () => {
           </button>
         </div>
       </div>
-      {/* ФИКСИРОВАННОЕ ИЗОБРАЖЕНИЕ ПОД ПАНЕЛЬЮ */}
-      <div
-        style={{
-          position: "fixed",
-          top: sidePad + panelHeight + sidePad,
-          left: "50%",
-          transform: "translateX(-50%)",
-          width: `calc(100% - ${sidePad * 2}px)`,
-          maxWidth: 370,
-          borderRadius: borderRadius,
-          overflow: "hidden",
-          boxSizing: "border-box",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          zIndex: 1500,
-          background: "none",
-        }}
-      >
-        <img
-          src={MAIN_IMG}
-          alt="Nora AI"
-          style={{
-            width: "100%",
-            borderRadius: borderRadius,
-            display: "block",
-            background: "none",
-            boxShadow: "none",
-          }}
-        />
-      </div>
-      {/* ОСНОВНОЙ КОНТЕНТ — ЧАТ */}
+      {/* СООБЩЕНИЯ + ФОТО (ОБЩАЯ СКРОЛЛИРУЕМАЯ ОБЛАСТЬ) */}
       <div
         style={{
           width: "100%",
@@ -138,10 +107,39 @@ const Chat = () => {
           alignItems: "center",
           overflowY: "auto",
           padding: `0 ${sidePad}px`,
-          marginTop: sidePad + panelHeight + sidePad + 370 + sidePad, // область как раз после фото
-          minHeight: "340px",
+          marginTop: sidePad + panelHeight, // отступ для панели + отступ боковой
+          marginBottom: sidePad + panelHeight, // для инпута
+          minHeight: 340,
         }}
       >
+        {/* СНАЧАЛА ФОТО НОРА */}
+        <div
+          style={{
+            width: "100%",
+            maxWidth: 370,
+            margin: "0 auto",
+            borderRadius: borderRadius,
+            overflow: "hidden",
+            boxSizing: "border-box",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            marginBottom: sidePad,
+          }}
+        >
+          <img
+            src={MAIN_IMG}
+            alt="Nora AI"
+            style={{
+              width: "100%",
+              borderRadius: borderRadius,
+              display: "block",
+              background: "none",
+              boxShadow: "none",
+            }}
+          />
+        </div>
+        {/* ДАЛЬШЕ СООБЩЕНИЯ */}
         {messages.map((msg, idx) => (
           <div
             key={idx}
