@@ -1,7 +1,6 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
 
-// --- Настройки и данные ---
 const ICONS = {
   telegram: "https://cdn-icons-png.flaticon.com/512/9821/9821637.png",
   sun: "https://cdn-icons-png.flaticon.com/512/16769/16769231.png",
@@ -11,19 +10,16 @@ const ICONS = {
 };
 
 const BANNER = "https://user-gen-media-assets.s3.amazonaws.com/seedream_images/4c36a715-f500-4186-8955-631a09fac0ed.png";
-const ICON_SIZE_PANEL = 18;
-const ICON_SIZE_SEND = 28;
+const maxWidth = 560;
+const borderRadius = 22;
 const BTN_SIZE = 62;
 const SEND_BTN_SIZE = 94;
-const borderRadius = 22;
+const ICON_SIZE_PANEL = 18;
+const ICON_SIZE_SEND = 28;
 const sidePad = 16;
 const panelHeight = 62;
-const maxWidth = 560;
-
-// Фирменный градиент (синий+фиолетовый)
 const gradient = "linear-gradient(135deg,#6a11cb 0%,#2575fc 100%)";
 
-// Те же ответы для примера
 const FAKE_ANSWERS = [
   "Привет! Я Nora, чем могу помочь?",
   "Расскажи, о чём бы ты хотел поговорить?",
@@ -31,13 +27,11 @@ const FAKE_ANSWERS = [
   "Пиши свой запрос, я отвечу!"
 ];
 
-// --- Интерактивная строка ---
 function InteractiveLine({ onSelect }) {
   const moods = [
     { label: "Отлично", emoji: "😃" },
     { label: "Нормально", emoji: "😐" },
-    { label: "Плохо", emoji: "😣" },
-    { label: "Мне нужна помощь", emoji: "🆘" }
+    { label: "Плохо", emoji: "😣" }
   ];
   const [selectedMonth, setSelectedMonth] = useState(null);
   const [selectedMood, setSelectedMood] = useState(null);
@@ -57,9 +51,18 @@ function InteractiveLine({ onSelect }) {
   }, [selectedMonth, selectedMood]);
 
   return (
-    <div style={{ margin: "28px auto 0 auto", maxWidth, width: "100%", display: "flex", flexDirection: "column", gap: 22 }}>
-      <div style={{ background: gradient, borderRadius, padding: "18px 22px" }}>
-        <div style={{ fontWeight: 800, fontSize: 18, color: "#fff", marginBottom: 12 }}>
+    <div style={{
+      margin: "0 auto",
+      maxWidth,
+      width: "100%",
+      display: "flex",
+      flexDirection: "column",
+      gap: 22,
+      paddingLeft: sidePad,
+      paddingRight: sidePad
+    }}>
+      <div style={{ background: gradient, borderRadius, padding: `18px ${sidePad}px` }}>
+        <div style={{ fontWeight: 700, fontSize: 15, color: "#fff", marginBottom: 12 }}>
           Выберите срок беременности:
         </div>
         <div style={{ display: "flex", gap: 12, justifyContent: "center" }}>
@@ -80,8 +83,7 @@ function InteractiveLine({ onSelect }) {
                 outline: "none",
                 borderWidth: selectedMonth === i + 1 ? 2 : 0,
                 borderStyle: "solid",
-                borderColor: "#fff",
-                transition: "background 0.2s"
+                borderColor: "#fff"
               }}
             >
               {i + 1}
@@ -89,8 +91,8 @@ function InteractiveLine({ onSelect }) {
           ))}
         </div>
       </div>
-      <div style={{ background: gradient, borderRadius, padding: "18px 22px" }}>
-        <div style={{ fontWeight: 800, fontSize: 18, color: "#fff", marginBottom: 12 }}>
+      <div style={{ background: gradient, borderRadius, padding: `18px ${sidePad}px` }}>
+        <div style={{ fontWeight: 700, fontSize: 15, color: "#fff", marginBottom: 12 }}>
           Выберите самочувствие:
         </div>
         <div style={{ display: "flex", gap: 14, justifyContent: "center" }}>
@@ -103,7 +105,7 @@ function InteractiveLine({ onSelect }) {
                 color: "#fff",
                 borderRadius: 12,
                 border: "none",
-                fontSize: 19,
+                fontSize: 18,
                 fontWeight: 600,
                 cursor: "pointer",
                 display: "flex",
@@ -113,8 +115,7 @@ function InteractiveLine({ onSelect }) {
                 outline: "none",
                 borderWidth: selectedMood === idx ? 2 : 0,
                 borderStyle: "solid",
-                borderColor: "#fff",
-                transition: "background 0.2s"
+                borderColor: "#fff"
               }}
             >
               <span style={{ fontSize: 22 }}>{item.emoji}</span> {item.label}
@@ -126,7 +127,6 @@ function InteractiveLine({ onSelect }) {
   );
 }
 
-// --- Chat-компонент ---
 const themes = {
   dark: {
     panelBg: "#131313",
@@ -243,7 +243,7 @@ const Chat = () => {
         </div>
       </div>
       <div style={{ height: sidePad }} />
-      {/* БАННЕР */}
+      {/* Фото-баннер */}
       <div
         style={{
           width: `calc(100% - ${sidePad * 2}px)`, maxWidth,
@@ -266,7 +266,9 @@ const Chat = () => {
           }}
         />
       </div>
-      {/* --- Новый инtractив сразу после баннера --- */}
+      {/* Отступ после фото до интерактива */}
+      <div style={{ height: sidePad }} />
+      {/* Сам интерактив-блок */}
       <InteractiveLine onSelect={handleInteractive} />
       {/* Сообщения */}
       <div style={{
