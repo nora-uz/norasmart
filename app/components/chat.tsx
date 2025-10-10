@@ -50,13 +50,14 @@ const Chat = () => {
         background: bgColor,
         minHeight: "100vh",
         width: "100vw",
+        position: "relative",
         display: "flex",
         flexDirection: "column",
-        overflow: "hidden",
         alignItems: "center",
+        overflow: "hidden",
       }}
     >
-      {/* ФИКСИРОВАННАЯ ПАНЕЛЬ */}
+      {/* Фиксированная панель */}
       <div
         style={{
           position: "fixed",
@@ -64,17 +65,17 @@ const Chat = () => {
           left: "50%",
           transform: "translateX(-50%)",
           width: `calc(100% - ${sidePad * 2}px)`,
+          maxWidth: maxWidth,
           height: panelHeight,
           background: panelBg,
           color: "#fff",
           display: "flex",
           alignItems: "center",
           borderRadius: borderRadius,
-          padding: `0 18px`,
+          padding: "0 18px",
           justifyContent: "space-between",
           boxSizing: "border-box",
           zIndex: 2000,
-          maxWidth: maxWidth,
         }}
       >
         <div style={{ fontWeight: 600, fontSize: 19 }}>Nora AI</div>
@@ -93,7 +94,7 @@ const Chat = () => {
           </button>
         </div>
       </div>
-      {/* СООБЩЕНИЯ + ФОТО (ОБЩАЯ СКРОЛЛИРУЕМАЯ ОБЛАСТЬ) */}
+      {/* Скроллируемая область: фото + сообщения */}
       <div
         style={{
           width: "100%",
@@ -103,16 +104,14 @@ const Chat = () => {
           flex: 1,
           display: "flex",
           flexDirection: "column",
-          justifyContent: "flex-end",
           alignItems: "center",
           overflowY: "auto",
-          padding: `0 ${sidePad}px`,
-          marginTop: sidePad + panelHeight, // отступ для панели + отступ боковой
-          marginBottom: sidePad + panelHeight, // для инпута
+          paddingTop: sidePad + panelHeight,     // отступ от панели
+          paddingBottom: sidePad + panelHeight,  // отступ для инпута
           minHeight: 340,
         }}
       >
-        {/* СНАЧАЛА ФОТО НОРА */}
+        {/* Фото Nora */}
         <div
           style={{
             width: "100%",
@@ -124,7 +123,6 @@ const Chat = () => {
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            marginBottom: sidePad,
           }}
         >
           <img
@@ -139,7 +137,9 @@ const Chat = () => {
             }}
           />
         </div>
-        {/* ДАЛЬШЕ СООБЩЕНИЯ */}
+        {/* Отступ после фото */}
+        <div style={{ height: sidePad }} />
+        {/* Сообщения пользователей и ассистента */}
         {messages.map((msg, idx) => (
           <div
             key={idx}
@@ -172,7 +172,7 @@ const Chat = () => {
         ))}
         <div ref={messagesEndRef} />
       </div>
-      {/* ФИКСИРОВАННОЕ ПОЛЕ ВВОДА */}
+      {/* Фиксированное поле для ввода и нижний отступ */}
       <form
         onSubmit={handleSubmit}
         style={{
@@ -181,6 +181,7 @@ const Chat = () => {
           bottom: sidePad,
           transform: "translateX(-50%)",
           width: `calc(100% - ${sidePad * 2}px)`,
+          maxWidth: maxWidth,
           background: panelBg,
           borderRadius: borderRadius,
           height: panelHeight,
@@ -189,7 +190,6 @@ const Chat = () => {
           zIndex: 2000,
           padding: 0,
           boxSizing: "border-box",
-          maxWidth: maxWidth,
         }}
       >
         <input
