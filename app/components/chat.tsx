@@ -1,22 +1,20 @@
 import React, { useState, useEffect, useRef } from "react";
 
+// Прямые ссылки на ваши прозрачные иконки
 const ICONS = {
-  moon: "https://img.icons8.com/?size=32&id=14148&format=png",      // прозрачный moon
-  sun:  "https://img.icons8.com/?size=32&id=14144&format=png",      // прозрачный sun
-  trash: "https://img.icons8.com/?size=32&id=36793&format=png",     // прозрачный trash
-  phone: "https://img.icons8.com/?size=32&id=16713&format=png",     // прозрачный phone
-  telegram: "https://img.icons8.com/?size=32&id=16713&format=png",  // пример - поменяйте на реальный telegram если нужно
-  arrow: "https://img.icons8.com/?size=32&id=36887&format=png"      // прозрачная стрелка вправо
+  telegram: "https://user-gen-media-assets.s3.amazonaws.com/seedream_images/f39761cf-3155-479b-a332-1495936c996c.png",
+  phone: "https://user-gen-media-assets.s3.amazonaws.com/seedream_images/0bc5d2d8-3f74-4720-ba12-bf7c943daca1.png",
+  moon: "https://user-gen-media-assets.s3.amazonaws.com/seedream_images/0b966ddf-e12a-412c-a815-c51dece903c6.png",
+  sun: "https://user-gen-media-assets.s3.amazonaws.com/seedream_images/bdfcd73c-a165-4cc9-aab0-e6cf8658c940.png",
+  trash: "https://user-gen-media-assets.s3.amazonaws.com/seedream_images/78042d39-e691-49ea-87dd-2814f5b9547a.png",
+  arrow: "https://user-gen-media-assets.s3.amazonaws.com/seedream_images/e09064af-e8c4-4c48-b8db-04b57316331d.png", // стрелка для отправки
 };
 
-// Замените URL на ваше реальное изображение — обязательно формат .png или .jpg
-const MAIN_IMG = "https://user-gen-media-assets.s3.amazonaws.com/seedream_images/70a60994-809a-473d-accc-36284ba46e1c.png";
-
 const ICON_SIZE = 32;
-const BTN_SIZE = 48; // вернули больше!
+const BTN_SIZE = 48;
 const borderRadius = 22;
 const sidePad = 18;
-const panelHeight = 62; // больше чем раньше
+const panelHeight = 62;
 
 const Chat = () => {
   const [userInput, setUserInput] = useState("");
@@ -32,9 +30,11 @@ const Chat = () => {
     setMessages(prev => [...prev, { role: "user", text: userInput }]);
     setUserInput(""); setInputDisabled(false);
   };
+
   const clearChat = () => { setMessages([]); setUserInput(""); };
 
-  const panelBg = "#171717", bgColor = "#1C1C1C";
+  const panelBg = "#171717";
+  const bgColor = "#1C1C1C";
 
   return (
     <div style={{
@@ -64,40 +64,23 @@ const Chat = () => {
       }}>
         <div style={{ fontWeight: 600, fontSize: 19 }}>Nora AI</div>
         <div style={{ display: "flex", alignItems: "center", gap: 13 }}>
-          <button style={iconBtn(panelBg)} onClick={() => setDarkMode(mode => !mode)} aria-label="Тема">
-            <img src={darkMode ? ICONS.sun : ICONS.moon} alt="Theme" style={iconImg} />
-          </button>
-          <button style={iconBtn(panelBg)} onClick={clearChat} aria-label="Очистить чат">
-            <img src={ICONS.trash} alt="Trash" style={iconImg} />
-          </button>
-          <button style={iconBtn(panelBg)} aria-label="Позвонить" onClick={() => window.open("tel:+1234567890")}>
-            <img src={ICONS.phone} alt="Phone" style={iconImg} />
-          </button>
+          {/* Telegram кнопка */}
           <button style={iconBtn(panelBg)} aria-label="Telegram" onClick={() => window.open("https://t.me/", "_blank")}>
             <img src={ICONS.telegram} alt="Telegram" style={iconImg} />
           </button>
+          {/* Звонок */}
+          <button style={iconBtn(panelBg)} aria-label="Позвонить" onClick={() => window.open("tel:+1234567890")}>
+            <img src={ICONS.phone} alt="Phone" style={iconImg} />
+          </button>
+          {/* Переключение темы */}
+          <button style={iconBtn(panelBg)} onClick={() => setDarkMode(mode => !mode)} aria-label="Тема">
+            <img src={darkMode ? ICONS.sun : ICONS.moon} alt="Theme" style={iconImg} />
+          </button>
+          {/* Удалить чат */}
+          <button style={iconBtn(panelBg)} onClick={clearChat} aria-label="Удалить чат">
+            <img src={ICONS.trash} alt="Trash" style={iconImg} />
+          </button>
         </div>
-      </div>
-      {/* Картинка Nora — ровно под панелью! */}
-      <div style={{
-        width: `calc(100vw - ${sidePad * 2}px)`,
-        maxWidth: 650 - sidePad * 2,
-        margin: "0 auto",
-        marginTop: sidePad + panelHeight + 12,
-        borderRadius: borderRadius,
-        overflow: "hidden",
-        background: "none",
-        boxSizing: "border-box"
-      }}>
-        <img
-          src={MAIN_IMG}
-          alt="Nora AI"
-          style={{
-            width: "100%",
-            borderRadius: borderRadius,
-            display: "block", background: "none", boxShadow: "none"
-          }}
-        />
       </div>
       {/* Сообщения */}
       <div style={{
@@ -128,7 +111,7 @@ const Chat = () => {
         ))}
         <div ref={messagesEndRef} />
       </div>
-      {/* Инпут и кнопка */}
+      {/* Инпут и кнопка отправки */}
       <form onSubmit={handleSubmit} style={{
         position: "fixed",
         left: sidePad, right: sidePad, bottom: sidePad,
@@ -159,8 +142,7 @@ const Chat = () => {
           disabled={inputDisabled}
         />
         <button type="submit" style={{
-          background: "#fff",
-          color: panelBg,
+          background: "none",
           border: "none",
           borderRadius: BTN_SIZE/2,
           width: BTN_SIZE,
