@@ -1,7 +1,6 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
 
-// --- весь твой код, как есть ниже ---
 const ICONS = {
   telegram: "https://cdn-icons-png.flaticon.com/512/9821/9821637.png",
   sun: "https://cdn-icons-png.flaticon.com/512/16769/16769231.png",
