@@ -21,6 +21,13 @@ const panelBg = "#131313";
 const bgColor = "#181818";
 const maxWidth = 560;
 
+const FAKE_ANSWERS = [
+  "Привет! Я Nora, чем могу помочь?",
+  "Расскажи, о чём бы ты хотел поговорить?",
+  "Я готова ответить на любые вопросы!",
+  "Пиши свой запрос, я отвечу!",
+];
+
 const Chat = () => {
   const [userInput, setUserInput] = useState("");
   const [messages, setMessages] = useState([]);
