@@ -12,8 +12,8 @@ const ICONS = {
 const BANNER = "https://user-gen-media-assets.s3.amazonaws.com/seedream_images/4c36a715-f500-4186-8955-631a09fac0ed.png";
 const ICON_SIZE_PANEL = 18;
 const ICON_SIZE_SEND = 28;
-const BTN_SIZE = 62;
-const SEND_BTN_SIZE = 94;
+const BTN_SIZE = 50;       // уменьшено было 62
+const SEND_BTN_SIZE = 78;  // уменьшено было 94
 const borderRadius = 22;
 const sidePad = 16;
 const panelHeight = 62;
@@ -184,9 +184,9 @@ const Chat = () => {
             maxWidth,
             margin: "0 auto",
             borderRadius: borderRadius,
-            background: "#22252B",
+            background: theme.inputBg,        // одинаковый цвет с полем
             marginBottom: sidePad,
-            boxShadow: "0 2px 12px 0 rgba(106,17,203,0.05)",
+            // boxShadow: "0 2px 12px 0 rgba(106,17,203,0.05)", // убрана тень
             padding: `${sidePad + 2}px ${sidePad}px ${sidePad + 6}px ${sidePad}px`,
             display: "flex",
             flexDirection: "column",
@@ -205,14 +205,13 @@ const Chat = () => {
             >
               Выберите срок беременности:
             </div>
-            {/* Скрываем скроллбар с помощью inline-стилей и псевдоэлементов */}
             <div
               style={{
                 display: "flex",
                 gap: 12,
                 overflowX: "auto",
                 justifyContent: "flex-start",
-                paddingRight: 32 // Добавляем отступ справа чтобы последняя цифра не обрезалась
+                paddingRight: 32
               }}
               className="months-scroll"
             >
@@ -220,12 +219,12 @@ const Chat = () => {
                 <button
                   key={i}
                   style={{
-                    minWidth: 40,
-                    height: 40,
-                    borderRadius: 15,
+                    minWidth: 52,   // увеличено
+                    height: 52,     // увеличено
+                    borderRadius: 20,
                     border: "none",
                     cursor: inputDisabled ? "not-allowed" : "pointer",
-                    fontSize: 16,
+                    fontSize: 26,   // увеличено
                     fontWeight: 600,
                     background: GRADIENT,
                     color: "#fff",
@@ -261,7 +260,6 @@ const Chat = () => {
                 </button>
               ))}
             </div>
-            {/* Стили для скрытия scrollbars */}
             <style>{`
               .months-scroll::-webkit-scrollbar { display: none; }
               .months-scroll { scrollbar-width: none; -ms-overflow-style: none; }
@@ -414,7 +412,7 @@ const Chat = () => {
           .nora-input::placeholder {
             color: ${theme.placeholder};
             opacity: 1;
-            font-size: 21px; /* увеличили размер плейсхолдера */
+            font-size: 21px;
           }
         `}</style>
       </form>
