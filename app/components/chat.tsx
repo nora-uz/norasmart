@@ -52,6 +52,18 @@ const FAKE_ANSWERS = [
   "Пиши свой запрос, я отвечу!"
 ];
 
+// Готовые темы для обсуждения
+const TOPICS = [
+  { title: "Сон", desc: "Проблемы с бессонницей и усталостью" },
+  { title: "Питание", desc: "Рацион и полезные продукты" },
+  { title: "Стрессы", desc: "Как управлять тревогой" },
+  { title: "Готовность к родам", desc: "Что знать заранее" },
+  { title: "Самочувствие", desc: "Физическое и эмоциональное состояние" },
+  { title: "Витамины", desc: "Что принимать, когда и зачем" },
+  { title: "Физическая активность", desc: "Можно ли и какую выбрать?" }
+  // Добавьте ещё темы по желанию
+];
+
 const Chat = () => {
   const [userInput, setUserInput] = useState("");
   const [messages, setMessages] = useState([]);
@@ -115,7 +127,6 @@ const Chat = () => {
           position: "relative",
           zIndex: 2000,
           transition: "background 0.4s, color 0.4s"
-          // boxShadow удален
         }}
       >
         <div style={{ fontWeight: 800, fontSize: 25, marginRight: sidePad }}>
@@ -157,7 +168,6 @@ const Chat = () => {
           margin: "0 auto",
           borderRadius: 26,
           overflow: "hidden",
-          // boxShadow удален
           background: theme.bgColor,
           display: "flex",
           justifyContent: "center",
@@ -178,6 +188,7 @@ const Chat = () => {
         />
       </div>
       <div style={{ height: sidePad }} />
+
       {showTemplates && (
         <div
           style={{
@@ -185,16 +196,16 @@ const Chat = () => {
             maxWidth,
             margin: "0 auto",
             borderRadius: borderRadius,
-            background: theme.inputBg,        // одинаковый цвет с полем
+            background: theme.inputBg,
             marginBottom: sidePad,
-            // boxShadow удален
             padding: `${sidePad + 2}px ${sidePad}px ${sidePad + 6}px ${sidePad}px`,
             display: "flex",
             flexDirection: "column",
             alignItems: "center"
           }}
         >
-          <div style={{ width: "100%" }}>
+          {/* Срок беременности */}
+          <div style={{ width: "100%", marginBottom: sidePad }}>
             <div
               style={{
                 fontWeight: 400,
@@ -220,16 +231,16 @@ const Chat = () => {
                 <button
                   key={i}
                   style={{
-                    minWidth: 52,   // увеличено
-                    height: 52,     // увеличено
+                    minWidth: 52,
+                    height: 52,
                     borderRadius: 20,
                     border: "none",
                     cursor: inputDisabled ? "not-allowed" : "pointer",
-                    fontSize: 26,   // увеличено
+                    fontSize: 26,
                     fontWeight: 600,
                     background: GRADIENT,
                     color: "#fff",
-                    boxShadow: "none", // тень убрана
+                    boxShadow: "none",
                     opacity: inputDisabled ? 0.7 : 1,
                     outline: "none",
                     marginRight: i < 8 ? 9 : 0,
@@ -245,10 +256,7 @@ const Chat = () => {
                     setInputDisabled(true);
                     setUserInput("");
                     setTimeout(() => {
-                      const reply =
-                        FAKE_ANSWERS[
-                          Math.floor(Math.random() * FAKE_ANSWERS.length)
-                        ];
+                      const reply = FAKE_ANSWERS[Math.floor(Math.random() * FAKE_ANSWERS.length)];
                       setMessages((prev) => [
                         ...prev,
                         { role: "assistant", text: reply }
@@ -266,8 +274,85 @@ const Chat = () => {
               .months-scroll { scrollbar-width: none; -ms-overflow-style: none; }
             `}</style>
           </div>
+          {/* Темы для обсуждения */}
+          <div style={{ width: "100%", marginBottom: sidePad }}>
+            <div
+              style={{
+                fontWeight: 400,
+                fontSize: 15,
+                marginBottom: 18,
+                color: "#c7d3ef",
+                letterSpacing: "0.03em"
+              }}
+            >
+              Выберите тему для обсуждения:
+            </div>
+            <div
+              style={{
+                display: "flex",
+                gap: 12,
+                overflowX: "auto",
+                justifyContent: "flex-start",
+                paddingRight: 32
+              }}
+              className="topics-scroll"
+            >
+              {TOPICS.map((topic, i) => (
+                <button
+                  key={i}
+                  style={{
+                    minWidth: 150,
+                    height: 66,
+                    borderRadius: 22,
+                    border: "none",
+                    cursor: inputDisabled ? "not-allowed" : "pointer",
+                    fontSize: 18,
+                    fontWeight: 600,
+                    background: GRADIENT,
+                    color: "#fff",
+                    boxShadow: "none",
+                    opacity: inputDisabled ? 0.7 : 1,
+                    outline: "none",
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                    alignItems: "flex-start",
+                    padding: "11px 16px 10px 16px",
+                    marginRight: 8,
+                    transition: "box-shadow 0.2s"
+                  }}
+                  disabled={inputDisabled}
+                  onClick={() => {
+                    if (inputDisabled) return;
+                    setMessages((prev) => [
+                      ...prev,
+                      { role: "user", text: `Тема: ${topic.title}. ${topic.desc}` }
+                    ]);
+                    setInputDisabled(true);
+                    setUserInput("");
+                    setTimeout(() => {
+                      const reply = FAKE_ANSWERS[Math.floor(Math.random() * FAKE_ANSWERS.length)];
+                      setMessages((prev) => [
+                        ...prev,
+                        { role: "assistant", text: reply }
+                      ]);
+                      setInputDisabled(false);
+                    }, 700);
+                  }}
+                >
+                  <span style={{ fontSize: 21, fontWeight: 700 }}>{topic.title}</span>
+                  <span style={{ fontSize: 14, opacity: 0.8 }}>{topic.desc}</span>
+                </button>
+              ))}
+            </div>
+            <style>{`
+              .topics-scroll::-webkit-scrollbar { display: none; }
+              .topics-scroll { scrollbar-width: none; -ms-overflow-style: none; }
+            `}</style>
+          </div>
         </div>
       )}
+
       <div
         style={{
           width: "100%",
@@ -297,24 +382,15 @@ const Chat = () => {
               key={idx}
               style={{
                 display: "flex",
-                justifyContent:
-                  msg.role === "assistant"
-                    ? "flex-start"
-                    : "flex-end",
+                justifyContent: msg.role === "assistant" ? "flex-start" : "flex-end",
                 marginBottom: 12,
                 width: "100%"
               }}
             >
               <div
                 style={{
-                  background:
-                    msg.role === "assistant"
-                      ? theme.assistantBubble
-                      : theme.userBubble,
-                  color:
-                    msg.role === "assistant"
-                      ? theme.assistantText
-                      : theme.userText,
+                  background: msg.role === "assistant" ? theme.assistantBubble : theme.userBubble,
+                  color: msg.role === "assistant" ? theme.assistantText : theme.userText,
                   borderRadius: borderRadius,
                   padding: "14px 20px",
                   fontSize: 16,
@@ -325,11 +401,8 @@ const Chat = () => {
                   marginLeft: sidePad,
                   marginRight: sidePad,
                   wordBreak: "break-word",
-                  alignSelf:
-                    msg.role === "assistant"
-                      ? "flex-start"
-                      : "flex-end",
-                  boxShadow: "none", // тень убрана
+                  alignSelf: msg.role === "assistant" ? "flex-start" : "flex-end",
+                  boxShadow: "none",
                   transition: "background 0.4s, color 0.4s"
                 }}
               >
@@ -338,13 +411,19 @@ const Chat = () => {
             </div>
           ))}
           <div ref={messagesEndRef} />
-          <div
-            style={{
-              height: BTN_SIZE + sidePad * 3
-            }}
-          />
+          <div style={{ height: BTN_SIZE + sidePad * 3 }} />
         </div>
       </div>
+      {/* Тёмный фон над полем сообщения */}
+      <div
+        style={{
+          width: "100vw",
+          height: 36,
+          // сделайте #181A1B или другой темный для dark+ lightThemes. При необходимости условие по theme.
+          background: darkMode ? "#181A1B" : "#F2F4F5",
+          transition: "background 0.4s"
+        }}
+      />
       <form
         onSubmit={handleSubmit}
         style={{
@@ -399,7 +478,7 @@ const Chat = () => {
             alignItems: "center",
             cursor: inputDisabled ? "not-allowed" : "pointer",
             opacity: inputDisabled ? 0.7 : 1,
-            boxShadow: "none", // тень убрана
+            boxShadow: "none",
             transition: "background 0.4s, color 0.4s"
           }}
           disabled={inputDisabled}
@@ -429,7 +508,7 @@ const iconBtn = (color) => ({
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
-  boxShadow: "none" // тень убрана для всех иконок!
+  boxShadow: "none"
 });
 
 const iconImgPanel = {
