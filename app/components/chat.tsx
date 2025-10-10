@@ -52,7 +52,6 @@ const FAKE_ANSWERS = [
   "Пиши свой запрос, я отвечу!"
 ];
 
-// Готовые темы для обсуждения
 const TOPICS = [
   { title: "Сон", desc: "Проблемы с бессонницей и усталостью" },
   { title: "Питание", desc: "Рацион и полезные продукты" },
@@ -61,7 +60,6 @@ const TOPICS = [
   { title: "Самочувствие", desc: "Физическое и эмоциональное состояние" },
   { title: "Витамины", desc: "Что принимать, когда и зачем" },
   { title: "Физическая активность", desc: "Можно ли и какую выбрать?" }
-  // Добавьте ещё темы по желанию
 ];
 
 const Chat = () => {
@@ -180,7 +178,7 @@ const Chat = () => {
           alt="Nora AI баннер"
           style={{
             width: "100%",
-            height: "auto",
+            maxHeight: 170,
             display: "block",
             objectFit: "contain",
             objectPosition: "center"
@@ -290,36 +288,30 @@ const Chat = () => {
             <div
               style={{
                 display: "flex",
-                gap: 12,
-                overflowX: "auto",
-                justifyContent: "flex-start",
-                paddingRight: 32
+                flexDirection: "column",
+                gap: 16
               }}
-              className="topics-scroll"
             >
               {TOPICS.map((topic, i) => (
                 <button
                   key={i}
                   style={{
-                    minWidth: 150,
-                    height: 66,
-                    borderRadius: 22,
+                    width: "100%",
+                    borderRadius: 18,
                     border: "none",
                     cursor: inputDisabled ? "not-allowed" : "pointer",
-                    fontSize: 18,
-                    fontWeight: 600,
                     background: GRADIENT,
                     color: "#fff",
                     boxShadow: "none",
                     opacity: inputDisabled ? 0.7 : 1,
                     outline: "none",
+                    textAlign: "left",
+                    padding: "17px 18px 13px 18px",
                     display: "flex",
                     flexDirection: "column",
-                    justifyContent: "center",
                     alignItems: "flex-start",
-                    padding: "11px 16px 10px 16px",
-                    marginRight: 8,
-                    transition: "box-shadow 0.2s"
+                    transition: "box-shadow 0.2s",
+                    fontWeight: 600
                   }}
                   disabled={inputDisabled}
                   onClick={() => {
@@ -340,15 +332,15 @@ const Chat = () => {
                     }, 700);
                   }}
                 >
-                  <span style={{ fontSize: 21, fontWeight: 700 }}>{topic.title}</span>
-                  <span style={{ fontSize: 14, opacity: 0.8 }}>{topic.desc}</span>
+                  <span style={{ fontSize: 19, fontWeight: 700, marginBottom: 5 }}>
+                    {topic.title}
+                  </span>
+                  <span style={{ fontSize: 15, fontWeight: 400, opacity: 0.95 }}>
+                    {topic.desc}
+                  </span>
                 </button>
               ))}
             </div>
-            <style>{`
-              .topics-scroll::-webkit-scrollbar { display: none; }
-              .topics-scroll { scrollbar-width: none; -ms-overflow-style: none; }
-            `}</style>
           </div>
         </div>
       )}
@@ -414,12 +406,10 @@ const Chat = () => {
           <div style={{ height: BTN_SIZE + sidePad * 3 }} />
         </div>
       </div>
-      {/* Тёмный фон над полем сообщения */}
       <div
         style={{
           width: "100vw",
           height: 36,
-          // сделайте #181A1B или другой темный для dark+ lightThemes. При необходимости условие по theme.
           background: darkMode ? "#181A1B" : "#F2F4F5",
           transition: "background 0.4s"
         }}
