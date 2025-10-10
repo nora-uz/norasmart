@@ -40,9 +40,10 @@ const themes = {
   }
 };
 
+// Длинные описания
 const PRESET_TEMPLATES = [
-  { title: "Здоровье", description: "Советы по самочувствию" },
-  { title: "Эмоции", description: "Как справиться со стрессом" }
+  { title: "Здоровье", description: "Полезные советы для поддержания хорошего самочувствия, профилактики и ухода на всех этапах беременности." },
+  { title: "Эмоции", description: "Рекомендации по управлению стрессом, эмоциональной поддержке и сохранению позитивного настроя в период беременности." }
 ];
 
 const FAKE_ANSWERS = [
@@ -112,13 +113,13 @@ const Chat = () => {
         display: "flex",
         alignItems: "center",
         borderRadius: borderRadius,
-        padding: "0 18px",
+        padding: `0 ${sidePad}px`,
         justifyContent: "flex-start",
         boxSizing: "border-box",
         zIndex: 2000,
         transition: "background 0.4s, color 0.4s"
       }}>
-        <div style={{ fontWeight: 600, fontSize: 17, marginRight: 8 }}>Nora AI</div>
+        <div style={{ fontWeight: 600, fontSize: 17, marginRight: sidePad }}>Nora AI</div>
         <div style={{
           display: "flex",
           alignItems: "center",
@@ -131,7 +132,7 @@ const Chat = () => {
           <button style={iconBtn(theme.panelBg)} onClick={() => window.open('https://t.me/', '_blank')}>
             <img src={ICONS.telegram} alt="Telegram" style={iconImgPanel} />
           </button>
-          <button style={iconBtn(theme.panelBg)} onClick={clearChat}>
+          <button style={{ ...iconBtn(theme.panelBg), marginRight: sidePad }} onClick={clearChat}>
             <img src={ICONS.trash} alt="Trash" style={iconImgPanel} />
           </button>
         </div>
@@ -153,7 +154,7 @@ const Chat = () => {
         <div style={{
           width: `calc(100% - ${sidePad * 2}px)`,
           maxWidth,
-          marginTop: sidePad, // отступ между баннером и панелью сверху
+          marginTop: sidePad,
           marginBottom: sidePad,
           borderRadius: 26,
           overflow: "hidden",
@@ -222,7 +223,7 @@ const Chat = () => {
         <div style={{
           position: "fixed",
           left: "50%",
-          bottom: BTN_SIZE + 2 * sidePad,
+          bottom: BTN_SIZE + sidePad * 1.4, // уменьшаем отступ между "готовыми ответами" и полем сообщений
           transform: "translateX(-50%)",
           width: `calc(100% - ${sidePad * 2}px)`,
           maxWidth,
@@ -272,9 +273,9 @@ const Chat = () => {
                 {tpl.title}
               </span>
               <span style={{
-                fontSize: 11,
+                fontSize: 13,
                 color: "#bbb",
-                lineHeight: 1.2,
+                lineHeight: 1.43,
               }}>
                 {tpl.description}
               </span>
@@ -331,7 +332,7 @@ const Chat = () => {
             borderRadius: borderRadius,
             width: BTN_SIZE,
             height: BTN_SIZE,
-            marginRight: sidePad,
+            marginRight: sidePad, // равный sidePad справа
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
