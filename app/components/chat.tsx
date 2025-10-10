@@ -6,10 +6,11 @@ const ICONS = {
   sun: "https://cdn-icons-png.flaticon.com/512/16769/16769231.png",
   moon: "https://cdn-icons-png.flaticon.com/512/16769/16769231.png",
   trash: "https://cdn-icons-png.flaticon.com/512/3917/3917772.png",
-  arrow: "https://cdn-icons-png.flaticon.com/512/3916/3916848.png",
+  arrow: "https://cdn-icons-png.flaticon.com/512/3916/3916848.png"
 };
 
-const BANNER = "https://user-gen-media-assets.s3.amazonaws.com/seedream_images/4c36a715-f500-4186-8955-631a09fac0ed.png";
+const BANNER =
+  "https://user-gen-media-assets.s3.amazonaws.com/seedream_images/4c36a715-f500-4186-8955-631a09fac0ed.png";
 const ICON_SIZE_PANEL = 18;
 const ICON_SIZE_SEND = 28;
 const BTN_SIZE = 62;
@@ -18,18 +19,19 @@ const borderRadius = 22;
 const sidePad = 16;
 const panelHeight = 62;
 const maxWidth = 560;
+const GRADIENT = "linear-gradient(90deg, #6a11cb 0%, #2575fc 100%)";
 
 const themes = {
   dark: {
-    panelBg: "#F6F7FB",
-    bgColor: "#F9FAFC",
-    userBubble: "#fff",
-    userText: "#181818",
-    inputBg: "#F6F7FB",
-    inputText: "#222",
-    placeholder: "#bbb",
-    assistantBubble: "#E8EAED",
-    assistantText: "#333"
+    panelBg: "#232323",
+    bgColor: "#1C1C1C", // Ваш фон
+    userBubble: "#343434",
+    userText: "#fff",
+    inputBg: "#232323",
+    inputText: "#fff",
+    placeholder: "#888",
+    assistantBubble: "#262939",
+    assistantText: "#fff"
   },
   light: {
     panelBg: "#F6F7FB",
@@ -48,20 +50,17 @@ const FAKE_ANSWERS = [
   "Привет! Я Nora, чем могу помочь?",
   "Расскажи, о чём бы ты хотел поговорить?",
   "Я готова ответить на любые вопросы!",
-  "Пиши свой запрос, я отвечу!",
+  "Пиши свой запрос, я отвечу!"
 ];
-
-const GRADIENT = "linear-gradient(90deg, #6a11cb 0%, #2575fc 100%)";
-const INTERACTIVE_HEIGHT = 108;
 
 const Chat = () => {
   const [userInput, setUserInput] = useState("");
   const [messages, setMessages] = useState([]);
   const [inputDisabled, setInputDisabled] = useState(false);
-  const [darkMode, setDarkMode] = useState(true);
+  const [darkMode] = useState(true); // Тёмная тема всегда активна!
   const messagesEndRef = useRef(null);
   const showTemplates = messages.length === 0;
-  const theme = darkMode ? themes.dark : themes.light;
+  const theme = themes.dark;
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -70,12 +69,16 @@ const Chat = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!userInput.trim()) return;
-    setMessages(prev => [...prev, { role: "user", text: userInput }]);
+    setMessages((prev) => [...prev, { role: "user", text: userInput }]);
     setUserInput("");
     setInputDisabled(true);
     setTimeout(() => {
-      const reply = FAKE_ANSWERS[Math.floor(Math.random() * FAKE_ANSWERS.length)];
-      setMessages(prev => [...prev, { role: "assistant", text: reply }]);
+      const reply =
+        FAKE_ANSWERS[Math.floor(Math.random() * FAKE_ANSWERS.length)];
+      setMessages((prev) => [
+        ...prev,
+        { role: "assistant", text: reply }
+      ]);
       setInputDisabled(false);
     }, 700);
   };
@@ -86,43 +89,51 @@ const Chat = () => {
   };
 
   return (
-    <div style={{
-      background: theme.bgColor,
-      width: "100vw",
-      minHeight: 800,
-      overflow: "hidden",
-      position: "relative",
-      transition: "background 0.4s"
-    }}>
-      <div style={{ height: sidePad }} />
-      <div style={{
-        width: `calc(100% - ${sidePad * 2}px)`,
-        maxWidth,
-        height: panelHeight,
-        margin: "0 auto",
-        background: GRADIENT,
-        color: "#fff",
-        display: "flex",
-        alignItems: "center",
-        borderRadius: borderRadius,
-        padding: `0 ${sidePad}px 0 ${sidePad}px`,
-        justifyContent: "flex-start",
-        boxSizing: "border-box",
+    <div
+      style={{
+        background: theme.bgColor,
+        width: "100vw",
+        minHeight: 800,
+        overflow: "hidden",
         position: "relative",
-        zIndex: 2000,
-        transition: "background 0.4s, color 0.4s"
-      }}>
-        <div style={{ fontWeight: 800, fontSize: 25, marginRight: sidePad }}>Nora AI</div>
-        <div style={{
+        transition: "background 0.4s"
+      }}
+    >
+      <div style={{ height: sidePad }} />
+      <div
+        style={{
+          width: `calc(100% - ${sidePad * 2}px)`,
+          maxWidth,
+          height: panelHeight,
+          margin: "0 auto",
+          background: GRADIENT,
+          color: "#fff",
           display: "flex",
           alignItems: "center",
-          gap: 6,
-          marginLeft: "auto"
-        }}>
-          <button style={iconBtn("transparent")} onClick={() => setDarkMode((prev) => !prev)}>
-            <img src={darkMode ? ICONS.sun : ICONS.moon} alt="Theme" style={iconImgPanel} />
-          </button>
-          <button style={iconBtn("transparent")} onClick={() => window.open('https://t.me/', '_blank')}>
+          borderRadius: borderRadius,
+          padding: `0 ${sidePad}px`,
+          justifyContent: "flex-start",
+          boxSizing: "border-box",
+          position: "relative",
+          zIndex: 2000,
+          transition: "background 0.4s, color 0.4s"
+        }}
+      >
+        <div style={{ fontWeight: 800, fontSize: 25, marginRight: sidePad }}>
+          Nora AI
+        </div>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 6,
+            marginLeft: "auto"
+          }}
+        >
+          <button
+            style={iconBtn("transparent")}
+            onClick={() => window.open("https://t.me/", "_blank")}
+          >
             <img src={ICONS.telegram} alt="Telegram" style={iconImgPanel} />
           </button>
           <button
@@ -146,7 +157,6 @@ const Chat = () => {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          flexShrink: 0,
           position: "relative"
         }}
       >
@@ -163,67 +173,79 @@ const Chat = () => {
         />
       </div>
       <div style={{ height: sidePad }} />
-      {/* --- интерактив сразу под фото --- */}
       {showTemplates && (
-        <div style={{
-          width: `calc(100% - ${sidePad * 2}px)`,
-          maxWidth,
-          margin: "0 auto",
-          borderRadius: borderRadius,
-          background: "#fff", // светлый фон!
-          marginBottom: sidePad,
-          boxShadow: "0 2px 12px 0 rgba(106,17,203,0.03)",
-          padding: `${sidePad}px ${sidePad}px`,
-          display: "flex",
-          flexDirection: "column",
-          gap: sidePad,
-          alignItems: "center"
-        }}>
+        <div
+          style={{
+            width: `calc(100% - ${sidePad * 2}px)`,
+            maxWidth,
+            margin: "0 auto",
+            borderRadius: borderRadius,
+            background: "#22252B",
+            marginBottom: sidePad,
+            boxShadow: "0 2px 12px 0 rgba(106,17,203,0.05)",
+            padding: `${sidePad + 2}px ${sidePad}px ${sidePad + 6}px ${sidePad}px`,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center"
+          }}
+        >
           <div style={{ width: "100%" }}>
-            <div style={{
-              fontWeight: 400,
-              fontSize: 18,
-              marginBottom: 16,
-              color: "#2575fc",
-              letterSpacing: "0.3px"
-            }}>
+            <div
+              style={{
+                fontWeight: 400,
+                fontSize: 15,
+                marginBottom: 18,
+                color: "#c7d3ef",
+                letterSpacing: "0.03em"
+              }}
+            >
               Выберите срок беременности:
             </div>
-            <div style={{
-              display: "flex",
-              gap: 12,
-              overflowX: "auto",
-              justifyContent: "center",
-              marginBottom: 2
-            }}>
+            <div
+              style={{
+                display: "flex",
+                gap: 12,
+                overflowX: "auto",
+                justifyContent: "center"
+              }}
+            >
               {Array.from({ length: 9 }).map((_, i) => (
                 <button
                   key={i}
                   style={{
-                    minWidth: 48,
-                    height: 48,
-                    borderRadius: 16,
+                    minWidth: 40,
+                    height: 40,
+                    borderRadius: 15,
                     border: "none",
                     cursor: inputDisabled ? "not-allowed" : "pointer",
-                    fontSize: 17,
+                    fontSize: 16,
                     fontWeight: 600,
                     background: GRADIENT,
                     color: "#fff",
-                    boxShadow: "0 2px 6px 0 rgba(37,117,252,0.11)",
+                    boxShadow: "0 2px 6px 0 rgba(37,117,252,0.13)",
                     opacity: inputDisabled ? 0.7 : 1,
                     outline: "none",
-                    transition: "box-shadow 0.2s",
-                    marginRight: i < 8 ? 8 : 0,
+                    marginRight: i < 8 ? 9 : 0,
+                    transition: "box-shadow 0.2s"
                   }}
                   disabled={inputDisabled}
                   onClick={() => {
                     if (inputDisabled) return;
-                    setMessages(prev => [...prev, { role: "user", text: `Мой срок беременности: ${i + 1} месяц` }]);
+                    setMessages((prev) => [
+                      ...prev,
+                      { role: "user", text: `Мой срок беременности: ${i + 1} месяц` }
+                    ]);
                     setInputDisabled(true);
                     setUserInput("");
                     setTimeout(() => {
-                      const reply = FAKE_ANSWERS[Math.floor(Math.random() * FAKE_ANSWERS.length)];
-                      setMessages(prev => [...prev, { role: "assistant", text: reply }]);
+                      const reply =
+                        FAKE_ANSWERS[
+                          Math.floor(Math.random() * FAKE_ANSWERS.length)
+                        ];
+                      setMessages((prev) => [
+                        ...prev,
+                        { role: "assistant", text: reply }
+                      ]);
                       setInputDisabled(false);
                     }, 700);
                   }}
@@ -235,59 +257,84 @@ const Chat = () => {
           </div>
         </div>
       )}
-      {/* Сообщения идут ниже интерактива */}
-      <div style={{
-        width: "100%",
-        maxWidth,
-        margin: "0 auto",
-        boxSizing: "border-box",
-        flex: 1,
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        overflow: "hidden"
-      }}>
-        <div style={{
+      <div
+        style={{
           width: "100%",
+          maxWidth,
+          margin: "0 auto",
+          boxSizing: "border-box",
           flex: 1,
-          minHeight: 0,
-          overflowY: "auto",
           display: "flex",
           flexDirection: "column",
-          justifyContent: "flex-start",
-        }}>
+          alignItems: "center",
+          overflow: "hidden"
+        }}
+      >
+        <div
+          style={{
+            width: "100%",
+            flex: 1,
+            minHeight: 0,
+            overflowY: "auto",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "flex-start"
+          }}
+        >
           {messages.map((msg, idx) => (
-            <div key={idx} style={{
-              display: "flex",
-              justifyContent: msg.role === "assistant" ? "flex-start" : "flex-end",
-              marginBottom: 12,
-              width: "100%",
-            }}>
-              <div style={{
-                background: msg.role === "assistant" ? theme.assistantBubble : theme.userBubble,
-                color: msg.role === "assistant" ? theme.assistantText : theme.userText,
-                borderRadius: borderRadius,
-                padding: "14px 20px",
-                fontSize: 16,
-                lineHeight: 1.7,
-                border: "none",
-                maxWidth: "70%",
-                minWidth: 54,
-                marginLeft: sidePad,
-                marginRight: sidePad,
-                wordBreak: "break-word",
-                alignSelf: msg.role === "assistant" ? "flex-start" : "flex-end",
-                boxShadow: msg.role === "user" ? "0 2px 12px rgba(0,0,0,0.08)" : "none",
-                transition: "background 0.4s, color 0.4s"
-              }}>
+            <div
+              key={idx}
+              style={{
+                display: "flex",
+                justifyContent:
+                  msg.role === "assistant"
+                    ? "flex-start"
+                    : "flex-end",
+                marginBottom: 12,
+                width: "100%"
+              }}
+            >
+              <div
+                style={{
+                  background:
+                    msg.role === "assistant"
+                      ? theme.assistantBubble
+                      : theme.userBubble,
+                  color:
+                    msg.role === "assistant"
+                      ? theme.assistantText
+                      : theme.userText,
+                  borderRadius: borderRadius,
+                  padding: "14px 20px",
+                  fontSize: 16,
+                  lineHeight: 1.7,
+                  border: "none",
+                  maxWidth: "70%",
+                  minWidth: 54,
+                  marginLeft: sidePad,
+                  marginRight: sidePad,
+                  wordBreak: "break-word",
+                  alignSelf:
+                    msg.role === "assistant"
+                      ? "flex-start"
+                      : "flex-end",
+                  boxShadow:
+                    msg.role === "user"
+                      ? "0 2px 12px rgba(0,0,0,0.08)"
+                      : "none",
+                  transition: "background 0.4s, color 0.4s"
+                }}
+              >
                 {msg.text}
               </div>
             </div>
           ))}
           <div ref={messagesEndRef} />
-          <div style={{
-            height: (BTN_SIZE + sidePad * 3) + (showTemplates ? INTERACTIVE_HEIGHT : 0)
-          }} />
+          <div
+            style={{
+              height: BTN_SIZE + sidePad * 3
+            }}
+          />
         </div>
       </div>
       <form
@@ -323,7 +370,7 @@ const Chat = () => {
             transition: "background 0.4s, color 0.4s"
           }}
           value={userInput}
-          onChange={e => setUserInput(e.target.value)}
+          onChange={(e) => setUserInput(e.target.value)}
           placeholder="Введите ваш вопрос"
           disabled={inputDisabled}
           className="nora-input"
@@ -363,6 +410,7 @@ const Chat = () => {
   );
 };
 
+// Вспомогательные стили
 const iconBtn = (color) => ({
   background: color,
   border: "none",
@@ -382,14 +430,14 @@ const iconImgPanel = {
   height: ICON_SIZE_PANEL,
   display: "block",
   background: "none",
-  filter: "brightness(0) invert(1)",
+  filter: "brightness(0) invert(1)"
 };
 
 const iconImgSend = {
   width: ICON_SIZE_SEND,
   height: ICON_SIZE_SEND,
   display: "block",
-  background: "none",
+  background: "none"
 };
 
 export default Chat;
