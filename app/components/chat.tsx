@@ -105,7 +105,7 @@ const Chat = () => {
             </button>
           </div>
         </div>
-        {/* Контейнер для контента, фото: важный marginTop */}
+        {/* Контейнер для контента, фото: исправленный marginTop */}
         <div
           style={{
             width: "100%",
@@ -113,7 +113,7 @@ const Chat = () => {
             margin: "0 auto",
             boxSizing: "border-box",
             flex: 1,
-            paddingTop: panelHeight + sidePad * 2, // ВАЖНО: фото не уходит под панель!
+            paddingTop: panelHeight + sidePad * 2,
             paddingBottom: panelHeight + sidePad * 2,
             overflow: "hidden",
             display: "flex",
@@ -127,6 +127,7 @@ const Chat = () => {
               width: `calc(100% - ${sidePad * 2}px)`,
               maxWidth: 370,
               margin: "0 auto",
+              marginTop: sidePad + panelHeight, // ← только эта строка изменена
               marginBottom: sidePad,
               borderRadius: borderRadius,
               overflow: "hidden",
@@ -148,7 +149,7 @@ const Chat = () => {
               }}
             />
           </div>
-          {/* Область для сообщений, адаптивная, появляется скролл только если сообщений много */}
+          {/* Область для сообщений */}
           <div
             style={{
               width: "100%",
@@ -196,7 +197,7 @@ const Chat = () => {
             <div ref={messagesEndRef} />
           </div>
         </div>
-        {/* Фиксированное поле ввода снизу, боковые и нижний отступ всегда равны sidePad */}
+        {/* Фиксированное поле ввода снизу */}
         <form
           onSubmit={handleSubmit}
           style={{
