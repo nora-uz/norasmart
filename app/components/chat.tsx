@@ -57,6 +57,8 @@ const FAKE_ANSWERS = [
   "Пиши свой запрос, я отвечу!",
 ];
 
+const GRADIENT = "linear-gradient(90deg, #6a11cb 0%, #2575fc 100%)";
+
 const Chat = () => {
   const [userInput, setUserInput] = useState("");
   const [messages, setMessages] = useState([]);
@@ -92,27 +94,30 @@ const Chat = () => {
     <div style={{
       background: theme.bgColor,
       width: "100vw",
-      minHeight: 800, // увеличено!
+      minHeight: 800,
       overflow: "hidden",
       position: "relative",
       transition: "background 0.4s"
     }}>
       <div style={{ height: sidePad }} />
+      {/* Панель с градиентом и линией снизу */}
       <div style={{
         width: `calc(100% - ${sidePad * 2}px)`,
         maxWidth,
         height: panelHeight,
         margin: "0 auto",
-        background: theme.panelBg,
-        color: theme.assistantText,
+        background: GRADIENT,
+        color: "#fff",
         display: "flex",
         alignItems: "center",
         borderRadius: borderRadius,
         padding: `0 ${sidePad}px 0 ${sidePad}px`,
         justifyContent: "flex-start",
         boxSizing: "border-box",
+        position: "relative",
         zIndex: 2000,
-        transition: "background 0.4s, color 0.4s"
+        transition: "background 0.4s, color 0.4s",
+        boxShadow: "0 3px 18px 0 rgba(37,117,252,0.20)"
       }}>
         <div style={{ fontWeight: 800, fontSize: 25, marginRight: sidePad }}>Nora AI</div>
         <div style={{
@@ -121,21 +126,34 @@ const Chat = () => {
           gap: 6,
           marginLeft: "auto"
         }}>
-          <button style={iconBtn(theme.panelBg)} onClick={() => setDarkMode((prev) => !prev)}>
+          <button style={iconBtn("transparent")} onClick={() => setDarkMode((prev) => !prev)}>
             <img src={darkMode ? ICONS.sun : ICONS.moon} alt="Theme" style={iconImgPanel} />
           </button>
-          <button style={iconBtn(theme.panelBg)} onClick={() => window.open('https://t.me/', '_blank')}>
+          <button style={iconBtn("transparent")} onClick={() => window.open('https://t.me/', '_blank')}>
             <img src={ICONS.telegram} alt="Telegram" style={iconImgPanel} />
           </button>
           <button
-            style={{ ...iconBtn(theme.panelBg), marginRight: -sidePad }}
+            style={{ ...iconBtn("transparent"), marginRight: -sidePad }}
             onClick={clearChat}
           >
             <img src={ICONS.trash} alt="Trash" style={iconImgPanel} />
           </button>
         </div>
+        {/* Градиентная линия-подсветка под панелью */}
+        <div style={{
+          position: "absolute",
+          left: sidePad,
+          right: sidePad,
+          bottom: -4,
+          height: 5,
+          borderRadius: 4,
+          background: GRADIENT,
+          zIndex: 1,
+          boxShadow: "0 2px 18px 0 rgba(37,117,252,0.20)"
+        }} />
       </div>
       <div style={{ height: sidePad }} />
+
       <div
         style={{
           width: `calc(100% - ${sidePad * 2}px)`,
@@ -165,6 +183,7 @@ const Chat = () => {
         />
       </div>
       <div style={{ height: sidePad }} />
+
       <div style={{
         width: "100%",
         maxWidth,
@@ -280,7 +299,7 @@ const Chat = () => {
                 fontSize: 13,
                 color: "#bbb",
                 lineHeight: 1.32,
-                marginTop: 4, // дополнительный отступ по твоему запросу
+                marginTop: 4,
                 wordBreak: "break-word",
                 whiteSpace: "normal"
               }}>
