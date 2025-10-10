@@ -10,7 +10,6 @@ const ICONS = {
 };
 
 const BANNER = "https://user-gen-media-assets.s3.amazonaws.com/seedream_images/4c36a715-f500-4186-8955-631a09fac0ed.png";
-
 const ICON_SIZE_PANEL = 18;
 const ICON_SIZE_SEND = 28;
 const BTN_SIZE = 48;
@@ -39,18 +38,18 @@ const Chat = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  // Высота для chatArea: 100vh минус панель, минус отступы, минус поле ввода
-  const chatAreaHeight = `calc(100vh - ${panelHeight + sidePad * 2 + panelHeight}px)`;
+  // Высота между панелью и полем ввода, учитывая margin под фото!
+  const chatAreaHeight = `calc(100vh - ${panelHeight + sidePad + panelHeight + sidePad}px)`;
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!userInput.trim()) return;
-    setMessages(prev => [...prev, { role: "user", text: userInput }]);
+    setMessages((prev) => [...prev, { role: "user", text: userInput }]);
     setUserInput("");
     setInputDisabled(true);
     setTimeout(() => {
       const reply = FAKE_ANSWERS[Math.floor(Math.random() * FAKE_ANSWERS.length)];
-      setMessages(prev => [...prev, { role: "assistant", text: reply }]);
+      setMessages((prev) => [...prev, { role: "assistant", text: reply }]);
       setInputDisabled(false);
     }, 700);
   };
@@ -70,7 +69,7 @@ const Chat = () => {
         position: "relative",
       }}
     >
-      {/* ----- Фиксированная панель ----- */}
+      {/* Панель */}
       <div
         style={{
           position: "fixed",
@@ -93,7 +92,7 @@ const Chat = () => {
       >
         <div style={{ fontWeight: 600, fontSize: 19 }}>Nora AI</div>
         <div style={{ display: "flex", alignItems: "center", gap: 13 }}>
-          <button style={iconBtn(panelBg)} onClick={() => setDarkMode(mode => !mode)} aria-label="Тема">
+          <button style={iconBtn(panelBg)} onClick={() => setDarkMode((mode) => !mode)} aria-label="Тема">
             <img src={darkMode ? ICONS.sun : ICONS.moon} alt="Theme" style={iconImgPanel} />
           </button>
           <button style={iconBtn(panelBg)} onClick={clearChat} aria-label="Очистить чат">
@@ -107,26 +106,26 @@ const Chat = () => {
           </button>
         </div>
       </div>
-      {/* ----- Контент между панелью и полем ввода ----- */}
+      {/* Контейнер между панелью и полем ввода */}
       <div
         style={{
           width: "100%",
           maxWidth,
           margin: "0 auto",
           marginTop: panelHeight + sidePad,
+          boxSizing: "border-box",
           height: chatAreaHeight,
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          boxSizing: "border-box",
           overflow: "hidden",
         }}
       >
-        {/* --- Баннер — строго под панелью, отступы по бокам и только ВНИЗУ --- */}
+        {/* Баннер — всегда sidePad между панелью и фото */}
         <div
           style={{
             width: `calc(100% - ${sidePad * 2}px)`,
-            maxWidth,
+            maxWidth: maxWidth,
             marginBottom: sidePad,
             borderRadius: 26,
             overflow: "hidden",
@@ -148,7 +147,6 @@ const Chat = () => {
             }}
           />
         </div>
-        {/* --- Чатовая область, скролл только тут (если сообщений много) --- */}
         <div
           style={{
             width: "100%",
@@ -188,7 +186,7 @@ const Chat = () => {
           <div ref={messagesEndRef} />
         </div>
       </div>
-      {/* ----- Фиксированное поле ввода снизу ----- */}
+      {/* Поле ввода снизу */}
       <form
         onSubmit={handleSubmit}
         style={{
