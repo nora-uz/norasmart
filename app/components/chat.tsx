@@ -1,55 +1,11 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import styles from "./chat.module.css";
-import { AssistantStream } from "openai/lib/AssistantStream";
 import Markdown from "react-markdown";
 // @ts-expect-error - no types for this yet
 import { AssistantStreamEvent } from "openai/resources/beta/assistants/assistants";
 import { RequiredActionFunctionToolCall } from "openai/resources/beta/threads/runs/runs";
-
-type MessageProps = {
-  role: "user" | "assistant" | "code";
-  text: string;
-};
-
-const UserMessage = ({ text }: { text: string }) => {
-  return <div className={styles.userMessage}>{text}</div>;
-};
-
-const AssistantMessage = ({ text }: { text: string }) => {
-  return (
-    <div className={styles.assistantMessage}>
-      <Markdown>{text}</Markdown>
-    </div>
-  );
-};
-
-const CodeMessage = ({ text }: { text: string }) => {
-  return (
-    <div className={styles.codeMessage}>
-      {text.split("\n").map((line, index) => (
-        <div key={index}>
-          <span>{`${index + 1}. `}</span>
-          {line}
-        </div>
-      ))}
-    </div>
-  );
-};
-
-const Message = ({ role, text }: MessageProps) => {
-  switch (role) {
-    case "user":
-      return <UserMessage text={text} />;
-    case "assistant":
-      return <AssistantMessage text={text} />;
-    case "code":
-      return <CodeMessage text={text} />;
-    default:
-      return null;
-  }
-};
+import { AssistantStream } from "openai/lib/AssistantStream";
 
 type ChatProps = {
   functionCallHandler?: (
@@ -58,14 +14,13 @@ type ChatProps = {
 };
 
 const Chat = ({
-  functionCallHandler = () => Promise.resolve(""), // default to return empty string
+  functionCallHandler = () => Promise.resolve(""),
 }: ChatProps) => {
   const [userInput, setUserInput] = useState("");
   const [messages, setMessages] = useState([]);
   const [inputDisabled, setInputDisabled] = useState(false);
   const [threadId, setThreadId] = useState("");
 
-  // automatically scroll to bottom of chat
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -74,7 +29,6 @@ const Chat = ({
     scrollToBottom();
   }, [messages]);
 
-  // create a new threadID when chat component created
   useEffect(() => {
     const createThread = async () => {
       const res = await fetch(`/api/assistants/threads`, {
@@ -131,48 +85,39 @@ const Chat = ({
     scrollToBottom();
   };
 
-  /* Stream Event Handlers */
-
-  // textCreated - create new assistant message
   const handleTextCreated = () => {
     appendMessage("assistant", "");
   };
 
-  // textDelta - append text to last assistant message
   const handleTextDelta = (delta) => {
     if (delta.value != null) {
       appendToLastMessage(delta.value);
-    };
+    }
     if (delta.annotations != null) {
       annotateLastMessage(delta.annotations);
     }
   };
 
-  // imageFileDone - show image in chat
   const handleImageFileDone = (image) => {
     appendToLastMessage(`\n![${image.file_id}](/api/files/${image.file_id})\n`);
-  }
+  };
 
-  // toolCallCreated - log new tool call
   const toolCallCreated = (toolCall) => {
     if (toolCall.type != "code_interpreter") return;
     appendMessage("code", "");
   };
 
-  // toolCallDelta - log delta and snapshot for the tool call
   const toolCallDelta = (delta, snapshot) => {
     if (delta.type != "code_interpreter") return;
     if (!delta.code_interpreter.input) return;
     appendToLastMessage(delta.code_interpreter.input);
   };
 
-  // handleRequiresAction - handle function call
   const handleRequiresAction = async (
     event: AssistantStreamEvent.ThreadRunRequiresAction
   ) => {
     const runId = event.data.id;
     const toolCalls = event.data.required_action.submit_tool_outputs.tool_calls;
-    // loop over tool calls and call function handler
     const toolCallOutputs = await Promise.all(
       toolCalls.map(async (toolCall) => {
         const result = await functionCallHandler(toolCall);
@@ -183,36 +128,22 @@ const Chat = ({
     submitActionResult(runId, toolCallOutputs);
   };
 
-  // handleRunCompleted - re-enable the input form
   const handleRunCompleted = () => {
     setInputDisabled(false);
   };
 
   const handleReadableStream = (stream: AssistantStream) => {
-    // messages
     stream.on("textCreated", handleTextCreated);
     stream.on("textDelta", handleTextDelta);
-
-    // image
     stream.on("imageFileDone", handleImageFileDone);
-
-    // code interpreter
     stream.on("toolCallCreated", toolCallCreated);
     stream.on("toolCallDelta", toolCallDelta);
-
-    // events without helpers yet (e.g. requires_action and run.done)
     stream.on("event", (event) => {
       if (event.event === "thread.run.requires_action")
         handleRequiresAction(event);
       if (event.event === "thread.run.completed") handleRunCompleted();
     });
   };
-
-  /*
-    =======================
-    === Utility Helpers ===
-    =======================
-  */
 
   const appendToLastMessage = (text) => {
     setMessages((prevMessages) => {
@@ -232,9 +163,7 @@ const Chat = ({
   const annotateLastMessage = (annotations) => {
     setMessages((prevMessages) => {
       const lastMessage = prevMessages[prevMessages.length - 1];
-      const updatedLastMessage = {
-        ...lastMessage,
-      };
+      const updatedLastMessage = { ...lastMessage };
       annotations.forEach((annotation) => {
         if (annotation.type === 'file_path') {
           updatedLastMessage.text = updatedLastMessage.text.replaceAll(
@@ -242,39 +171,93 @@ const Chat = ({
             `/api/files/${annotation.file_path.file_id}`
           );
         }
-      })
+      });
       return [...prevMessages.slice(0, -1), updatedLastMessage];
     });
-    
-  }
+  };
 
+  // === UI code ===
   return (
-    <div className={styles.chatContainer}>
-      <div className={styles.messages}>
-        {messages.map((msg, index) => (
-          <Message key={index} role={msg.role} text={msg.text} />
-        ))}
-        <div ref={messagesEndRef} />
-      </div>
-      <form
-        onSubmit={handleSubmit}
-        className={`${styles.inputForm} ${styles.clearfix}`}
-      >
-        <input
-          type="text"
-          className={styles.input}
-          value={userInput}
-          onChange={(e) => setUserInput(e.target.value)}
-          placeholder="Enter your question"
-        />
-        <button
-          type="submit"
-          className={styles.button}
-          disabled={inputDisabled}
+    <div style={{ minHeight: "100vh", background: "#f7fafb", paddingTop: 40, paddingBottom: 40 }}>
+      <div style={{
+        maxWidth: "680px",
+        margin: "0 auto",
+        background: "#fff",
+        borderRadius: "20px",
+        boxShadow: "0 2px 16px rgba(34,48,115,0.07)",
+        padding: "32px",
+        minHeight: "60vh",
+      }}>
+        <div>
+          {messages.map((msg, index) => (
+            <div
+              key={index}
+              style={{
+                display: "flex",
+                justifyContent: msg.role === "assistant" ? "flex-start" : "flex-end",
+              }}
+            >
+              <div style={{
+                background: msg.role === "assistant" ? "#F4F6FC" : "#F8FAFC",
+                color: "#222",
+                borderRadius: "16px",
+                padding: "12px 18px",
+                margin: "8px 0",
+                maxWidth: "70%",
+                boxShadow: "0 1px 4px rgba(0,0,0,0.04)"
+              }}>
+                {msg.role === "code"
+                  ? msg.text.split("\n").map((line, idx) => (
+                      <div key={idx}><span>{`${idx + 1}. `}</span>{line}</div>
+                    ))
+                  : <Markdown>{msg.text}</Markdown>
+                }
+              </div>
+            </div>
+          ))}
+          <div ref={messagesEndRef} />
+        </div>
+        <form
+          onSubmit={handleSubmit}
+          style={{
+            display: "flex",
+            gap: "12px",
+            marginTop: "32px",
+          }}
         >
-          Send
-        </button>
-      </form>
+          <input
+            type="text"
+            style={{
+              flex: 1,
+              border: "1px solid #e5e7eb",
+              borderRadius: "12px",
+              padding: "10px 16px",
+              fontSize: "17px",
+              background: "#FAFBFC",
+            }}
+            value={userInput}
+            onChange={(e) => setUserInput(e.target.value)}
+            placeholder="Введите ваш вопрос"
+            disabled={inputDisabled}
+          />
+          <button
+            type="submit"
+            style={{
+              background: "#2646FC",
+              color: "#fff",
+              border: "none",
+              borderRadius: "10px",
+              padding: "0 24px",
+              fontSize: "17px",
+              cursor: inputDisabled ? "not-allowed" : "pointer",
+              opacity: inputDisabled ? 0.6 : 1,
+            }}
+            disabled={inputDisabled}
+          >
+            Отправить
+          </button>
+        </form>
+      </div>
     </div>
   );
 };
