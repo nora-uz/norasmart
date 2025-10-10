@@ -115,6 +115,7 @@ const Chat = () => {
           position: "relative",
           zIndex: 2000,
           transition: "background 0.4s, color 0.4s"
+          // boxShadow удален
         }}
       >
         <div style={{ fontWeight: 800, fontSize: 25, marginRight: sidePad }}>
@@ -156,7 +157,7 @@ const Chat = () => {
           margin: "0 auto",
           borderRadius: 26,
           overflow: "hidden",
-          boxShadow: "0 4px 28px 0 rgba(55,40,120,0.14)",
+          // boxShadow удален
           background: theme.bgColor,
           display: "flex",
           justifyContent: "center",
@@ -186,7 +187,7 @@ const Chat = () => {
             borderRadius: borderRadius,
             background: theme.inputBg,        // одинаковый цвет с полем
             marginBottom: sidePad,
-            // boxShadow: "0 2px 12px 0 rgba(106,17,203,0.05)", // убрана тень
+            // boxShadow удален
             padding: `${sidePad + 2}px ${sidePad}px ${sidePad + 6}px ${sidePad}px`,
             display: "flex",
             flexDirection: "column",
@@ -228,7 +229,7 @@ const Chat = () => {
                     fontWeight: 600,
                     background: GRADIENT,
                     color: "#fff",
-                    boxShadow: "0 2px 6px 0 rgba(37,117,252,0.13)",
+                    boxShadow: "none", // тень убрана
                     opacity: inputDisabled ? 0.7 : 1,
                     outline: "none",
                     marginRight: i < 8 ? 9 : 0,
@@ -328,10 +329,7 @@ const Chat = () => {
                     msg.role === "assistant"
                       ? "flex-start"
                       : "flex-end",
-                  boxShadow:
-                    msg.role === "user"
-                      ? "0 2px 12px rgba(0,0,0,0.08)"
-                      : "none",
+                  boxShadow: "none", // тень убрана
                   transition: "background 0.4s, color 0.4s"
                 }}
               >
@@ -401,7 +399,7 @@ const Chat = () => {
             alignItems: "center",
             cursor: inputDisabled ? "not-allowed" : "pointer",
             opacity: inputDisabled ? 0.7 : 1,
-            boxShadow: "none",
+            boxShadow: "none", // тень убрана
             transition: "background 0.4s, color 0.4s"
           }}
           disabled={inputDisabled}
@@ -431,7 +429,7 @@ const iconBtn = (color) => ({
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
-  boxShadow: "none"
+  boxShadow: "none" // тень убрана для всех иконок!
 });
 
 const iconImgPanel = {
