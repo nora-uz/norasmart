@@ -76,8 +76,6 @@ const Chat = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  const fixedPaddingTop = sidePad + panelHeight + sidePad + (showTemplates ? (TEMPLATE_BTN_SIZE + sidePad) * PRESET_TEMPLATES.length : 0);
-
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!userInput.trim()) return;
@@ -106,9 +104,7 @@ const Chat = () => {
       position: "relative",
       transition: "background 0.4s"
     }}>
-      {/* Верхний отступ до панели */}
       <div style={{ height: sidePad }} />
-      {/* Панель */}
       <div style={{
         width: `calc(100% - ${sidePad * 2}px)`,
         maxWidth,
@@ -146,16 +142,14 @@ const Chat = () => {
           </button>
         </div>
       </div>
-      {/* Отступ между панелью и фото */}
       <div style={{ height: sidePad }} />
-
-      {/* Фото баннер сразу под панелью */}
+      {/* Фото баннер сразу под панелью! */}
       <div
         style={{
           width: `calc(100% - ${sidePad * 2}px)`,
           maxWidth,
           margin: "0 auto",
-          marginTop: panelHeight + sidePad, // фото всегда под панелью!
+          marginTop: sidePad, // минимальный аккуратный отступ!
           borderRadius: 26,
           overflow: "hidden",
           boxShadow: "0 4px 28px 0 rgba(55,40,120,0.14)",
@@ -179,14 +173,12 @@ const Chat = () => {
           }}
         />
       </div>
-
-      {/* Окно сообщений */}
       <div style={{
         width: "100%",
         maxWidth,
         margin: "0 auto",
         boxSizing: "border-box",
-        height: `calc(100vh - ${BTN_SIZE + (showTemplates ? TEMPLATE_BTN_SIZE * PRESET_TEMPLATES.length + sidePad : 0) + fixedPaddingTop + sidePad}px)`,
+        height: `calc(100vh - ${BTN_SIZE + sidePad}px)`,
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
@@ -232,8 +224,6 @@ const Chat = () => {
           <div ref={messagesEndRef} />
         </div>
       </div>
-
-      {/* Готовые шаблоны над полем */}
       {showTemplates && (
         <div style={{
           position: "fixed",
@@ -304,8 +294,6 @@ const Chat = () => {
           ))}
         </div>
       )}
-
-      {/* Фиксированное поле ввода */}
       <form
         onSubmit={handleSubmit}
         style={{
