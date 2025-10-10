@@ -38,21 +38,22 @@ const Chat = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  // Ключ: теперь снизу учитываем только один sidePad 
+  // Главное: НЕ учитываем размер поля для сообщения – оно поверх layout!
   const chatAreaHeight = `calc(100vh - ${panelHeight + sidePad * 2}px)`;
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!userInput.trim()) return;
-    setMessages((prev) => [...prev, { role: "user", text: userInput }]);
+    setMessages(prev => [...prev, { role: "user", text: userInput }]);
     setUserInput("");
     setInputDisabled(true);
     setTimeout(() => {
       const reply = FAKE_ANSWERS[Math.floor(Math.random() * FAKE_ANSWERS.length)];
-      setMessages((prev) => [...prev, { role: "assistant", text: reply }]);
+      setMessages(prev => [...prev, { role: "assistant", text: reply }]);
       setInputDisabled(false);
     }, 700);
   };
+
   const clearChat = () => {
     setMessages([]);
     setUserInput("");
@@ -105,13 +106,13 @@ const Chat = () => {
           </button>
         </div>
       </div>
-      {/* Контейнер под панелью */}
+      {/* Контейнер с чатом и баннером */}
       <div
         style={{
           width: "100%",
           maxWidth,
           margin: "0 auto",
-          marginTop: panelHeight + sidePad,
+          marginTop: panelHeight + sidePad, // фото ниже панели ровно на sidePad
           boxSizing: "border-box",
           height: chatAreaHeight,
           display: "flex",
@@ -120,11 +121,11 @@ const Chat = () => {
           overflow: "hidden",
         }}
       >
-        {/* Баннер, строго после панели с отступом вниз */}
+        {/* Баннер — строго sidePad ниже панели */}
         <div
           style={{
             width: `calc(100% - ${sidePad * 2}px)`,
-            maxWidth: maxWidth,
+            maxWidth,
             marginBottom: sidePad,
             borderRadius: 26,
             overflow: "hidden",
@@ -146,7 +147,7 @@ const Chat = () => {
             }}
           />
         </div>
-        {/* Блок сообщений, скролл только если нужно */}
+        {/* Сообщения */}
         <div
           style={{
             width: "100%",
