@@ -21,6 +21,15 @@ const panelBg = "#131313";
 const bgColor = "#181818";
 const maxWidth = 560;
 
+const FAKE_ANSWERS = [
+  "Привет! Я Nora, чем могу помочь?",
+  "Расскажи, о чём бы ты хотел поговорить?",
+  "Я готова ответить на любые вопросы!",
+  "Пиши свой запрос, я отвечу!",
+];
+
+// Для теста: ассистент всегда отвечает случайной фразой, чтобы не было ошибки связи.
+// Для реального GPT-эндпоинта — раскомментируй fetch ниже.
 const Chat = () => {
   const [userInput, setUserInput] = useState("");
   const [messages, setMessages] = useState([]);
@@ -39,6 +48,15 @@ const Chat = () => {
     setUserInput("");
     setInputDisabled(true);
 
+    // ФЕЙК-ответ для теста. Для реального GPT — замени на fetch-команду.
+    setTimeout(() => {
+      const reply = FAKE_ANSWERS[Math.floor(Math.random() * FAKE_ANSWERS.length)];
+      setMessages(prev => [...prev, { role: "assistant", text: reply }]);
+      setInputDisabled(false);
+    }, 700);
+
+    /*
+    // Для реального GPT backend:
     try {
       const response = await fetch("/api/gpt", {
         method: "POST",
@@ -53,6 +71,7 @@ const Chat = () => {
       setMessages(prev => [...prev, { role: "assistant", text: "Ошибка связи с сервером." }]);
     }
     setInputDisabled(false);
+    */
   };
 
   const clearChat = () => {
@@ -123,18 +142,19 @@ const Chat = () => {
           minHeight: `calc(100vh - ${panelHeight * 2 + sidePad * 4}px)`,
         }}
       >
-        {/* Фото Nora — во всю ширину */}
+        {/* Фото Nora — с отступами по бокам */}
         <div
           style={{
-            width: "100%",
+            width: `calc(100% - ${sidePad * 2}px)`,
             margin: "0 auto",
             borderRadius: borderRadius,
             overflow: "hidden",
             boxSizing: "border-box",
+            marginBottom: sidePad,
+            background: "#222",
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            marginBottom: sidePad,
           }}
         >
           <img
@@ -145,11 +165,13 @@ const Chat = () => {
               height: "auto",
               borderRadius: borderRadius,
               display: "block",
+              minHeight: 120,
               objectFit: "cover",
+              background: "none",
             }}
           />
         </div>
-        {/* СООБЩЕНИЯ c margin по бокам */}
+        {/* СООБЩЕНИЯ C margin по бокам */}
         <div style={{ width: "100%" }}>
           {messages.map((msg, idx) => (
             <div
