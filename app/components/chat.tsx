@@ -29,21 +29,21 @@ const Chat = () => {
   const [darkMode, setDarkMode] = useState(true);
   const messagesEndRef = useRef(null);
 
+  // Скроллим к последнему сообщению
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  // Отправка на свой сервер GPT (проверь адрес API!)
+  // Пример с GPT сервером (обнови endpoint!)
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!userInput.trim()) return;
-    const userMessage = { role: "user", text: userInput };
-    setMessages(prev => [...prev, userMessage]);
+
+    setMessages(prev => [...prev, { role: "user", text: userInput }]);
     setUserInput("");
     setInputDisabled(true);
 
     try {
-      // ЗАМЕНИ /api/gpt на свой реальный эндпоинт!
       const response = await fetch("/api/gpt", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -111,7 +111,7 @@ const Chat = () => {
           </button>
         </div>
       </div>
-      {/* Скроллируемая часть: фото (первым) + сообщения */}
+      {/* ЧАТ-ОБЛАСТЬ: СКРОЛЛИРУЕМАЯ, ФОТО ПЕРВЫМ */}
       <div
         style={{
           width: "100%",
@@ -122,12 +122,13 @@ const Chat = () => {
           flexDirection: "column",
           alignItems: "center",
           overflowY: "auto",
-          paddingTop: sidePad + panelHeight + sidePad, // отступы сверху: sidePad, панель, sidePad
-          paddingBottom: panelHeight + sidePad * 2,   // отступы снизу: панель ввода + sidePad
+          // главная магия!
+          paddingTop: sidePad + panelHeight + sidePad, // отступ от фиксированной панели до фото
+          paddingBottom: panelHeight + sidePad * 2,
           minHeight: `calc(100vh - ${panelHeight * 2 + sidePad * 4}px)`,
         }}
       >
-        {/* Фото Nora */}
+        {/* ФОТО НОРА */}
         <div
           style={{
             width: "100%",
@@ -156,7 +157,7 @@ const Chat = () => {
             }}
           />
         </div>
-        {/* Сообщения идут строго ПОД фото! */}
+        {/* СООБЩЕНИЯ ПОСЛЕ ФОТО */}
         {messages.map((msg, idx) => (
           <div
             key={idx}
