@@ -14,7 +14,7 @@ const ICON_SIZE_PANEL = 18;
 const ICON_SIZE_SEND = 28;
 const BTN_SIZE = 48;
 const borderRadius = 22;
-const sidePad = 16; // чуть меньше для мобильных
+const sidePad = 16;
 const panelHeight = 62;
 const panelBg = "#131313";
 const bgColor = "#181818";
@@ -153,7 +153,6 @@ const Chat = () => {
               maxWidth: "100%",
               marginBottom: 0,
               marginTop: 0,
-              // Для мобильных делаем тач-отступ
               touchAction: "manipulation",
             }}
             disabled={inputDisabled}
@@ -180,7 +179,7 @@ const Chat = () => {
           overflow: "hidden",
         }}
       >
-        {/* Баннер */}
+        {/* Баннер, обрезанный сверху/снизу по 10% */}
         <div
           style={{
             width: `calc(100% - ${sidePad * 2}px)`,
@@ -194,6 +193,8 @@ const Chat = () => {
             justifyContent: "center",
             alignItems: "center",
             flexShrink: 0,
+            height: 132,               // фиксированная высота баннера, можно менять под дизайн
+            position: "relative",
           }}
         >
           <img
@@ -201,8 +202,13 @@ const Chat = () => {
             alt="Nora AI баннер"
             style={{
               width: "100%",
-              height: "auto",
+              height: "120%",           // увеличение, чтобы 10% сверху/снизу попало вне видимой области
+              objectFit: "cover",
+              objectPosition: "center 50%",
               display: "block",
+              position: "absolute",
+              top: "-10%",
+              left: 0,
             }}
           />
         </div>
