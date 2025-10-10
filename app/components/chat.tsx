@@ -49,7 +49,7 @@ const Chat = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  // Адаптивная высота чата
+  // Адаптивная высота чата: скорректируй при необходимости под твой layout
   const chatAreaHeight = `calc(100vh - ${panelHeight + sidePad * 2 + 160}px)`;
 
   const handleSubmit = (e) => {
@@ -133,7 +133,7 @@ const Chat = () => {
           overflow: "hidden",
         }}
       >
-        {/* Баннер — оригинальный размер */}
+        {/* Баннер — без обрезки, с равными отступами по бокам */}
         <div
           style={{
             width: `calc(100% - ${sidePad * 2}px)`,
@@ -207,18 +207,16 @@ const Chat = () => {
         </div>
       </div>
 
-      {/* Шаблонные ответы над вводом с отступом, тёмные */}
+      {/* Шаблонные ответы растянуты, с равными боковыми отступами */}
       <div
         style={{
           position: "fixed",
           left: "50%",
-          bottom: panelHeight + sidePad * 2 + sidePad, // отступ между полем и шаблонами
+          bottom: panelHeight + sidePad * 2 + sidePad,
           transform: "translateX(-50%)",
           width: `calc(100% - ${sidePad * 2}px)`,
           maxWidth,
           display: "flex",
-          flexDirection: "row",
-          justifyContent: "space-between",
           gap: 10,
           paddingLeft: sidePad,
           paddingRight: sidePad,
