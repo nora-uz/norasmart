@@ -1,15 +1,19 @@
 import React, { useState, useEffect, useRef } from "react";
 
-// PNG иконки (реально прозрачные)
+const ICONS = {
+  moon: "/icons/moon.png",
+  sun: "/icons/sun.png",
+  trash: "/icons/trash.png",
+  phone: "/icons/phone.png",
+  telegram: "/icons/telegram.png",
+  arrow: "/icons/arrow.png"
+};
+
 const ICON_SIZE = 32;
-const BTN_SIZE = 44; // размер кнопки (фон)
-const ICON_MOON = "https://user-gen-media-assets.s3.amazonaws.com/seedream_images/350cb7b8-4f7f-43db-9c71-c5388ac17f4e.png";
-const ICON_SUN = "https://user-gen-media-assets.s3.amazonaws.com/seedream_images/baf09364-3f86-47e1-8134-0c505aeaf9cc.png";
-const ICON_TRASH = "https://user-gen-media-assets.s3.amazonaws.com/seedream_images/a1a10e8a-7ce4-4789-8e72-0cbb22504d9c.png";
-const ICON_PHONE = "https://user-gen-media-assets.s3.amazonaws.com/seedream_images/09b38cb2-5ed3-402a-ba48-f5716e26968a.png";
-const ICON_TELEGRAM = "https://user-gen-media-assets.s3.amazonaws.com/seedream_images/50394a9d-0d54-499b-b3b0-2a8a96dc316f.png";
-const ICON_ARROW = "https://user-gen-media-assets.s3.amazonaws.com/seedream_images/4f06cab0-ec48-4875-8a37-e4f27fb4da0c.png";
-const MAIN_IMG = "https://user-gen-media-assets.s3.amazonaws.com/seedream_images/70a60994-809a-473d-accc-36284ba46e1c.png";
+const BTN_SIZE = 44;
+const borderRadius = 18;
+const sidePad = 18;
+const panelHeight = BTN_SIZE;
 
 const Chat = () => {
   const [userInput, setUserInput] = useState("");
@@ -35,12 +39,8 @@ const Chat = () => {
     setUserInput("");
   };
 
-  // --- Стили ---
-  const bgColor = "#1C1C1C";
   const panelBg = "#171717";
-  const borderRadius = 18;
-  const sidePad = 18;
-  const panelHeight = BTN_SIZE;
+  const bgColor = "#1C1C1C";
 
   return (
     <div
@@ -51,6 +51,7 @@ const Chat = () => {
         flexDirection: "column",
         alignItems: "center",
         padding: 0,
+        overflow: "hidden"
       }}
     >
       {/* Панель */}
@@ -75,7 +76,7 @@ const Chat = () => {
         <div style={{
           display: "flex",
           alignItems: "center",
-          gap: 13,
+          gap: 13
         }}>
           <button
             style={iconBtn(panelBg)}
@@ -83,31 +84,31 @@ const Chat = () => {
             aria-label="Тема"
           >
             <img
-              src={darkMode ? ICON_SUN : ICON_MOON}
+              src={darkMode ? ICONS.sun : ICONS.moon}
               alt="Theme"
               style={iconImg}
             />
           </button>
           <button style={iconBtn(panelBg)} onClick={clearChat} aria-label="Очистить чат">
-            <img src={ICON_TRASH} alt="Trash" style={iconImg} />
+            <img src={ICONS.trash} alt="Trash" style={iconImg} />
           </button>
           <button
             style={iconBtn(panelBg)}
             aria-label="Позвонить"
             onClick={() => window.open("tel:+1234567890")}
           >
-            <img src={ICON_PHONE} alt="Phone" style={iconImg} />
+            <img src={ICONS.phone} alt="Phone" style={iconImg} />
           </button>
           <button
             style={iconBtn(panelBg)}
             aria-label="Telegram"
             onClick={() => window.open("https://t.me/", "_blank")}
           >
-            <img src={ICON_TELEGRAM} alt="Telegram" style={iconImg} />
+            <img src={ICONS.telegram} alt="Telegram" style={iconImg} />
           </button>
         </div>
       </div>
-      {/* Фото ровно под панелью, идеально выровнено */}
+      {/* Картинка - строго под панелью, фиксированная, скруглённая */}
       <div
         style={{
           width: `calc(100vw - ${sidePad * 2}px)`,
@@ -121,7 +122,7 @@ const Chat = () => {
         }}
       >
         <img
-          src={MAIN_IMG}
+          src="/main-image.png"
           alt="Nora AI"
           style={{
             width: "100%",
@@ -141,7 +142,7 @@ const Chat = () => {
         boxSizing: "border-box",
         minHeight: "100vh",
         padding: `18px ${sidePad}px 110px ${sidePad}px`,
-        marginTop: 20,
+        marginTop: "10px"
       }}>
         {messages.map((msg, idx) => (
           <div key={idx} style={{
@@ -169,7 +170,7 @@ const Chat = () => {
         ))}
         <div ref={messagesEndRef} />
       </div>
-      {/* Поле ввода и кнопка */}
+      {/* Поле ввода и кнопка PNG стрелка */}
       <form onSubmit={handleSubmit} style={{
         position: "fixed",
         left: sidePad, right: sidePad, bottom: sidePad,
@@ -215,14 +216,13 @@ const Chat = () => {
           opacity: inputDisabled ? 0.7 : 1,
           boxShadow: "none"
         }}>
-          <img src={ICON_ARROW} alt="Send" style={{width: 32, height: 32}} />
+          <img src={ICONS.arrow} alt="Send" style={iconImg} />
         </button>
       </form>
     </div>
   );
 };
 
-// Стиль кнопки — круглый фон, прозрачная PNG-иконка внутри
 const iconBtn = (color) => ({
   background: color,
   border: "none",
