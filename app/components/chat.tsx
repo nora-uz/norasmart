@@ -20,6 +20,17 @@ const panelBg = "#131313";
 const bgColor = "#181818";
 const maxWidth = 560;
 
+const PRESET_TEMPLATES = [
+  {
+    title: "Здоровье",
+    description: "Советы по самочувствию во время беременности",
+  },
+  {
+    title: "Эмоции",
+    description: "Как справиться с тревогой и стрессом",
+  },
+];
+
 const FAKE_ANSWERS = [
   "Привет! Я Nora, чем могу помочь?",
   "Расскажи, о чём бы ты хотел поговорить?",
@@ -38,6 +49,9 @@ const Chat = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
+  // Главное: НЕ учитываем размер поля для сообщения – оно поверх layout!
+  const chatAreaHeight = `calc(100vh - ${panelHeight + sidePad * 2}px)`;
+
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!userInput.trim()) return;
@@ -50,6 +64,7 @@ const Chat = () => {
       setInputDisabled(false);
     }, 700);
   };
+
   const clearChat = () => {
     setMessages([]);
     setUserInput("");
@@ -58,25 +73,22 @@ const Chat = () => {
   return (
     <div
       style={{
-        display: "flex",
-        flexDirection: "column",
-        height: "100vh",
-        width: "100vw",
         background: bgColor,
-        margin: 0,
-        padding: 0,
+        width: "100vw",
+        height: "100vh",
         overflow: "hidden",
+        position: "relative",
       }}
     >
-      {/* ----- Панель ----- */}
+      {/* Панель */}
       <div
         style={{
-          flex: "0 0 auto",
-          width: "100%",
+          position: "fixed",
+          top: sidePad,
+          left: "50%",
+          transform: "translateX(-50%)",
+          width: `calc(100% - ${sidePad * 2}px)`,
           maxWidth,
-          margin: "0 auto",
-          marginTop: sidePad,
-          marginBottom: sidePad,
           height: panelHeight,
           background: panelBg,
           color: "#fff",
@@ -86,6 +98,7 @@ const Chat = () => {
           padding: "0 18px",
           justifyContent: "space-between",
           boxSizing: "border-box",
+          zIndex: 2000,
         }}
       >
         <div style={{ fontWeight: 600, fontSize: 19 }}>Nora AI</div>
@@ -104,21 +117,81 @@ const Chat = () => {
           </button>
         </div>
       </div>
-      {/* ----- Контент между панелью и полем ввода ----- */}
+
+      {/* Шаблоны над полем ввода */}
       <div
         style={{
-          flex: "1 1 auto",
+          width: "100%",
+          maxWidth,
+          display: "flex",
+          justifyContent: "space-between",
+          margin: "0 auto 14px auto",
+          paddingLeft: sidePad,
+          paddingRight: sidePad,
+          marginTop: panelHeight + sidePad, // Баннер чуть ниже панели, шаблоны прямо под ним
+        }}
+      >
+        <button
+          style={{
+            background: "#fff",
+            color: panelBg,
+            border: "none",
+            borderRadius: 18,
+            padding: "12px 18px",
+            fontSize: 16,
+            minWidth: 110,
+            boxShadow: "0 2px 10px 0 rgba(55,40,120,0.12)",
+            cursor: inputDisabled ? "not-allowed" : "pointer",
+            textAlign: "left",
+            display: "flex",
+            flexDirection: "column"
+          }}
+          disabled={inputDisabled}
+          onClick={() => setUserInput(PRESET_TEMPLATES[0].description)}
+        >
+          <span style={{ fontWeight: 600, fontSize: 18 }}>{PRESET_TEMPLATES[0].title}</span>
+          <span style={{ fontSize: 14, color: "#555" }}>{PRESET_TEMPLATES[0].description}</span>
+        </button>
+        
+        <button
+          style={{
+            background: "#fff",
+            color: panelBg,
+            border: "none",
+            borderRadius: 18,
+            padding: "12px 18px",
+            fontSize: 16,
+            minWidth: 110,
+            boxShadow: "0 2px 10px 0 rgba(55,40,120,0.12)",
+            cursor: inputDisabled ? "not-allowed" : "pointer",
+            textAlign: "left",
+            display: "flex",
+            flexDirection: "column"
+          }}
+          disabled={inputDisabled}
+          onClick={() => setUserInput(PRESET_TEMPLATES[1].description)}
+        >
+          <span style={{ fontWeight: 600, fontSize: 18 }}>{PRESET_TEMPLATES[1].title}</span>
+          <span style={{ fontSize: 14, color: "#555" }}>{PRESET_TEMPLATES[1].description}</span>
+        </button>
+      </div>
+
+      {/* Контейнер с чатом и баннером */}
+      <div
+        style={{
           width: "100%",
           maxWidth,
           margin: "0 auto",
+          marginTop: panelHeight + sidePad * 2 + 66, // Плюсуем высоту шаблонов
           boxSizing: "border-box",
+          height: chatAreaHeight,
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
           overflow: "hidden",
         }}
       >
-        {/* ---- Баннер ---- */}
+        {/* Баннер — строго sidePad ниже панели */}
         <div
           style={{
             width: `calc(100% - ${sidePad * 2}px)`,
@@ -144,7 +217,7 @@ const Chat = () => {
             }}
           />
         </div>
-        {/* ---- Сообщения, строго скролится только содержимое и баннер остаётся сверху ---- */}
+        {/* Сообщения */}
         <div
           style={{
             width: "100%",
@@ -184,20 +257,23 @@ const Chat = () => {
           <div ref={messagesEndRef} />
         </div>
       </div>
-      {/* ----- Поле ввода ----- */}
+
+      {/* Фиксированное поле ввода снизу */}
       <form
         onSubmit={handleSubmit}
         style={{
-          flex: "0 0 auto",
-          width: "100%",
+          position: "fixed",
+          left: "50%",
+          bottom: sidePad,
+          transform: "translateX(-50%)",
+          width: `calc(100% - ${sidePad * 2}px)`,
           maxWidth,
-          margin: "0 auto",
-          marginBottom: sidePad,
           background: panelBg,
           borderRadius: borderRadius,
           height: panelHeight,
           display: "flex",
           alignItems: "center",
+          zIndex: 2000,
           padding: 0,
           boxSizing: "border-box",
         }}
