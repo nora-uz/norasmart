@@ -1,5 +1,7 @@
+"use client";
 import React, { useState, useEffect, useRef } from "react";
 
+// --- весь твой код, как есть ниже ---
 const ICONS = {
   telegram: "https://cdn-icons-png.flaticon.com/512/9821/9821637.png",
   sun: "https://cdn-icons-png.flaticon.com/512/16769/16769231.png",
@@ -20,14 +22,8 @@ const bgColor = "#181818";
 const maxWidth = 560;
 
 const PRESET_TEMPLATES = [
-  {
-    title: "Здоровье",
-    description: "Советы по самочувствию",
-  },
-  {
-    title: "Эмоции",
-    description: "Как справиться со стрессом",
-  },
+  { title: "Здоровье", description: "Советы по самочувствию" },
+  { title: "Эмоции", description: "Как справиться со стрессом" },
 ];
 
 const FAKE_ANSWERS = [
@@ -117,7 +113,6 @@ const Chat = () => {
           </button>
         </div>
       </div>
-
       {/* Контент и баннер */}
       <div style={{
         width: "100%",
@@ -194,7 +189,6 @@ const Chat = () => {
           <div ref={messagesEndRef} />
         </div>
       </div>
-
       {/* Готовые шаблоны — над полем, равные отступы между, исчезают после сообщения */}
       {showTemplates && (
         <div style={{
@@ -259,7 +253,6 @@ const Chat = () => {
           ))}
         </div>
       )}
-
       {/* Поле для сообщения и кнопка */}
       <form
         onSubmit={handleSubmit}
