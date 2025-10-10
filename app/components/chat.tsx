@@ -51,7 +51,7 @@ const FAKE_ANSWERS = [
   "Пиши свой запрос, я отвечу!",
 ];
 
-// ---- НОВЫЕ ЭЛЕМЕНТЫ ----
+// --- интерактивы ---
 const EMOJI_TERM = "🤰";
 const EMOJI_STATE = "😊";
 const termGradient = "linear-gradient(135deg,#fde047 0%,#fbbf24 100%)"; // желтый градиент
@@ -65,7 +65,7 @@ const moods = [
   { label: "Плохо", emoji: "😣" }
 ];
 
-const InteractiveLine = ({ onSelect }) => {
+function InteractiveLine({ onSelect }) {
   const [showMonthList, setShowMonthList] = useState(false);
   const [showMoodList, setShowMoodList] = useState(false);
   const [selectedMonth, setSelectedMonth] = useState(null);
@@ -85,12 +85,12 @@ const InteractiveLine = ({ onSelect }) => {
     if (selectedMonth === null || selectedMood === null) setHasSent(false);
   }, [selectedMonth, selectedMood]);
 
-  const boxPad = 16; // отступы как у баннера и панели
+  const boxPad = 16;
   const fontSizeLabel = 15;
   const fontSizeChoice = 18;
   const dropdownAnim = {
-    animation: "dropdown 320ms cubic-bezier(.6,.45,0,1.08)",
-    transform: "translateY(-7px)",
+    animation: "dropdown 320ms cubic-bezier(.61,.55,0,1.08)",
+    transform: "translateY(-6px)",
     opacity: 1,
     pointerEvents: "auto",
   };
@@ -99,8 +99,8 @@ const InteractiveLine = ({ onSelect }) => {
     <>
       <style>{`
         @keyframes dropdown {
-          0% { opacity: 0; transform: translateY(-32px);}
-          100% { opacity: 1; transform: translateY(-7px);}
+          0% { opacity: 0; transform: translateY(-36px);}
+          100% { opacity: 1; transform: translateY(-6px);}
         }
       `}</style>
       <div style={{
@@ -122,7 +122,6 @@ const InteractiveLine = ({ onSelect }) => {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          boxSizing: "border-box",
           minWidth: 128
         }}>
           <div
@@ -192,7 +191,6 @@ const InteractiveLine = ({ onSelect }) => {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          boxSizing: "border-box",
           minWidth: 128
         }}>
           <div
@@ -258,8 +256,7 @@ const InteractiveLine = ({ onSelect }) => {
       </div>
     </>
   );
-};
-// ---- КОНЕЦ ЭЛЕМЕНТОВ ----
+}
 
 const Chat = () => {
   const [userInput, setUserInput] = useState("");
@@ -383,7 +380,7 @@ const Chat = () => {
           }}
         />
       </div>
-      {/* ---- ИНТЕРАКТИВЫ ---- */}
+      {/* ---- интерактивы ---- */}
       <InteractiveLine onSelect={handleInteractive} />
       {/* Сообщения */}
       <div style={{
