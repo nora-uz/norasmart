@@ -49,7 +49,7 @@ const Chat = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  // Адаптивная высота чата под все слои
+  // Адаптивная высота чата
   const chatAreaHeight = `calc(100vh - ${panelHeight + sidePad * 2 + 160}px)`;
 
   const handleSubmit = (e) => {
@@ -133,7 +133,7 @@ const Chat = () => {
           overflow: "hidden",
         }}
       >
-        {/* Баннер, не слишком укороченный */}
+        {/* Баннер — оригинальный размер */}
         <div
           style={{
             width: `calc(100% - ${sidePad * 2}px)`,
@@ -147,7 +147,7 @@ const Chat = () => {
             justifyContent: "center",
             alignItems: "center",
             flexShrink: 0,
-            height: 168, // баннер стал чуть выше!
+            height: 208, // оригинальная (или желаемая) высота
             position: "relative",
           }}
         >
@@ -156,12 +156,12 @@ const Chat = () => {
             alt="Nora AI баннер"
             style={{
               width: "100%",
-              height: "113%",           // обрезаем совсем чуть-чуть
+              height: "100%",
               objectFit: "cover",
-              objectPosition: "center 50%",
+              objectPosition: "center center",
               display: "block",
-              position: "absolute",
-              top: "-6.5%",
+              position: "relative",
+              top: 0,
               left: 0,
             }}
           />
@@ -207,7 +207,7 @@ const Chat = () => {
         </div>
       </div>
 
-      {/* Шаблонные ответы над вводом */}
+      {/* Шаблонные ответы над вводом с отступами */}
       <div
         style={{
           position: "fixed",
