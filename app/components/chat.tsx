@@ -10,14 +10,14 @@ const ICONS = {
 };
 
 const BANNER = "https://user-gen-media-assets.s3.amazonaws.com/seedream_images/4c36a715-f500-4186-8955-631a09fac0ed.png";
-const maxWidth = 560;
-const borderRadius = 22;
-const BTN_SIZE = 62;
-const SEND_BTN_SIZE = 94;
+const maxWidth = 420; // стало меньше
+const borderRadius = 16; // чуть меньше
+const BTN_SIZE = 54;
+const SEND_BTN_SIZE = 74;
 const ICON_SIZE_PANEL = 18;
-const ICON_SIZE_SEND = 28;
-const sidePad = 16;
-const panelHeight = 62;
+const ICON_SIZE_SEND = 24;
+const sidePad = 12;
+const panelHeight = 48;
 const gradient = "linear-gradient(135deg,#6a11cb 0%,#2575fc 100%)";
 
 const FAKE_ANSWERS = [
@@ -57,33 +57,47 @@ function InteractiveLine({ onSelect }) {
       width: "100%",
       display: "flex",
       flexDirection: "column",
-      gap: 22,
+      gap: 10, // было 22
       paddingLeft: sidePad,
       paddingRight: sidePad
     }}>
-      <div style={{ background: gradient, borderRadius, padding: `18px ${sidePad}px` }}>
-        <div style={{ fontWeight: 700, fontSize: 15, color: "#fff", marginBottom: 12 }}>
+      <div style={{
+        background: "#fff", // убран градиент
+        borderRadius,
+        padding: `8px ${sidePad}px`
+      }}>
+        <div style={{
+          fontWeight: 400, // стало обычным
+          fontSize: 15,
+          color: "#6a11cb",
+          marginBottom: 8
+        }}>
           Выберите срок беременности:
         </div>
-        <div style={{ display: "flex", gap: 12, justifyContent: "center" }}>
+        <div style={{
+          display: "flex",
+          gap: 8, // было 12
+          justifyContent: "center"
+        }}>
           {Array.from({ length: 9 }).map((_, i) => (
             <button
               key={i + 1}
               onClick={() => setSelectedMonth(i + 1)}
               style={{
-                background: selectedMonth === i + 1 ? "#fff6" : "transparent",
-                color: "#fff",
-                borderRadius: 12,
+                background: selectedMonth === i + 1 ? gradient : "#f6f7fb", // фон выбранного — градиент
+                color: selectedMonth === i + 1 ? "#fff" : "#6a11cb",
+                borderRadius: 9,
                 border: "none",
-                fontSize: 18,
-                fontWeight: 600,
-                padding: "10px 0",
+                fontSize: 15,
+                fontWeight: 500,
+                padding: "6px 0",
                 cursor: "pointer",
-                width: 40,
+                width: 34,
                 outline: "none",
-                borderWidth: selectedMonth === i + 1 ? 2 : 0,
+                borderWidth: 0,
                 borderStyle: "solid",
-                borderColor: "#fff"
+                boxShadow: selectedMonth === i + 1 ? "0 0 6px #2575fc55" : "none",
+                transition: "background 0.3s"
               }}
             >
               {i + 1}
@@ -91,34 +105,48 @@ function InteractiveLine({ onSelect }) {
           ))}
         </div>
       </div>
-      <div style={{ background: gradient, borderRadius, padding: `18px ${sidePad}px` }}>
-        <div style={{ fontWeight: 700, fontSize: 15, color: "#fff", marginBottom: 12 }}>
+      <div style={{
+        background: "#fff", // убран градиент
+        borderRadius,
+        padding: `8px ${sidePad}px`
+      }}>
+        <div style={{
+          fontWeight: 400, // стало обычным
+          fontSize: 15,
+          color: "#6a11cb",
+          marginBottom: 8
+        }}>
           Выберите самочувствие:
         </div>
-        <div style={{ display: "flex", gap: 14, justifyContent: "center" }}>
+        <div style={{
+          display: "flex",
+          flexDirection: "column", // столбик
+          gap: 8,
+          alignItems: "stretch"
+        }}>
           {moods.map((item, idx) => (
             <button
               key={item.label}
               onClick={() => setSelectedMood(idx)}
               style={{
-                background: selectedMood === idx ? "#fff6" : "transparent",
-                color: "#fff",
-                borderRadius: 12,
+                background: selectedMood === idx ? gradient : "#f6f7fb",
+                color: selectedMood === idx ? "#fff" : "#6a11cb",
+                borderRadius: 9,
                 border: "none",
-                fontSize: 18,
-                fontWeight: 600,
+                fontSize: 15,
+                fontWeight: 500,
                 cursor: "pointer",
                 display: "flex",
                 alignItems: "center",
-                gap: 7,
-                padding: "10px 18px",
+                gap: 8,
+                padding: "7px 12px",
                 outline: "none",
-                borderWidth: selectedMood === idx ? 2 : 0,
-                borderStyle: "solid",
-                borderColor: "#fff"
+                boxShadow: selectedMood === idx ? "0 0 6px #2575fc55" : "none",
+                width: "100%",
+                transition: "background 0.3s"
               }}
             >
-              <span style={{ fontSize: 22 }}>{item.emoji}</span> {item.label}
+              <span style={{ fontSize: 19 }}>{item.emoji}</span> {item.label}
             </button>
           ))}
         </div>
@@ -199,8 +227,11 @@ const Chat = () => {
   return (
     <div style={{
       background: theme.bgColor,
-      width: "100vw", minHeight: 800, overflow: "hidden",
-      position: "relative", transition: "background 0.4s"
+      width: "100vw",
+      minHeight: 600,
+      overflow: "hidden",
+      position: "relative",
+      transition: "background 0.4s"
     }}>
       <div style={{ height: sidePad }} />
       {/* Панель */}
@@ -221,7 +252,7 @@ const Chat = () => {
         zIndex: 2000,
         transition: "background 0.4s, color 0.4s"
       }}>
-        <div style={{ fontWeight: 800, fontSize: 25, marginRight: sidePad }}>Nora AI</div>
+        <div style={{ fontWeight: 800, fontSize: 21, marginRight: sidePad }}>Nora AI</div>
         <div style={{
           display: "flex",
           alignItems: "center",
@@ -247,8 +278,8 @@ const Chat = () => {
       <div
         style={{
           width: `calc(100% - ${sidePad * 2}px)`, maxWidth,
-          margin: "0 auto", borderRadius: 26, overflow: "hidden",
-          boxShadow: "0 4px 28px 0 rgba(55,40,120,0.14)",
+          margin: "0 auto", borderRadius: 20, overflow: "hidden",
+          boxShadow: "0 4px 18px 0 rgba(55,40,120,0.12)",
           background: theme.bgColor,
           display: "flex", justifyContent: "center",
           alignItems: "center", flexShrink: 0, position: "relative"
@@ -295,19 +326,19 @@ const Chat = () => {
             <div key={idx} style={{
               display: "flex",
               justifyContent: msg.role === "assistant" ? "flex-start" : "flex-end",
-              marginBottom: 12,
+              marginBottom: 10,
               width: "100%",
             }}>
               <div style={{
                 background: msg.role === "assistant" ? theme.assistantBubble : theme.userBubble,
                 color: msg.role === "assistant" ? theme.assistantText : theme.userText,
                 borderRadius: borderRadius,
-                padding: "14px 20px",
-                fontSize: 16,
+                padding: "11px 17px",
+                fontSize: 15,
                 lineHeight: 1.7,
                 border: "none",
                 maxWidth: "70%",
-                minWidth: 54,
+                minWidth: 44,
                 marginLeft: sidePad,
                 marginRight: sidePad,
                 wordBreak: "break-word",
@@ -345,7 +376,7 @@ const Chat = () => {
             borderRadius: borderRadius,
             height: BTN_SIZE,
             padding: `0 8px 0 ${sidePad}px`,
-            fontSize: 19,
+            fontSize: 17,
             background: theme.inputBg,
             color: theme.inputText,
             outline: "none",
