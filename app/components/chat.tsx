@@ -17,7 +17,7 @@ const BTN_SIZE = 48;
 const borderRadius = 22;
 const sidePad = 18;
 const panelHeight = 62;
-const photoHeight = 200; // фиксированная высота фото (можешь изменить)
+const photoHeight = 200; // задать по желанию
 const panelBg = "#131313";
 const bgColor = "#181818";
 const maxWidth = 560;
@@ -33,11 +33,31 @@ const Chat = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  const handleSubmit = (e) => {
+  // Новый handleSubmit с GPT
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!userInput.trim()) return;
-    setMessages(prev => [...prev, { role: "user", text: userInput }]);
+    const userMessage = { role: "user", text: userInput };
+    setMessages(prev => [...prev, userMessage]);
     setUserInput("");
+    setInputDisabled(true);
+
+    try {
+      // URL и обработка — настрой под свой backend!
+      const response = await fetch("/api/gpt", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: userInput }),
+      });
+      const data = await response.json();
+      const assistantMessage = {
+        role: "assistant",
+        text: data.text || "Ошибка ответа от ассистента.",
+      };
+      setMessages(prev => [...prev, assistantMessage]);
+    } catch (err) {
+      setMessages(prev => [...prev, { role: "assistant", text: "Ошибка связи с сервером." }]);
+    }
     setInputDisabled(false);
   };
 
@@ -93,11 +113,11 @@ const Chat = () => {
           </button>
         </div>
       </div>
-      {/* Фиксированная фотография Nora под панелью */}
+      {/* Фиксированная фотография Nora под панелью с двойным отступом! */}
       <div
         style={{
           position: "fixed",
-          top: sidePad + panelHeight,
+          top: sidePad + panelHeight + sidePad,
           left: "50%",
           transform: "translateX(-50%)",
           width: `calc(100% - ${sidePad * 2}px)`,
@@ -131,7 +151,7 @@ const Chat = () => {
       <div
         style={{
           position: "absolute",
-          top: sidePad + panelHeight + photoHeight + sidePad, // сразу под фото
+          top: sidePad + panelHeight + sidePad + photoHeight + sidePad,
           left: 0,
           width: "100%",
           maxWidth: maxWidth,
@@ -143,7 +163,7 @@ const Chat = () => {
           overflowY: "auto",
           padding: `0 ${sidePad}px`,
           paddingBottom: panelHeight + sidePad * 2, // для фиксированного инпута
-          minHeight: `calc(100vh - ${panelHeight + photoHeight + sidePad * 3}px)`,
+          minHeight: `calc(100vh - ${panelHeight + photoHeight + sidePad * 4}px)`,
         }}
       >
         {messages.map((msg, idx) => (
