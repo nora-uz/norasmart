@@ -17,6 +17,7 @@ const BTN_SIZE = 48;
 const borderRadius = 22;
 const sidePad = 18;
 const panelHeight = 62;
+const photoHeight = 200; // фиксированная высота фото (можешь изменить)
 const panelBg = "#131313";
 const bgColor = "#181818";
 const maxWidth = 560;
@@ -39,6 +40,7 @@ const Chat = () => {
     setUserInput("");
     setInputDisabled(false);
   };
+
   const clearChat = () => {
     setMessages([]);
     setUserInput("");
@@ -51,9 +53,6 @@ const Chat = () => {
         minHeight: "100vh",
         width: "100vw",
         position: "relative",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
         overflow: "hidden",
       }}
     >
@@ -94,52 +93,59 @@ const Chat = () => {
           </button>
         </div>
       </div>
-      {/* Скроллируемая область: фото + сообщения */}
+      {/* Фиксированная фотография Nora под панелью */}
       <div
         style={{
+          position: "fixed",
+          top: sidePad + panelHeight,
+          left: "50%",
+          transform: "translateX(-50%)",
+          width: `calc(100% - ${sidePad * 2}px)`,
+          maxWidth: 370,
+          height: photoHeight,
+          borderRadius: borderRadius,
+          overflow: "hidden",
+          boxSizing: "border-box",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          zIndex: 1500,
+          background: "none",
+        }}
+      >
+        <img
+          src={MAIN_IMG}
+          alt="Nora AI"
+          style={{
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+            borderRadius: borderRadius,
+            display: "block",
+            background: "none",
+            boxShadow: "none",
+          }}
+        />
+      </div>
+      {/* Скроллируемая область для сообщений ПОД фото */}
+      <div
+        style={{
+          position: "absolute",
+          top: sidePad + panelHeight + photoHeight + sidePad, // сразу под фото
+          left: 0,
           width: "100%",
           maxWidth: maxWidth,
           margin: "0 auto",
           boxSizing: "border-box",
-          flex: 1,
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
           overflowY: "auto",
-          paddingTop: sidePad + panelHeight,     // отступ от панели
-          paddingBottom: sidePad + panelHeight,  // отступ для инпута
-          minHeight: 340,
+          padding: `0 ${sidePad}px`,
+          paddingBottom: panelHeight + sidePad * 2, // для фиксированного инпута
+          minHeight: `calc(100vh - ${panelHeight + photoHeight + sidePad * 3}px)`,
         }}
       >
-        {/* Фото Nora */}
-        <div
-          style={{
-            width: "100%",
-            maxWidth: 370,
-            margin: "0 auto",
-            borderRadius: borderRadius,
-            overflow: "hidden",
-            boxSizing: "border-box",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <img
-            src={MAIN_IMG}
-            alt="Nora AI"
-            style={{
-              width: "100%",
-              borderRadius: borderRadius,
-              display: "block",
-              background: "none",
-              boxShadow: "none",
-            }}
-          />
-        </div>
-        {/* Отступ после фото */}
-        <div style={{ height: sidePad }} />
-        {/* Сообщения пользователей и ассистента */}
         {messages.map((msg, idx) => (
           <div
             key={idx}
@@ -172,7 +178,7 @@ const Chat = () => {
         ))}
         <div ref={messagesEndRef} />
       </div>
-      {/* Фиксированное поле для ввода и нижний отступ */}
+      {/* Фиксированное поле ввода */}
       <form
         onSubmit={handleSubmit}
         style={{
