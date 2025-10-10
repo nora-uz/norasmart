@@ -60,12 +60,12 @@ const Chat = () => {
   const [messages, setMessages] = useState([]);
   const [inputDisabled, setInputDisabled] = useState(false);
   const [darkMode, setDarkMode] = useState(true);
-  const [containerHeight, setContainerHeight] = useState(window.innerHeight);
+  const [containerHeight, setContainerHeight] = useState(0);
   const messagesEndRef = useRef(null);
   const showTemplates = messages.length === 0;
   const theme = darkMode ? themes.dark : themes.light;
 
-  // 1. Ставим высоту на весь реальный экран
+  // Обновляем высоту только на клиенте
   useEffect(() => {
     const setVH = () => setContainerHeight(window.innerHeight);
     setVH();
@@ -332,7 +332,7 @@ const Chat = () => {
             background: theme.inputBg,
             color: theme.assistantText,
             outline: "none",
-            marginRight: 0, // нет gap справа
+            marginRight: 0,
             transition: "background 0.4s, color 0.4s"
           }}
           value={userInput}
