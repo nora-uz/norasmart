@@ -10,8 +10,8 @@ const ICONS = {
 };
 
 const BANNER = "https://user-gen-media-assets.s3.amazonaws.com/seedream_images/4c36a715-f500-4186-8955-631a09fac0ed.png";
-const maxWidth = 420; // стало меньше
-const borderRadius = 16; // чуть меньше
+const maxWidth = 420;
+const borderRadius = 16;
 const BTN_SIZE = 54;
 const SEND_BTN_SIZE = 74;
 const ICON_SIZE_PANEL = 18;
@@ -57,26 +57,26 @@ function InteractiveLine({ onSelect }) {
       width: "100%",
       display: "flex",
       flexDirection: "column",
-      gap: 10, // было 22
+      gap: 10,
       paddingLeft: sidePad,
       paddingRight: sidePad
     }}>
       <div style={{
-        background: "#fff", // убран градиент
+        background: "transparent",
         borderRadius,
         padding: `8px ${sidePad}px`
       }}>
         <div style={{
-          fontWeight: 400, // стало обычным
+          fontWeight: 400,
           fontSize: 15,
-          color: "#6a11cb",
+          color: "#fff",
           marginBottom: 8
         }}>
           Выберите срок беременности:
         </div>
         <div style={{
           display: "flex",
-          gap: 8, // было 12
+          gap: 8,
           justifyContent: "center"
         }}>
           {Array.from({ length: 9 }).map((_, i) => (
@@ -84,8 +84,8 @@ function InteractiveLine({ onSelect }) {
               key={i + 1}
               onClick={() => setSelectedMonth(i + 1)}
               style={{
-                background: selectedMonth === i + 1 ? gradient : "#f6f7fb", // фон выбранного — градиент
-                color: selectedMonth === i + 1 ? "#fff" : "#6a11cb",
+                background: selectedMonth === i + 1 ? gradient : "transparent",
+                color: "#fff",
                 borderRadius: 9,
                 border: "none",
                 fontSize: 15,
@@ -94,8 +94,6 @@ function InteractiveLine({ onSelect }) {
                 cursor: "pointer",
                 width: 34,
                 outline: "none",
-                borderWidth: 0,
-                borderStyle: "solid",
                 boxShadow: selectedMonth === i + 1 ? "0 0 6px #2575fc55" : "none",
                 transition: "background 0.3s"
               }}
@@ -106,21 +104,21 @@ function InteractiveLine({ onSelect }) {
         </div>
       </div>
       <div style={{
-        background: "#fff", // убран градиент
+        background: "transparent",
         borderRadius,
         padding: `8px ${sidePad}px`
       }}>
         <div style={{
-          fontWeight: 400, // стало обычным
+          fontWeight: 400,
           fontSize: 15,
-          color: "#6a11cb",
+          color: "#fff",
           marginBottom: 8
         }}>
           Выберите самочувствие:
         </div>
         <div style={{
           display: "flex",
-          flexDirection: "column", // столбик
+          flexDirection: "column",
           gap: 8,
           alignItems: "stretch"
         }}>
@@ -129,8 +127,8 @@ function InteractiveLine({ onSelect }) {
               key={item.label}
               onClick={() => setSelectedMood(idx)}
               style={{
-                background: selectedMood === idx ? gradient : "#f6f7fb",
-                color: selectedMood === idx ? "#fff" : "#6a11cb",
+                background: selectedMood === idx ? gradient : "transparent",
+                color: "#fff",
                 borderRadius: 9,
                 border: "none",
                 fontSize: 15,
@@ -228,7 +226,7 @@ const Chat = () => {
     <div style={{
       background: theme.bgColor,
       width: "100vw",
-      minHeight: 600,
+      minHeight: "100vh",
       overflow: "hidden",
       position: "relative",
       transition: "background 0.4s"
