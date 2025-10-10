@@ -185,22 +185,56 @@ const Chat = ({
 
   // Тёмная / светлая тема
   const isDark = darkMode;
-  const bgColor = isDark ? "#1C1C1C" : "#f7fafb";
-  const userBubble = isDark ? "#475569" : "#fff";
-  const assistantBubble = isDark ? "#232438" : "#F4F6FC";
-  const inputBg = isDark ? "#232438" : "#fff";
+  const bgColor = isDark ? "#1C1C1C" : "#f5f5f5";
+  const bubbleUser = isDark ? "#28324d" : "#fff";
+  const bubbleAssistant = isDark ? "#232439" : "#F1F3F8";
+  const inputBg = isDark ? "#232439" : "#fff";
   const inputColor = isDark ? "#fff" : "#111";
-  const iconStroke = isDark ? "#fff" : "#2646FC";
   const borderColor = "#22242e";
 
-  // SVG стрелка
-  const SendIcon = (
-    <svg width="28" height="28" viewBox="0 0 24 24"><path d="M4 12L20 12M20 12L13 5M20 12L13 19" stroke={iconStroke} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" fill="none"/></svg>
+  // SVG icons
+  const SunIcon = (
+    <svg width="27" height="27" viewBox="0 0 22 22" style={{display:"block"}}>
+      <circle cx="11" cy="11" r="6.5" fill="none" stroke="#FDB813" strokeWidth="2"/>
+      <g stroke="#FDB813" strokeWidth="1">
+        <line x1="11" y1="0.5" x2="11" y2="4"/>
+        <line x1="11" y1="18" x2="11" y2="21.5"/>
+        <line x1="0.5" y1="11" x2="4" y2="11"/>
+        <line x1="18" y1="11" x2="21.5" y2="11"/>
+        <line x1="4.05" y1="4.05" x2="6.6" y2="6.6"/>
+        <line x1="17.96" y1="17.96" x2="15.4" y2="15.4"/>
+        <line x1="4.05" y1="17.96" x2="6.6" y2="15.4"/>
+        <line x1="15.4" y1="6.6" x2="17.96" y2="4.05"/>
+      </g>
+    </svg>
   );
-
-  // SVG телефона
+  const MoonIcon = (
+    <svg width="27" height="27" viewBox="0 0 22 22" style={{display:"block"}}>
+      <path d="M15.5 5.9A8 8 0 1 1 6.5 16.1a8 8 0 0 0 9-10.2z"
+        stroke="#fff" strokeWidth="1.8" fill="none"/>
+    </svg>
+  );
+  const RefreshIcon = (
+    <svg width="27" height="27" viewBox="0 0 22 22" style={{display:"block"}}>
+      <path d="M3 12a9 9 0 0 1 14.7-5.7m0 0L18 3m-0.3 3.3H14" 
+        stroke="#aaa" strokeWidth="2.6" fill="none" strokeLinecap="round"/>
+      <path d="M19 10a9 9 0 0 1-14.7 5.7m0 0L4 21m0.3-3.3H8" 
+        stroke="#aaa" strokeWidth="2.6" fill="none" strokeLinecap="round"/>
+    </svg>
+  );
+  const TelegramIcon = (
+    <svg width="25" height="25" viewBox="0 0 496 496" style={{display:"block"}}>
+      <path d="M248 0C111.036 0 0 111.036 0 248c0 136.964 111.036 248 248 248s248-111.036 248-248C496 111.036 384.964 0 248 0zm93.928 177.552l-45.84 215.08c-5.432 24-19.616 29.84-39.832 18.576l-55.168-40.52-26.624 25.664c-2.936 2.936-5.384 5.384-11.064 5.384l3.944-55.658 101.408-91.656c4.406-3.944-0.96-6.184-6.827-2.24l-125.344 78.856-54.088-16.908c-11.76-3.68-12.016-11.76 2.432-17.344L360.56 164.648c10.008-3.68 19.576 2.432 16.768 12.904z" fill={isDark ? "#fff" : "#2646FC"}/>
+    </svg>
+  );
   const PhoneIcon = (
-    <svg width="24" height="24" viewBox="0 0 24 24"><path d="M6.6 10.8C8.2 13.1 10.9 15.8 13.2 17.4L15.2 15.5C15.5 15.3 15.9 15.2 16.2 15.3C17.3 15.7 18.5 16 19.7 16C20.3 16 20.8 16.5 20.8 17.1V21C20.8 21.6 20.3 22.1 19.7 22.1C9.4 22.1 1.9 14.6 1.9 4.3C1.9 3.7 2.3 3.2 2.9 3.2H6.8C7.4 3.2 7.9 3.7 7.9 4.3C7.9 5.5 8.2 6.7 8.6 7.7C8.7 8 8.7 8.4 8.6 8.6L6.6 10.8Z" stroke={iconStroke} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none"/></svg>
+    <svg width="24" height="24" viewBox="0 0 24 24" style={{display:"block", transform:"scaleX(-1)"}}>
+      <path d="M6.6 10.8C8.2 13.1 10.9 15.8 13.2 17.4L15.2 15.5C15.5 15.3 15.9 15.2 16.2 15.3C17.3 15.7 18.5 16 19.7 16C20.3 16 20.8 16.5 20.8 17.1V21C20.8 21.6 20.3 22.1 19.7 22.1C9.4 22.1 1.9 14.6 1.9 4.3C1.9 3.7 2.3 3.2 2.9 3.2H6.8C7.4 3.2 7.9 3.7 7.9 4.3C7.9 5.5 8.2 6.7 8.6 7.7C8.7 8 8.7 8.4 8.6 8.6L6.6 10.8Z" stroke="#aaa" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+    </svg>
+  );
+  // SVG стрелка (отправить)
+  const SendIcon = (
+    <svg width="35" height="35" viewBox="0 0 32 32"><path d="M7 15L25 15M25 15L17.5 7.5M25 15L17.5 22.5" stroke="#fff" strokeWidth="2.7" strokeLinecap="round" strokeLinejoin="round" fill="none"/></svg>
   );
 
   // --- UI START ---
@@ -215,25 +249,29 @@ const Chat = ({
         padding: 0,
       }}
     >
-      {/* Шапка */}
+      {/* Шапка внутри чата */}
       <div
         style={{
-          position: "fixed",
+          position: "relative",
           top: 0,
           left: 0,
           right: 0,
           zIndex: 100,
-          height: 62,
-          background: "#18181d",
-          color: "#fff",
+          height: 58,
+          background: isDark ? "#232439" : "#f2f3fa",
+          color: isDark ? "#fff" : "#232439",
+          width: "99%",
+          maxWidth: 670,
+          margin: "15px auto 0 auto",
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
-          padding: "0 12px",
-          borderBottom: "1.5px solid #232438"
+          borderRadius: "20px",
+          padding: "0 18px",
+          boxShadow: isDark ? "0 2px 18px rgba(44,44,68,0.12)" : "0 2px 14px #ccd6ff44"
         }}
       >
-        <div style={{ fontWeight: 700, letterSpacing: 1, fontSize: 22 }}>NoraSmart</div>
+        <div style={{ fontWeight: 700, fontSize: 18 }}>Norasmart.uz</div>
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
           <button
             onClick={() => setDarkMode((v) => !v)}
@@ -242,13 +280,12 @@ const Chat = ({
               background: "none",
               border: "none",
               cursor: "pointer",
-              marginRight: 6
+              width: 35,
+              height: 35,
+              display: "flex",
             }}
           >
-            {isDark
-              ? <svg width="27" height="27" viewBox="0 0 22 22"><circle cx="11" cy="11" r="8" fill="none" stroke="#fff" strokeWidth="2" /><path d="M2,11 L20,11 M11,2 L11,20 M4.9,4.9 L17.1,17.1 M4.9,17.1 L17.1,4.9" stroke="#fff" strokeWidth="1" /></svg>
-              : <svg width="27" height="27" viewBox="0 0 22 22"><circle cx="11" cy="11" r="8" fill="none" stroke="#232438" strokeWidth="2" /></svg>
-            }
+            {isDark ? MoonIcon : SunIcon}
           </button>
           <button
             onClick={clearChat}
@@ -257,37 +294,53 @@ const Chat = ({
               background: "none",
               border: "none",
               cursor: "pointer",
-              color: "#aaa",
-              fontSize: 17
+              width: 35,
+              height: 35,
+              display: "flex"
             }}
           >
-            Очистить
+            {RefreshIcon}
+          </button>
+          <button
+            aria-label="Telegram"
+            style={{
+              background: "none",
+              border: "none",
+              cursor: "pointer",
+              width: 35,
+              height: 35,
+              display: "flex"
+            }}
+            onClick={() => window.open("https://t.me/", "_blank")}
+          >
+            {TelegramIcon}
           </button>
           <button
             aria-label="Позвонить"
             style={{
               background: "none",
               border: "none",
-              cursor: "pointer"
+              cursor: "pointer",
+              width: 35,
+              height: 35,
+              display: "flex"
             }}
-            onClick={() => {
-              window.open("tel:+1234567890");
-            }}
+            onClick={() => window.open("tel:+1234567890")}
           >
             {PhoneIcon}
           </button>
         </div>
       </div>
-      {/* Содержимое чата */}
+      {/* Содержимое чата фиксированный отступ от шапки */}
       <div
         style={{
           flex: 1,
           width: "100%",
-          maxWidth: 700,
+          maxWidth: 670,
           margin: "0 auto",
-          padding: "82px 10px 85px 10px",
           boxSizing: "border-box",
-          minHeight: "100vh"
+          minHeight: "100vh",
+          padding: "90px 13px 85px 13px",
         }}
       >
         {messages.map((msg, index) => (
@@ -301,26 +354,25 @@ const Chat = ({
           >
             <div
               style={{
-                background: msg.role === "assistant" ? assistantBubble : userBubble,
+                background: msg.role === "assistant" ? bubbleAssistant : bubbleUser,
                 color: isDark
                   ? (msg.role === "assistant" ? "#eaeaea" : "#fff")
-                  : "#232438",
+                  : "#232439",
                 borderRadius: 20,
-                padding: "19px 20px",
-                maxWidth: "84vw",
+                padding: "21px 23px",
+                maxWidth: "90vw",
                 minWidth: 60,
                 fontSize: 18,
                 lineHeight: 1.7,
                 boxShadow:
                   msg.role === "assistant"
-                    ? "0 2px 12px rgba(86,86,138,.10)"
-                    : "0 2px 12px rgba(38,70,252,0.09)",
+                    ? "0 2px 18px rgba(44,44,68,.13)"
+                    : "0 2px 12px rgba(38,70,252,0.11)",
                 border: msg.role === "assistant"
-                  ? "1px solid #242443"
-                  : "1.3px solid #2646fc33",
+                  ? "1.3px solid #242443"
+                  : "1.5px solid #2646fc33",
                 marginRight: msg.role === "assistant" ? "auto" : 0,
                 marginLeft: msg.role === "user" ? "auto" : 0,
-                marginTop: 2
               }}
             >
               {msg.role === "code"
@@ -334,6 +386,7 @@ const Chat = ({
         ))}
         <div ref={messagesEndRef} />
       </div>
+      {/* Форма отправки сообщения */}
       <form
         onSubmit={handleSubmit}
         style={{
@@ -342,21 +395,21 @@ const Chat = ({
           right: 0,
           bottom: 0,
           width: "100%",
-          background: "#18181d",
+          background: isDark ? "#232439" : "#f2f3fa",
           display: "flex",
           gap: 10,
-          padding: "14px 12px 18px 12px",
+          padding: "15px 16px 17px 16px",
           zIndex: 101,
-          borderTop: "1.5px solid #232438"
+          borderTop: isDark ? "1.5px solid #262640" : "1.3px solid #2646fc22"
         }}
       >
         <input
           type="text"
           style={{
             flex: 1,
-            border: "1.6px solid #232438",
+            border: "1.7px solid #2646fc33",
             borderRadius: 20,
-            padding: "16px 17px",
+            padding: "17px 17px",
             fontSize: 18,
             background: inputBg,
             color: inputColor,
