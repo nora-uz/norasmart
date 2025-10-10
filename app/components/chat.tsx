@@ -22,17 +22,13 @@ const maxWidth = 560;
 
 const PRESET_TEMPLATES = [
   {
-    title: "Здоровье",
+    title: "ЗДОРОВЬЕ",
     description: "Советы по самочувствию",
   },
   {
-    title: "Эмоции",
+    title: "ЭМОЦИИ",
     description: "Как справиться со стрессом",
-  },
-  {
-    title: "Вопрос врачу",
-    description: "Когда обратиться за консультацией",
-  },
+  }
 ];
 
 const FAKE_ANSWERS = [
@@ -48,13 +44,13 @@ const Chat = () => {
   const [inputDisabled, setInputDisabled] = useState(false);
   const [darkMode, setDarkMode] = useState(true);
   const messagesEndRef = useRef(null);
+  const showTemplates = messages.length === 0;
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  // Вычисление высоты основного chatArea учитывает размещение фиксированных элементов снизу.
-  const chatAreaHeight = `calc(100vh - ${panelHeight + sidePad * 2 + 3 * (BTN_SIZE + sidePad) + BTN_SIZE}px)`;
+  const chatAreaHeight = `calc(100vh - ${panelHeight + sidePad * 2 + (showTemplates ? 2 * (BTN_SIZE + sidePad) : 0) + BTN_SIZE}px)`;
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -75,85 +71,80 @@ const Chat = () => {
   };
 
   return (
-    <div
-      style={{
-        background: bgColor,
-        width: "100vw",
-        height: "100vh",
-        overflow: "hidden",
-        position: "relative",
-      }}
-    >
+    <div style={{
+      background: bgColor,
+      width: "100vw",
+      height: "100vh",
+      overflow: "hidden",
+      position: "relative",
+    }}>
       {/* Панель */}
-      <div
-        style={{
-          position: "fixed",
-          top: sidePad,
-          left: "50%",
-          transform: "translateX(-50%)",
-          width: `calc(100% - ${sidePad * 2}px)`,
-          maxWidth,
-          height: panelHeight,
-          background: panelBg,
-          color: "#fff",
+      <div style={{
+        position: "fixed",
+        top: sidePad,
+        left: "50%",
+        transform: "translateX(-50%)",
+        width: `calc(100% - ${sidePad * 2}px)`,
+        maxWidth,
+        height: panelHeight,
+        background: panelBg,
+        color: "#fff",
+        display: "flex",
+        alignItems: "center",
+        borderRadius: borderRadius,
+        padding: "0 18px",
+        justifyContent: "flex-start",
+        boxSizing: "border-box",
+        zIndex: 2000,
+      }}>
+        <div style={{ fontWeight: 600, fontSize: 19, marginRight: 16 }}>Nora AI</div>
+        <div style={{
           display: "flex",
           alignItems: "center",
-          borderRadius: borderRadius,
-          padding: "0 18px",
-          justifyContent: "space-between",
-          boxSizing: "border-box",
-          zIndex: 2000,
-        }}
-      >
-        <div style={{ fontWeight: 600, fontSize: 19 }}>Nora AI</div>
-        <div style={{ display: "flex", alignItems: "center", gap: 13 }}>
-          <button style={iconBtn(panelBg)} onClick={() => setDarkMode(mode => !mode)} aria-label="Тема">
+          gap: 8,
+        }}>
+          <button style={iconBtn(panelBg)} onClick={() => setDarkMode(mode => !mode)}>
             <img src={darkMode ? ICONS.sun : ICONS.moon} alt="Theme" style={iconImgPanel} />
           </button>
-          <button style={iconBtn(panelBg)} onClick={clearChat} aria-label="Очистить чат">
+          <button style={iconBtn(panelBg)} onClick={clearChat}>
             <img src={ICONS.trash} alt="Trash" style={iconImgPanel} />
           </button>
-          <button style={iconBtn(panelBg)} aria-label="Позвонить" onClick={() => window.open('tel:+1234567890')}>
+          <button style={iconBtn(panelBg)} onClick={() => window.open('tel:+1234567890')}>
             <img src={ICONS.phone} alt="Phone" style={iconImgPanel} />
           </button>
-          <button style={iconBtn(panelBg)} aria-label="Telegram" onClick={() => window.open('https://t.me/', '_blank')}>
+          <button style={iconBtn(panelBg)} onClick={() => window.open('https://t.me/', '_blank')}>
             <img src={ICONS.telegram} alt="Telegram" style={iconImgPanel} />
           </button>
         </div>
       </div>
 
-      {/* Контейнер с чатом и баннером */}
-      <div
-        style={{
-          width: "100%",
+      {/* Контент и баннер */}
+      <div style={{
+        width: "100%",
+        maxWidth,
+        margin: "0 auto",
+        marginTop: panelHeight + sidePad,
+        boxSizing: "border-box",
+        height: chatAreaHeight,
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        overflow: "hidden",
+      }}>
+        <div style={{
+          width: `calc(100% - ${sidePad * 2}px)`,
           maxWidth,
-          margin: "0 auto",
-          marginTop: panelHeight + sidePad,
-          boxSizing: "border-box",
-          height: chatAreaHeight,
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
+          marginBottom: sidePad,
+          borderRadius: 26,
           overflow: "hidden",
-        }}
-      >
-        {/* Баннер — не обрезается, оригинальный размер, по ширине контейнера */}
-        <div
-          style={{
-            width: `calc(100% - ${sidePad * 2}px)`,
-            maxWidth,
-            marginBottom: sidePad,
-            borderRadius: 26,
-            overflow: "hidden",
-            boxShadow: "0 4px 28px 0 rgba(55,40,120,0.14)",
-            background: "#181818",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            flexShrink: 0,
-            position: "relative",
-          }}
-        >
+          boxShadow: "0 4px 28px 0 rgba(55,40,120,0.14)",
+          background: "#181818",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          flexShrink: 0,
+          position: "relative",
+        }}>
           <img
             src={BANNER}
             alt="Nora AI баннер"
@@ -167,17 +158,14 @@ const Chat = () => {
             }}
           />
         </div>
-        {/* Сообщения */}
-        <div
-          style={{
-            width: "100%",
-            flex: 1,
-            overflowY: "auto",
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "flex-start",
-          }}
-        >
+        <div style={{
+          width: "100%",
+          flex: 1,
+          overflowY: "auto",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "flex-start",
+        }}>
           {messages.map((msg, idx) => (
             <div key={idx} style={{
               display: "flex",
@@ -208,9 +196,9 @@ const Chat = () => {
         </div>
       </div>
 
-      {/* Шаблонные ответы фиксированы над формой ввода, крупные, с маленьким описанием */}
-      <div
-        style={{
+      {/* Шаблонные ответы над формой, исчезают после первого сообщения */}
+      {showTemplates && (
+        <div style={{
           position: "fixed",
           left: "50%",
           bottom: BTN_SIZE + 2 * sidePad,
@@ -218,62 +206,62 @@ const Chat = () => {
           width: `calc(100% - ${sidePad * 2}px)`,
           maxWidth,
           zIndex: 2500,
-        }}
-      >
-        {PRESET_TEMPLATES.map((tpl, idx) => (
-          <button
-            key={tpl.title}
-            style={{
-              background: panelBg,
-              color: "#fff",
-              border: "none",
-              borderRadius: borderRadius,
-              padding: "0 22px",
-              fontSize: 16,
-              width: "100%",
-              height: BTN_SIZE,
-              marginBottom: sidePad,
-              boxShadow: "0 2px 10px 0 rgba(55,40,120,0.12)",
-              cursor: inputDisabled ? "not-allowed" : "pointer",
-              textAlign: "left",
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              outline: "none",
-            }}
-            disabled={inputDisabled}
-            onClick={() => {
-              if (inputDisabled) return;
-              setMessages(prev => [...prev, { role: "user", text: tpl.description }]);
-              setInputDisabled(true);
-              setUserInput("");
-              setTimeout(() => {
-                const reply = FAKE_ANSWERS[Math.floor(Math.random() * FAKE_ANSWERS.length)];
-                setMessages(prev => [...prev, { role: "assistant", text: reply }]);
-                setInputDisabled(false);
-              }, 700);
-            }}
-          >
-            <span style={{
-              fontWeight: 600,
-              fontSize: 16,
-              marginBottom: 5,
-              lineHeight: 1.13,
-            }}>
-              {tpl.title}
-            </span>
-            <span style={{
-              fontSize: 11,
-              color: "#bbb",
-              lineHeight: 1.2,
-            }}>
-              {tpl.description}
-            </span>
-          </button>
-        ))}
-      </div>
+        }}>
+          {PRESET_TEMPLATES.map((tpl, idx) => (
+            <button
+              key={tpl.title}
+              style={{
+                background: panelBg,
+                color: "#fff",
+                border: "none",
+                borderRadius: borderRadius,
+                padding: "0 22px",
+                fontSize: 16,
+                width: "100%",
+                height: BTN_SIZE,
+                marginBottom: sidePad,
+                boxShadow: "0 2px 10px 0 rgba(55,40,120,0.12)",
+                cursor: inputDisabled ? "not-allowed" : "pointer",
+                textAlign: "left",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                outline: "none",
+              }}
+              disabled={inputDisabled}
+              onClick={() => {
+                if (inputDisabled) return;
+                setMessages(prev => [...prev, { role: "user", text: tpl.description }]);
+                setInputDisabled(true);
+                setUserInput("");
+                setTimeout(() => {
+                  const reply = FAKE_ANSWERS[Math.floor(Math.random() * FAKE_ANSWERS.length)];
+                  setMessages(prev => [...prev, { role: "assistant", text: reply }]);
+                  setInputDisabled(false);
+                }, 700);
+              }}
+            >
+              <span style={{
+                fontWeight: 600,
+                fontSize: 16,
+                marginBottom: 5,
+                lineHeight: 1.13,
+              }}>
+                {tpl.title}
+              </span>
+              <span style={{
+                fontSize: 11,
+                color: "#bbb",
+                lineHeight: 1.2,
+              }}>
+                {tpl.description}
+              </span>
+            </button>
+          ))}
+        </div>
+      )}
 
-      {/* Поле для сообщения (фиксировано внизу, большое) */}
+      {/* Форма ввода фиксирована снизу */}
       <form
         onSubmit={handleSubmit}
         style={{
