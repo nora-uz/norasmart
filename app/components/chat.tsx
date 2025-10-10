@@ -59,15 +59,25 @@ const Chat = () => {
   const [messages, setMessages] = useState([]);
   const [inputDisabled, setInputDisabled] = useState(false);
   const [darkMode, setDarkMode] = useState(true);
+  const [containerHeight, setContainerHeight] = useState(window.innerHeight);
   const messagesEndRef = useRef(null);
   const showTemplates = messages.length === 0;
   const theme = darkMode ? themes.dark : themes.light;
+
+  // 1. Ставим высоту на весь реальный экран
+  useEffect(() => {
+    const setVH = () => setContainerHeight(window.innerHeight);
+    setVH();
+    window.addEventListener("resize", setVH);
+    return () => window.removeEventListener("resize", setVH);
+  }, []);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  const mobileScreenHeight = `calc(100vh - ${(showTemplates ? TEMPLATE_BTN_SIZE * PRESET_TEMPLATES.length + sidePad : 0) + BTN_SIZE + sidePad * 3}px)`;
+  // вычисляем динамически всё, что выше поля и шаблонов
+  const fixedPaddingTop = sidePad + panelHeight + sidePad + (showTemplates ? (TEMPLATE_BTN_SIZE + sidePad) * PRESET_TEMPLATES.length : 0);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -91,12 +101,13 @@ const Chat = () => {
     <div style={{
       background: theme.bgColor,
       width: "100vw",
-      minHeight: "100vh",
+      minHeight: containerHeight,
+      height: containerHeight,
       overflow: "hidden",
       position: "relative",
       transition: "background 0.4s"
     }}>
-      {/* Отступ сверху до панели */}
+      {/* Верхний отступ до панели */}
       <div style={{ height: sidePad }} />
       {/* Панель */}
       <div style={{
@@ -136,20 +147,24 @@ const Chat = () => {
           </button>
         </div>
       </div>
-      {/* Отступ после панели до фото */}
+      {/* Отступ между панелью и фото */}
       <div style={{ height: sidePad }} />
-      <div style={{
-        width: "100%",
-        maxWidth,
-        margin: "0 auto",
-        boxSizing: "border-box",
-        height: mobileScreenHeight,
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        overflow: "hidden",
-      }}>
-        {/* БАННЕР */}
+
+      {/* Блок с фото, сообщениями*/}
+      <div
+        style={{
+          width: "100%",
+          maxWidth,
+          margin: "0 auto",
+          boxSizing: "border-box",
+          height: `calc(100vh - ${BTN_SIZE + (showTemplates ? TEMPLATE_BTN_SIZE * PRESET_TEMPLATES.length + sidePad : 0) + fixedPaddingTop + sidePad}px)`,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          overflow: "hidden"
+        }}
+      >
+        {/* Фото */}
         <div style={{
           width: `calc(100% - ${sidePad * 2}px)`,
           maxWidth,
@@ -215,12 +230,12 @@ const Chat = () => {
           <div ref={messagesEndRef} />
         </div>
       </div>
-      {/* Фиксированные готовые ответы */}
+      {/* Фиксированные готовые ответы над полем */}
       {showTemplates && (
         <div style={{
           position: "fixed",
           left: "50%",
-          bottom: BTN_SIZE + sidePad * 2, // отступ между формой и шаблонами как sidePad
+          bottom: BTN_SIZE + sidePad * 2,
           transform: "translateX(-50%)",
           width: `calc(100% - ${sidePad * 2}px)`,
           maxWidth,
@@ -301,13 +316,13 @@ const Chat = () => {
           alignItems: "center",
           background: "none",
           boxSizing: "border-box",
-          padding: 0,
+          padding: 0
         }}
       >
         <input
           type="text"
           style={{
-            flex: 14,
+            flex: 1,
             border: "none",
             borderRadius: borderRadius,
             height: BTN_SIZE,
@@ -316,7 +331,7 @@ const Chat = () => {
             background: theme.inputBg,
             color: theme.assistantText,
             outline: "none",
-            marginRight: 8,
+            marginRight: 0, // нет gap справа
             transition: "background 0.4s, color 0.4s"
           }}
           value={userInput}
@@ -334,7 +349,8 @@ const Chat = () => {
             borderRadius: borderRadius,
             width: SEND_BTN_SIZE,
             height: BTN_SIZE,
-            marginRight: sidePad,
+            marginRight: 0,
+            marginLeft: sidePad,
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
