@@ -57,10 +57,10 @@ const Chat = () => {
   const [userInput, setUserInput] = useState("");
   const [messages, setMessages] = useState([]);
   const [inputDisabled, setInputDisabled] = useState(false);
-  const [darkMode] = useState(true); // Тёмная тема всегда активна!
+  const [darkMode, setDarkMode] = useState(true); // Можно менять!
   const messagesEndRef = useRef(null);
   const showTemplates = messages.length === 0;
-  const theme = themes.dark;
+  const theme = darkMode ? themes.dark : themes.light;
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -130,6 +130,13 @@ const Chat = () => {
             marginLeft: "auto"
           }}
         >
+          {/* Вернули иконку смены темы */}
+          <button
+            style={iconBtn("transparent")}
+            onClick={() => setDarkMode((prev) => !prev)}
+          >
+            <img src={darkMode ? ICONS.sun : ICONS.moon} alt="Theme" style={iconImgPanel} />
+          </button>
           <button
             style={iconBtn("transparent")}
             onClick={() => window.open("https://t.me/", "_blank")}
@@ -206,7 +213,8 @@ const Chat = () => {
                 display: "flex",
                 gap: 12,
                 overflowX: "auto",
-                justifyContent: "center"
+                justifyContent: "flex-start", // <--- список начинается с 1!
+                scrollbarColor: "#9ecaff #232323"
               }}
             >
               {Array.from({ length: 9 }).map((_, i) => (
@@ -378,8 +386,8 @@ const Chat = () => {
         <button
           type="submit"
           style={{
-            background: theme.userBubble,
-            color: theme.userText,
+            background: "#fff", // белая кнопка!
+            color: "#2575fc",
             border: "none",
             borderRadius: borderRadius,
             width: SEND_BTN_SIZE,
@@ -410,7 +418,6 @@ const Chat = () => {
   );
 };
 
-// Вспомогательные стили
 const iconBtn = (color) => ({
   background: color,
   border: "none",
