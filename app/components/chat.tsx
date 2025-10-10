@@ -27,7 +27,7 @@ const themes = {
     userBubble: "#fff",
     userText: "#181818",
     inputBg: "#131313",
-    inputText: "#eee", // Темнее текст инпута
+    inputText: "#eee",
     placeholder: "#bbb",
     assistantBubble: "#131313",
     assistantText: "#fff"
@@ -38,7 +38,7 @@ const themes = {
     userBubble: "#fff",
     userText: "#333",
     inputBg: "#F6F7FB",
-    inputText: "#222", // Темнее текст инпута
+    inputText: "#222",
     placeholder: "#333",
     assistantBubble: "#E8EAED",
     assistantText: "#333"
@@ -92,7 +92,7 @@ const Chat = () => {
     <div style={{
       background: theme.bgColor,
       width: "100vw",
-      minHeight: 540,
+      minHeight: "100vh", // Растянет фон темы всегда по экрану
       overflow: "hidden",
       position: "relative",
       transition: "background 0.4s"
@@ -164,6 +164,10 @@ const Chat = () => {
           }}
         />
       </div>
+      {/* Отступ после фото как после панели */}
+      <div style={{ height: sidePad }} />
+
+      {/* Сообщения всегда идут под фото, с отступом */}
       <div style={{
         width: "100%",
         maxWidth,
@@ -196,7 +200,7 @@ const Chat = () => {
                 color: msg.role === "assistant" ? theme.assistantText : theme.userText,
                 borderRadius: borderRadius,
                 padding: "14px 20px",
-                fontSize: 18,
+                fontSize: 16, // messages smaller
                 lineHeight: 1.7,
                 border: "none",
                 maxWidth: "70%",
@@ -213,7 +217,7 @@ const Chat = () => {
             </div>
           ))}
           <div ref={messagesEndRef} />
-          {/* Виртуальный паддинг снизу, чтобы фон не обрывался! */}
+          {/* Виртуальный паддинг для чёрного фона снизу */}
           <div style={{
             height: (BTN_SIZE + sidePad * 3) + (showTemplates ? (TEMPLATE_BTN_SIZE + sidePad) * PRESET_TEMPLATES.length : 0)
           }} />
@@ -269,8 +273,8 @@ const Chat = () => {
             >
               <span style={{
                 fontWeight: 700,
-                fontSize: 18, // Сделали больше!
-                marginBottom: 5,
+                fontSize: 18, // bigger title
+                marginBottom: 8, // increased spacing!
                 lineHeight: 1.13,
                 whiteSpace: "nowrap"
               }}>
@@ -316,7 +320,7 @@ const Chat = () => {
             padding: `0 8px 0 ${sidePad}px`,
             fontSize: 19,
             background: theme.inputBg,
-            color: theme.inputText, // Более тёмный текст!
+            color: theme.inputText,
             outline: "none",
             marginRight: 0,
             transition: "background 0.4s, color 0.4s"
@@ -354,6 +358,7 @@ const Chat = () => {
           .nora-input::placeholder {
             color: ${theme.placeholder};
             opacity: 1;
+            font-size: 15px; /* placeholder smaller */
           }
         `}</style>
       </form>
