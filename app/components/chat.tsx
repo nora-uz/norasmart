@@ -10,7 +10,6 @@ const ICONS = {
 };
 
 const BANNER = "https://user-gen-media-assets.s3.amazonaws.com/seedream_images/4c36a715-f500-4186-8955-631a09fac0ed.png";
-
 const ICON_SIZE_PANEL = 18;
 const ICON_SIZE_SEND = 28;
 const BTN_SIZE = 48;
@@ -39,22 +38,21 @@ const Chat = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  // Высота основной chatArea
-  const chatAreaHeight = `calc(100vh - ${panelHeight + 2 * sidePad + panelHeight}px)`;
+  // Ключ: теперь снизу учитываем только один sidePad 
+  const chatAreaHeight = `calc(100vh - ${panelHeight + sidePad * 2}px)`;
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!userInput.trim()) return;
-    setMessages(prev => [...prev, { role: "user", text: userInput }]);
+    setMessages((prev) => [...prev, { role: "user", text: userInput }]);
     setUserInput("");
     setInputDisabled(true);
     setTimeout(() => {
       const reply = FAKE_ANSWERS[Math.floor(Math.random() * FAKE_ANSWERS.length)];
-      setMessages(prev => [...prev, { role: "assistant", text: reply }]);
+      setMessages((prev) => [...prev, { role: "assistant", text: reply }]);
       setInputDisabled(false);
     }, 700);
   };
-
   const clearChat = () => {
     setMessages([]);
     setUserInput("");
@@ -107,13 +105,13 @@ const Chat = () => {
           </button>
         </div>
       </div>
-      {/* Контейнер, строго после панели + sidePad, отступ СПУЩЕН на sidePad */}
+      {/* Контейнер под панелью */}
       <div
         style={{
           width: "100%",
           maxWidth,
           margin: "0 auto",
-          marginTop: panelHeight + 2 * sidePad, // строго два sidePad до картинки
+          marginTop: panelHeight + sidePad,
           boxSizing: "border-box",
           height: chatAreaHeight,
           display: "flex",
@@ -122,7 +120,7 @@ const Chat = () => {
           overflow: "hidden",
         }}
       >
-        {/* Баннер — под панелью, отступ строго sidePad */}
+        {/* Баннер, строго после панели с отступом вниз */}
         <div
           style={{
             width: `calc(100% - ${sidePad * 2}px)`,
@@ -148,7 +146,7 @@ const Chat = () => {
             }}
           />
         </div>
-        {/* Чатовая зона — скролл только здесь (если сообщений много) */}
+        {/* Блок сообщений, скролл только если нужно */}
         <div
           style={{
             width: "100%",
@@ -188,7 +186,7 @@ const Chat = () => {
           <div ref={messagesEndRef} />
         </div>
       </div>
-      {/* Поле ввода снизу */}
+      {/* Фиксированное поле ввода снизу */}
       <form
         onSubmit={handleSubmit}
         style={{
