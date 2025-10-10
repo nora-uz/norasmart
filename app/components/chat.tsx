@@ -173,17 +173,18 @@ const Chat = () => {
           position: "relative"
         }}
       >
-        <img
-          src={BANNER}
-          alt="Nora AI баннер"
-          style={{
-            width: "100%",
-            maxHeight: 170,
-            display: "block",
-            objectFit: "contain",
-            objectPosition: "center"
-          }}
-        />
+<img
+  src={BANNER}
+  alt="Nora AI баннер"
+  style={{
+    width: "100%",
+    height: "auto",
+    display: "block",
+    objectFit: "contain",
+    objectPosition: "center"
+  }}
+/>
+
       </div>
       <div style={{ height: sidePad }} />
 
