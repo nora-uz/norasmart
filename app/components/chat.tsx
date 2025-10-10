@@ -9,7 +9,7 @@ const ICONS = {
   arrow: "https://cdn-icons-png.flaticon.com/512/3916/3916848.png",
 };
 
-const MAIN_IMG = "https://user-gen-media-assets.s3.amazonaws.com/seedream_images/70a60994-809a-473d-accc-36284ba46e1c.png";
+const BANNER = "https://user-gen-media-assets.s3.amazonaws.com/seedream_images/4c36a715-f500-4186-8955-631a09fac0ed.png";
 
 const ICON_SIZE_PANEL = 18;
 const ICON_SIZE_SEND = 28;
@@ -28,8 +28,6 @@ const FAKE_ANSWERS = [
   "Пиши свой запрос, я отвечу!",
 ];
 
-// Для теста: ассистент всегда отвечает случайной фразой, чтобы не было ошибки связи.
-// Для реального GPT-эндпоинта — раскомментируй fetch ниже.
 const Chat = () => {
   const [userInput, setUserInput] = useState("");
   const [messages, setMessages] = useState([]);
@@ -41,6 +39,7 @@ const Chat = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
+  // Для демонстрации: фейковый ответ ассистента без сервера
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!userInput.trim()) return;
@@ -48,7 +47,6 @@ const Chat = () => {
     setUserInput("");
     setInputDisabled(true);
 
-    // ФЕЙК-ответ для теста. Для реального GPT — замени на fetch-команду.
     setTimeout(() => {
       const reply = FAKE_ANSWERS[Math.floor(Math.random() * FAKE_ANSWERS.length)];
       setMessages(prev => [...prev, { role: "assistant", text: reply }]);
@@ -56,14 +54,13 @@ const Chat = () => {
     }, 700);
 
     /*
-    // Для реального GPT backend:
+    // Для реального GPT backend — раскомментируй этот код:
     try {
       const response = await fetch("/api/gpt", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: userInput }),
       });
-
       if (!response.ok) throw new Error("Сервер не отвечает");
       const data = await response.json();
       setMessages(prev => [...prev, { role: "assistant", text: data.text || "Ошибка ответа от ассистента." }]);
@@ -126,7 +123,33 @@ const Chat = () => {
           </button>
         </div>
       </div>
-      {/* ЧАТ-ОБЛАСТЬ */}
+      {/* Главный баннер сайта */}
+      <div
+        style={{
+          width: "100%",
+          maxWidth,
+          margin: "0 auto",
+          marginBottom: sidePad,
+          borderRadius: 26,
+          overflow: "hidden",
+          boxShadow: "0 4px 28px 0 rgba(55,40,120,0.14)",
+          background: "#181818",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <img
+          src={BANNER}
+          alt="Nora AI баннер"
+          style={{
+            width: "100%",
+            height: "auto",
+            display: "block",
+          }}
+        />
+      </div>
+      {/* Область сообщений и чата */}
       <div
         style={{
           width: "100%",
@@ -137,41 +160,12 @@ const Chat = () => {
           flexDirection: "column",
           alignItems: "center",
           overflowY: "auto",
-          paddingTop: sidePad + panelHeight + sidePad,
+          paddingTop: panelHeight + sidePad,
           paddingBottom: panelHeight + sidePad * 2,
           minHeight: `calc(100vh - ${panelHeight * 2 + sidePad * 4}px)`,
         }}
       >
-        {/* Фото Nora — с отступами по бокам */}
-        <div
-          style={{
-            width: `calc(100% - ${sidePad * 2}px)`,
-            margin: "0 auto",
-            borderRadius: borderRadius,
-            overflow: "hidden",
-            boxSizing: "border-box",
-            marginBottom: sidePad,
-            background: "#222",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <img
-            src={MAIN_IMG}
-            alt="Nora AI"
-            style={{
-              width: "100%",
-              height: "auto",
-              borderRadius: borderRadius,
-              display: "block",
-              minHeight: 120,
-              objectFit: "cover",
-              background: "none",
-            }}
-          />
-        </div>
-        {/* СООБЩЕНИЯ C margin по бокам */}
+        {/* Сообщения c margin по бокам */}
         <div style={{ width: "100%" }}>
           {messages.map((msg, idx) => (
             <div
