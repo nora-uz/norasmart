@@ -20,6 +20,7 @@ const panelHeight = 62;
 const panelBg = "#131313";
 const bgColor = "#181818";
 const maxWidth = 560;
+const topPad = sidePad;
 
 const Chat = () => {
   const [userInput, setUserInput] = useState("");
@@ -51,200 +52,187 @@ const Chat = () => {
         minHeight: "100vh",
         width: "100vw",
         display: "flex",
-        justifyContent: "center",
-        alignItems: "flex-start",
+        flexDirection: "column",
+        alignItems: "center",
         overflow: "hidden",
       }}
     >
+      {/* ВЕРХНИЙ ОТСТУП */}
+      <div style={{ height: topPad }} />
+      {/* ПАНЕЛЬ */}
       <div
         style={{
-          maxWidth,
           width: "100%",
-          minHeight: "100vh",
-          boxSizing: "border-box",
+          maxWidth: maxWidth,
+          margin: "0 auto",
+          height: panelHeight,
+          background: panelBg,
+          color: "#fff",
           display: "flex",
-          flexDirection: "column",
           alignItems: "center",
-          position: "relative",
-          padding: 0,
+          borderRadius: borderRadius,
+          padding: `0 ${sidePad}px`,
+          justifyContent: "space-between",
+          boxSizing: "border-box",
+          zIndex: 1000,
         }}
       >
-        {/* Фиксированная панель */}
-        <div
+        <div style={{ fontWeight: 600, fontSize: 19 }}>Nora AI</div>
+        <div style={{ display: "flex", alignItems: "center", gap: 13 }}>
+          <button style={iconBtn(panelBg)} onClick={() => setDarkMode(mode => !mode)} aria-label="Тема">
+            <img src={darkMode ? ICONS.sun : ICONS.moon} alt="Theme" style={iconImgPanel} />
+          </button>
+          <button style={iconBtn(panelBg)} onClick={clearChat} aria-label="Очистить чат">
+            <img src={ICONS.trash} alt="Trash" style={iconImgPanel} />
+          </button>
+          <button style={iconBtn(panelBg)} aria-label="Позвонить" onClick={() => window.open('tel:+1234567890')}>
+            <img src={ICONS.phone} alt="Phone" style={iconImgPanel} />
+          </button>
+          <button style={iconBtn(panelBg)} aria-label="Telegram" onClick={() => window.open('https://t.me/', '_blank')}>
+            <img src={ICONS.telegram} alt="Telegram" style={iconImgPanel} />
+          </button>
+        </div>
+      </div>
+      {/* ОТСТУП ПОСЛЕ ПАНЕЛИ */}
+      <div style={{ height: sidePad }} />
+      {/* ФОТО НОРА */}
+      <div
+        style={{
+          width: "100%",
+          maxWidth: 370,
+          margin: "0 auto",
+          borderRadius: borderRadius,
+          overflow: "hidden",
+          boxSizing: "border-box",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <img
+          src={MAIN_IMG}
+          alt="Nora AI"
           style={{
-            position: "fixed",
-            top: sidePad,
-            left: "50%",
-            transform: "translateX(-50%)",
-            width: `calc(100% - ${sidePad * 2}px)`,
-            height: panelHeight,
+            width: "100%",
+            borderRadius: borderRadius,
+            display: "block",
+            background: "none",
+            boxShadow: "none",
+          }}
+        />
+      </div>
+      {/* ОТСТУП МЕЖДУ ФОТО И СООБЩЕНИЯМИ */}
+      <div style={{ height: sidePad }} />
+      {/* ОБЛАСТЬ СООБЩЕНИЙ */}
+      <div
+        style={{
+          width: "100%",
+          maxWidth: maxWidth,
+          margin: "0 auto",
+          boxSizing: "border-box",
+          flex: 1,
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "flex-end",
+          alignItems: "center",
+          overflowY: "auto",
+          padding: `0 ${sidePad}px`,
+        }}
+      >
+        {messages.map((msg, idx) => (
+          <div
+            key={idx}
+            style={{
+              display: "flex",
+              justifyContent: msg.role === "assistant" ? "flex-start" : "flex-end",
+              marginBottom: 12,
+              width: "100%",
+            }}
+          >
+            <div
+              style={{
+                background: msg.role === "assistant" ? panelBg : "none",
+                color: "#fff",
+                borderRadius: borderRadius,
+                padding: "14px 20px",
+                fontSize: 18,
+                lineHeight: 1.7,
+                border: "none",
+                maxWidth: "86vw",
+                minWidth: 54,
+                marginLeft: msg.role === "user" ? "auto" : 0,
+                marginRight: msg.role === "assistant" ? "auto" : 0,
+                wordBreak: "break-word",
+              }}
+            >
+              {msg.text}
+            </div>
+          </div>
+        ))}
+        <div ref={messagesEndRef} />
+      </div>
+      {/* ПОЛЕ ДЛЯ СООБЩЕНИЯ ФИКСИРОВАНО */}
+      <form
+        onSubmit={handleSubmit}
+        style={{
+          position: "fixed",
+          left: "50%",
+          bottom: sidePad + sidePad, // двойной нижний отступ
+          transform: "translateX(-50%)",
+          width: `calc(100% - ${sidePad * 2}px)`,
+          background: panelBg,
+          borderRadius: borderRadius,
+          height: panelHeight,
+          display: "flex",
+          alignItems: "center",
+          zIndex: 1000,
+          padding: 0,
+          boxSizing: "border-box",
+          margin: "0 auto",
+        }}
+      >
+        <input
+          type="text"
+          style={{
+            flex: 1,
+            border: "none",
+            borderRadius: borderRadius,
+            height: BTN_SIZE,
+            padding: "0 22px",
+            fontSize: 19,
             background: panelBg,
             color: "#fff",
-            display: "flex",
-            alignItems: "center",
-            borderRadius: borderRadius,
-            padding: "0 18px",
-            justifyContent: "space-between",
-            boxSizing: "border-box",
-            zIndex: 1000,
+            outline: "none",
           }}
-        >
-          <div style={{ fontWeight: 600, fontSize: 19 }}>Nora AI</div>
-          <div style={{ display: "flex", alignItems: "center", gap: 13 }}>
-            <button style={iconBtn(panelBg)} onClick={() => setDarkMode((mode) => !mode)} aria-label="Тема">
-              <img src={darkMode ? ICONS.sun : ICONS.moon} alt="Theme" style={iconImgPanel} />
-            </button>
-            <button style={iconBtn(panelBg)} onClick={clearChat} aria-label="Очистить чат">
-              <img src={ICONS.trash} alt="Trash" style={iconImgPanel} />
-            </button>
-            <button style={iconBtn(panelBg)} aria-label="Позвонить" onClick={() => window.open('tel:+1234567890')}>
-              <img src={ICONS.phone} alt="Phone" style={iconImgPanel} />
-            </button>
-            <button style={iconBtn(panelBg)} aria-label="Telegram" onClick={() => window.open('https://t.me/', '_blank')}>
-              <img src={ICONS.telegram} alt="Telegram" style={iconImgPanel} />
-            </button>
-          </div>
-        </div>
-        {/* Фото Nora всегда под панелью, отступ сверху sidePad */}
-        <div
+          value={userInput}
+          onChange={e => setUserInput(e.target.value)}
+          placeholder="Введите ваш вопрос"
+          disabled={inputDisabled}
+        />
+        <button
+          type="submit"
           style={{
-            width: `calc(100% - ${sidePad * 2}px)`,
-            maxWidth: 370,
-            margin: "0 auto",
-            marginTop: sidePad + panelHeight,  // всегда такой же отступ, как у панели сверху!
-            marginBottom: sidePad,
-            borderRadius: borderRadius,
-            overflow: "hidden",
-            boxSizing: "border-box",
+            background: "#fff",
+            color: panelBg,
+            border: "none",
+            borderRadius: BTN_SIZE / 2,
+            width: BTN_SIZE,
+            height: BTN_SIZE,
+            marginLeft: 10,
+            marginRight: 8,
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            position: "relative",
-            zIndex: 999,
+            cursor: inputDisabled ? "not-allowed" : "pointer",
+            opacity: inputDisabled ? 0.7 : 1,
+            boxShadow: "none",
           }}
         >
-          <img
-            src={MAIN_IMG}
-            alt="Nora AI"
-            style={{
-              width: "100%",
-              borderRadius: borderRadius,
-              display: "block",
-              background: "none",
-              boxShadow: "none",
-            }}
-          />
-        </div>
-        {/* Сообщения c прокруткой только между фото и вводом */}
-        <div
-          style={{
-            width: `calc(100% - ${sidePad * 2}px)`,
-            margin: "0 auto",
-            boxSizing: "border-box",
-            flex: 1,
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "flex-end",
-            overflowY: "auto",
-            padding: 0,
-            marginBottom: sidePad + panelHeight, // оставляет место для инпута
-            position: "relative",
-            zIndex: 1,
-          }}
-        >
-          {messages.map((msg, idx) => (
-            <div
-              key={idx}
-              style={{
-                display: "flex",
-                justifyContent: msg.role === "assistant" ? "flex-start" : "flex-end",
-                marginBottom: 12,
-                width: "100%",
-              }}
-            >
-              <div
-                style={{
-                  background: msg.role === "assistant" ? panelBg : "none",
-                  color: "#fff",
-                  borderRadius: borderRadius,
-                  padding: "14px 20px",
-                  fontSize: 18,
-                  lineHeight: 1.7,
-                  border: "none",
-                  maxWidth: "86vw",
-                  minWidth: 54,
-                  marginLeft: msg.role === "user" ? "auto" : 0,
-                  marginRight: msg.role === "assistant" ? "auto" : 0,
-                  wordBreak: "break-word",
-                }}
-              >
-                {msg.text}
-              </div>
-            </div>
-          ))}
-          <div ref={messagesEndRef} />
-        </div>
-        {/* Фиксированное поле ввода снизу */}
-        <form
-          onSubmit={handleSubmit}
-          style={{
-            position: "fixed",
-            left: "50%",
-            bottom: sidePad,
-            transform: "translateX(-50%)",
-            width: `calc(100% - ${sidePad * 2}px)`,
-            background: panelBg,
-            borderRadius: borderRadius,
-            height: panelHeight,
-            display: "flex",
-            alignItems: "center",
-            zIndex: 1000,
-            padding: 0,
-            boxSizing: "border-box",
-            margin: "0 auto",
-          }}
-        >
-          <input
-            type="text"
-            style={{
-              flex: 1,
-              border: "none",
-              borderRadius: borderRadius,
-              height: BTN_SIZE,
-              padding: "0 22px",
-              fontSize: 19,
-              background: panelBg,
-              color: "#fff",
-              outline: "none",
-            }}
-            value={userInput}
-            onChange={(e) => setUserInput(e.target.value)}
-            placeholder="Введите ваш вопрос"
-            disabled={inputDisabled}
-          />
-          <button
-            type="submit"
-            style={{
-              background: "#fff",
-              color: panelBg,
-              border: "none",
-              borderRadius: BTN_SIZE / 2,
-              width: BTN_SIZE,
-              height: BTN_SIZE,
-              marginLeft: 10,
-              marginRight: 8,
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              cursor: inputDisabled ? "not-allowed" : "pointer",
-              opacity: inputDisabled ? 0.7 : 1,
-              boxShadow: "none",
-            }}
-          >
-            <img src={ICONS.arrow} alt="Send" style={iconImgSend} />
-          </button>
-        </form>
-      </div>
+          <img src={ICONS.arrow} alt="Send" style={iconImgSend} />
+        </button>
+      </form>
+      {/* НИЖНИЙ ОТСТУП ПОД ИНПУТОМ */}
+      <div style={{ height: sidePad }} />
     </div>
   );
 };
