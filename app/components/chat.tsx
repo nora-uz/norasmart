@@ -12,6 +12,7 @@ const BANNER = "https://user-gen-media-assets.s3.amazonaws.com/seedream_images/4
 const ICON_SIZE_PANEL = 18;
 const ICON_SIZE_SEND = 28;
 const BTN_SIZE = 62;
+const TEMPLATE_BTN_SIZE = 88; // увеличенная высота для шаблонов
 const borderRadius = 22;
 const sidePad = 16;
 const panelHeight = 62;
@@ -40,7 +41,6 @@ const themes = {
   }
 };
 
-// Длинные описания
 const PRESET_TEMPLATES = [
   { title: "Здоровье", description: "Полезные советы для поддержания хорошего самочувствия, профилактики и ухода на всех этапах беременности." },
   { title: "Эмоции", description: "Рекомендации по управлению стрессом, эмоциональной поддержке и сохранению позитивного настроя в период беременности." }
@@ -67,7 +67,7 @@ const Chat = () => {
   }, [messages]);
 
   const templatesHeight = showTemplates
-    ? PRESET_TEMPLATES.length * BTN_SIZE + PRESET_TEMPLATES.length * sidePad
+    ? PRESET_TEMPLATES.length * TEMPLATE_BTN_SIZE + PRESET_TEMPLATES.length * sidePad
     : 0;
 
   const chatAreaHeight = `calc(100vh - ${panelHeight + sidePad * 2 + BTN_SIZE + templatesHeight}px)`;
@@ -113,13 +113,13 @@ const Chat = () => {
         display: "flex",
         alignItems: "center",
         borderRadius: borderRadius,
-        padding: `0 ${sidePad}px`,
+        padding: `0 ${sidePad}px 0 ${sidePad}px`,
         justifyContent: "flex-start",
         boxSizing: "border-box",
         zIndex: 2000,
         transition: "background 0.4s, color 0.4s"
       }}>
-        <div style={{ fontWeight: 600, fontSize: 17, marginRight: sidePad }}>Nora AI</div>
+        <div style={{ fontWeight: 800, fontSize: 25, marginRight: sidePad }}>Nora AI</div>
         <div style={{
           display: "flex",
           alignItems: "center",
@@ -132,7 +132,10 @@ const Chat = () => {
           <button style={iconBtn(theme.panelBg)} onClick={() => window.open('https://t.me/', '_blank')}>
             <img src={ICONS.telegram} alt="Telegram" style={iconImgPanel} />
           </button>
-          <button style={{ ...iconBtn(theme.panelBg), marginRight: sidePad }} onClick={clearChat}>
+          <button
+            style={{ ...iconBtn(theme.panelBg), marginRight: -sidePad }}
+            onClick={clearChat}
+          >
             <img src={ICONS.trash} alt="Trash" style={iconImgPanel} />
           </button>
         </div>
@@ -223,7 +226,7 @@ const Chat = () => {
         <div style={{
           position: "fixed",
           left: "50%",
-          bottom: BTN_SIZE + sidePad * 1.4, // уменьшаем отступ между "готовыми ответами" и полем сообщений
+          bottom: BTN_SIZE + sidePad * 1.4,
           transform: "translateX(-50%)",
           width: `calc(100% - ${sidePad * 2}px)`,
           maxWidth,
@@ -237,19 +240,22 @@ const Chat = () => {
                 color: theme.assistantText,
                 border: "none",
                 borderRadius: borderRadius,
-                padding: "0 22px",
-                fontSize: 16,
+                padding: "12px 22px",
+                fontSize: 17,
                 width: "100%",
-                height: BTN_SIZE,
+                height: TEMPLATE_BTN_SIZE, // большая высота 
                 marginBottom: sidePad,
                 cursor: inputDisabled ? "not-allowed" : "pointer",
                 textAlign: "left",
                 display: "flex",
                 flexDirection: "column",
                 justifyContent: "center",
+                alignItems: "start",
                 outline: "none",
                 boxShadow: "none",
-                transition: "background 0.4s, color 0.4s"
+                transition: "background 0.4s, color 0.4s",
+                whiteSpace: "normal",
+                overflowWrap: "anywhere"
               }}
               disabled={inputDisabled}
               onClick={() => {
@@ -266,16 +272,17 @@ const Chat = () => {
             >
               <span style={{
                 fontWeight: 600,
-                fontSize: 16,
+                fontSize: 18,
                 marginBottom: 5,
                 lineHeight: 1.13,
               }}>
                 {tpl.title}
               </span>
               <span style={{
-                fontSize: 13,
+                fontSize: 14,
                 color: "#bbb",
                 lineHeight: 1.43,
+                wordBreak: "break-word"
               }}>
                 {tpl.description}
               </span>
@@ -305,7 +312,7 @@ const Chat = () => {
         <input
           type="text"
           style={{
-            flex: 5,
+            flex: 4,
             border: "none",
             borderRadius: borderRadius,
             height: BTN_SIZE,
@@ -314,7 +321,7 @@ const Chat = () => {
             background: theme.inputBg,
             color: theme.assistantText,
             outline: "none",
-            marginRight: 12,
+            marginRight: 12, // чуть меньше ширина, чтобы кнопка правее
             transition: "background 0.4s, color 0.4s"
           }}
           value={userInput}
@@ -332,7 +339,7 @@ const Chat = () => {
             borderRadius: borderRadius,
             width: BTN_SIZE,
             height: BTN_SIZE,
-            marginRight: sidePad, // равный sidePad справа
+            marginRight: sidePad, // отступ справа у кнопки равен sidePad
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
