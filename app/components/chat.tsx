@@ -49,8 +49,8 @@ const Chat = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  // Адаптивная высота чата под слой шаблонов
-  const chatAreaHeight = `calc(100vh - ${panelHeight + sidePad * 2 + 56}px)`;
+  // Адаптивная высота чата под все слои
+  const chatAreaHeight = `calc(100vh - ${panelHeight + sidePad * 2 + 160}px)`;
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -118,59 +118,13 @@ const Chat = () => {
         </div>
       </div>
 
-      {/* Шаблоны: Адаптивные, всегда видны и удобно нажимать с любого устройства */}
-      <div
-        style={{
-          width: "100%",
-          maxWidth,
-          display: "flex",
-          flexDirection: "row",
-          justifyContent: "space-between",
-          gap: 10,
-          margin: "0 auto 10px auto",
-          paddingLeft: sidePad,
-          paddingRight: sidePad,
-          marginTop: panelHeight + sidePad,
-        }}
-      >
-        {PRESET_TEMPLATES.map((tpl, idx) => (
-          <button
-            key={tpl.title}
-            style={{
-              background: "#fff",
-              color: panelBg,
-              border: "none",
-              borderRadius: 18,
-              padding: "10px 8px",
-              fontSize: 16,
-              flex: 1,
-              boxShadow: "0 2px 10px 0 rgba(55,40,120,0.12)",
-              cursor: inputDisabled ? "not-allowed" : "pointer",
-              textAlign: "left",
-              display: "flex",
-              flexDirection: "column",
-              minWidth: 0,
-              maxWidth: "100%",
-              marginBottom: 0,
-              marginTop: 0,
-              touchAction: "manipulation",
-            }}
-            disabled={inputDisabled}
-            onClick={() => setUserInput(tpl.description)}
-          >
-            <span style={{ fontWeight: 600, fontSize: 17 }}>{tpl.title}</span>
-            <span style={{ fontSize: 13, color: "#555" }}>{tpl.description}</span>
-          </button>
-        ))}
-      </div>
-
       {/* Контейнер с чатом и баннером */}
       <div
         style={{
           width: "100%",
           maxWidth,
           margin: "0 auto",
-          marginTop: panelHeight + sidePad * 2 + 56,
+          marginTop: panelHeight + sidePad,
           boxSizing: "border-box",
           height: chatAreaHeight,
           display: "flex",
@@ -179,7 +133,7 @@ const Chat = () => {
           overflow: "hidden",
         }}
       >
-        {/* Баннер, обрезанный сверху/снизу по 10% */}
+        {/* Баннер, не слишком укороченный */}
         <div
           style={{
             width: `calc(100% - ${sidePad * 2}px)`,
@@ -193,7 +147,7 @@ const Chat = () => {
             justifyContent: "center",
             alignItems: "center",
             flexShrink: 0,
-            height: 132,               // фиксированная высота баннера, можно менять под дизайн
+            height: 168, // баннер стал чуть выше!
             position: "relative",
           }}
         >
@@ -202,12 +156,12 @@ const Chat = () => {
             alt="Nora AI баннер"
             style={{
               width: "100%",
-              height: "120%",           // увеличение, чтобы 10% сверху/снизу попало вне видимой области
+              height: "113%",           // обрезаем совсем чуть-чуть
               objectFit: "cover",
               objectPosition: "center 50%",
               display: "block",
               position: "absolute",
-              top: "-10%",
+              top: "-6.5%",
               left: 0,
             }}
           />
@@ -251,6 +205,56 @@ const Chat = () => {
           ))}
           <div ref={messagesEndRef} />
         </div>
+      </div>
+
+      {/* Шаблонные ответы над вводом */}
+      <div
+        style={{
+          position: "fixed",
+          left: "50%",
+          bottom: panelHeight + sidePad * 2,
+          transform: "translateX(-50%)",
+          width: `calc(100% - ${sidePad * 2}px)`,
+          maxWidth,
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-between",
+          gap: 10,
+          paddingLeft: sidePad,
+          paddingRight: sidePad,
+          marginBottom: sidePad,
+          zIndex: 2500,
+        }}
+      >
+        {PRESET_TEMPLATES.map((tpl, idx) => (
+          <button
+            key={tpl.title}
+            style={{
+              background: "#fff",
+              color: panelBg,
+              border: "none",
+              borderRadius: 18,
+              padding: "10px 8px",
+              fontSize: 16,
+              flex: 1,
+              boxShadow: "0 2px 10px 0 rgba(55,40,120,0.12)",
+              cursor: inputDisabled ? "not-allowed" : "pointer",
+              textAlign: "left",
+              display: "flex",
+              flexDirection: "column",
+              minWidth: 0,
+              maxWidth: "100%",
+              marginBottom: 0,
+              marginTop: 0,
+              touchAction: "manipulation",
+            }}
+            disabled={inputDisabled}
+            onClick={() => setUserInput(tpl.description)}
+          >
+            <span style={{ fontWeight: 600, fontSize: 17 }}>{tpl.title}</span>
+            <span style={{ fontSize: 13, color: "#555" }}>{tpl.description}</span>
+          </button>
+        ))}
       </div>
 
       {/* Фиксированное поле ввода снизу */}
