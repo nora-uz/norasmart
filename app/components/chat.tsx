@@ -51,12 +51,6 @@ const FAKE_ANSWERS = [
   "Пиши свой запрос, я отвечу!",
 ];
 
-// --- интерактивы ---
-const EMOJI_TERM = "🤰";
-const EMOJI_STATE = "😊";
-const termGradient = "linear-gradient(135deg,#fde047 0%,#fbbf24 100%)"; // желтый градиент
-const stateGradient = "linear-gradient(135deg,#7c3aed 0%,#6a11cb 100%)"; // фиолетово-синий градиент
-
 const moods = [
   { label: "Отлично", emoji: "😃" },
   { label: "Хорошо", emoji: "🙂" },
@@ -64,6 +58,11 @@ const moods = [
   { label: "Не очень", emoji: "😕" },
   { label: "Плохо", emoji: "😣" }
 ];
+
+const EMOJI_TERM = "🤰";
+const EMOJI_STATE = "😊";
+const termGradient = "linear-gradient(135deg,#fde047 0%,#fbbf24 100%)";
+const stateGradient = "linear-gradient(135deg,#7c3aed 0%,#6a11cb 100%)";
 
 function InteractiveLine({ onSelect }) {
   const [showMonthList, setShowMonthList] = useState(false);
@@ -85,28 +84,22 @@ function InteractiveLine({ onSelect }) {
     if (selectedMonth === null || selectedMood === null) setHasSent(false);
   }, [selectedMonth, selectedMood]);
 
-  const boxPad = 16;
+  const boxPad = sidePad;
   const fontSizeLabel = 15;
   const fontSizeChoice = 18;
-  const dropdownAnim = {
-    animation: "dropdown 320ms cubic-bezier(.61,.55,0,1.08)",
-    transform: "translateY(-6px)",
-    opacity: 1,
-    pointerEvents: "auto",
-  };
 
   return (
     <>
       <style>{`
         @keyframes dropdown {
-          0% { opacity: 0; transform: translateY(-36px);}
-          100% { opacity: 1; transform: translateY(-6px);}
+          0% { opacity: 0; transform: translateY(-32px);}
+          100% { opacity: 1; transform: translateY(-7px);}
         }
       `}</style>
       <div style={{
         display: "flex",
         gap: 22,
-        maxWidth: 560,
+        maxWidth: maxWidth,
         padding: `0 ${boxPad}px`,
         margin: "28px auto 0 auto",
         justifyContent: "center"
@@ -151,7 +144,7 @@ function InteractiveLine({ onSelect }) {
               padding: 10,
               marginTop: 7,
               boxShadow: "none",
-              ...dropdownAnim
+              animation: "dropdown 320ms cubic-bezier(.61,.55,0,1.08)"
             }}>
               {Array.from({ length: 9 }).map((_, i) => (
                 <div
@@ -166,15 +159,19 @@ function InteractiveLine({ onSelect }) {
                     background: selectedMonth === (i + 1) ? "#fff6" : "transparent",
                     cursor: "pointer",
                     marginBottom: i < 8 ? 4 : 0,
-                    transition: "background 0.15s"
+                    transition: "background 0.15s",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: 7
                   }}
                   onClick={() => {
                     setSelectedMonth(i + 1);
                     setShowMonthList(false);
                   }}
                 >
-                  <span style={{ marginRight: 10, fontSize: 20 }}>{EMOJI_TERM}</span>
-                  {i + 1} месяц
+                  <span style={{ fontSize: 20 }}>{EMOJI_TERM}</span>
+                  <span>{i + 1} месяц</span>
                 </div>
               ))}
             </div>
@@ -222,7 +219,7 @@ function InteractiveLine({ onSelect }) {
               padding: 10,
               marginTop: 7,
               boxShadow: "none",
-              ...dropdownAnim
+              animation: "dropdown 320ms cubic-bezier(.61,.55,0,1.08)"
             }}>
               {moods.map((item, idx) => (
                 <div
@@ -258,6 +255,7 @@ function InteractiveLine({ onSelect }) {
   );
 }
 
+// --- основной блок чата ---
 const Chat = () => {
   const [userInput, setUserInput] = useState("");
   const [messages, setMessages] = useState([]);
@@ -265,6 +263,7 @@ const Chat = () => {
   const [darkMode, setDarkMode] = useState(true);
   const messagesEndRef = useRef(null);
   const showTemplates = messages.length === 0;
+
   const theme = darkMode ? themes.dark : themes.light;
 
   useEffect(() => {
@@ -305,14 +304,10 @@ const Chat = () => {
   return (
     <div style={{
       background: theme.bgColor,
-      width: "100vw",
-      minHeight: 800,
-      overflow: "hidden",
-      position: "relative",
-      transition: "background 0.4s"
+      width: "100vw", minHeight: 800, overflow: "hidden",
+      position: "relative", transition: "background 0.4s"
     }}>
       <div style={{ height: sidePad }} />
-      {/* Панель с градиентом */}
       <div style={{
         width: `calc(100% - ${sidePad * 2}px)`,
         maxWidth,
@@ -354,18 +349,12 @@ const Chat = () => {
       <div style={{ height: sidePad }} />
       <div
         style={{
-          width: `calc(100% - ${sidePad * 2}px)`,
-          maxWidth,
-          margin: "0 auto",
-          borderRadius: 26,
-          overflow: "hidden",
+          width: `calc(100% - ${sidePad * 2}px)`, maxWidth,
+          margin: "0 auto", borderRadius: 26, overflow: "hidden",
           boxShadow: "0 4px 28px 0 rgba(55,40,120,0.14)",
           background: theme.bgColor,
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          flexShrink: 0,
-          position: "relative"
+          display: "flex", justifyContent: "center",
+          alignItems: "center", flexShrink: 0, position: "relative"
         }}
       >
         <img
@@ -434,8 +423,7 @@ const Chat = () => {
           <div ref={messagesEndRef} />
         </div>
       </div>
-      <form
-        onSubmit={handleSubmit}
+      <form onSubmit={handleSubmit}
         style={{
           position: "fixed",
           left: "50%",
@@ -449,8 +437,7 @@ const Chat = () => {
           background: "none",
           boxSizing: "border-box",
           padding: 0
-        }}
-      >
+        }}>
         <input
           type="text"
           style={{
@@ -495,14 +482,14 @@ const Chat = () => {
         >
           <img src={ICONS.arrow} alt="Send" style={iconImgSend} />
         </button>
-        <style>{`
-          .nora-input::placeholder {
-            color: ${theme.placeholder};
-            opacity: 1;
-            font-size: 15px;
-          }
-        `}</style>
       </form>
+      <style>{`
+        .nora-input::placeholder {
+          color: ${theme.placeholder};
+          opacity: 1;
+          font-size: 15px;
+        }
+      `}</style>
     </div>
   );
 };
