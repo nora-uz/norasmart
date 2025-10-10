@@ -173,8 +173,8 @@ const Chat = () => {
               width: "100%",
             }}>
               <div style={{
-                background: msg.role === "assistant" ? panelBg : "none",
-                color: "#fff",
+                background: msg.role === "assistant" ? panelBg : "#fff",
+                color: msg.role === "assistant" ? "#fff" : "#181818",
                 borderRadius: borderRadius,
                 padding: "14px 20px",
                 fontSize: 18,
@@ -186,6 +186,7 @@ const Chat = () => {
                 marginRight: sidePad,
                 wordBreak: "break-word",
                 alignSelf: msg.role === "assistant" ? "flex-start" : "flex-end",
+                boxShadow: msg.role === "user" ? "0 2px 12px rgba(0,0,0,0.08)" : "none",
               }}>
                 {msg.text}
               </div>
@@ -260,7 +261,7 @@ const Chat = () => {
         </div>
       )}
 
-      {/* Поле для сообщения и кнопка (круглая, справа в поле, снаружи одинаковый sidePad) */}
+      {/* Поле для сообщения и кнопка (отдельные, одинаковый скругление, справа отступ как слева у поля) */}
       <form
         onSubmit={handleSubmit}
         style={{
@@ -270,14 +271,12 @@ const Chat = () => {
           transform: "translateX(-50%)",
           width: `calc(100% - ${sidePad * 2}px)`,
           maxWidth,
-          background: panelBg,
-          borderRadius: borderRadius,
-          height: BTN_SIZE,
+          zIndex: 2600,
           display: "flex",
           alignItems: "center",
-          zIndex: 2600,
-          padding: 0,
+          background: "none",
           boxSizing: "border-box",
+          padding: 0,
         }}
       >
         <input
@@ -287,11 +286,12 @@ const Chat = () => {
             border: "none",
             borderRadius: borderRadius,
             height: BTN_SIZE,
-            padding: "0 8px 0 22px",
+            padding: `0 8px 0 ${sidePad}px`,
             fontSize: 19,
             background: panelBg,
             color: "#fff",
             outline: "none",
+            marginRight: 8,
           }}
           value={userInput}
           onChange={e => setUserInput(e.target.value)}
@@ -304,11 +304,10 @@ const Chat = () => {
             background: "#fff",
             color: panelBg,
             border: "none",
-            borderRadius: BTN_SIZE / 2,
-            width: BTN_SIZE - 8,
-            height: BTN_SIZE - 8,
+            borderRadius: borderRadius,
+            width: BTN_SIZE,
+            height: BTN_SIZE,
             marginRight: sidePad,
-            marginLeft: 6,
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
@@ -316,6 +315,7 @@ const Chat = () => {
             opacity: inputDisabled ? 0.7 : 1,
             boxShadow: "none",
           }}
+          disabled={inputDisabled}
         >
           <img src={ICONS.arrow} alt="Send" style={iconImgSend} />
         </button>
