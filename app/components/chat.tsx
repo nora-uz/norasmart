@@ -1,23 +1,25 @@
 import React, { useState, useEffect, useRef } from "react";
 
-// Новые иконки (PNG)
+// Иконки (PNG)
 const ICONS = {
-  telegram: "https://cdn-icons-png.flaticon.com/512/9821/9821637.png", // Telegram/message
-  phone: "https://cdn-icons-png.flaticon.com/512/5068/5068703.png", // Phone call
-  sun: "https://cdn-icons-png.flaticon.com/512/16769/16769231.png", // Sun (night-day)
-  moon: "https://cdn-icons-png.flaticon.com/512/16769/16769231.png", // Moon (night-day)
-  trash: "https://cdn-icons-png.flaticon.com/512/3917/3917772.png", // Trash
-  arrow: "https://cdn-icons-png.flaticon.com/512/3916/3916848.png", // Arrow small up
+  telegram: "https://cdn-icons-png.flaticon.com/512/9821/9821637.png",
+  phone: "https://cdn-icons-png.flaticon.com/512/5068/5068703.png",
+  sun: "https://cdn-icons-png.flaticon.com/512/16769/16769231.png",
+  moon: "https://cdn-icons-png.flaticon.com/512/16769/16769231.png",
+  trash: "https://cdn-icons-png.flaticon.com/512/3917/3917772.png",
+  arrow: "https://cdn-icons-png.flaticon.com/512/3916/3916848.png",
 };
 
 const MAIN_IMG = "https://user-gen-media-assets.s3.amazonaws.com/seedream_images/70a60994-809a-473d-accc-36284ba46e1c.png";
 
-const ICON_SIZE_PANEL = 24;
+const ICON_SIZE_PANEL = 18; // уменьшено ещё
 const ICON_SIZE_SEND = 28;
 const BTN_SIZE = 48;
 const borderRadius = 22;
 const sidePad = 18;
 const panelHeight = 62;
+const panelBg = "#131313";   // ещё темней
+const bgColor = "#181818";   // основной фон чуть темнее
 
 const Chat = () => {
   const [userInput, setUserInput] = useState("");
@@ -42,11 +44,10 @@ const Chat = () => {
     setUserInput("");
   };
 
-  const panelBg = "#171717", bgColor = "#1C1C1C";
-
   return (
     <div style={{
       minHeight: "100vh",
+      width: "100vw",
       background: bgColor,
       display: "flex",
       flexDirection: "column",
@@ -58,8 +59,10 @@ const Chat = () => {
       <div style={{
         position: "fixed",
         top: sidePad,
-        left: sidePad,
-        right: sidePad,
+        left: "50%",
+        transform: "translateX(-50%)",
+        width: "100%",
+        maxWidth: 560,
         zIndex: 100,
         height: panelHeight,
         background: panelBg,
@@ -68,7 +71,7 @@ const Chat = () => {
         alignItems: "center",
         borderRadius: borderRadius,
         padding: "0 18px",
-        justifyContent: "space-between"
+        justifyContent: "space-between",
       }}>
         <div style={{ fontWeight: 600, fontSize: 19 }}>Nora AI</div>
         <div style={{ display: "flex", alignItems: "center", gap: 13 }}>
@@ -88,20 +91,24 @@ const Chat = () => {
       </div>
       {/* Картинка Nora — по центру */}
       <div style={{
-        width: `calc(100vw - ${sidePad * 2}px)`,
-        maxWidth: 650 - sidePad * 2,
+        width: "100%",
+        maxWidth: 560,
         margin: "0 auto",
         marginTop: sidePad + panelHeight + 12,
         borderRadius: borderRadius,
         overflow: "hidden",
         background: "none",
-        boxSizing: "border-box"
+        boxSizing: "border-box",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center"
       }}>
         <img
           src={MAIN_IMG}
           alt="Nora AI"
           style={{
             width: "100%",
+            maxWidth: 370,
             borderRadius: borderRadius,
             display: "block",
             background: "none",
@@ -113,11 +120,12 @@ const Chat = () => {
       <div style={{
         flex: 1,
         width: "100%",
-        maxWidth: 650,
+        maxWidth: 560,
         margin: "0 auto",
         boxSizing: "border-box",
         minHeight: "100vh",
         padding: `20px ${sidePad}px 140px ${sidePad}px`,
+        position: "relative"
       }}>
         {messages.map((msg, idx) => (
           <div key={idx} style={{
@@ -147,9 +155,11 @@ const Chat = () => {
       {/* Инпут и кнопка отправки */}
       <form onSubmit={handleSubmit} style={{
         position: "fixed",
-        left: sidePad,
-        right: sidePad,
+        left: "50%",
+        transform: "translateX(-50%)",
         bottom: sidePad,
+        width: "100%",
+        maxWidth: 560,
         background: panelBg,
         borderRadius: borderRadius,
         height: panelHeight,
@@ -167,7 +177,7 @@ const Chat = () => {
             height: BTN_SIZE,
             padding: "0 22px",
             fontSize: 19,
-            background: panelBg,
+            background: panelBg, // темнее чем фон!
             color: "#fff",
             outline: "none",
           }}
@@ -214,16 +224,16 @@ const iconBtn = (color) => ({
 });
 
 const iconImgPanel = {
-  width: 24,
-  height: 24,
+  width: ICON_SIZE_PANEL,
+  height: ICON_SIZE_PANEL,
   display: "block",
   background: "none",
-  filter: "brightness(0) invert(1)", // фильтр делает PNG белым
+  filter: "brightness(0) invert(1)", // делает PNG белым
 };
 
 const iconImgSend = {
-  width: 28,
-  height: 28,
+  width: ICON_SIZE_SEND,
+  height: ICON_SIZE_SEND,
   display: "block",
   background: "none",
 };
