@@ -204,7 +204,7 @@ const Chat = () => {
         </div>
       </div>
 
-      {/* Готовые ответы — столбец с ровными боковыми и нижним отступами */}
+      {/* Готовые ответы — столбец, ширина и отступы как у поля для сообщения */}
       <div
         style={{
           position: "fixed",
@@ -213,11 +213,6 @@ const Chat = () => {
           transform: "translateX(-50%)",
           width: `calc(100% - ${sidePad * 2}px)`,
           maxWidth,
-          display: "flex",
-          flexDirection: "column",
-          gap: sidePad,
-          paddingLeft: sidePad,
-          paddingRight: sidePad,
           zIndex: 2500,
         }}
       >
@@ -228,17 +223,17 @@ const Chat = () => {
               background: panelBg,
               color: "#fff",
               border: "none",
-              borderRadius: 18,
-              padding: "12px 20px",
+              borderRadius: borderRadius,
+              padding: "12px 22px",
               fontSize: 16,
               width: "100%",
+              marginBottom: sidePad, // промежуток между шаблонами
               boxShadow: "0 2px 10px 0 rgba(55,40,120,0.12)",
               cursor: inputDisabled ? "not-allowed" : "pointer",
               textAlign: "left",
               display: "flex",
               flexDirection: "column",
               outline: "none",
-              margin: 0,
             }}
             disabled={inputDisabled}
             onClick={() => {
