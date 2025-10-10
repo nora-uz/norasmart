@@ -12,7 +12,7 @@ const BANNER = "https://user-gen-media-assets.s3.amazonaws.com/seedream_images/4
 const ICON_SIZE_PANEL = 18;
 const ICON_SIZE_SEND = 28;
 const BTN_SIZE = 62;
-const SEND_BTN_SIZE = 84; // еще шире кнопку отправки
+const SEND_BTN_SIZE = 94; // еще шире кнопку отправки
 const TEMPLATE_BTN_SIZE = 88;
 const borderRadius = 22;
 const sidePad = 16;
@@ -67,7 +67,6 @@ const Chat = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  // для мобильного экрана: высота = 100vh минус поле ввода
   const mobileScreenHeight = `calc(100vh - ${BTN_SIZE + sidePad * 2}px)`;
 
   const handleSubmit = (e) => {
@@ -97,12 +96,15 @@ const Chat = () => {
       position: "relative",
       transition: "background 0.4s"
     }}>
+      {/* Отступ сверху до панели */}
+      <div style={{ height: sidePad }} />
+
       {/* Панель */}
       <div style={{
         width: `calc(100% - ${sidePad * 2}px)`,
         maxWidth,
         height: panelHeight,
-        margin: `${sidePad}px auto 0 auto`,
+        margin: "0 auto",
         background: theme.panelBg,
         color: theme.assistantText,
         display: "flex",
@@ -136,11 +138,13 @@ const Chat = () => {
         </div>
       </div>
 
+      {/* Отступ после панели до фото */}
+      <div style={{ height: sidePad }} />
+
       <div style={{
         width: "100%",
         maxWidth,
         margin: "0 auto",
-        marginTop: sidePad,
         boxSizing: "border-box",
         height: mobileScreenHeight,
         display: "flex",
@@ -152,7 +156,6 @@ const Chat = () => {
         <div style={{
           width: `calc(100% - ${sidePad * 2}px)`,
           maxWidth,
-          margin: `${sidePad}px 0`,
           borderRadius: 26,
           overflow: "hidden",
           boxShadow: "0 4px 28px 0 rgba(55,40,120,0.14)",
@@ -214,12 +217,14 @@ const Chat = () => {
           ))}
           <div ref={messagesEndRef} />
         </div>
-        {/* БЛОК ГОТОВЫХ ОТВЕТОВ */}
+        {/* Отступ между фото/чатом и блоком готовых ответов */}
+        <div style={{ height: sidePad }} />
+        {/* ГОТОВЫЕ ОТВЕТЫ */}
         {showTemplates && (
           <div style={{
             width: `calc(100% - ${sidePad * 2}px)`,
             maxWidth,
-            margin: `${sidePad}px auto 0 auto`,
+            margin: "0 auto",
             zIndex: 2500
           }}>
             {PRESET_TEMPLATES.map((tpl) => (
@@ -231,7 +236,7 @@ const Chat = () => {
                   border: "none",
                   borderRadius: borderRadius,
                   padding: "12px 22px",
-                  fontSize: 16,
+                  fontSize: 15,
                   width: "100%",
                   height: TEMPLATE_BTN_SIZE,
                   marginBottom: sidePad,
@@ -262,7 +267,7 @@ const Chat = () => {
               >
                 <span style={{
                   fontWeight: 600,
-                  fontSize: 16,
+                  fontSize: 15,
                   marginBottom: 5,
                   lineHeight: 1.13,
                   whiteSpace: "nowrap"
@@ -283,6 +288,8 @@ const Chat = () => {
           </div>
         )}
       </div>
+      {/* Отступ над фиксированным полем */}
+      <div style={{ height: sidePad }} />
       {/* ПОЛЕ И КНОПКА: фиксировано снизу */}
       <form
         onSubmit={handleSubmit}
@@ -304,7 +311,7 @@ const Chat = () => {
         <input
           type="text"
           style={{
-            flex: 10,
+            flex: 14, // длиннее input
             border: "none",
             borderRadius: borderRadius,
             height: BTN_SIZE,
