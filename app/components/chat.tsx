@@ -147,7 +147,7 @@ const Chat = () => {
             justifyContent: "center",
             alignItems: "center",
             flexShrink: 0,
-            height: 208, // оригинальная (или желаемая) высота
+            height: 208,
             position: "relative",
           }}
         >
@@ -207,12 +207,12 @@ const Chat = () => {
         </div>
       </div>
 
-      {/* Шаблонные ответы над вводом с отступами */}
+      {/* Шаблонные ответы над вводом с отступом, тёмные */}
       <div
         style={{
           position: "fixed",
           left: "50%",
-          bottom: panelHeight + sidePad * 2,
+          bottom: panelHeight + sidePad * 2 + sidePad, // отступ между полем и шаблонами
           transform: "translateX(-50%)",
           width: `calc(100% - ${sidePad * 2}px)`,
           maxWidth,
@@ -222,7 +222,7 @@ const Chat = () => {
           gap: 10,
           paddingLeft: sidePad,
           paddingRight: sidePad,
-          marginBottom: sidePad,
+          marginBottom: 0,
           zIndex: 2500,
         }}
       >
@@ -230,8 +230,8 @@ const Chat = () => {
           <button
             key={tpl.title}
             style={{
-              background: "#fff",
-              color: panelBg,
+              background: panelBg,
+              color: "#fff",
               border: "none",
               borderRadius: 18,
               padding: "10px 8px",
@@ -247,12 +247,23 @@ const Chat = () => {
               marginBottom: 0,
               marginTop: 0,
               touchAction: "manipulation",
+              outline: "none",
             }}
             disabled={inputDisabled}
-            onClick={() => setUserInput(tpl.description)}
+            onClick={() => {
+              if (inputDisabled) return;
+              setMessages(prev => [...prev, { role: "user", text: tpl.description }]);
+              setInputDisabled(true);
+              setUserInput("");
+              setTimeout(() => {
+                const reply = FAKE_ANSWERS[Math.floor(Math.random() * FAKE_ANSWERS.length)];
+                setMessages(prev => [...prev, { role: "assistant", text: reply }]);
+                setInputDisabled(false);
+              }, 700);
+            }}
           >
             <span style={{ fontWeight: 600, fontSize: 17 }}>{tpl.title}</span>
-            <span style={{ fontSize: 13, color: "#555" }}>{tpl.description}</span>
+            <span style={{ fontSize: 13, color: "#ccc" }}>{tpl.description}</span>
           </button>
         ))}
       </div>
