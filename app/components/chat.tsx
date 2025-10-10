@@ -1,15 +1,15 @@
 import React, { useState, useEffect, useRef } from "react";
 
 const ICONS = {
-  telegram: "https://your-cdn.com/telegram.png",
-  phone: "https://your-cdn.com/phone.png",
-  sun: "https://your-cdn.com/sun1.png",
-  moon: "https://your-cdn.com/moon.png",
-  trash: "https://your-cdn.com/trash.png",
-  arrow: "https://your-cdn.com/arrow.png", // стрелка вверх на белом фоне, темная
+  telegram: "https://user-gen-media-assets.s3.amazonaws.com/seedream_images/telegram.png",
+  phone: "https://user-gen-media-assets.s3.amazonaws.com/seedream_images/phone.png",
+  sun: "https://user-gen-media-assets.s3.amazonaws.com/seedream_images/sun1.png", // или sun2.png
+  moon: "https://user-gen-media-assets.s3.amazonaws.com/seedream_images/moon.png",
+  trash: "https://user-gen-media-assets.s3.amazonaws.com/seedream_images/trash.png",
+  arrow: "https://user-gen-media-assets.s3.amazonaws.com/seedream_images/arrow.png", // стрелка вверх, белый фон, темная
 };
 
-// Замените на свою ссылку настоящей главной фотографии
+// Главная фотография по центру
 const MAIN_IMG = "https://user-gen-media-assets.s3.amazonaws.com/seedream_images/70a60994-809a-473d-accc-36284ba46e1c.png";
 
 const ICON_SIZE = 32;
