@@ -49,7 +49,7 @@ const Chat = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  // Адаптивная высота чата: скорректируй при необходимости под твой layout
+  // Высота блока чата скорректирована по макету
   const chatAreaHeight = `calc(100vh - ${panelHeight + sidePad * 2 + 160}px)`;
 
   const handleSubmit = (e) => {
@@ -133,7 +133,7 @@ const Chat = () => {
           overflow: "hidden",
         }}
       >
-        {/* Баннер — без обрезки, с равными отступами по бокам */}
+        {/* Баннер — оригинальный размер с равными отступами */}
         <div
           style={{
             width: `calc(100% - ${sidePad * 2}px)`,
@@ -207,7 +207,7 @@ const Chat = () => {
         </div>
       </div>
 
-      {/* Шаблонные ответы растянуты, с равными боковыми отступами */}
+      {/* Готовые ответы — один столбец, с боковыми отступами и равным отступом снизу */}
       <div
         style={{
           position: "fixed",
@@ -217,7 +217,8 @@ const Chat = () => {
           width: `calc(100% - ${sidePad * 2}px)`,
           maxWidth,
           display: "flex",
-          gap: 10,
+          flexDirection: "column",
+          gap: sidePad,
           paddingLeft: sidePad,
           paddingRight: sidePad,
           marginBottom: 0,
@@ -232,20 +233,16 @@ const Chat = () => {
               color: "#fff",
               border: "none",
               borderRadius: 18,
-              padding: "10px 8px",
+              padding: "12px 20px",
               fontSize: 16,
-              flex: 1,
+              width: "100%",
               boxShadow: "0 2px 10px 0 rgba(55,40,120,0.12)",
               cursor: inputDisabled ? "not-allowed" : "pointer",
               textAlign: "left",
               display: "flex",
               flexDirection: "column",
-              minWidth: 0,
-              maxWidth: "100%",
-              marginBottom: 0,
-              marginTop: 0,
-              touchAction: "manipulation",
               outline: "none",
+              margin: 0,
             }}
             disabled={inputDisabled}
             onClick={() => {
