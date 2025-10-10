@@ -105,97 +105,84 @@ const Chat = () => {
             </button>
           </div>
         </div>
-        {/* Контейнер для контента, фото: исправленный marginTop */}
+        {/* Фото Nora всегда под панелью, отступ сверху sidePad */}
         <div
           style={{
-            width: "100%",
-            maxWidth,
+            width: `calc(100% - ${sidePad * 2}px)`,
+            maxWidth: 370,
+            margin: "0 auto",
+            marginTop: sidePad + panelHeight,  // всегда такой же отступ, как у панели сверху!
+            marginBottom: sidePad,
+            borderRadius: borderRadius,
+            overflow: "hidden",
+            boxSizing: "border-box",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            position: "relative",
+            zIndex: 999,
+          }}
+        >
+          <img
+            src={MAIN_IMG}
+            alt="Nora AI"
+            style={{
+              width: "100%",
+              borderRadius: borderRadius,
+              display: "block",
+              background: "none",
+              boxShadow: "none",
+            }}
+          />
+        </div>
+        {/* Сообщения c прокруткой только между фото и вводом */}
+        <div
+          style={{
+            width: `calc(100% - ${sidePad * 2}px)`,
             margin: "0 auto",
             boxSizing: "border-box",
             flex: 1,
-            paddingTop: panelHeight + sidePad * 2,
-            paddingBottom: panelHeight + sidePad * 2,
-            overflow: "hidden",
             display: "flex",
             flexDirection: "column",
-            alignItems: "center",
-            minHeight: `calc(100vh - ${panelHeight + sidePad * 3}px)`,
+            justifyContent: "flex-end",
+            overflowY: "auto",
+            padding: 0,
+            marginBottom: sidePad + panelHeight, // оставляет место для инпута
+            position: "relative",
+            zIndex: 1,
           }}
         >
-          <div
-            style={{
-              width: `calc(100% - ${sidePad * 2}px)`,
-              maxWidth: 370,
-              margin: "0 auto",
-              marginTop: sidePad + panelHeight, // ← только эта строка изменена
-              marginBottom: sidePad,
-              borderRadius: borderRadius,
-              overflow: "hidden",
-              boxSizing: "border-box",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <img
-              src={MAIN_IMG}
-              alt="Nora AI"
+          {messages.map((msg, idx) => (
+            <div
+              key={idx}
               style={{
+                display: "flex",
+                justifyContent: msg.role === "assistant" ? "flex-start" : "flex-end",
+                marginBottom: 12,
                 width: "100%",
-                borderRadius: borderRadius,
-                display: "block",
-                background: "none",
-                boxShadow: "none",
               }}
-            />
-          </div>
-          {/* Область для сообщений */}
-          <div
-            style={{
-              width: "100%",
-              boxSizing: "border-box",
-              flex: 1,
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "flex-end",
-              overflowY: "auto",
-              padding: 0,
-              marginBottom: 0,
-              alignItems: "center",
-            }}
-          >
-            {messages.map((msg, idx) => (
+            >
               <div
-                key={idx}
                 style={{
-                  display: "flex",
-                  justifyContent: msg.role === "assistant" ? "flex-start" : "flex-end",
-                  marginBottom: 12,
-                  width: "100%",
+                  background: msg.role === "assistant" ? panelBg : "none",
+                  color: "#fff",
+                  borderRadius: borderRadius,
+                  padding: "14px 20px",
+                  fontSize: 18,
+                  lineHeight: 1.7,
+                  border: "none",
+                  maxWidth: "86vw",
+                  minWidth: 54,
+                  marginLeft: msg.role === "user" ? "auto" : 0,
+                  marginRight: msg.role === "assistant" ? "auto" : 0,
+                  wordBreak: "break-word",
                 }}
               >
-                <div
-                  style={{
-                    background: msg.role === "assistant" ? panelBg : "none",
-                    color: "#fff",
-                    borderRadius: borderRadius,
-                    padding: "14px 20px",
-                    fontSize: 18,
-                    lineHeight: 1.7,
-                    border: "none",
-                    maxWidth: "86vw",
-                    minWidth: 54,
-                    marginLeft: msg.role === "user" ? "auto" : 0,
-                    marginRight: msg.role === "assistant" ? "auto" : 0,
-                    wordBreak: "break-word",
-                  }}
-                >
-                  {msg.text}
-                </div>
+                {msg.text}
               </div>
-            ))}
-            <div ref={messagesEndRef} />
-          </div>
+            </div>
+          ))}
+          <div ref={messagesEndRef} />
         </div>
         {/* Фиксированное поле ввода снизу */}
         <form
