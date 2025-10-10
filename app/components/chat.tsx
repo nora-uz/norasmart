@@ -29,6 +29,10 @@ const PRESET_TEMPLATES = [
     title: "Эмоции",
     description: "Как справиться с тревогой и стрессом",
   },
+  {
+    title: "Вопрос врачу",
+    description: "Когда стоит обратиться за консультацией",
+  },
 ];
 
 const FAKE_ANSWERS = [
@@ -50,7 +54,7 @@ const Chat = () => {
   }, [messages]);
 
   // Высота блока чата скорректирована по макету
-  const chatAreaHeight = `calc(100vh - ${panelHeight + sidePad * 2 + 160}px)`;
+  const chatAreaHeight = `calc(100vh - ${panelHeight + sidePad * 2 + 220}px)`;
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -204,7 +208,7 @@ const Chat = () => {
         </div>
       </div>
 
-      {/* Готовые ответы — столбец, ширина и отступы как у поля для сообщения */}
+      {/* Готовые ответы — столбец, в точности как поле для сообщения */}
       <div
         style={{
           position: "fixed",
@@ -224,15 +228,17 @@ const Chat = () => {
               color: "#fff",
               border: "none",
               borderRadius: borderRadius,
-              padding: "12px 22px",
+              padding: "11px 22px",
               fontSize: 16,
               width: "100%",
-              marginBottom: sidePad, // промежуток между шаблонами
+              height: BTN_SIZE, // идентичный размер с полем ввода
+              marginBottom: sidePad,
               boxShadow: "0 2px 10px 0 rgba(55,40,120,0.12)",
               cursor: inputDisabled ? "not-allowed" : "pointer",
               textAlign: "left",
               display: "flex",
               flexDirection: "column",
+              justifyContent: "center",
               outline: "none",
             }}
             disabled={inputDisabled}
@@ -248,8 +254,20 @@ const Chat = () => {
               }, 700);
             }}
           >
-            <span style={{ fontWeight: 600, fontSize: 17 }}>{tpl.title}</span>
-            <span style={{ fontSize: 13, color: "#ccc" }}>{tpl.description}</span>
+            <span style={{
+              fontWeight: 600,
+              fontSize: 17,
+              marginBottom: 6 // небольшая вертикальная дистанция между заголовком и описанием
+            }}>
+              {tpl.title}
+            </span>
+            <span style={{
+              fontSize: 13,
+              color: "#ccc",
+              lineHeight: 1.5
+            }}>
+              {tpl.description}
+            </span>
           </button>
         ))}
       </div>
@@ -266,7 +284,7 @@ const Chat = () => {
           maxWidth,
           background: panelBg,
           borderRadius: borderRadius,
-          height: panelHeight,
+          height: BTN_SIZE,
           display: "flex",
           alignItems: "center",
           zIndex: 2000,
