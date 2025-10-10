@@ -22,13 +22,13 @@ const maxWidth = 560;
 
 const PRESET_TEMPLATES = [
   {
-    title: "ЗДОРОВЬЕ",
+    title: "Здоровье",
     description: "Советы по самочувствию",
   },
   {
-    title: "ЭМОЦИИ",
+    title: "Эмоции",
     description: "Как справиться со стрессом",
-  }
+  },
 ];
 
 const FAKE_ANSWERS = [
@@ -97,11 +97,11 @@ const Chat = () => {
         boxSizing: "border-box",
         zIndex: 2000,
       }}>
-        <div style={{ fontWeight: 600, fontSize: 19, marginRight: 16 }}>Nora AI</div>
+        <div style={{ fontWeight: 600, fontSize: 19, marginRight: 36 }}>Nora AI</div>
         <div style={{
           display: "flex",
           alignItems: "center",
-          gap: 8,
+          gap: 6,
         }}>
           <button style={iconBtn(panelBg)} onClick={() => setDarkMode(mode => !mode)}>
             <img src={darkMode ? ICONS.sun : ICONS.moon} alt="Theme" style={iconImgPanel} />
@@ -153,8 +153,7 @@ const Chat = () => {
               height: "auto",
               display: "block",
               objectFit: "contain",
-              objectPosition: "center",
-              position: "relative",
+              objectPosition: "center"
             }}
           />
         </div>
@@ -196,7 +195,7 @@ const Chat = () => {
         </div>
       </div>
 
-      {/* Шаблонные ответы над формой, исчезают после первого сообщения */}
+      {/* Готовые шаблонные ответы над формой, исчезают после первого сообщения, без тени */}
       {showTemplates && (
         <div style={{
           position: "fixed",
@@ -220,7 +219,7 @@ const Chat = () => {
                 width: "100%",
                 height: BTN_SIZE,
                 marginBottom: sidePad,
-                boxShadow: "0 2px 10px 0 rgba(55,40,120,0.12)",
+                boxShadow: "none",
                 cursor: inputDisabled ? "not-allowed" : "pointer",
                 textAlign: "left",
                 display: "flex",
@@ -261,7 +260,7 @@ const Chat = () => {
         </div>
       )}
 
-      {/* Форма ввода фиксирована снизу */}
+      {/* Форма ввода — кнопка отправки внутри поля, одна общая граница */}
       <form
         onSubmit={handleSubmit}
         style={{
@@ -286,9 +285,9 @@ const Chat = () => {
           style={{
             flex: 1,
             border: "none",
-            borderRadius: borderRadius,
+            borderRadius: `${borderRadius}px 0 0 ${borderRadius}px`,
             height: BTN_SIZE,
-            padding: "0 22px",
+            padding: "0 18px",
             fontSize: 19,
             background: panelBg,
             color: "#fff",
@@ -305,17 +304,17 @@ const Chat = () => {
             background: "#fff",
             color: panelBg,
             border: "none",
-            borderRadius: BTN_SIZE / 2,
+            borderRadius: `0 ${borderRadius}px ${borderRadius}px 0`,
             width: BTN_SIZE,
             height: BTN_SIZE,
-            marginLeft: 10,
-            marginRight: 8,
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
             cursor: inputDisabled ? "not-allowed" : "pointer",
             opacity: inputDisabled ? 0.7 : 1,
             boxShadow: "none",
+            marginLeft: 0,
+            marginRight: 0,
           }}
         >
           <img src={ICONS.arrow} alt="Send" style={iconImgSend} />
@@ -336,7 +335,7 @@ const iconBtn = (color) => ({
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
-  boxShadow: "none",
+  boxShadow: "none"
 });
 
 const iconImgPanel = {
