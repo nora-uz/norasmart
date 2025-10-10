@@ -39,7 +39,6 @@ const Chat = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  // Для демонстрации: фейковый ответ ассистента без сервера
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!userInput.trim()) return;
@@ -123,12 +122,13 @@ const Chat = () => {
           </button>
         </div>
       </div>
-      {/* Главный баннер сайта */}
+      {/* Баннер под панелью с одинаковым отступом сверху и по бокам */}
       <div
         style={{
-          width: "100%",
-          maxWidth,
+          width: `calc(100% - ${sidePad * 2}px)`,
+          maxWidth: maxWidth,
           margin: "0 auto",
+          marginTop: sidePad + panelHeight,   // под панелью и с тем же отступом
           marginBottom: sidePad,
           borderRadius: 26,
           overflow: "hidden",
@@ -160,7 +160,7 @@ const Chat = () => {
           flexDirection: "column",
           alignItems: "center",
           overflowY: "auto",
-          paddingTop: panelHeight + sidePad,
+          paddingTop: 0,
           paddingBottom: panelHeight + sidePad * 2,
           minHeight: `calc(100vh - ${panelHeight * 2 + sidePad * 4}px)`,
         }}
