@@ -39,8 +39,8 @@ const Chat = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  // Высота для chat-зоны между панелью и полем ввода
-  const chatAreaHeight = `calc(100vh - ${(panelHeight + sidePad) * 2})`;
+  // Высота для chatArea: 100vh минус панель, минус отступы, минус поле ввода
+  const chatAreaHeight = `calc(100vh - ${panelHeight + sidePad * 2 + panelHeight}px)`;
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -66,11 +66,11 @@ const Chat = () => {
         background: bgColor,
         width: "100vw",
         height: "100vh",
-        position: "relative",
         overflow: "hidden",
+        position: "relative",
       }}
     >
-      {/* Панель сверху */}
+      {/* ----- Фиксированная панель ----- */}
       <div
         style={{
           position: "fixed",
@@ -107,26 +107,26 @@ const Chat = () => {
           </button>
         </div>
       </div>
-      {/* Контент под панелью, адаптивная высота, fix отступ */}
+      {/* ----- Контент между панелью и полем ввода ----- */}
       <div
         style={{
           width: "100%",
-          maxWidth: maxWidth,
+          maxWidth,
           margin: "0 auto",
-          marginTop: panelHeight + sidePad, // ровно sidePad после панели
-          boxSizing: "border-box",
+          marginTop: panelHeight + sidePad,
           height: chatAreaHeight,
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
+          boxSizing: "border-box",
           overflow: "hidden",
         }}
       >
-        {/* Баннер — всегда sidePad сверху и по бокам */}
+        {/* --- Баннер — строго под панелью, отступы по бокам и только ВНИЗУ --- */}
         <div
           style={{
             width: `calc(100% - ${sidePad * 2}px)`,
-            maxWidth: maxWidth,
+            maxWidth,
             marginBottom: sidePad,
             borderRadius: 26,
             overflow: "hidden",
@@ -135,6 +135,7 @@ const Chat = () => {
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
+            flexShrink: 0,
           }}
         >
           <img
@@ -147,7 +148,7 @@ const Chat = () => {
             }}
           />
         </div>
-        {/* Сообщения — скролл внутри chatArea, не всей страницы */}
+        {/* --- Чатовая область, скролл только тут (если сообщений много) --- */}
         <div
           style={{
             width: "100%",
@@ -187,7 +188,7 @@ const Chat = () => {
           <div ref={messagesEndRef} />
         </div>
       </div>
-      {/* Фиксированное поле ввода снизу */}
+      {/* ----- Фиксированное поле ввода снизу ----- */}
       <form
         onSubmit={handleSubmit}
         style={{
