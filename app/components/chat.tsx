@@ -139,7 +139,6 @@ const Chat = () => {
           width: `calc(100% - ${sidePad * 2}px)`,
           maxWidth,
           margin: "0 auto",
-          marginTop: sidePad,
           borderRadius: 26,
           overflow: "hidden",
           boxShadow: "0 4px 28px 0 rgba(55,40,120,0.14)",
