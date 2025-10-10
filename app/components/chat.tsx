@@ -15,19 +15,34 @@ const BTN_SIZE = 62;
 const borderRadius = 22;
 const sidePad = 16;
 const panelHeight = 62;
-const panelBg = "#131313";
-const bgColor = "#181818";
 const maxWidth = 560;
 
+const themes = {
+  dark: {
+    panelBg: "#131313",
+    bgColor: "#181818",
+    userBubble: "#fff",
+    userText: "#181818",
+    inputBg: "#131313",
+    placeholder: "#fff",
+    assistantBubble: "#131313",
+    assistantText: "#fff"
+  },
+  light: {
+    panelBg: "#F6F7FB",
+    bgColor: "#F9FAFC",
+    userBubble: "#fff",
+    userText: "#333",
+    inputBg: "#F6F7FB",
+    placeholder: "#333",
+    assistantBubble: "#E8EAED",
+    assistantText: "#333"
+  }
+};
+
 const PRESET_TEMPLATES = [
-  {
-    title: "Здоровье",
-    description: "Советы по самочувствию",
-  },
-  {
-    title: "Эмоции",
-    description: "Как справиться со стрессом",
-  },
+  { title: "Здоровье", description: "Советы по самочувствию" },
+  { title: "Эмоции", description: "Как справиться со стрессом" }
 ];
 
 const FAKE_ANSWERS = [
@@ -44,6 +59,7 @@ const Chat = () => {
   const [darkMode, setDarkMode] = useState(true);
   const messagesEndRef = useRef(null);
   const showTemplates = messages.length === 0;
+  const theme = darkMode ? themes.dark : themes.light;
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -52,6 +68,7 @@ const Chat = () => {
   const templatesHeight = showTemplates
     ? PRESET_TEMPLATES.length * BTN_SIZE + PRESET_TEMPLATES.length * sidePad
     : 0;
+
   const chatAreaHeight = `calc(100vh - ${panelHeight + sidePad * 2 + BTN_SIZE + templatesHeight}px)`;
 
   const handleSubmit = (e) => {
@@ -74,13 +91,14 @@ const Chat = () => {
 
   return (
     <div style={{
-      background: bgColor,
+      background: theme.bgColor,
       width: "100vw",
       height: "100vh",
       overflow: "hidden",
       position: "relative",
+      transition: "background 0.4s"
     }}>
-      {/* Панель: иконки правее, порядок — тема, телеграм, мусор */}
+      {/* Панель */}
       <div style={{
         position: "fixed",
         top: sidePad,
@@ -89,8 +107,8 @@ const Chat = () => {
         width: `calc(100% - ${sidePad * 2}px)`,
         maxWidth,
         height: panelHeight,
-        background: panelBg,
-        color: "#fff",
+        background: theme.panelBg,
+        color: theme.assistantText,
         display: "flex",
         alignItems: "center",
         borderRadius: borderRadius,
@@ -98,6 +116,7 @@ const Chat = () => {
         justifyContent: "flex-start",
         boxSizing: "border-box",
         zIndex: 2000,
+        transition: "background 0.4s, color 0.4s"
       }}>
         <div style={{ fontWeight: 600, fontSize: 17, marginRight: 8 }}>Nora AI</div>
         <div style={{
@@ -106,13 +125,13 @@ const Chat = () => {
           gap: 6,
           marginLeft: "auto"
         }}>
-          <button style={iconBtn(panelBg)} onClick={() => setDarkMode(mode => !mode)}>
+          <button style={iconBtn(theme.panelBg)} onClick={() => setDarkMode((prev) => !prev)}>
             <img src={darkMode ? ICONS.sun : ICONS.moon} alt="Theme" style={iconImgPanel} />
           </button>
-          <button style={iconBtn(panelBg)} onClick={() => window.open('https://t.me/', '_blank')}>
+          <button style={iconBtn(theme.panelBg)} onClick={() => window.open('https://t.me/', '_blank')}>
             <img src={ICONS.telegram} alt="Telegram" style={iconImgPanel} />
           </button>
-          <button style={iconBtn(panelBg)} onClick={clearChat}>
+          <button style={iconBtn(theme.panelBg)} onClick={clearChat}>
             <img src={ICONS.trash} alt="Trash" style={iconImgPanel} />
           </button>
         </div>
@@ -134,16 +153,17 @@ const Chat = () => {
         <div style={{
           width: `calc(100% - ${sidePad * 2}px)`,
           maxWidth,
+          marginTop: sidePad, // отступ между баннером и панелью сверху
           marginBottom: sidePad,
           borderRadius: 26,
           overflow: "hidden",
           boxShadow: "0 4px 28px 0 rgba(55,40,120,0.14)",
-          background: "#181818",
+          background: theme.bgColor,
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
           flexShrink: 0,
-          position: "relative",
+          position: "relative"
         }}>
           <img
             src={BANNER}
@@ -173,8 +193,8 @@ const Chat = () => {
               width: "100%",
             }}>
               <div style={{
-                background: msg.role === "assistant" ? panelBg : "#fff",
-                color: msg.role === "assistant" ? "#fff" : "#181818",
+                background: msg.role === "assistant" ? theme.assistantBubble : theme.userBubble,
+                color: msg.role === "assistant" ? theme.assistantText : theme.userText,
                 borderRadius: borderRadius,
                 padding: "14px 20px",
                 fontSize: 18,
@@ -187,6 +207,7 @@ const Chat = () => {
                 wordBreak: "break-word",
                 alignSelf: msg.role === "assistant" ? "flex-start" : "flex-end",
                 boxShadow: msg.role === "user" ? "0 2px 12px rgba(0,0,0,0.08)" : "none",
+                transition: "background 0.4s, color 0.4s"
               }}>
                 {msg.text}
               </div>
@@ -196,7 +217,7 @@ const Chat = () => {
         </div>
       </div>
 
-      {/* Готовые шаблоны — над полем, равные отступы между, исчезают после сообщения */}
+      {/* Готовые шаблоны */}
       {showTemplates && (
         <div style={{
           position: "fixed",
@@ -207,12 +228,12 @@ const Chat = () => {
           maxWidth,
           zIndex: 2500,
         }}>
-          {PRESET_TEMPLATES.map((tpl, idx) => (
+          {PRESET_TEMPLATES.map((tpl) => (
             <button
               key={tpl.title}
               style={{
-                background: panelBg,
-                color: "#fff",
+                background: theme.panelBg,
+                color: theme.assistantText,
                 border: "none",
                 borderRadius: borderRadius,
                 padding: "0 22px",
@@ -226,7 +247,8 @@ const Chat = () => {
                 flexDirection: "column",
                 justifyContent: "center",
                 outline: "none",
-                boxShadow: "none"
+                boxShadow: "none",
+                transition: "background 0.4s, color 0.4s"
               }}
               disabled={inputDisabled}
               onClick={() => {
@@ -261,7 +283,7 @@ const Chat = () => {
         </div>
       )}
 
-      {/* Поле для сообщения и кнопка (отдельные, одинаковый скругление, справа отступ как слева у поля) */}
+      {/* Поле для сообщения и кнопка */}
       <form
         onSubmit={handleSubmit}
         style={{
@@ -282,27 +304,29 @@ const Chat = () => {
         <input
           type="text"
           style={{
-            flex: 1,
+            flex: 5,
             border: "none",
             borderRadius: borderRadius,
             height: BTN_SIZE,
             padding: `0 8px 0 ${sidePad}px`,
             fontSize: 19,
-            background: panelBg,
-            color: "#fff",
+            background: theme.inputBg,
+            color: theme.assistantText,
             outline: "none",
-            marginRight: 8,
+            marginRight: 12,
+            transition: "background 0.4s, color 0.4s"
           }}
           value={userInput}
           onChange={e => setUserInput(e.target.value)}
           placeholder="Введите ваш вопрос"
           disabled={inputDisabled}
+          className="nora-input"
         />
         <button
           type="submit"
           style={{
-            background: "#fff",
-            color: panelBg,
+            background: theme.userBubble,
+            color: theme.userText,
             border: "none",
             borderRadius: borderRadius,
             width: BTN_SIZE,
@@ -314,11 +338,18 @@ const Chat = () => {
             cursor: inputDisabled ? "not-allowed" : "pointer",
             opacity: inputDisabled ? 0.7 : 1,
             boxShadow: "none",
+            transition: "background 0.4s, color 0.4s"
           }}
           disabled={inputDisabled}
         >
           <img src={ICONS.arrow} alt="Send" style={iconImgSend} />
         </button>
+        <style>{`
+          .nora-input::placeholder {
+            color: ${theme.placeholder};
+            opacity: 1;
+          }
+        `}</style>
       </form>
     </div>
   );
