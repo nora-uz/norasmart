@@ -21,13 +21,6 @@ const panelBg = "#131313";
 const bgColor = "#181818";
 const maxWidth = 560;
 
-const FAKE_ANSWERS = [
-  "Привет! Я Nora, чем могу помочь?",
-  "Расскажи, о чём бы ты хотел поговорить?",
-  "Я готова ответить на любые вопросы!",
-  "Пиши свой запрос, я отвечу!",
-];
-
 const Chat = () => {
   const [userInput, setUserInput] = useState("");
   const [messages, setMessages] = useState([]);
@@ -53,7 +46,7 @@ const Chat = () => {
     }, 700);
 
     /*
-    // Для реального GPT backend — раскомментируй этот код:
+    // Для GPT backend:
     try {
       const response = await fetch("/api/gpt", {
         method: "POST",
@@ -122,50 +115,49 @@ const Chat = () => {
           </button>
         </div>
       </div>
-      {/* Баннер под панелью с одинаковым отступом сверху и по бокам */}
-      <div
-        style={{
-          width: `calc(100% - ${sidePad * 2}px)`,
-          maxWidth: maxWidth,
-          margin: "0 auto",
-          marginTop: sidePad + panelHeight,   // под панелью и с тем же отступом
-          marginBottom: sidePad,
-          borderRadius: 26,
-          overflow: "hidden",
-          boxShadow: "0 4px 28px 0 rgba(55,40,120,0.14)",
-          background: "#181818",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <img
-          src={BANNER}
-          alt="Nora AI баннер"
-          style={{
-            width: "100%",
-            height: "auto",
-            display: "block",
-          }}
-        />
-      </div>
-      {/* Область сообщений и чата */}
+      
+      {/* Весь главный контент под панелью, с marginTop */}
       <div
         style={{
           width: "100%",
-          maxWidth,
+          maxWidth: maxWidth,
           margin: "0 auto",
           boxSizing: "border-box",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          overflowY: "auto",
-          paddingTop: 0,
+          marginTop: sidePad + panelHeight, // отступ сверху ровно под панелью
           paddingBottom: panelHeight + sidePad * 2,
-          minHeight: `calc(100vh - ${panelHeight * 2 + sidePad * 4}px)`,
+          minHeight: `calc(100vh - ${panelHeight + sidePad * 3}px)`,
         }}
       >
-        {/* Сообщения c margin по бокам */}
+        {/* Баннер - строго под панелью, с отступами по бокам и снизу */}
+        <div
+          style={{
+            width: `calc(100% - ${sidePad * 2}px)`,
+            maxWidth: maxWidth,
+            margin: "0 auto",
+            marginBottom: sidePad,
+            borderRadius: 26,
+            overflow: "hidden",
+            boxShadow: "0 4px 28px 0 rgba(55,40,120,0.14)",
+            background: "#181818",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <img
+            src={BANNER}
+            alt="Nora AI баннер"
+            style={{
+              width: "100%",
+              height: "auto",
+              display: "block",
+            }}
+          />
+        </div>
+        {/* Сообщения */}
         <div style={{ width: "100%" }}>
           {messages.map((msg, idx) => (
             <div
@@ -201,6 +193,7 @@ const Chat = () => {
           <div ref={messagesEndRef} />
         </div>
       </div>
+      
       {/* Фиксированное поле ввода снизу */}
       <form
         onSubmit={handleSubmit}
