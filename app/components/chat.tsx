@@ -52,7 +52,7 @@ const Chat = () => {
         width: "100vw",
         display: "flex",
         justifyContent: "center",
-        alignItems: "flex-start",
+        alignItems: "center",
         overflow: "hidden",
       }}
     >
@@ -69,17 +69,14 @@ const Chat = () => {
           padding: 0,
         }}
       >
-        {/* Панель: боковые и верхний отступы */}
+        {/* Фиксированная панель */}
         <div
           style={{
-            position: "sticky",
+            position: "fixed",
             top: sidePad,
-            left: 0,
-            right: 0,
-            zIndex: 100,
+            left: "50%",
+            transform: "translateX(-50%)",
             width: `calc(100% - ${sidePad * 2}px)`,
-            margin: `0 auto`,
-            marginTop: sidePad,
             height: panelHeight,
             background: panelBg,
             color: "#fff",
@@ -89,6 +86,7 @@ const Chat = () => {
             padding: "0 18px",
             justifyContent: "space-between",
             boxSizing: "border-box",
+            zIndex: 1000,
           }}
         >
           <div style={{ fontWeight: 600, fontSize: 19 }}>Nora AI</div>
@@ -107,96 +105,116 @@ const Chat = () => {
             </button>
           </div>
         </div>
-        {/* Фото Nora — строго под панелью, боковые и нижний отступ */}
+        {/* Контейнер для контента, отступ сверху как у панели */}
         <div
           style={{
-            width: `calc(100% - ${sidePad * 2}px)`,
-            maxWidth: 370,
-            margin: `0 auto`,
-            marginTop: sidePad,
-            marginBottom: sidePad,
-            borderRadius: borderRadius,
-            overflow: "hidden",
-            boxSizing: "border-box",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <img
-            src={MAIN_IMG}
-            alt="Nora AI"
-            style={{
-              width: "100%",
-              borderRadius: borderRadius,
-              display: "block",
-              background: "none",
-              boxShadow: "none",
-            }}
-          />
-        </div>
-        {/* Сообщения — отступы и прокрутка */}
-        <div
-          style={{
-            width: `calc(100% - ${sidePad * 2}px)`,
+            width: "100%",
+            maxWidth,
             margin: "0 auto",
             boxSizing: "border-box",
             flex: 1,
+            paddingTop: sidePad + panelHeight + sidePad,
+            paddingBottom: panelHeight + sidePad * 2,
+            overflow: "hidden",
             display: "flex",
             flexDirection: "column",
-            justifyContent: "flex-end",
-            overflowY: "auto",
-            padding: 0,
-            marginBottom: sidePad,
+            alignItems: "center",
+            minHeight: `calc(100vh - ${panelHeight + sidePad * 3}px)`,
           }}
         >
-          {messages.map((msg, idx) => (
-            <div
-              key={idx}
+          {/* Фото Nora — между панелью и сообщениями, отступы как у панели */}
+          <div
+            style={{
+              width: `calc(100% - ${sidePad * 2}px)`,
+              maxWidth: 370,
+              margin: "0 auto",
+              marginBottom: sidePad,
+              borderRadius: borderRadius,
+              overflow: "hidden",
+              boxSizing: "border-box",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <img
+              src={MAIN_IMG}
+              alt="Nora AI"
               style={{
-                display: "flex",
-                justifyContent: msg.role === "assistant" ? "flex-start" : "flex-end",
-                marginBottom: 12,
+                width: "100%",
+                borderRadius: borderRadius,
+                display: "block",
+                background: "none",
+                boxShadow: "none",
               }}
-            >
+            />
+          </div>
+          {/* Область для сообщений, адаптивная, появляется скролл только если сообщений много */}
+          <div
+            style={{
+              width: "100%",
+              boxSizing: "border-box",
+              flex: 1,
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "flex-end",
+              overflowY: "auto",
+              padding: 0,
+              marginBottom: 0,
+              alignItems: "center",
+            }}
+          >
+            {messages.map((msg, idx) => (
               <div
+                key={idx}
                 style={{
-                  background: msg.role === "assistant" ? panelBg : "none",
-                  color: "#fff",
-                  borderRadius: borderRadius,
-                  padding: "14px 20px",
-                  fontSize: 18,
-                  lineHeight: 1.7,
-                  border: "none",
-                  maxWidth: "86vw",
-                  minWidth: 54,
-                  marginLeft: msg.role === "user" ? "auto" : 0,
-                  marginRight: msg.role === "assistant" ? "auto" : 0,
-                  wordBreak: "break-word",
+                  display: "flex",
+                  justifyContent: msg.role === "assistant" ? "flex-start" : "flex-end",
+                  marginBottom: 12,
+                  width: "100%",
                 }}
               >
-                {msg.text}
+                <div
+                  style={{
+                    background: msg.role === "assistant" ? panelBg : "none",
+                    color: "#fff",
+                    borderRadius: borderRadius,
+                    padding: "14px 20px",
+                    fontSize: 18,
+                    lineHeight: 1.7,
+                    border: "none",
+                    maxWidth: "86vw",
+                    minWidth: 54,
+                    marginLeft: msg.role === "user" ? "auto" : 0,
+                    marginRight: msg.role === "assistant" ? "auto" : 0,
+                    wordBreak: "break-word",
+                  }}
+                >
+                  {msg.text}
+                </div>
               </div>
-            </div>
-          ))}
-          <div ref={messagesEndRef} />
+            ))}
+            <div ref={messagesEndRef} />
+          </div>
         </div>
-        {/* Инпут: тот же боковой и нижний отступ */}
+        {/* Фиксированное поле ввода снизу, боковые и нижний отступ всегда равны sidePad */}
         <form
           onSubmit={handleSubmit}
           style={{
-            position: "sticky",
+            position: "fixed",
+            left: "50%",
             bottom: sidePad,
+            transform: "translateX(-50%)",
             width: `calc(100% - ${sidePad * 2}px)`,
-            margin: "0 auto",
             background: panelBg,
             borderRadius: borderRadius,
             height: panelHeight,
             display: "flex",
             alignItems: "center",
-            zIndex: 101,
+            zIndex: 1000,
             padding: 0,
             boxSizing: "border-box",
+            margin: "0 auto",
           }}
         >
           <input
