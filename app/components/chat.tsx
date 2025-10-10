@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
 
-// PNG иконки (32px, прозрачный фон)
 const ICON_SIZE = 32;
 
 const ICON_MOON = "https://user-gen-media-assets.s3.amazonaws.com/seedream_images/350cb7b8-4f7f-43db-9c71-c5388ac17f4e.png";
@@ -40,7 +39,7 @@ const Chat = () => {
   const bgColor = "#1C1C1C";
   const panelBg = "#171717";
   const borderRadius = 18;
-  const panelHeight = 56;  // одна высота для панели и поля ввода
+  const panelHeight = 56;
   const panelPadH = 16;
 
   return (
@@ -76,9 +75,9 @@ const Chat = () => {
         <div style={{
           display: "flex",
           alignItems: "center",
-          gap: 14, // расстояние только между иконками!
+          gap: 14,
         }}>
-          {darkMode && (
+          {darkMode ? (
             <button
               style={iconBtnStyle}
               onClick={() => setDarkMode(false)}
@@ -86,8 +85,7 @@ const Chat = () => {
             >
               <img src={ICON_SUN} alt="Sun" style={iconImgStyle} />
             </button>
-          )}
-          {!darkMode && (
+          ) : (
             <button
               style={iconBtnStyle}
               onClick={() => setDarkMode(true)}
@@ -115,7 +113,7 @@ const Chat = () => {
           </button>
         </div>
       </div>
-      {/* Центрированное изображение — по ширине панели и поля */}
+      {/* Центрированное изображение Nora AI */}
       <div
         style={{
           display: "flex",
@@ -134,7 +132,6 @@ const Chat = () => {
             maxWidth: 650 - 2 * panelPadH,
             height: panelHeight * 2,
             borderRadius: borderRadius,
-            objectFit: "cover",
             boxShadow: "none",
             background: "none",
             display: "block"
@@ -229,7 +226,7 @@ const Chat = () => {
             cursor: inputDisabled ? "not-allowed" : "pointer",
             opacity: inputDisabled ? 0.7 : 1
           }}>
-            <img src={ICON_ARROW} alt="Send" style={{width: 22, height: 22, filter: "brightness(0) invert(1)"}} />
+            <img src={ICON_ARROW} alt="Send" style={{width: 22, height: 22}} />
           </button>
         </div>
       </form>
@@ -245,8 +242,7 @@ const iconBtnStyle = {
 };
 const iconImgStyle = {
   width: ICON_SIZE,
-  height: ICON_SIZE,
-  objectFit: "contain"
+  height: ICON_SIZE
 };
 
 export default Chat;
