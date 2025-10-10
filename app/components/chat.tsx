@@ -100,7 +100,7 @@ const Chat = () => {
       transition: "background 0.4s"
     }}>
       <div style={{ height: sidePad }} />
-      {/* Панель с градиентом и гладкой линией снизу, без тени */}
+      {/* Панель только с градиентом, без линии, без тени */}
       <div style={{
         width: `calc(100% - ${sidePad * 2}px)`,
         maxWidth,
@@ -138,17 +138,7 @@ const Chat = () => {
             <img src={ICONS.trash} alt="Trash" style={iconImgPanel} />
           </button>
         </div>
-        {/* Линия снизу панели (без тени, гладкая) */}
-        <div style={{
-          position: "absolute",
-          left: 8,
-          right: 8,
-          bottom: -3,
-          height: 4,
-          borderRadius: 2,
-          background: GRADIENT,
-          zIndex: 1
-        }} />
+        {/* Градиентной линии больше нет здесь! */}
       </div>
       <div style={{ height: sidePad }} />
 
