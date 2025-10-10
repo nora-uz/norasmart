@@ -12,7 +12,7 @@ const ICONS = {
 const BANNER = "https://user-gen-media-assets.s3.amazonaws.com/seedream_images/4c36a715-f500-4186-8955-631a09fac0ed.png";
 const ICON_SIZE_PANEL = 18;
 const ICON_SIZE_SEND = 28;
-const BTN_SIZE = 48;
+const BTN_SIZE = 62;
 const borderRadius = 22;
 const sidePad = 16;
 const panelHeight = 62;
@@ -53,7 +53,7 @@ const Chat = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  // Высота блока чата
+  // Высота блока чата с учётом новых размеров
   const chatAreaHeight = `calc(100vh - ${panelHeight + sidePad * 2 + 3 * BTN_SIZE + 3 * sidePad}px)`;
 
   const handleSubmit = (e) => {
@@ -208,7 +208,7 @@ const Chat = () => {
         </div>
       </div>
 
-      {/* Готовые ответы — столбец, высота, padding, скругление как у поля для сообщения */}
+      {/* Готовые ответы — столбец, размер, padding, скругление как у поля для сообщения */}
       <div
         style={{
           position: "fixed",
@@ -229,7 +229,7 @@ const Chat = () => {
               border: "none",
               borderRadius: borderRadius,
               padding: "0 22px",
-              fontSize: 16,
+              fontSize: 19,
               width: "100%",
               height: BTN_SIZE,
               marginBottom: sidePad,
@@ -256,14 +256,14 @@ const Chat = () => {
           >
             <span style={{
               fontWeight: 600,
-              fontSize: 17,
+              fontSize: 19,
             }}>
               {tpl.title}
             </span>
             <span style={{
-              fontSize: 13,
+              fontSize: 15,
               color: "#ccc",
-              marginTop: 8, // больше вертикальный отступ для удобства чтения
+              marginTop: 10,
               lineHeight: 1.6,
             }}>
               {tpl.description}
