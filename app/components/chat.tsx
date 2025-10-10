@@ -92,7 +92,7 @@ const Chat = () => {
     <div style={{
       background: theme.bgColor,
       width: "100vw",
-      minHeight: "100vh", // Растянет фон темы всегда по экрану
+      minHeight: 800, // увеличено!
       overflow: "hidden",
       position: "relative",
       transition: "background 0.4s"
@@ -164,10 +164,7 @@ const Chat = () => {
           }}
         />
       </div>
-      {/* Отступ после фото как после панели */}
       <div style={{ height: sidePad }} />
-
-      {/* Сообщения всегда идут под фото, с отступом */}
       <div style={{
         width: "100%",
         maxWidth,
@@ -200,7 +197,7 @@ const Chat = () => {
                 color: msg.role === "assistant" ? theme.assistantText : theme.userText,
                 borderRadius: borderRadius,
                 padding: "14px 20px",
-                fontSize: 16, // messages smaller
+                fontSize: 16,
                 lineHeight: 1.7,
                 border: "none",
                 maxWidth: "70%",
@@ -217,7 +214,6 @@ const Chat = () => {
             </div>
           ))}
           <div ref={messagesEndRef} />
-          {/* Виртуальный паддинг для чёрного фона снизу */}
           <div style={{
             height: (BTN_SIZE + sidePad * 3) + (showTemplates ? (TEMPLATE_BTN_SIZE + sidePad) * PRESET_TEMPLATES.length : 0)
           }} />
@@ -273,8 +269,8 @@ const Chat = () => {
             >
               <span style={{
                 fontWeight: 700,
-                fontSize: 18, // bigger title
-                marginBottom: 8, // increased spacing!
+                fontSize: 18,
+                marginBottom: 8,
                 lineHeight: 1.13,
                 whiteSpace: "nowrap"
               }}>
@@ -284,6 +280,7 @@ const Chat = () => {
                 fontSize: 13,
                 color: "#bbb",
                 lineHeight: 1.32,
+                marginTop: 4, // дополнительный отступ по твоему запросу
                 wordBreak: "break-word",
                 whiteSpace: "normal"
               }}>
@@ -358,7 +355,7 @@ const Chat = () => {
           .nora-input::placeholder {
             color: ${theme.placeholder};
             opacity: 1;
-            font-size: 15px; /* placeholder smaller */
+            font-size: 15px;
           }
         `}</style>
       </form>
