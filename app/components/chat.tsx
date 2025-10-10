@@ -17,7 +17,6 @@ const BTN_SIZE = 48;
 const borderRadius = 22;
 const sidePad = 18;
 const panelHeight = 62;
-const photoHeight = 200;
 const panelBg = "#131313";
 const bgColor = "#181818";
 const maxWidth = 560;
@@ -29,16 +28,13 @@ const Chat = () => {
   const [darkMode, setDarkMode] = useState(true);
   const messagesEndRef = useRef(null);
 
-  // Скроллим к последнему сообщению
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  // Пример с GPT сервером (обнови endpoint!)
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!userInput.trim()) return;
-
     setMessages(prev => [...prev, { role: "user", text: userInput }]);
     setUserInput("");
     setInputDisabled(true);
@@ -111,7 +107,7 @@ const Chat = () => {
           </button>
         </div>
       </div>
-      {/* ЧАТ-ОБЛАСТЬ: СКРОЛЛИРУЕМАЯ, ФОТО ПЕРВЫМ */}
+      {/* ЧАТ-ОБЛАСТЬ */}
       <div
         style={{
           width: "100%",
@@ -122,17 +118,15 @@ const Chat = () => {
           flexDirection: "column",
           alignItems: "center",
           overflowY: "auto",
-          // главная магия!
-          paddingTop: sidePad + panelHeight + sidePad, // отступ от фиксированной панели до фото
+          paddingTop: sidePad + panelHeight + sidePad,
           paddingBottom: panelHeight + sidePad * 2,
           minHeight: `calc(100vh - ${panelHeight * 2 + sidePad * 4}px)`,
         }}
       >
-        {/* ФОТО НОРА */}
+        {/* Фото Nora — во всю ширину */}
         <div
           style={{
             width: "100%",
-            maxWidth: 370,
             margin: "0 auto",
             borderRadius: borderRadius,
             overflow: "hidden",
@@ -148,47 +142,48 @@ const Chat = () => {
             alt="Nora AI"
             style={{
               width: "100%",
-              height: photoHeight,
-              objectFit: "cover",
+              height: "auto",
               borderRadius: borderRadius,
               display: "block",
-              background: "none",
-              boxShadow: "none",
+              objectFit: "cover",
             }}
           />
         </div>
-        {/* СООБЩЕНИЯ ПОСЛЕ ФОТО */}
-        {messages.map((msg, idx) => (
-          <div
-            key={idx}
-            style={{
-              display: "flex",
-              justifyContent: msg.role === "assistant" ? "flex-start" : "flex-end",
-              marginBottom: 12,
-              width: "100%",
-            }}
-          >
+        {/* СООБЩЕНИЯ c margin по бокам */}
+        <div style={{ width: "100%" }}>
+          {messages.map((msg, idx) => (
             <div
+              key={idx}
               style={{
-                background: msg.role === "assistant" ? panelBg : "none",
-                color: "#fff",
-                borderRadius: borderRadius,
-                padding: "14px 20px",
-                fontSize: 18,
-                lineHeight: 1.7,
-                border: "none",
-                maxWidth: "86vw",
-                minWidth: 54,
-                marginLeft: msg.role === "user" ? "auto" : 0,
-                marginRight: msg.role === "assistant" ? "auto" : 0,
-                wordBreak: "break-word",
+                display: "flex",
+                justifyContent: msg.role === "assistant" ? "flex-start" : "flex-end",
+                marginBottom: 12,
+                width: "100%",
               }}
             >
-              {msg.text}
+              <div
+                style={{
+                  background: msg.role === "assistant" ? panelBg : "none",
+                  color: "#fff",
+                  borderRadius: borderRadius,
+                  padding: "14px 20px",
+                  fontSize: 18,
+                  lineHeight: 1.7,
+                  border: "none",
+                  maxWidth: "70%",
+                  minWidth: 54,
+                  marginLeft: sidePad,
+                  marginRight: sidePad,
+                  wordBreak: "break-word",
+                  alignSelf: msg.role === "assistant" ? "flex-start" : "flex-end",
+                }}
+              >
+                {msg.text}
+              </div>
             </div>
-          </div>
-        ))}
-        <div ref={messagesEndRef} />
+          ))}
+          <div ref={messagesEndRef} />
+        </div>
       </div>
       {/* Фиксированное поле ввода снизу */}
       <form
