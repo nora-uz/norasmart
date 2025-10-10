@@ -183,23 +183,22 @@ const Chat = ({
     setUserInput("");
   };
 
-  // Тёмная / светлая тема
+  // Тёмная / светлая тема и стили
   const isDark = darkMode;
-  const bgColor = isDark ? "#1C1C1C" : "#f5f5f5";
-  const bubbleUser = isDark ? "#293141" : "#fff";
-  const bubbleAssistant = isDark ? "#20222d" : "#F4F6FA";
-  const inputBg = "transparent";
-  const inputColor = isDark ? "#fff" : "#111";
-  const borderColor = "#232438";
+  const bgColor = isDark ? "#1C1C1C" : "#f6f6fa";
+  const panelBg = isDark ? "#17171b" : "#f2f3f8";
+  const assistantBubble = isDark ? "#202028" : "#eaeafd";
+  const inputBg = panelBg;
+  const inputColor = isDark ? "#fff" : "#222";
   const borderRadius = 32;
 
-  // icons (line-only, одинаковый стиль, SVG без кружков):
-  const SunIcon = (<svg width={28} height={28} viewBox="0 0 28 28"><circle cx="14" cy="14" r="7" fill="none" stroke="#FDB813" strokeWidth="2"/><g stroke="#FDB813" strokeWidth="1.7"><line x1="14" y1="2" x2="14" y2="5.5"/><line x1="14" y1="22.5" x2="14" y2="26"/><line x1="2" y1="14" x2="5.5" y2="14"/><line x1="22.5" y1="14" x2="26" y2="14"/><line x1="6.7" y1="6.7" x2="10.1" y2="10.1"/><line x1="21.3" y1="21.3" x2="17.9" y2="17.9"/><line x1="21.3" y1="6.7" x2="17.9" y2="10.1"/><line x1="6.7" y1="21.3" x2="10.1" y2="17.9"/></g></svg>);
-  const MoonIcon = (<svg width={28} height={28} viewBox="0 0 28 28"><path d="M20 8.5A9.5 9.5 0 1 1 8.5 20a9.5 9.5 0 0 0 11.5-11.5z" stroke="#fff" strokeWidth="2" fill="none"/></svg>);
-  const RefreshIcon = (<svg width={28} height={28} viewBox="0 0 28 28"><path d="M7 21c-2-2.3-3.1-5.3-2.4-8.3S8.8 7.1 12 6m9-2v5M21 7c2 2.3 3.1 5.3 2.4 8.3S19.2 20.9 16 22m-9 2v-5" stroke="#aaa" strokeWidth="2" fill="none" strokeLinecap="round"/></svg>);
-  const TelegramIcon = (<svg width={26} height={26} viewBox="0 0 26 26"><path d="M4 13L10 16L14 20L21 6L4 13Z" stroke={isDark ? "#fff" : "#2646FC"} strokeWidth="1.7" fill="none"/><circle cx="13" cy="13" r="12" stroke={isDark ? "#fff" : "#2646FC"} strokeWidth="1.3" fill="none"/></svg>);
-  const PhoneIcon = (<svg width={26} height={26} viewBox="0 0 28 28" style={{transform: "scaleX(-1)"}}><path d="M7.8 12.6C9.7 15.4 12.7 18.4 15.5 20.3L17.9 18.2C18.2 18 18.6 17.9 18.9 18C20.2 18.5 21.7 18.8 23.2 18.8C23.9 18.8 24.5 19.3 24.5 20V25.2C24.5 25.8 24 26.3 23.2 26.3C11.8 26.3 2.8 17.3 2.8 5.9C2.8 5.3 3.2 4.8 3.9 4.8H9C9.7 4.8 10.3 5.3 10.3 5.9C10.3 7.5 10.6 9.1 11.1 10.5C11.2 10.8 11.2 11.2 11.1 11.5L7.8 12.6Z" stroke="#aaa" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" fill="none"/></svg>);
-  const SendIcon = (<svg width={36} height={36} viewBox="0 0 36 36"><path d="M9 18H27M27 18L18 9M27 18L18 27" stroke="#fff" strokeWidth="2.7" strokeLinecap="round" strokeLinejoin="round" fill="none"/></svg>);
+  // icons (Line, один стиль, SVG, без кружков):
+  const SunIcon = (<svg width={24} height={24} viewBox="0 0 28 28"><circle cx="14" cy="14" r="7" fill="none" stroke="#FDB813" strokeWidth="2"/><g stroke="#FDB813" strokeWidth="1.7"><line x1="14" y1="2" x2="14" y2="5.5"/><line x1="14" y1="22.5" x2="14" y2="26"/><line x1="2" y1="14" x2="5.5" y2="14"/><line x1="22.5" y1="14" x2="26" y2="14"/><line x1="6.7" y1="6.7" x2="10.1" y2="10.1"/><line x1="21.3" y1="21.3" x2="17.9" y2="17.9"/><line x1="21.3" y1="6.7" x2="17.9" y2="10.1"/><line x1="6.7" y1="21.3" x2="10.1" y2="17.9"/></g></svg>);
+  const MoonIcon = (<svg width={24} height={24} viewBox="0 0 28 28"><path d="M20 8.5A9.5 9.5 0 1 1 8.5 20a9.5 9.5 0 0 0 11.5-11.5z" stroke="#fff" strokeWidth="2" fill="none"/></svg>);
+  const RefreshIcon = (<svg width={24} height={24} viewBox="0 0 28 28"><path d="M7 21c-2-2.3-3.1-5.3-2.4-8.3S8.8 7.1 12 6m9-2v5M21 7c2 2.3 3.1 5.3 2.4 8.3S19.2 20.9 16 22m-9 2v-5" stroke="#aaa" strokeWidth="2" fill="none" strokeLinecap="round"/></svg>);
+  const TelegramIcon = (<svg width={24} height={24} viewBox="0 0 26 26"><path d="M4 13L10 16L14 20L21 6L4 13Z" stroke={isDark ? "#fff" : "#2646FC"} strokeWidth="1.7" fill="none"/><circle cx="13" cy="13" r="12" stroke={isDark ? "#fff" : "#2646FC"} strokeWidth="1.3" fill="none"/></svg>);
+  const PhoneIcon = (<svg width={24} height={24} viewBox="0 0 28 28" style={{transform: "scaleX(-1)"}}><path d="M7.8 12.6C9.7 15.4 12.7 18.4 15.5 20.3L17.9 18.2C18.2 18 18.6 17.9 18.9 18C20.2 18.5 21.7 18.8 23.2 18.8C23.9 18.8 24.5 19.3 24.5 20V25.2C24.5 25.8 24 26.3 23.2 26.3C11.8 26.3 2.8 17.3 2.8 5.9C2.8 5.3 3.2 4.8 3.9 4.8H9C9.7 4.8 10.3 5.3 10.3 5.9C10.3 7.5 10.6 9.1 11.1 10.5C11.2 10.8 11.2 11.2 11.1 11.5L7.8 12.6Z" stroke="#aaa" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" fill="none"/></svg>);
+  const SendIcon = (<svg width={29} height={29} viewBox="0 0 29 29"><path d="M8 14.5H21M21 14.5L15.5 9M21 14.5L15.5 20" stroke="#fff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" fill="none"/></svg>);
 
   // --- UI START ---
   return (
@@ -213,7 +212,7 @@ const Chat = ({
         padding: 0,
       }}
     >
-      {/* Шапка фиксирована с отступом */}
+      {/* Панель (фикс, 15px от верха и по бокам) */}
       <div
         style={{
           position: "fixed",
@@ -221,20 +220,18 @@ const Chat = ({
           left: 15,
           right: 15,
           zIndex: 100,
-          height: 56,
-          background: isDark ? "#232439" : "#f1f3fa",
+          height: 52,
+          background: panelBg,
           color: isDark ? "#fff" : "#232439",
-          width: "auto",
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
           borderRadius: borderRadius,
-          padding: "0 17px",
-          boxShadow: isDark ? "0 2px 16px rgba(44,44,68,0.09)" : "0 2px 12px #ccd6ff44"
+          padding: "0 14px",
         }}
       >
         <div style={{ fontWeight: 600, fontSize: 15 }}>Norasmart.uz</div>
-        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
           <button
             onClick={() => setDarkMode((v) => !v)}
             aria-label="Сменить тему"
@@ -242,8 +239,8 @@ const Chat = ({
               background: "none",
               border: "none",
               cursor: "pointer",
-              width: 32,
-              height: 32,
+              width: 28,
+              height: 28,
               display: "flex",
             }}
           >
@@ -256,8 +253,8 @@ const Chat = ({
               background: "none",
               border: "none",
               cursor: "pointer",
-              width: 32,
-              height: 32,
+              width: 28,
+              height: 28,
               display: "flex"
             }}
           >
@@ -269,8 +266,8 @@ const Chat = ({
               background: "none",
               border: "none",
               cursor: "pointer",
-              width: 32,
-              height: 32,
+              width: 28,
+              height: 28,
               display: "flex"
             }}
             onClick={() => window.open("https://t.me/", "_blank")}
@@ -283,8 +280,8 @@ const Chat = ({
               background: "none",
               border: "none",
               cursor: "pointer",
-              width: 32,
-              height: 32,
+              width: 28,
+              height: 28,
               display: "flex"
             }}
             onClick={() => window.open("tel:+1234567890")}
@@ -293,16 +290,17 @@ const Chat = ({
           </button>
         </div>
       </div>
-      {/* Содержимое чата фиксированной зоны */}
+
+      {/* Содержимое чата */}
       <div
         style={{
           flex: 1,
           width: "100%",
-          maxWidth: 660,
+          maxWidth: 650,
           margin: "0 auto",
           boxSizing: "border-box",
           minHeight: "100vh",
-          padding: "90px 15px 88px 15px",
+          padding: "85px 15px 70px 15px",
         }}
       >
         {messages.map((msg, index) => (
@@ -311,44 +309,49 @@ const Chat = ({
             style={{
               display: "flex",
               justifyContent: msg.role === "assistant" ? "flex-start" : "flex-end",
-              marginBottom: 15,
+              marginBottom: 12,
             }}
           >
-            <div
-              style={{
-                background: msg.role === "assistant" ? bubbleAssistant : bubbleUser,
-                color: isDark
-                  ? (msg.role === "assistant" ? "#eaeaea" : "#fff")
-                  : "#232439",
-                borderRadius: borderRadius,
-                padding: "22px 24px",
-                maxWidth: "89vw",
-                minWidth: 60,
-                fontSize: 18,
-                lineHeight: 1.75,
-                boxShadow:
-                  msg.role === "assistant"
-                    ? "0 2px 16px rgba(44,44,68,.11)"
-                    : "0 2px 14px rgba(38,70,252,0.10)",
-                border: msg.role === "assistant"
-                  ? "1.5px solid #252443"
-                  : "1.5px solid #2646fc33",
-                marginRight: msg.role === "assistant" ? "auto" : 0,
-                marginLeft: msg.role === "user" ? "auto" : 0,
-              }}
-            >
-              {msg.role === "code"
-                ? msg.text.split("\n").map((line, idx) => (
-                    <div key={idx}><span style={{ color: "#889" }}>{`${idx + 1}. `}</span>{line}</div>
-                  ))
-                : <Markdown>{msg.text}</Markdown>
-              }
-            </div>
+            {msg.role === "assistant" ? (
+              <div
+                style={{
+                  background: assistantBubble,
+                  color: isDark ? "#eaeaea" : "#232439",
+                  borderRadius: borderRadius,
+                  padding: "11px 16px",
+                  fontSize: 17,
+                  lineHeight: 1.65,
+                  border: "none",
+                  maxWidth: "86vw",
+                  minWidth: 54,
+                  marginRight: "auto"
+                }}
+              >
+                <Markdown>{msg.text}</Markdown>
+              </div>
+            ) : (
+              <div
+                style={{
+                  background: "transparent",
+                  color: isDark ? "#fff" : "#232439",
+                  borderRadius: borderRadius,
+                  padding: "11px 0px",
+                  fontSize: 17,
+                  lineHeight: 1.65,
+                  border: "none",
+                  maxWidth: "86vw",
+                  minWidth: 54,
+                  marginLeft: "auto"
+                }}
+              >
+                <Markdown>{msg.text}</Markdown>
+              </div>
+            )}
           </div>
         ))}
         <div ref={messagesEndRef} />
       </div>
-      {/* Форма отправки сообщения — прозрачный фон */}
+      {/* Поле ввода — фон равен панели, круглая кнопка */}
       <form
         onSubmit={handleSubmit}
         style={{
@@ -356,22 +359,24 @@ const Chat = ({
           left: 15,
           right: 15,
           bottom: 15,
-          width: "auto",
           background: inputBg,
+          borderRadius: borderRadius,
           display: "flex",
-          gap: 10,
+          gap: 8,
           padding: "0",
           zIndex: 101,
+          height: 52,
         }}
       >
         <input
           type="text"
           style={{
             flex: 1,
-            border: "1.8px solid #2646fc33",
+            border: "none",
             borderRadius: borderRadius,
-            padding: "18px 17px",
-            fontSize: 18,
+            height: "100%",
+            padding: "0 17px",
+            fontSize: 17,
             background: inputBg,
             color: inputColor,
             outline: "none"
@@ -388,13 +393,13 @@ const Chat = ({
             color: "#fff",
             border: "none",
             borderRadius: borderRadius,
-            width: "56px",
-            height: "56px",
-            fontSize: 23,
+            width: 44,
+            height: 44,
+            fontSize: 21,
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            marginLeft: 2,
+            margin: "auto 7px auto 0",
             cursor: inputDisabled ? "not-allowed" : "pointer",
             opacity: inputDisabled ? 0.7 : 1
           }}
