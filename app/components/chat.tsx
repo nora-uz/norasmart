@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 
+// PNG иконки
 const ICON_SIZE = 32;
 const PANEL_ICONS = [
   { alt: "Полная луна", src: "https://user-gen-media-assets.s3.amazonaws.com/seedream_images/b47fcd5d-20e4-47d7-bb93-ec479ee3ba35.png", key: "moon", onClick: null },
@@ -10,8 +11,8 @@ const PANEL_ICONS = [
 ];
 
 const MAIN_IMG = "https://user-gen-media-assets.s3.amazonaws.com/seedream_images/70a60994-809a-473d-accc-36284ba46e1c.png";
-
-const SEND_ICON = "https://user-gen-media-assets.s3.amazonaws.com/seedream_images/b4b83412-f425-4b6f-83cf-5f471df7ca3d.png"; // Можно заменить на отдельную иконку send
+// Иконка отправки — большая голубая, старая
+const SEND_ICON = "https://user-gen-media-assets.s3.amazonaws.com/seedream_images/b4b83412-f425-4b6f-83cf-5f471df7ca3d.png";
 
 const Chat = () => {
   const [userInput, setUserInput] = useState("");
@@ -60,7 +61,7 @@ const Chat = () => {
           left: 18,
           right: 18,
           zIndex: 100,
-          height: ICON_SIZE + 9,
+          height: ICON_SIZE + 10,
           background: panelBg,
           color: "#fff",
           display: "flex",
@@ -71,7 +72,7 @@ const Chat = () => {
         }}
       >
         <div style={{ fontWeight: 600, fontSize: 17 }}>Nora AI</div>
-        <div style={{ display: "flex", alignItems: "center", gap: 18 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
           {PANEL_ICONS.map((icon) => (
             <button
               key={icon.key}
@@ -81,7 +82,7 @@ const Chat = () => {
                 cursor: "pointer",
                 width: ICON_SIZE,
                 height: ICON_SIZE,
-                borderRadius: 9,
+                borderRadius: 8,
                 padding: 0,
                 display: "flex",
                 alignItems: "center",
@@ -96,35 +97,37 @@ const Chat = () => {
                 style={{
                   width: ICON_SIZE,
                   height: ICON_SIZE,
-                  objectFit: "contain",
-                  filter: "brightness(1.13)"
+                  objectFit: "contain"
                 }}
               />
             </button>
           ))}
         </div>
       </div>
-      {/* Главная картинка по центру */}
+      {/* Центрированная картинка "Nora AI" — как меню по отступам */}
       <div
         style={{
-          paddingTop: ICON_SIZE + 46,
-          paddingBottom: 26,
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
           width: "100%",
+          marginTop: ICON_SIZE + 42,
+          marginBottom: 28,
+          minHeight: "calc(46vw - 80px)",
         }}
       >
         <img
           src={MAIN_IMG}
           alt="Nora AI"
           style={{
-            width: `${ICON_SIZE * 2.3}px`,
-            height: `${ICON_SIZE * 2.3}px`,
+            width: "calc(100vw - 36px)",
+            maxWidth: 650 - 36,
+            height: "auto",
             borderRadius: borderRadius,
             objectFit: "cover",
             boxShadow: "none",
             background: "none",
+            display: "block",
           }}
         />
       </div>
@@ -164,7 +167,7 @@ const Chat = () => {
         ))}
         <div ref={messagesEndRef} />
       </div>
-      {/* Инпут */}
+      {/* Input */}
       <form onSubmit={handleSubmit} style={{
         position: "fixed",
         left: 18,
@@ -174,9 +177,9 @@ const Chat = () => {
         borderRadius: borderRadius,
         display: "flex",
         alignItems: "center",
-        padding: "0 0px",
+        padding: 0,
         zIndex: 101,
-        height: 54,
+        height: 62,
       }}>
         <input
           type="text"
@@ -185,12 +188,12 @@ const Chat = () => {
             border: "none",
             borderRadius: borderRadius,
             height: 44,
-            padding: "0 19px",
+            padding: "0 22px",
             fontSize: 18,
             background: panelBg,
             color: "#fff",
             outline: "none",
-            marginRight: 9,
+            marginRight: 10,
           }}
           value={userInput}
           onChange={e => setUserInput(e.target.value)}
@@ -208,13 +211,13 @@ const Chat = () => {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          marginRight: 13,
-          marginTop: 6,
-          marginBottom: 6,
+          marginRight: 15,
+          marginTop: 9,
+          marginBottom: 9,
           cursor: inputDisabled ? "not-allowed" : "pointer",
           opacity: inputDisabled ? 0.7 : 1
         }}>
-          <img src={SEND_ICON} alt="Send" style={{width: 20, height: 20}} />
+          <img src={SEND_ICON} alt="Send" style={{width: 22, height: 22}} />
         </button>
       </form>
     </div>
