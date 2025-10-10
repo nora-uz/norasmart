@@ -14,7 +14,7 @@ const ICON_SIZE_PANEL = 18;
 const ICON_SIZE_SEND = 28;
 const BTN_SIZE = 48;
 const borderRadius = 22;
-const sidePad = 18;
+const sidePad = 16; // чуть меньше для мобильных
 const panelHeight = 62;
 const panelBg = "#131313";
 const bgColor = "#181818";
@@ -49,8 +49,8 @@ const Chat = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  // Главное: НЕ учитываем размер поля для сообщения – оно поверх layout!
-  const chatAreaHeight = `calc(100vh - ${panelHeight + sidePad * 2}px)`;
+  // Адаптивная высота чата под слой шаблонов
+  const chatAreaHeight = `calc(100vh - ${panelHeight + sidePad * 2 + 56}px)`;
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -118,62 +118,51 @@ const Chat = () => {
         </div>
       </div>
 
-      {/* Шаблоны над полем ввода */}
+      {/* Шаблоны: Адаптивные, всегда видны и удобно нажимать с любого устройства */}
       <div
         style={{
           width: "100%",
           maxWidth,
           display: "flex",
+          flexDirection: "row",
           justifyContent: "space-between",
-          margin: "0 auto 14px auto",
+          gap: 10,
+          margin: "0 auto 10px auto",
           paddingLeft: sidePad,
           paddingRight: sidePad,
-          marginTop: panelHeight + sidePad, // Баннер чуть ниже панели, шаблоны прямо под ним
+          marginTop: panelHeight + sidePad,
         }}
       >
-        <button
-          style={{
-            background: "#fff",
-            color: panelBg,
-            border: "none",
-            borderRadius: 18,
-            padding: "12px 18px",
-            fontSize: 16,
-            minWidth: 110,
-            boxShadow: "0 2px 10px 0 rgba(55,40,120,0.12)",
-            cursor: inputDisabled ? "not-allowed" : "pointer",
-            textAlign: "left",
-            display: "flex",
-            flexDirection: "column"
-          }}
-          disabled={inputDisabled}
-          onClick={() => setUserInput(PRESET_TEMPLATES[0].description)}
-        >
-          <span style={{ fontWeight: 600, fontSize: 18 }}>{PRESET_TEMPLATES[0].title}</span>
-          <span style={{ fontSize: 14, color: "#555" }}>{PRESET_TEMPLATES[0].description}</span>
-        </button>
-        
-        <button
-          style={{
-            background: "#fff",
-            color: panelBg,
-            border: "none",
-            borderRadius: 18,
-            padding: "12px 18px",
-            fontSize: 16,
-            minWidth: 110,
-            boxShadow: "0 2px 10px 0 rgba(55,40,120,0.12)",
-            cursor: inputDisabled ? "not-allowed" : "pointer",
-            textAlign: "left",
-            display: "flex",
-            flexDirection: "column"
-          }}
-          disabled={inputDisabled}
-          onClick={() => setUserInput(PRESET_TEMPLATES[1].description)}
-        >
-          <span style={{ fontWeight: 600, fontSize: 18 }}>{PRESET_TEMPLATES[1].title}</span>
-          <span style={{ fontSize: 14, color: "#555" }}>{PRESET_TEMPLATES[1].description}</span>
-        </button>
+        {PRESET_TEMPLATES.map((tpl, idx) => (
+          <button
+            key={tpl.title}
+            style={{
+              background: "#fff",
+              color: panelBg,
+              border: "none",
+              borderRadius: 18,
+              padding: "10px 8px",
+              fontSize: 16,
+              flex: 1,
+              boxShadow: "0 2px 10px 0 rgba(55,40,120,0.12)",
+              cursor: inputDisabled ? "not-allowed" : "pointer",
+              textAlign: "left",
+              display: "flex",
+              flexDirection: "column",
+              minWidth: 0,
+              maxWidth: "100%",
+              marginBottom: 0,
+              marginTop: 0,
+              // Для мобильных делаем тач-отступ
+              touchAction: "manipulation",
+            }}
+            disabled={inputDisabled}
+            onClick={() => setUserInput(tpl.description)}
+          >
+            <span style={{ fontWeight: 600, fontSize: 17 }}>{tpl.title}</span>
+            <span style={{ fontSize: 13, color: "#555" }}>{tpl.description}</span>
+          </button>
+        ))}
       </div>
 
       {/* Контейнер с чатом и баннером */}
@@ -182,7 +171,7 @@ const Chat = () => {
           width: "100%",
           maxWidth,
           margin: "0 auto",
-          marginTop: panelHeight + sidePad * 2 + 66, // Плюсуем высоту шаблонов
+          marginTop: panelHeight + sidePad * 2 + 56,
           boxSizing: "border-box",
           height: chatAreaHeight,
           display: "flex",
@@ -191,7 +180,7 @@ const Chat = () => {
           overflow: "hidden",
         }}
       >
-        {/* Баннер — строго sidePad ниже панели */}
+        {/* Баннер */}
         <div
           style={{
             width: `calc(100% - ${sidePad * 2}px)`,
