@@ -7,11 +7,18 @@ const ICONS = {
   moon: "https://cdn-icons-png.flaticon.com/512/16769/16769231.png",
   trash: "https://cdn-icons-png.flaticon.com/512/3917/3917772.png",
   arrow: "https://cdn-icons-png.flaticon.com/512/3916/3916848.png",
+  term: "https://cdn-icons-png.flaticon.com/512/1514/1514826.png", // пример иконки минимализма
+  state_1: "https://cdn-icons-png.flaticon.com/512/599/599305.png", // Отлично
+  state_2: "https://cdn-icons-png.flaticon.com/512/752/752828.png", // Хорошо
+  state_3: "https://cdn-icons-png.flaticon.com/512/5593/5593095.png", // Нормально
+  state_4: "https://cdn-icons-png.flaticon.com/512/2728/2728949.png", // Не очень
+  state_5: "https://cdn-icons-png.flaticon.com/512/189/189254.png", // Плохо
 };
 
 const BANNER = "https://user-gen-media-assets.s3.amazonaws.com/seedream_images/4c36a715-f500-4186-8955-631a09fac0ed.png";
 const ICON_SIZE_PANEL = 18;
 const ICON_SIZE_SEND = 28;
+const ICON_SIZE_BIG = 22;
 const BTN_SIZE = 62;
 const SEND_BTN_SIZE = 94;
 const borderRadius = 22;
@@ -52,15 +59,13 @@ const FAKE_ANSWERS = [
 ];
 
 const moods = [
-  { label: "Отлично", emoji: "😃" },
-  { label: "Хорошо", emoji: "🙂" },
-  { label: "Нормально", emoji: "😐" },
-  { label: "Не очень", emoji: "😕" },
-  { label: "Плохо", emoji: "😣" }
+  { label: "Отлично", icon: ICONS.state_1 },
+  { label: "Хорошо", icon: ICONS.state_2 },
+  { label: "Нормально", icon: ICONS.state_3 },
+  { label: "Не очень", icon: ICONS.state_4 },
+  { label: "Плохо", icon: ICONS.state_5 }
 ];
 
-const EMOJI_TERM = "🤰";
-const EMOJI_STATE = "😊";
 const termGradient = "linear-gradient(135deg,#fde047 0%,#fbbf24 100%)";
 const stateGradient = "linear-gradient(135deg,#7c3aed 0%,#6a11cb 100%)";
 
@@ -74,7 +79,7 @@ function InteractiveLine({ onSelect }) {
   useEffect(() => {
     if (!hasSent && selectedMonth !== null && selectedMood !== null) {
       onSelect(
-        `Срок беременности: ${selectedMonth} мес., самочувствие: ${moods[selectedMood].emoji} ${moods[selectedMood].label}`
+        `Срок беременности: ${selectedMonth} мес., самочувствие: ${moods[selectedMood].label}`
       );
       setHasSent(true);
     }
@@ -84,174 +89,155 @@ function InteractiveLine({ onSelect }) {
     if (selectedMonth === null || selectedMood === null) setHasSent(false);
   }, [selectedMonth, selectedMood]);
 
-  const boxPad = sidePad;
   const fontSizeLabel = 15;
   const fontSizeChoice = 18;
 
   return (
-    <>
-      <style>{`
-        @keyframes dropdown {
-          0% { opacity: 0; transform: translateY(-32px);}
-          100% { opacity: 1; transform: translateY(-7px);}
-        }
-      `}</style>
+    <div style={{
+      margin: "24px auto 0 auto",
+      maxWidth: maxWidth,
+      width: "100%",
+      display: "flex",
+      flexDirection: "column",
+      gap: 18
+    }}>
+      {/* Срок беременности */}
       <div style={{
-        display: "flex",
-        gap: 22,
-        maxWidth: maxWidth,
-        padding: `0 ${boxPad}px`,
-        margin: "28px auto 0 auto",
-        justifyContent: "center"
+        background: termGradient,
+        borderRadius: 20,
+        padding: "18px 22px",
+        position: "relative"
       }}>
-        {/* Срок беременности */}
         <div style={{
-          position: "relative",
-          flex: 1,
-          background: termGradient,
-          borderRadius: 20,
-          padding: "14px",
-          cursor: "pointer",
+          fontWeight: 800,
+          fontSize: fontSizeLabel + 3,
+          color: "#fff",
+          marginBottom: 12,
           display: "flex",
           alignItems: "center",
-          justifyContent: "center",
-          minWidth: 128
+          gap: 10
         }}>
-          <div
-            onClick={() => setShowMonthList(v => !v)}
-            style={{
-              fontWeight: 700,
-              fontSize: fontSizeLabel,
-              color: "#fff",
-              userSelect: "none",
-              display: "flex",
-              alignItems: "center",
-              gap: 7
-            }}
-          >
-            <span>{EMOJI_TERM}</span>
-            {selectedMonth ? `Срок: ${selectedMonth} мес.` : "Выберите срок"}
-          </div>
-          {showMonthList && (
-            <div style={{
-              position: "absolute",
-              top: "100%",
-              left: 14,
-              right: 14,
-              background: termGradient,
-              borderRadius: 18,
-              zIndex: 11,
-              padding: 10,
-              marginTop: 7,
-              boxShadow: "none",
-              animation: "dropdown 320ms cubic-bezier(.61,.55,0,1.08)"
-            }}>
-              {Array.from({ length: 9 }).map((_, i) => (
-                <div
-                  key={i}
-                  style={{
-                    padding: "9px 0",
-                    textAlign: "center",
-                    color: "#fff",
-                    fontWeight: 600,
-                    fontSize: fontSizeChoice,
-                    borderRadius: 15,
-                    background: selectedMonth === (i + 1) ? "#fff6" : "transparent",
-                    cursor: "pointer",
-                    marginBottom: i < 8 ? 4 : 0,
-                    transition: "background 0.15s",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    gap: 7
-                  }}
-                  onClick={() => {
-                    setSelectedMonth(i + 1);
-                    setShowMonthList(false);
-                  }}
-                >
-                  <span style={{ fontSize: 20 }}>{EMOJI_TERM}</span>
-                  <span>{i + 1} месяц</span>
-                </div>
-              ))}
-            </div>
-          )}
+          <img src={ICONS.term} style={{ width: ICON_SIZE_BIG, height: ICON_SIZE_BIG }} alt="term"/>
+          <span>Выберите срок беременности:</span>
         </div>
-        {/* Самочувствие */}
-        <div style={{
-          position: "relative",
-          flex: 1,
-          background: stateGradient,
-          borderRadius: 20,
-          padding: "14px",
-          cursor: "pointer",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          minWidth: 128
-        }}>
-          <div
-            onClick={() => setShowMoodList(v => !v)}
-            style={{
-              fontWeight: 700,
-              fontSize: fontSizeLabel,
-              color: "#fff",
-              userSelect: "none",
-              display: "flex",
-              alignItems: "center",
-              gap: 8
-            }}
-          >
-            <span>{EMOJI_STATE}</span>
-            {selectedMood !== null
-              ? `${moods[selectedMood].emoji} ${moods[selectedMood].label}`
-              : "Выберите самочувствие"}
-          </div>
-          {showMoodList && (
-            <div style={{
-              position: "absolute",
-              top: "100%",
-              left: 14,
-              right: 14,
-              background: stateGradient,
-              borderRadius: 18,
-              zIndex: 11,
-              padding: 10,
-              marginTop: 7,
-              boxShadow: "none",
-              animation: "dropdown 320ms cubic-bezier(.61,.55,0,1.08)"
-            }}>
-              {moods.map((item, idx) => (
-                <div
-                  key={item.label}
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 8,
-                    padding: "9px 0",
-                    color: "#fff",
-                    fontWeight: 600,
-                    fontSize: fontSizeChoice,
-                    borderRadius: 14,
-                    cursor: "pointer",
-                    background: selectedMood === idx ? "#fff5" : "transparent",
-                    marginBottom: idx < moods.length - 1 ? 4 : 0,
-                    transition: "background 0.16s"
-                  }}
-                  onClick={() => {
-                    setSelectedMood(idx);
-                    setShowMoodList(false);
-                  }}
-                >
-                  <span style={{ fontSize: 20 }}>{item.emoji}</span>
-                  <span>{item.label}</span>
-                </div>
-              ))}
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: 12, marginBottom: 8 }}>
+          {Array.from({ length: 5 }).map((_, i) => (
+            <div
+              key={i}
+              onClick={() => { setSelectedMonth(i); }}
+              style={{
+                background: selectedMonth === i ? "#fff6" : "transparent",
+                color: "#fff",
+                fontWeight: 600,
+                borderRadius: 12,
+                fontSize: fontSizeChoice,
+                textAlign: "center",
+                padding: "10px 0",
+                cursor: "pointer",
+                border: selectedMonth === i ? "2px solid #fff" : "none"
+              }}
+            >
+              {i}
             </div>
-          )}
+          ))}
+        </div>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: 12 }}>
+          {Array.from({ length: 5 }).map((_, i) => (
+            <div
+              key={i + 5}
+              onClick={() => { setSelectedMonth(i + 5); }}
+              style={{
+                background: selectedMonth === (i + 5) ? "#fff6" : "transparent",
+                color: "#fff",
+                fontWeight: 600,
+                borderRadius: 12,
+                fontSize: fontSizeChoice,
+                textAlign: "center",
+                padding: "10px 0",
+                cursor: "pointer",
+                border: selectedMonth === (i + 5) ? "2px solid #fff" : "none"
+              }}
+            >
+              {i + 5}
+            </div>
+          ))}
         </div>
       </div>
-    </>
+      {/* Самочувствие */}
+      <div style={{
+        background: stateGradient,
+        borderRadius: 20,
+        padding: "18px 22px",
+        position: "relative"
+      }}>
+        <div style={{
+          fontWeight: 800,
+          fontSize: fontSizeLabel + 3,
+          color: "#fff",
+          marginBottom: 12,
+          display: "flex",
+          alignItems: "center",
+          gap: 10
+        }}>
+          <span>
+            <img src={ICONS.state_1} style={{ width: ICON_SIZE_BIG, height: ICON_SIZE_BIG }} alt="mood"/>
+          </span>
+          <span>Выберите самочувствие:</span>
+        </div>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 12, marginBottom: 8 }}>
+          {moods.slice(0, 3).map((item, idx) => (
+            <div
+              key={item.label}
+              onClick={() => setSelectedMood(idx)}
+              style={{
+                background: selectedMood === idx ? "#fff6" : "transparent",
+                color: "#fff",
+                fontWeight: 600,
+                borderRadius: 12,
+                fontSize: fontSizeChoice,
+                textAlign: "center",
+                padding: "10px 0",
+                cursor: "pointer",
+                border: selectedMood === idx ? "2px solid #fff" : "none",
+                display: "flex",
+                alignItems: "center",
+                gap: 8,
+                justifyContent: "center"
+              }}
+            >
+              <img src={item.icon} style={{ width: ICON_SIZE_BIG, height: ICON_SIZE_BIG }} alt={item.label}/>
+              {item.label}
+            </div>
+          ))}
+        </div>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 12 }}>
+          {moods.slice(3).map((item, idx) => (
+            <div
+              key={item.label}
+              onClick={() => setSelectedMood(idx + 3)}
+              style={{
+                background: selectedMood === (idx + 3) ? "#fff6" : "transparent",
+                color: "#fff",
+                fontWeight: 600,
+                borderRadius: 12,
+                fontSize: fontSizeChoice,
+                textAlign: "center",
+                padding: "10px 0",
+                cursor: "pointer",
+                border: selectedMood === (idx + 3) ? "2px solid #fff" : "none",
+                display: "flex",
+                alignItems: "center",
+                gap: 8,
+                justifyContent: "center"
+              }}
+            >
+              <img src={item.icon} style={{ width: ICON_SIZE_BIG, height: ICON_SIZE_BIG }} alt={item.label}/>
+              {item.label}
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -262,7 +248,6 @@ const Chat = () => {
   const [inputDisabled, setInputDisabled] = useState(false);
   const [darkMode, setDarkMode] = useState(true);
   const messagesEndRef = useRef(null);
-  const showTemplates = messages.length === 0;
 
   const theme = darkMode ? themes.dark : themes.light;
 
@@ -308,6 +293,7 @@ const Chat = () => {
       position: "relative", transition: "background 0.4s"
     }}>
       <div style={{ height: sidePad }} />
+      {/* Header Panel */}
       <div style={{
         width: `calc(100% - ${sidePad * 2}px)`,
         maxWidth,
@@ -347,6 +333,7 @@ const Chat = () => {
         </div>
       </div>
       <div style={{ height: sidePad }} />
+      {/* Banner */}
       <div
         style={{
           width: `calc(100% - ${sidePad * 2}px)`, maxWidth,
@@ -369,7 +356,7 @@ const Chat = () => {
           }}
         />
       </div>
-      {/* ---- интерактивы ---- */}
+      {/* --- Интерактив сразу под фото --- */}
       <InteractiveLine onSelect={handleInteractive} />
       {/* Сообщения */}
       <div style={{
