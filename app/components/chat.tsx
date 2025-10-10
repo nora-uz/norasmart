@@ -53,8 +53,8 @@ const Chat = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  // Высота блока чата скорректирована по макету
-  const chatAreaHeight = `calc(100vh - ${panelHeight + sidePad * 2 + 220}px)`;
+  // Высота блока чата
+  const chatAreaHeight = `calc(100vh - ${panelHeight + sidePad * 2 + 3 * BTN_SIZE + 3 * sidePad}px)`;
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -208,12 +208,12 @@ const Chat = () => {
         </div>
       </div>
 
-      {/* Готовые ответы — столбец, в точности как поле для сообщения */}
+      {/* Готовые ответы — столбец, высота, padding, скругление как у поля для сообщения */}
       <div
         style={{
           position: "fixed",
           left: "50%",
-          bottom: panelHeight + sidePad * 2 + sidePad,
+          bottom: panelHeight + sidePad * 2 + 3 * BTN_SIZE,
           transform: "translateX(-50%)",
           width: `calc(100% - ${sidePad * 2}px)`,
           maxWidth,
@@ -228,10 +228,10 @@ const Chat = () => {
               color: "#fff",
               border: "none",
               borderRadius: borderRadius,
-              padding: "11px 22px",
+              padding: "0 22px",
               fontSize: 16,
               width: "100%",
-              height: BTN_SIZE, // идентичный размер с полем ввода
+              height: BTN_SIZE,
               marginBottom: sidePad,
               boxShadow: "0 2px 10px 0 rgba(55,40,120,0.12)",
               cursor: inputDisabled ? "not-allowed" : "pointer",
@@ -257,14 +257,14 @@ const Chat = () => {
             <span style={{
               fontWeight: 600,
               fontSize: 17,
-              marginBottom: 6 // небольшая вертикальная дистанция между заголовком и описанием
             }}>
               {tpl.title}
             </span>
             <span style={{
               fontSize: 13,
               color: "#ccc",
-              lineHeight: 1.5
+              marginTop: 8, // больше вертикальный отступ для удобства чтения
+              lineHeight: 1.6,
             }}>
               {tpl.description}
             </span>
