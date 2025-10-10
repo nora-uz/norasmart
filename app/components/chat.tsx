@@ -1,19 +1,19 @@
 import React, { useState, useEffect, useRef } from "react";
 
-// Новые иконки
+// Новые иконки (PNG)
 const ICONS = {
   telegram: "https://cdn-icons-png.flaticon.com/512/9821/9821637.png", // Telegram/message
   phone: "https://cdn-icons-png.flaticon.com/512/5068/5068703.png", // Phone call
-  sun: "https://cdn-icons-png.flaticon.com/512/16769/16769231.png", // Sun (night-day иконка)
-  moon: "https://cdn-icons-png.flaticon.com/512/16769/16769231.png", // Moon (night-day иконка)
+  sun: "https://cdn-icons-png.flaticon.com/512/16769/16769231.png", // Sun (night-day)
+  moon: "https://cdn-icons-png.flaticon.com/512/16769/16769231.png", // Moon (night-day)
   trash: "https://cdn-icons-png.flaticon.com/512/3917/3917772.png", // Trash
   arrow: "https://cdn-icons-png.flaticon.com/512/3916/3916848.png", // Arrow small up
 };
 
-// Главная фотография по центру
 const MAIN_IMG = "https://user-gen-media-assets.s3.amazonaws.com/seedream_images/70a60994-809a-473d-accc-36284ba46e1c.png";
 
-const ICON_SIZE = 32;
+const ICON_SIZE_PANEL = 24;
+const ICON_SIZE_SEND = 28;
 const BTN_SIZE = 48;
 const borderRadius = 22;
 const sidePad = 18;
@@ -29,7 +29,7 @@ const Chat = () => {
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
-  
+
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!userInput.trim()) return;
@@ -73,16 +73,16 @@ const Chat = () => {
         <div style={{ fontWeight: 600, fontSize: 19 }}>Nora AI</div>
         <div style={{ display: "flex", alignItems: "center", gap: 13 }}>
           <button style={iconBtn(panelBg)} onClick={() => setDarkMode(mode => !mode)} aria-label="Тема">
-            <img src={darkMode ? ICONS.sun : ICONS.moon} alt="Theme" style={iconImg} />
+            <img src={darkMode ? ICONS.sun : ICONS.moon} alt="Theme" style={iconImgPanel} />
           </button>
           <button style={iconBtn(panelBg)} onClick={clearChat} aria-label="Очистить чат">
-            <img src={ICONS.trash} alt="Trash" style={iconImg} />
+            <img src={ICONS.trash} alt="Trash" style={iconImgPanel} />
           </button>
           <button style={iconBtn(panelBg)} aria-label="Позвонить" onClick={() => window.open('tel:+1234567890')}>
-            <img src={ICONS.phone} alt="Phone" style={iconImg} />
+            <img src={ICONS.phone} alt="Phone" style={iconImgPanel} />
           </button>
           <button style={iconBtn(panelBg)} aria-label="Telegram" onClick={() => window.open('https://t.me/', '_blank')}>
-            <img src={ICONS.telegram} alt="Telegram" style={iconImg} />
+            <img src={ICONS.telegram} alt="Telegram" style={iconImgPanel} />
           </button>
         </div>
       </div>
@@ -192,7 +192,7 @@ const Chat = () => {
           opacity: inputDisabled ? 0.7 : 1,
           boxShadow: "none"
         }}>
-          <img src={ICONS.arrow} alt="Send" style={{ width: 28, height: 28, display: "block" }} />
+          <img src={ICONS.arrow} alt="Send" style={iconImgSend} />
         </button>
       </form>
     </div>
@@ -212,9 +212,18 @@ const iconBtn = (color) => ({
   justifyContent: "center",
   boxShadow: "none",
 });
-const iconImg = {
-  width: ICON_SIZE,
-  height: ICON_SIZE,
+
+const iconImgPanel = {
+  width: 24,
+  height: 24,
+  display: "block",
+  background: "none",
+  filter: "brightness(0) invert(1)", // фильтр делает PNG белым
+};
+
+const iconImgSend = {
+  width: 28,
+  height: 28,
   display: "block",
   background: "none",
 };
