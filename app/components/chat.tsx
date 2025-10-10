@@ -186,19 +186,20 @@ const Chat = ({
   // Тёмная / светлая тема и стили
   const isDark = darkMode;
   const bgColor = isDark ? "#1C1C1C" : "#f6f6fa";
-  const panelBg = isDark ? "#17171b" : "#f2f3f8";
-  const assistantBubble = isDark ? "#202028" : "#eaeafd";
+  const panelBg = isDark ? "#15151A" : "#f7f8fa";
+  const assistantBubble = isDark ? "#111117" : "#ebeefa";
   const inputBg = panelBg;
-  const inputColor = isDark ? "#fff" : "#222";
-  const borderRadius = 32;
+  const inputColor = isDark ? "#f8f8fa" : "#232439";
+  const borderRadius = 18;
 
-  // icons (Line, один стиль, SVG, без кружков):
-  const SunIcon = (<svg width={24} height={24} viewBox="0 0 28 28"><circle cx="14" cy="14" r="7" fill="none" stroke="#FDB813" strokeWidth="2"/><g stroke="#FDB813" strokeWidth="1.7"><line x1="14" y1="2" x2="14" y2="5.5"/><line x1="14" y1="22.5" x2="14" y2="26"/><line x1="2" y1="14" x2="5.5" y2="14"/><line x1="22.5" y1="14" x2="26" y2="14"/><line x1="6.7" y1="6.7" x2="10.1" y2="10.1"/><line x1="21.3" y1="21.3" x2="17.9" y2="17.9"/><line x1="21.3" y1="6.7" x2="17.9" y2="10.1"/><line x1="6.7" y1="21.3" x2="10.1" y2="17.9"/></g></svg>);
-  const MoonIcon = (<svg width={24} height={24} viewBox="0 0 28 28"><path d="M20 8.5A9.5 9.5 0 1 1 8.5 20a9.5 9.5 0 0 0 11.5-11.5z" stroke="#fff" strokeWidth="2" fill="none"/></svg>);
-  const RefreshIcon = (<svg width={24} height={24} viewBox="0 0 28 28"><path d="M7 21c-2-2.3-3.1-5.3-2.4-8.3S8.8 7.1 12 6m9-2v5M21 7c2 2.3 3.1 5.3 2.4 8.3S19.2 20.9 16 22m-9 2v-5" stroke="#aaa" strokeWidth="2" fill="none" strokeLinecap="round"/></svg>);
-  const TelegramIcon = (<svg width={24} height={24} viewBox="0 0 26 26"><path d="M4 13L10 16L14 20L21 6L4 13Z" stroke={isDark ? "#fff" : "#2646FC"} strokeWidth="1.7" fill="none"/><circle cx="13" cy="13" r="12" stroke={isDark ? "#fff" : "#2646FC"} strokeWidth="1.3" fill="none"/></svg>);
-  const PhoneIcon = (<svg width={24} height={24} viewBox="0 0 28 28" style={{transform: "scaleX(-1)"}}><path d="M7.8 12.6C9.7 15.4 12.7 18.4 15.5 20.3L17.9 18.2C18.2 18 18.6 17.9 18.9 18C20.2 18.5 21.7 18.8 23.2 18.8C23.9 18.8 24.5 19.3 24.5 20V25.2C24.5 25.8 24 26.3 23.2 26.3C11.8 26.3 2.8 17.3 2.8 5.9C2.8 5.3 3.2 4.8 3.9 4.8H9C9.7 4.8 10.3 5.3 10.3 5.9C10.3 7.5 10.6 9.1 11.1 10.5C11.2 10.8 11.2 11.2 11.1 11.5L7.8 12.6Z" stroke="#aaa" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" fill="none"/></svg>);
-  const SendIcon = (<svg width={29} height={29} viewBox="0 0 29 29"><path d="M8 14.5H21M21 14.5L15.5 9M21 14.5L15.5 20" stroke="#fff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" fill="none"/></svg>);
+  // icons — outline, чистый line, один стиль (24px)
+  const iconColor = isDark ? "#E2E3E7" : "#232439";
+  const SunIcon = (<svg width={24} height={24} viewBox="0 0 24 24"><circle cx="12" cy="12" r="6" fill="none" stroke="#FDB813" strokeWidth="2"/><g stroke="#FDB813" strokeWidth="1.5"><line x1="12" y1="1" x2="12" y2="4"/><line x1="12" y1="20" x2="12" y2="23"/><line x1="1" y1="12" x2="4" y2="12"/><line x1="20" y1="12" x2="23" y2="12"/><line x1="4.2" y1="4.2" x2="6.5" y2="6.5"/><line x1="19.8" y1="19.8" x2="17.5" y2="17.5"/><line x1="19.8" y1="4.2" x2="17.5" y2="6.5"/><line x1="4.2" y1="19.8" x2="6.5" y2="17.5"/></g></svg>);
+  const MoonIcon = (<svg width={24} height={24} viewBox="0 0 24 24"><path d="M17 6.5A9.5 9.5 0 1 1 6.5 17a9.5 9.5 0 0 0 10.5-10.5z" stroke={iconColor} strokeWidth="2" fill="none"/></svg>);
+  const RefreshIcon = (<svg width={24} height={24} viewBox="0 0 24 24"><path d="M5 19A9 9 0 1 1 19 5" stroke="#A4A5A8" strokeWidth="2" fill="none" /><polyline points="19 9 19 5 15 5" stroke="#A4A5A8" strokeWidth="2" fill="none"/></svg>);
+  const TelegramIcon = (<svg width={24} height={24} viewBox="0 0 24 24"><path d="M3.7 12.5L20.3 3.5c.6-.3 1.2.4 1 .9l-3.1 17.3c-.1.6-.7.8-1.1.3l-4.2-5.2-2.5 2c-.4.3-1 .1-1-.4l1-6.4-5-1.2c-.6-.1-.7-.9-.2-1.1z" stroke={iconColor} strokeWidth="1.5" fill="none"/></svg>);
+  const PhoneIcon = (<svg width={24} height={24} viewBox="0 0 24 24" style={{transform: "scaleX(-1)"}}><path d="M6.8 11.5C8.4 13.9 11.2 16.6 13.6 18.2l1.6-1.7c.4-.4 1-.4 1.5-.3 1.2.4 2.4.7 3.7.7.7 0 1.2.5 1.2 1.2v3.1c0 .7-.5 1.2-1.2 1.2-8.1 0-14.7-6.6-14.7-14.7 0-.7.5-1.2 1.2-1.2H8.5c.7 0 1.2.5 1.2 1.2 0 1.2.3 2.4.7 3.7.2.5.1 1.1-.3 1.5l-1.7 1.6z" stroke="#A4A5A8" strokeWidth="1.5" fill="none"/></svg>);
+  const SendIcon = (<svg width={24} height={24} viewBox="0 0 24 24"><path d="M5 12h14M19 12l-7-7M19 12l-7 7" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none"/></svg>);
 
   // --- UI START ---
   return (
@@ -231,7 +232,7 @@ const Chat = ({
         }}
       >
         <div style={{ fontWeight: 600, fontSize: 15 }}>Norasmart.uz</div>
-        <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
           <button
             onClick={() => setDarkMode((v) => !v)}
             aria-label="Сменить тему"
@@ -239,9 +240,11 @@ const Chat = ({
               background: "none",
               border: "none",
               cursor: "pointer",
-              width: 28,
-              height: 28,
+              width: 24,
+              height: 24,
               display: "flex",
+              alignItems: "center",
+              justifyContent: "center"
             }}
           >
             {isDark ? MoonIcon : SunIcon}
@@ -253,9 +256,11 @@ const Chat = ({
               background: "none",
               border: "none",
               cursor: "pointer",
-              width: 28,
-              height: 28,
-              display: "flex"
+              width: 24,
+              height: 24,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center"
             }}
           >
             {RefreshIcon}
@@ -266,9 +271,11 @@ const Chat = ({
               background: "none",
               border: "none",
               cursor: "pointer",
-              width: 28,
-              height: 28,
-              display: "flex"
+              width: 24,
+              height: 24,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center"
             }}
             onClick={() => window.open("https://t.me/", "_blank")}
           >
@@ -280,9 +287,11 @@ const Chat = ({
               background: "none",
               border: "none",
               cursor: "pointer",
-              width: 28,
-              height: 28,
-              display: "flex"
+              width: 24,
+              height: 24,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center"
             }}
             onClick={() => window.open("tel:+1234567890")}
           >
@@ -316,9 +325,9 @@ const Chat = ({
               <div
                 style={{
                   background: assistantBubble,
-                  color: isDark ? "#eaeaea" : "#232439",
+                  color: isDark ? "#f6f6f6" : "#232439",
                   borderRadius: borderRadius,
-                  padding: "11px 16px",
+                  padding: "9px 13px",
                   fontSize: 17,
                   lineHeight: 1.65,
                   border: "none",
@@ -332,10 +341,10 @@ const Chat = ({
             ) : (
               <div
                 style={{
-                  background: "transparent",
+                  background: "none",
                   color: isDark ? "#fff" : "#232439",
                   borderRadius: borderRadius,
-                  padding: "11px 0px",
+                  padding: "9px 0px",
                   fontSize: 17,
                   lineHeight: 1.65,
                   border: "none",
@@ -351,7 +360,7 @@ const Chat = ({
         ))}
         <div ref={messagesEndRef} />
       </div>
-      {/* Поле ввода — фон равен панели, круглая кнопка */}
+      {/* Поле ввода — фон равен панели, круглая кнопка меньше */}
       <form
         onSubmit={handleSubmit}
         style={{
@@ -375,10 +384,10 @@ const Chat = ({
             border: "none",
             borderRadius: borderRadius,
             height: "100%",
-            padding: "0 17px",
+            padding: "0 13px",
             fontSize: 17,
             background: inputBg,
-            color: inputColor,
+            color: "#fff",
             outline: "none"
           }}
           value={userInput}
@@ -393,13 +402,13 @@ const Chat = ({
             color: "#fff",
             border: "none",
             borderRadius: borderRadius,
-            width: 44,
-            height: 44,
-            fontSize: 21,
+            width: 36,
+            height: 36,
+            fontSize: 17,
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            margin: "auto 7px auto 0",
+            margin: "auto 4px auto 0",
             cursor: inputDisabled ? "not-allowed" : "pointer",
             opacity: inputDisabled ? 0.7 : 1
           }}
