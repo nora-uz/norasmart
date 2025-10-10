@@ -38,9 +38,6 @@ const Chat = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  // Главное: НЕ учитываем размер поля для сообщения – оно поверх layout!
-  const chatAreaHeight = `calc(100vh - ${panelHeight + sidePad * 2}px)`;
-
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!userInput.trim()) return;
@@ -53,7 +50,6 @@ const Chat = () => {
       setInputDisabled(false);
     }, 700);
   };
-
   const clearChat = () => {
     setMessages([]);
     setUserInput("");
@@ -62,22 +58,25 @@ const Chat = () => {
   return (
     <div
       style={{
-        background: bgColor,
-        width: "100vw",
+        display: "flex",
+        flexDirection: "column",
         height: "100vh",
+        width: "100vw",
+        background: bgColor,
+        margin: 0,
+        padding: 0,
         overflow: "hidden",
-        position: "relative",
       }}
     >
-      {/* Панель */}
+      {/* ----- Панель ----- */}
       <div
         style={{
-          position: "fixed",
-          top: sidePad,
-          left: "50%",
-          transform: "translateX(-50%)",
-          width: `calc(100% - ${sidePad * 2}px)`,
+          flex: "0 0 auto",
+          width: "100%",
           maxWidth,
+          margin: "0 auto",
+          marginTop: sidePad,
+          marginBottom: sidePad,
           height: panelHeight,
           background: panelBg,
           color: "#fff",
@@ -87,7 +86,6 @@ const Chat = () => {
           padding: "0 18px",
           justifyContent: "space-between",
           boxSizing: "border-box",
-          zIndex: 2000,
         }}
       >
         <div style={{ fontWeight: 600, fontSize: 19 }}>Nora AI</div>
@@ -106,22 +104,21 @@ const Chat = () => {
           </button>
         </div>
       </div>
-      {/* Контейнер с чатом и баннером */}
+      {/* ----- Контент между панелью и полем ввода ----- */}
       <div
         style={{
+          flex: "1 1 auto",
           width: "100%",
           maxWidth,
           margin: "0 auto",
-          marginTop: panelHeight + sidePad, // фото ниже панели ровно на sidePad
           boxSizing: "border-box",
-          height: chatAreaHeight,
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
           overflow: "hidden",
         }}
       >
-        {/* Баннер — строго sidePad ниже панели */}
+        {/* ---- Баннер ---- */}
         <div
           style={{
             width: `calc(100% - ${sidePad * 2}px)`,
@@ -147,7 +144,7 @@ const Chat = () => {
             }}
           />
         </div>
-        {/* Сообщения */}
+        {/* ---- Сообщения, строго скролится только содержимое и баннер остаётся сверху ---- */}
         <div
           style={{
             width: "100%",
@@ -187,22 +184,20 @@ const Chat = () => {
           <div ref={messagesEndRef} />
         </div>
       </div>
-      {/* Фиксированное поле ввода снизу */}
+      {/* ----- Поле ввода ----- */}
       <form
         onSubmit={handleSubmit}
         style={{
-          position: "fixed",
-          left: "50%",
-          bottom: sidePad,
-          transform: "translateX(-50%)",
-          width: `calc(100% - ${sidePad * 2}px)`,
+          flex: "0 0 auto",
+          width: "100%",
           maxWidth,
+          margin: "0 auto",
+          marginBottom: sidePad,
           background: panelBg,
           borderRadius: borderRadius,
           height: panelHeight,
           display: "flex",
           alignItems: "center",
-          zIndex: 2000,
           padding: 0,
           boxSizing: "border-box",
         }}
