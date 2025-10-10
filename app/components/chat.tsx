@@ -50,7 +50,6 @@ const Chat = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  // Высота включает шаблоны только если они видимы
   const templatesHeight = showTemplates
     ? PRESET_TEMPLATES.length * BTN_SIZE + PRESET_TEMPLATES.length * sidePad
     : 0;
@@ -82,7 +81,7 @@ const Chat = () => {
       overflow: "hidden",
       position: "relative",
     }}>
-      {/* Панель — иконки максимально вправо */}
+      {/* Панель — Nora AI меньше, иконки справа */}
       <div style={{
         position: "fixed",
         top: sidePad,
@@ -97,20 +96,17 @@ const Chat = () => {
         alignItems: "center",
         borderRadius: borderRadius,
         padding: "0 18px",
-        justifyContent: "space-between",
+        justifyContent: "flex-start",
         boxSizing: "border-box",
         zIndex: 2000,
       }}>
-        <div style={{
-          fontWeight: 600,
-          fontSize: 19,
-          marginRight: "auto",
-        }}>Nora AI</div>
+        {/* Название чуть меньше и слева */}
+        <div style={{ fontWeight: 600, fontSize: 17, marginRight: 8 }}>Nora AI</div>
         <div style={{
           display: "flex",
           alignItems: "center",
           gap: 6,
-          marginLeft: 32,
+          marginLeft: "auto"
         }}>
           <button style={iconBtn(panelBg)} onClick={() => setDarkMode(mode => !mode)}>
             <img src={darkMode ? ICONS.sun : ICONS.moon} alt="Theme" style={iconImgPanel} />
@@ -204,7 +200,7 @@ const Chat = () => {
         </div>
       </div>
 
-      {/* Готовые шаблонные ответы над формой, с равным отступом между собой и до поля */}
+      {/* Готовые шаблонные ответы над полем, с отступами */}
       {showTemplates && (
         <div style={{
           position: "fixed",
@@ -227,7 +223,7 @@ const Chat = () => {
                 fontSize: 16,
                 width: "100%",
                 height: BTN_SIZE,
-                marginBottom: idx === PRESET_TEMPLATES.length - 1 ? sidePad : sidePad,
+                marginBottom: sidePad,
                 cursor: inputDisabled ? "not-allowed" : "pointer",
                 textAlign: "left",
                 display: "flex",
@@ -269,7 +265,7 @@ const Chat = () => {
         </div>
       )}
 
-      {/* Поле для сообщения фиксировано внизу, кнопка внутри, квадратная и скруглённая */}
+      {/* Поле для сообщения и кнопка - внутри, скругленная как поле */}
       <form
         onSubmit={handleSubmit}
         style={{
@@ -294,7 +290,7 @@ const Chat = () => {
           style={{
             flex: 1,
             border: "none",
-            borderRadius: `${borderRadius}px`,
+            borderRadius: borderRadius,
             height: BTN_SIZE,
             padding: "0 18px 0 22px",
             fontSize: 19,
@@ -313,7 +309,7 @@ const Chat = () => {
             background: "#fff",
             color: panelBg,
             border: "none",
-            borderRadius: BTN_SIZE / 2,
+            borderRadius: borderRadius,
             width: BTN_SIZE - 8,
             height: BTN_SIZE - 8,
             marginRight: 10,
