@@ -9,8 +9,7 @@ const ICONS = {
   arrow: "https://cdn-icons-png.flaticon.com/512/3916/3916848.png"
 };
 
-const BANNER =
-  "https://user-gen-media-assets.s3.amazonaws.com/seedream_images/4c36a715-f500-4186-8955-631a09fac0ed.png";
+const BANNER = "https://user-gen-media-assets.s3.amazonaws.com/seedream_images/4c36a715-f500-4186-8955-631a09fac0ed.png";
 const ICON_SIZE_PANEL = 18;
 const ICON_SIZE_SEND = 28;
 const BTN_SIZE = 62;
@@ -24,7 +23,7 @@ const GRADIENT = "linear-gradient(90deg, #6a11cb 0%, #2575fc 100%)";
 const themes = {
   dark: {
     panelBg: "#232323",
-    bgColor: "#1C1C1C", // Ваш фон
+    bgColor: "#1C1C1C",
     userBubble: "#343434",
     userText: "#fff",
     inputBg: "#232323",
@@ -57,7 +56,7 @@ const Chat = () => {
   const [userInput, setUserInput] = useState("");
   const [messages, setMessages] = useState([]);
   const [inputDisabled, setInputDisabled] = useState(false);
-  const [darkMode, setDarkMode] = useState(true); // Можно менять!
+  const [darkMode, setDarkMode] = useState(true);
   const messagesEndRef = useRef(null);
   const showTemplates = messages.length === 0;
   const theme = darkMode ? themes.dark : themes.light;
@@ -73,8 +72,7 @@ const Chat = () => {
     setUserInput("");
     setInputDisabled(true);
     setTimeout(() => {
-      const reply =
-        FAKE_ANSWERS[Math.floor(Math.random() * FAKE_ANSWERS.length)];
+      const reply = FAKE_ANSWERS[Math.floor(Math.random() * FAKE_ANSWERS.length)];
       setMessages((prev) => [
         ...prev,
         { role: "assistant", text: reply }
@@ -130,7 +128,6 @@ const Chat = () => {
             marginLeft: "auto"
           }}
         >
-          {/* Вернули иконку смены темы */}
           <button
             style={iconBtn("transparent")}
             onClick={() => setDarkMode((prev) => !prev)}
@@ -208,14 +205,16 @@ const Chat = () => {
             >
               Выберите срок беременности:
             </div>
+            {/* Скрываем скроллбар с помощью inline-стилей и псевдоэлементов */}
             <div
               style={{
                 display: "flex",
                 gap: 12,
                 overflowX: "auto",
-                justifyContent: "flex-start", // <--- список начинается с 1!
-                scrollbarColor: "#9ecaff #232323"
+                justifyContent: "flex-start",
+                paddingRight: 32 // Добавляем отступ справа чтобы последняя цифра не обрезалась
               }}
+              className="months-scroll"
             >
               {Array.from({ length: 9 }).map((_, i) => (
                 <button
@@ -262,6 +261,11 @@ const Chat = () => {
                 </button>
               ))}
             </div>
+            {/* Стили для скрытия scrollbars */}
+            <style>{`
+              .months-scroll::-webkit-scrollbar { display: none; }
+              .months-scroll { scrollbar-width: none; -ms-overflow-style: none; }
+            `}</style>
           </div>
         </div>
       )}
@@ -370,7 +374,7 @@ const Chat = () => {
             borderRadius: borderRadius,
             height: BTN_SIZE,
             padding: `0 8px 0 ${sidePad}px`,
-            fontSize: 19,
+            fontSize: 21,
             background: theme.inputBg,
             color: theme.inputText,
             outline: "none",
@@ -386,7 +390,7 @@ const Chat = () => {
         <button
           type="submit"
           style={{
-            background: "#fff", // белая кнопка!
+            background: "#fff",
             color: "#2575fc",
             border: "none",
             borderRadius: borderRadius,
@@ -410,7 +414,7 @@ const Chat = () => {
           .nora-input::placeholder {
             color: ${theme.placeholder};
             opacity: 1;
-            font-size: 15px;
+            font-size: 21px; /* увеличили размер плейсхолдера */
           }
         `}</style>
       </form>
