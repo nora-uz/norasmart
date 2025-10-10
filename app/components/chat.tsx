@@ -45,11 +45,6 @@ const themes = {
   }
 };
 
-const PRESET_TEMPLATES = [
-  { title: "Здоровье", description: "Советы для самочувствия, профилактики и ухода." },
-  { title: "Эмоции", description: "Как справиться со стрессом и получить поддержку." }
-];
-
 const FAKE_ANSWERS = [
   "Привет! Я Nora, чем могу помочь?",
   "Расскажи, о чём бы ты хотел поговорить?",
@@ -58,6 +53,8 @@ const FAKE_ANSWERS = [
 ];
 
 const GRADIENT = "linear-gradient(90deg, #6a11cb 0%, #2575fc 100%)";
+
+const INTERACTIVE_HEIGHT = 148; // примерная высота интерактивной панели
 
 const Chat = () => {
   const [userInput, setUserInput] = useState("");
@@ -100,7 +97,7 @@ const Chat = () => {
       transition: "background 0.4s"
     }}>
       <div style={{ height: sidePad }} />
-      {/* Панель только с градиентом, без линии, без тени */}
+      {/* Панель с градиентом, без тени/линии */}
       <div style={{
         width: `calc(100% - ${sidePad * 2}px)`,
         maxWidth,
@@ -138,10 +135,8 @@ const Chat = () => {
             <img src={ICONS.trash} alt="Trash" style={iconImgPanel} />
           </button>
         </div>
-        {/* Градиентной линии больше нет здесь! */}
       </div>
       <div style={{ height: sidePad }} />
-
       <div
         style={{
           width: `calc(100% - ${sidePad * 2}px)`,
@@ -171,7 +166,128 @@ const Chat = () => {
         />
       </div>
       <div style={{ height: sidePad }} />
-
+      {/* --- интерактив сразу под фото --- */}
+      {showTemplates && (
+        <div style={{
+          width: `calc(100% - ${sidePad * 2}px)`,
+          maxWidth,
+          margin: "0 auto",
+          borderRadius: borderRadius,
+          background: theme.panelBg,
+          marginBottom: sidePad,
+          boxShadow: "0 2px 12px 0 rgba(106,17,203,0.03)",
+          padding: `${sidePad}px`,
+          display: "flex",
+          flexDirection: "column",
+          gap: sidePad,
+          alignItems: "center"
+        }}>
+          {/* Первый: срок беременности */}
+          <div style={{ width: "100%" }}>
+            <div style={{ fontWeight: 700, fontSize: 18, marginBottom: 8, color: "#2575fc", letterSpacing: "0.5px" }}>
+              Выберите срок беременности:
+            </div>
+            <div style={{
+              display: "flex",
+              gap: 8,
+              overflowX: "auto",
+              paddingBottom: 2,
+              justifyContent: "center"
+            }}>
+              {Array.from({ length: 9 }).map((_, i) => (
+                <button
+                  key={i}
+                  style={{
+                    minWidth: 48,
+                    height: 48,
+                    borderRadius: 16,
+                    border: "none",
+                    cursor: inputDisabled ? "not-allowed" : "pointer",
+                    fontSize: 17,
+                    fontWeight: 600,
+                    background: `linear-gradient(135deg, #6a11cb 0%, #2575fc 100%)`,
+                    color: "#fff",
+                    boxShadow: "0 2px 6px 0 rgba(37,117,252,0.11)",
+                    opacity: inputDisabled ? 0.7 : 1,
+                    outline: "none",
+                    transition: "box-shadow 0.2s",
+                    marginRight: i < 8 ? 8 : 0,
+                  }}
+                  disabled={inputDisabled}
+                  onClick={() => {
+                    if (inputDisabled) return;
+                    setMessages(prev => [...prev, { role: "user", text: `Мой срок беременности: ${i + 1} месяц` }]);
+                    setInputDisabled(true);
+                    setUserInput("");
+                    setTimeout(() => {
+                      const reply = FAKE_ANSWERS[Math.floor(Math.random() * FAKE_ANSWERS.length)];
+                      setMessages(prev => [...prev, { role: "assistant", text: reply }]);
+                      setInputDisabled(false);
+                    }, 700);
+                  }}
+                >
+                  {i + 1}
+                </button>
+              ))}
+            </div>
+          </div>
+          {/* Второй: выбор состояния */}
+          <div style={{ width: "100%" }}>
+            <div style={{ fontWeight: 700, fontSize: 18, marginBottom: 8, color: "#2575fc" }}>
+              Как вы себя сегодня чувствуете?
+            </div>
+            <div style={{ display: "flex", gap: 12, justifyContent: "center" }}>
+              {[
+                { emoji: "😊", label: "Отлично" },
+                { emoji: "🙂", label: "Нормально" },
+                { emoji: "🤔", label: "Тревожно" },
+                { emoji: "😣", label: "Есть дискомфорт" },
+                { emoji: "💤", label: "Усталость" },
+              ].map((item, idx) => (
+                <button
+                  key={item.label}
+                  style={{
+                    background: `linear-gradient(135deg, #6a11cb 0%, #2575fc 70%)`,
+                    color: "#fff",
+                    border: "none",
+                    borderRadius: 16,
+                    padding: "8px 10px",
+                    minWidth: 58,
+                    height: 58,
+                    fontSize: 23,
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    fontWeight: 600,
+                    boxShadow: "0 2px 6px 0 rgba(37,117,252,0.09)",
+                    opacity: inputDisabled ? 0.7 : 1,
+                    cursor: inputDisabled ? "not-allowed" : "pointer",
+                    outline: "none",
+                    transition: "box-shadow 0.2s"
+                  }}
+                  disabled={inputDisabled}
+                  onClick={() => {
+                    if (inputDisabled) return;
+                    setMessages(prev => [...prev, { role: "user", text: `Сегодня моё состояние: ${item.label}` }]);
+                    setInputDisabled(true);
+                    setUserInput("");
+                    setTimeout(() => {
+                      const reply = FAKE_ANSWERS[Math.floor(Math.random() * FAKE_ANSWERS.length)];
+                      setMessages(prev => [...prev, { role: "assistant", text: reply }]);
+                      setInputDisabled(false);
+                    }, 700);
+                  }}
+                >
+                  <span style={{ fontSize: 25, marginBottom: 3 }}>{item.emoji}</span>
+                  <span style={{ fontSize: 12, marginTop: 2 }}>{item.label}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+      {/* Сообщения идут ниже интерактива */}
       <div style={{
         width: "100%",
         maxWidth,
@@ -222,81 +338,10 @@ const Chat = () => {
           ))}
           <div ref={messagesEndRef} />
           <div style={{
-            height: (BTN_SIZE + sidePad * 3) + (showTemplates ? (TEMPLATE_BTN_SIZE + sidePad) * PRESET_TEMPLATES.length : 0)
+            height: (BTN_SIZE + sidePad * 3) + (showTemplates ? INTERACTIVE_HEIGHT : 0)
           }} />
         </div>
       </div>
-      {showTemplates && (
-        <div style={{
-          position: "fixed",
-          left: "50%",
-          bottom: BTN_SIZE + sidePad * 2,
-          transform: "translateX(-50%)",
-          width: `calc(100% - ${sidePad * 2}px)`,
-          maxWidth,
-          zIndex: 2500,
-        }}>
-          {PRESET_TEMPLATES.map((tpl) => (
-            <button
-              key={tpl.title}
-              style={{
-                background: theme.panelBg,
-                color: theme.assistantText,
-                border: "none",
-                borderRadius: borderRadius,
-                padding: "12px 22px",
-                fontSize: 15,
-                width: "100%",
-                height: TEMPLATE_BTN_SIZE,
-                marginBottom: sidePad,
-                cursor: inputDisabled ? "not-allowed" : "pointer",
-                textAlign: "left",
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                alignItems: "start",
-                outline: "none",
-                boxShadow: "none",
-                transition: "background 0.4s, color 0.4s",
-                whiteSpace: "normal",
-                overflowWrap: "anywhere"
-              }}
-              disabled={inputDisabled}
-              onClick={() => {
-                if (inputDisabled) return;
-                setMessages(prev => [...prev, { role: "user", text: tpl.description }]);
-                setInputDisabled(true);
-                setUserInput("");
-                setTimeout(() => {
-                  const reply = FAKE_ANSWERS[Math.floor(Math.random() * FAKE_ANSWERS.length)];
-                  setMessages(prev => [...prev, { role: "assistant", text: reply }]);
-                  setInputDisabled(false);
-                }, 700);
-              }}
-            >
-              <span style={{
-                fontWeight: 700,
-                fontSize: 18,
-                marginBottom: 8,
-                lineHeight: 1.13,
-                whiteSpace: "nowrap"
-              }}>
-                {tpl.title}
-              </span>
-              <span style={{
-                fontSize: 13,
-                color: "#bbb",
-                lineHeight: 1.32,
-                marginTop: 4,
-                wordBreak: "break-word",
-                whiteSpace: "normal"
-              }}>
-                {tpl.description}
-              </span>
-            </button>
-          ))}
-        </div>
-      )}
       <form
         onSubmit={handleSubmit}
         style={{
