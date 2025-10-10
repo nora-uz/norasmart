@@ -9,14 +9,15 @@ const ICONS = {
   arrow: "https://cdn-icons-png.flaticon.com/512/3916/3916848.png"
 };
 
-const BANNER = "https://user-gen-media-assets.s3.amazonaws.com/seedream_images/4c36a715-f500-4186-8955-631a09fac0ed.png";
+const BANNER =
+  "https://user-gen-media-assets.s3.amazonaws.com/seedream_images/4c36a715-f500-4186-8955-631a09fac0ed.png";
 const ICON_SIZE_PANEL = 18;
-const ICON_SIZE_SEND = 28;
-const BTN_SIZE = 62;
-const SEND_BTN_SIZE = 94;
-const borderRadius = 22;
-const sidePad = 16;
-const panelHeight = 62;
+const ICON_SIZE_SEND = 24; // уменьшено
+const BTN_SIZE = 38;       // уменьшено
+const SEND_BTN_SIZE = 54;  // уменьшено
+const borderRadius = 16;
+const sidePad = 14;
+const panelHeight = 52;
 const maxWidth = 560;
 const GRADIENT = "linear-gradient(90deg, #6a11cb 0%, #2575fc 100%)";
 
@@ -50,6 +51,19 @@ const FAKE_ANSWERS = [
   "Расскажи, о чём бы ты хотел поговорить?",
   "Я готова ответить на любые вопросы!",
   "Пиши свой запрос, я отвечу!"
+];
+
+const TOPICS = [
+  "Сон и отдых",
+  "Питание",
+  "Спорт и упражнения",
+  "Стресс",
+  "Депрессия",
+  "Ощущения в теле",
+  "Работа",
+  "Отношения",
+  "Роды",
+  "Врач / медицина"
 ];
 
 const Chat = () => {
@@ -86,6 +100,167 @@ const Chat = () => {
     setUserInput("");
   };
 
+  // Главный интерактивный блок
+  function InteractivePanel() {
+    return (
+      <div style={{
+        width: "100%",
+        display: "flex",
+        flexDirection: "column",
+        gap: 18,
+        alignItems: "center"
+      }}>
+        {/* Срок беременности */}
+        <div style={{ width: "100%" }}>
+          <div
+            style={{
+              fontWeight: 400,
+              fontSize: 15,
+              marginBottom: 12,
+              color: "#c7d3ef",
+              letterSpacing: "0.03em"
+            }}
+          >
+            Выберите срок беременности:
+          </div>
+          <div
+            style={{
+              display: "flex",
+              gap: 7, // меньше!
+              overflowX: "auto",
+              justifyContent: "flex-start",
+              paddingRight: 24
+            }}
+            className="months-scroll"
+          >
+            {Array.from({ length: 9 }).map((_, i) => (
+              <button
+                key={i}
+                style={{
+                  minWidth: 32,
+                  height: 32,
+                  borderRadius: 12,
+                  border: "none",
+                  cursor: inputDisabled ? "not-allowed" : "pointer",
+                  fontSize: 15,
+                  fontWeight: 600,
+                  background: GRADIENT,
+                  color: "#fff",
+                  boxShadow: "0 2px 6px 0 rgba(37,117,252,0.13)",
+                  opacity: inputDisabled ? 0.7 : 1,
+                  outline: "none",
+                  marginRight: i < 8 ? 6 : 0,
+                  transition: "box-shadow 0.2s"
+                }}
+                disabled={inputDisabled}
+                onClick={() => {
+                  if (inputDisabled) return;
+                  setMessages((prev) => [
+                    ...prev,
+                    { role: "user", text: `Мой срок беременности: ${i + 1} месяц` }
+                  ]);
+                  setInputDisabled(true);
+                  setUserInput("");
+                  setTimeout(() => {
+                    const reply =
+                      FAKE_ANSWERS[
+                        Math.floor(Math.random() * FAKE_ANSWERS.length)
+                      ];
+                    setMessages((prev) => [
+                      ...prev,
+                      { role: "assistant", text: reply }
+                    ]);
+                    setInputDisabled(false);
+                  }, 700);
+                }}
+              >
+                {i + 1}
+              </button>
+            ))}
+          </div>
+          {/* Скрываем scrollbars */}
+          <style>{`
+            .months-scroll::-webkit-scrollbar { display: none; }
+            .months-scroll { scrollbar-width: none; -ms-overflow-style: none; }
+          `}</style>
+        </div>
+        {/* Темы для общения */}
+        <div style={{ width: "100%" }}>
+          <div
+            style={{
+              fontWeight: 400,
+              fontSize: 15,
+              marginBottom: 12,
+              color: "#c7d3ef",
+              letterSpacing: "0.03em"
+            }}
+          >
+            Выберите тему для общения:
+          </div>
+          <div
+            style={{
+              display: "flex",
+              gap: 7,
+              overflowX: "auto",
+              justifyContent: "flex-start",
+              paddingRight: 24
+            }}
+            className="topics-scroll"
+          >
+            {TOPICS.map((topic, idx) => (
+              <button
+                key={topic}
+                style={{
+                  minWidth: 80,
+                  height: 32,
+                  borderRadius: 12,
+                  border: "none",
+                  cursor: inputDisabled ? "not-allowed" : "pointer",
+                  fontSize: 15,
+                  fontWeight: 600,
+                  background: GRADIENT,
+                  color: "#fff",
+                  boxShadow: "0 2px 6px 0 rgba(37,117,252,0.13)",
+                  opacity: inputDisabled ? 0.7 : 1,
+                  outline: "none",
+                  marginRight: idx < TOPICS.length - 1 ? 6 : 0,
+                  transition: "box-shadow 0.2s"
+                }}
+                disabled={inputDisabled}
+                onClick={() => {
+                  if (inputDisabled) return;
+                  setMessages((prev) => [
+                    ...prev,
+                    { role: "user", text: `Хочу поговорить про: ${topic}` }
+                  ]);
+                  setInputDisabled(true);
+                  setUserInput("");
+                  setTimeout(() => {
+                    const reply =
+                      FAKE_ANSWERS[
+                        Math.floor(Math.random() * FAKE_ANSWERS.length)
+                      ];
+                    setMessages((prev) => [
+                      ...prev,
+                      { role: "assistant", text: reply }
+                    ]);
+                    setInputDisabled(false);
+                  }, 700);
+                }}
+              >
+                {topic}
+              </button>
+            ))}
+          </div>
+          <style>{`
+            .topics-scroll::-webkit-scrollbar { display: none; }
+            .topics-scroll { scrollbar-width: none; -ms-overflow-style: none; }
+          `}</style>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div
       style={{
@@ -117,7 +292,7 @@ const Chat = () => {
           transition: "background 0.4s, color 0.4s"
         }}
       >
-        <div style={{ fontWeight: 800, fontSize: 25, marginRight: sidePad }}>
+        <div style={{ fontWeight: 800, fontSize: 21, marginRight: sidePad }}>
           Nora AI
         </div>
         <div
@@ -190,83 +365,11 @@ const Chat = () => {
             padding: `${sidePad + 2}px ${sidePad}px ${sidePad + 6}px ${sidePad}px`,
             display: "flex",
             flexDirection: "column",
-            alignItems: "center"
+            alignItems: "center",
+            gap: 20
           }}
         >
-          <div style={{ width: "100%" }}>
-            <div
-              style={{
-                fontWeight: 400,
-                fontSize: 15,
-                marginBottom: 18,
-                color: "#c7d3ef",
-                letterSpacing: "0.03em"
-              }}
-            >
-              Выберите срок беременности:
-            </div>
-            {/* Скрываем скроллбар с помощью inline-стилей и псевдоэлементов */}
-            <div
-              style={{
-                display: "flex",
-                gap: 12,
-                overflowX: "auto",
-                justifyContent: "flex-start",
-                paddingRight: 32 // Добавляем отступ справа чтобы последняя цифра не обрезалась
-              }}
-              className="months-scroll"
-            >
-              {Array.from({ length: 9 }).map((_, i) => (
-                <button
-                  key={i}
-                  style={{
-                    minWidth: 40,
-                    height: 40,
-                    borderRadius: 15,
-                    border: "none",
-                    cursor: inputDisabled ? "not-allowed" : "pointer",
-                    fontSize: 16,
-                    fontWeight: 600,
-                    background: GRADIENT,
-                    color: "#fff",
-                    boxShadow: "0 2px 6px 0 rgba(37,117,252,0.13)",
-                    opacity: inputDisabled ? 0.7 : 1,
-                    outline: "none",
-                    marginRight: i < 8 ? 9 : 0,
-                    transition: "box-shadow 0.2s"
-                  }}
-                  disabled={inputDisabled}
-                  onClick={() => {
-                    if (inputDisabled) return;
-                    setMessages((prev) => [
-                      ...prev,
-                      { role: "user", text: `Мой срок беременности: ${i + 1} месяц` }
-                    ]);
-                    setInputDisabled(true);
-                    setUserInput("");
-                    setTimeout(() => {
-                      const reply =
-                        FAKE_ANSWERS[
-                          Math.floor(Math.random() * FAKE_ANSWERS.length)
-                        ];
-                      setMessages((prev) => [
-                        ...prev,
-                        { role: "assistant", text: reply }
-                      ]);
-                      setInputDisabled(false);
-                    }, 700);
-                  }}
-                >
-                  {i + 1}
-                </button>
-              ))}
-            </div>
-            {/* Стили для скрытия scrollbars */}
-            <style>{`
-              .months-scroll::-webkit-scrollbar { display: none; }
-              .months-scroll { scrollbar-width: none; -ms-overflow-style: none; }
-            `}</style>
-          </div>
+          <InteractivePanel />
         </div>
       )}
       <div
@@ -302,7 +405,7 @@ const Chat = () => {
                   msg.role === "assistant"
                     ? "flex-start"
                     : "flex-end",
-                marginBottom: 12,
+                marginBottom: 10,
                 width: "100%"
               }}
             >
@@ -317,12 +420,12 @@ const Chat = () => {
                       ? theme.assistantText
                       : theme.userText,
                   borderRadius: borderRadius,
-                  padding: "14px 20px",
-                  fontSize: 16,
+                  padding: "12px 16px",
+                  fontSize: 15,
                   lineHeight: 1.7,
                   border: "none",
                   maxWidth: "70%",
-                  minWidth: 54,
+                  minWidth: 44,
                   marginLeft: sidePad,
                   marginRight: sidePad,
                   wordBreak: "break-word",
@@ -344,7 +447,7 @@ const Chat = () => {
           <div ref={messagesEndRef} />
           <div
             style={{
-              height: BTN_SIZE + sidePad * 3
+              height: BTN_SIZE + sidePad * 2
             }}
           />
         </div>
@@ -374,7 +477,7 @@ const Chat = () => {
             borderRadius: borderRadius,
             height: BTN_SIZE,
             padding: `0 8px 0 ${sidePad}px`,
-            fontSize: 21,
+            fontSize: 17,
             background: theme.inputBg,
             color: theme.inputText,
             outline: "none",
@@ -414,7 +517,7 @@ const Chat = () => {
           .nora-input::placeholder {
             color: ${theme.placeholder};
             opacity: 1;
-            font-size: 21px; /* увеличили размер плейсхолдера */
+            font-size: 17px;
           }
         `}</style>
       </form>
@@ -422,6 +525,7 @@ const Chat = () => {
   );
 };
 
+// Вспомогательные стили
 const iconBtn = (color) => ({
   background: color,
   border: "none",
