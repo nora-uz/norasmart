@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
 
-// Иконки (PNG)
 const ICONS = {
   telegram: "https://cdn-icons-png.flaticon.com/512/9821/9821637.png",
   phone: "https://cdn-icons-png.flaticon.com/512/5068/5068703.png",
@@ -53,7 +52,7 @@ const Chat = () => {
         width: "100vw",
         display: "flex",
         justifyContent: "center",
-        alignItems: "center",
+        alignItems: "flex-start",
         overflow: "hidden",
       }}
     >
@@ -70,20 +69,24 @@ const Chat = () => {
           padding: 0,
         }}
       >
-        {/* Панель фиксирована сверху */}
+        {/* Панель: боковые и верхний отступы */}
         <div
           style={{
             position: "sticky",
-            top: 0,
+            top: sidePad,
+            left: 0,
+            right: 0,
             zIndex: 100,
-            width: "100%",
+            width: `calc(100% - ${sidePad * 2}px)`,
+            margin: `0 auto`,
+            marginTop: sidePad,
             height: panelHeight,
             background: panelBg,
             color: "#fff",
             display: "flex",
             alignItems: "center",
             borderRadius: borderRadius,
-            padding: `0 ${sidePad}px`,
+            padding: "0 18px",
             justifyContent: "space-between",
             boxSizing: "border-box",
           }}
@@ -104,98 +107,88 @@ const Chat = () => {
             </button>
           </div>
         </div>
-        {/* Content скроллится, панель и поле ввода - всегда на экране */}
+        {/* Фото Nora — строго под панелью, боковые и нижний отступ */}
         <div
           style={{
-            flex: 1,
-            width: "100%",
+            width: `calc(100% - ${sidePad * 2}px)`,
+            maxWidth: 370,
+            margin: `0 auto`,
+            marginTop: sidePad,
+            marginBottom: sidePad,
+            borderRadius: borderRadius,
+            overflow: "hidden",
             boxSizing: "border-box",
             display: "flex",
-            flexDirection: "column",
+            justifyContent: "center",
             alignItems: "center",
-            overflowY: "auto",
-            padding: `0 ${sidePad}px`,
           }}
         >
-          {/* Фото Nora — строго под панелью, отступы такие же, как по бокам */}
-          <div
+          <img
+            src={MAIN_IMG}
+            alt="Nora AI"
             style={{
               width: "100%",
-              maxWidth: 370,
-              marginTop: sidePad,
-              marginBottom: sidePad,
               borderRadius: borderRadius,
-              overflow: "hidden",
-              boxSizing: "border-box",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
+              display: "block",
+              background: "none",
+              boxShadow: "none",
             }}
-          >
-            <img
-              src={MAIN_IMG}
-              alt="Nora AI"
+          />
+        </div>
+        {/* Сообщения — отступы и прокрутка */}
+        <div
+          style={{
+            width: `calc(100% - ${sidePad * 2}px)`,
+            margin: "0 auto",
+            boxSizing: "border-box",
+            flex: 1,
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "flex-end",
+            overflowY: "auto",
+            padding: 0,
+            marginBottom: sidePad,
+          }}
+        >
+          {messages.map((msg, idx) => (
+            <div
+              key={idx}
               style={{
-                width: "100%",
-                borderRadius: borderRadius,
-                display: "block",
-                background: "none",
-                boxShadow: "none",
+                display: "flex",
+                justifyContent: msg.role === "assistant" ? "flex-start" : "flex-end",
+                marginBottom: 12,
               }}
-            />
-          </div>
-          {/* Сообщения — между фото и инпутом */}
-          <div
-            style={{
-              width: "100%",
-              minHeight: "200px",
-              padding: 0,
-              margin: 0,
-              boxSizing: "border-box",
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "flex-end",
-            }}
-          >
-            {messages.map((msg, idx) => (
+            >
               <div
-                key={idx}
                 style={{
-                  display: "flex",
-                  justifyContent: msg.role === "assistant" ? "flex-start" : "flex-end",
-                  marginBottom: 12,
+                  background: msg.role === "assistant" ? panelBg : "none",
+                  color: "#fff",
+                  borderRadius: borderRadius,
+                  padding: "14px 20px",
+                  fontSize: 18,
+                  lineHeight: 1.7,
+                  border: "none",
+                  maxWidth: "86vw",
+                  minWidth: 54,
+                  marginLeft: msg.role === "user" ? "auto" : 0,
+                  marginRight: msg.role === "assistant" ? "auto" : 0,
+                  wordBreak: "break-word",
                 }}
               >
-                <div
-                  style={{
-                    background: msg.role === "assistant" ? panelBg : "none",
-                    color: "#fff",
-                    borderRadius: borderRadius,
-                    padding: "14px 20px",
-                    fontSize: 18,
-                    lineHeight: 1.7,
-                    border: "none",
-                    maxWidth: "86vw",
-                    minWidth: 54,
-                    marginLeft: msg.role === "user" ? "auto" : 0,
-                    marginRight: msg.role === "assistant" ? "auto" : 0,
-                    wordBreak: "break-word",
-                  }}
-                >
-                  {msg.text}
-                </div>
+                {msg.text}
               </div>
-            ))}
-            <div ref={messagesEndRef} />
-          </div>
+            </div>
+          ))}
+          <div ref={messagesEndRef} />
         </div>
-        {/* Инпут всегда фиксирован низом */}
+        {/* Инпут: тот же боковой и нижний отступ */}
         <form
           onSubmit={handleSubmit}
           style={{
             position: "sticky",
-            bottom: 0,
-            width: "100%",
+            bottom: sidePad,
+            width: `calc(100% - ${sidePad * 2}px)`,
+            margin: "0 auto",
             background: panelBg,
             borderRadius: borderRadius,
             height: panelHeight,
@@ -204,7 +197,6 @@ const Chat = () => {
             zIndex: 101,
             padding: 0,
             boxSizing: "border-box",
-            margin: `0 0 ${sidePad}px 0`,
           }}
         >
           <input
