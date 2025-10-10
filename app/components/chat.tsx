@@ -13,16 +13,39 @@ const BANNER = "https://user-gen-media-assets.s3.amazonaws.com/seedream_images/4
 const ICON_SIZE_PANEL = 18;
 const ICON_SIZE_SEND = 28;
 const BTN_SIZE = 62;
+const SEND_BTN_SIZE = 94;
+const TEMPLATE_BTN_SIZE = 88;
 const borderRadius = 22;
 const sidePad = 16;
 const panelHeight = 62;
-const panelBg = "#131313";
-const bgColor = "#181818";
 const maxWidth = 560;
 
+const themes = {
+  dark: {
+    panelBg: "#131313",
+    bgColor: "#181818",
+    userBubble: "#fff",
+    userText: "#181818",
+    inputBg: "#131313",
+    placeholder: "#fff",
+    assistantBubble: "#131313",
+    assistantText: "#fff"
+  },
+  light: {
+    panelBg: "#F6F7FB",
+    bgColor: "#F9FAFC",
+    userBubble: "#fff",
+    userText: "#333",
+    inputBg: "#F6F7FB",
+    placeholder: "#333",
+    assistantBubble: "#E8EAED",
+    assistantText: "#333"
+  }
+};
+
 const PRESET_TEMPLATES = [
-  { title: "Здоровье", description: "Советы по самочувствию" },
-  { title: "Эмоции", description: "Как справиться со стрессом" },
+  { title: "Здоровье", description: "Советы для самочувствия, профилактики и ухода." },
+  { title: "Эмоции", description: "Как справиться со стрессом и получить поддержку." }
 ];
 
 const FAKE_ANSWERS = [
@@ -37,17 +60,25 @@ const Chat = () => {
   const [messages, setMessages] = useState([]);
   const [inputDisabled, setInputDisabled] = useState(false);
   const [darkMode, setDarkMode] = useState(true);
+  const [containerHeight, setContainerHeight] = useState(window.innerHeight);
   const messagesEndRef = useRef(null);
   const showTemplates = messages.length === 0;
+  const theme = darkMode ? themes.dark : themes.light;
+
+  // 1. Ставим высоту на весь реальный экран
+  useEffect(() => {
+    const setVH = () => setContainerHeight(window.innerHeight);
+    setVH();
+    window.addEventListener("resize", setVH);
+    return () => window.removeEventListener("resize", setVH);
+  }, []);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  const templatesHeight = showTemplates
-    ? PRESET_TEMPLATES.length * BTN_SIZE + PRESET_TEMPLATES.length * sidePad
-    : 0;
-  const chatAreaHeight = `calc(100vh - ${panelHeight + sidePad * 2 + BTN_SIZE + templatesHeight}px)`;
+  // вычисляем динамически всё, что выше поля и шаблонов
+  const fixedPaddingTop = sidePad + panelHeight + sidePad + (showTemplates ? (TEMPLATE_BTN_SIZE + sidePad) * PRESET_TEMPLATES.length : 0);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -69,75 +100,84 @@ const Chat = () => {
 
   return (
     <div style={{
-      background: bgColor,
+      background: theme.bgColor,
       width: "100vw",
-      height: "100vh",
+      minHeight: containerHeight,
+      height: containerHeight,
       overflow: "hidden",
       position: "relative",
+      transition: "background 0.4s"
     }}>
-      {/* Панель: иконки правее, порядок — тема, телеграм, мусор */}
+      {/* Верхний отступ до панели */}
+      <div style={{ height: sidePad }} />
+      {/* Панель */}
       <div style={{
-        position: "fixed",
-        top: sidePad,
-        left: "50%",
-        transform: "translateX(-50%)",
         width: `calc(100% - ${sidePad * 2}px)`,
         maxWidth,
         height: panelHeight,
-        background: panelBg,
-        color: "#fff",
+        margin: "0 auto",
+        background: theme.panelBg,
+        color: theme.assistantText,
         display: "flex",
         alignItems: "center",
         borderRadius: borderRadius,
-        padding: "0 18px",
+        padding: `0 ${sidePad}px 0 ${sidePad}px`,
         justifyContent: "flex-start",
         boxSizing: "border-box",
         zIndex: 2000,
+        transition: "background 0.4s, color 0.4s"
       }}>
-        <div style={{ fontWeight: 600, fontSize: 17, marginRight: 8 }}>Nora AI</div>
+        <div style={{ fontWeight: 800, fontSize: 25, marginRight: sidePad }}>Nora AI</div>
         <div style={{
           display: "flex",
           alignItems: "center",
           gap: 6,
           marginLeft: "auto"
         }}>
-          <button style={iconBtn(panelBg)} onClick={() => setDarkMode(mode => !mode)}>
+          <button style={iconBtn(theme.panelBg)} onClick={() => setDarkMode((prev) => !prev)}>
             <img src={darkMode ? ICONS.sun : ICONS.moon} alt="Theme" style={iconImgPanel} />
           </button>
-          <button style={iconBtn(panelBg)} onClick={() => window.open('https://t.me/', '_blank')}>
+          <button style={iconBtn(theme.panelBg)} onClick={() => window.open('https://t.me/', '_blank')}>
             <img src={ICONS.telegram} alt="Telegram" style={iconImgPanel} />
           </button>
-          <button style={iconBtn(panelBg)} onClick={clearChat}>
+          <button
+            style={{ ...iconBtn(theme.panelBg), marginRight: -sidePad }}
+            onClick={clearChat}
+          >
             <img src={ICONS.trash} alt="Trash" style={iconImgPanel} />
           </button>
         </div>
       </div>
-      {/* Контент и баннер */}
-      <div style={{
-        width: "100%",
-        maxWidth,
-        margin: "0 auto",
-        marginTop: panelHeight + sidePad,
-        boxSizing: "border-box",
-        height: chatAreaHeight,
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        overflow: "hidden",
-      }}>
+      {/* Отступ между панелью и фото */}
+      <div style={{ height: sidePad }} />
+
+      {/* Блок с фото, сообщениями*/}
+      <div
+        style={{
+          width: "100%",
+          maxWidth,
+          margin: "0 auto",
+          boxSizing: "border-box",
+          height: `calc(100vh - ${BTN_SIZE + (showTemplates ? TEMPLATE_BTN_SIZE * PRESET_TEMPLATES.length + sidePad : 0) + fixedPaddingTop + sidePad}px)`,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          overflow: "hidden"
+        }}
+      >
+        {/* Фото */}
         <div style={{
           width: `calc(100% - ${sidePad * 2}px)`,
           maxWidth,
-          marginBottom: sidePad,
           borderRadius: 26,
           overflow: "hidden",
           boxShadow: "0 4px 28px 0 rgba(55,40,120,0.14)",
-          background: "#181818",
+          background: theme.bgColor,
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
           flexShrink: 0,
-          position: "relative",
+          position: "relative"
         }}>
           <img
             src={BANNER}
@@ -154,6 +194,7 @@ const Chat = () => {
         <div style={{
           width: "100%",
           flex: 1,
+          minHeight: 0,
           overflowY: "auto",
           display: "flex",
           flexDirection: "column",
@@ -167,8 +208,8 @@ const Chat = () => {
               width: "100%",
             }}>
               <div style={{
-                background: msg.role === "assistant" ? panelBg : "none",
-                color: "#fff",
+                background: msg.role === "assistant" ? theme.assistantBubble : theme.userBubble,
+                color: msg.role === "assistant" ? theme.assistantText : theme.userText,
                 borderRadius: borderRadius,
                 padding: "14px 20px",
                 fontSize: 18,
@@ -180,6 +221,8 @@ const Chat = () => {
                 marginRight: sidePad,
                 wordBreak: "break-word",
                 alignSelf: msg.role === "assistant" ? "flex-start" : "flex-end",
+                boxShadow: msg.role === "user" ? "0 2px 12px rgba(0,0,0,0.08)" : "none",
+                transition: "background 0.4s, color 0.4s"
               }}>
                 {msg.text}
               </div>
@@ -188,37 +231,41 @@ const Chat = () => {
           <div ref={messagesEndRef} />
         </div>
       </div>
-      {/* Готовые шаблоны — над полем, равные отступы между, исчезают после сообщения */}
+      {/* Фиксированные готовые ответы над полем */}
       {showTemplates && (
         <div style={{
           position: "fixed",
           left: "50%",
-          bottom: BTN_SIZE + 2 * sidePad,
+          bottom: BTN_SIZE + sidePad * 2,
           transform: "translateX(-50%)",
           width: `calc(100% - ${sidePad * 2}px)`,
           maxWidth,
           zIndex: 2500,
         }}>
-          {PRESET_TEMPLATES.map((tpl, idx) => (
+          {PRESET_TEMPLATES.map((tpl) => (
             <button
               key={tpl.title}
               style={{
-                background: panelBg,
-                color: "#fff",
+                background: theme.panelBg,
+                color: theme.assistantText,
                 border: "none",
                 borderRadius: borderRadius,
-                padding: "0 22px",
-                fontSize: 16,
+                padding: "12px 22px",
+                fontSize: 15,
                 width: "100%",
-                height: BTN_SIZE,
+                height: TEMPLATE_BTN_SIZE,
                 marginBottom: sidePad,
                 cursor: inputDisabled ? "not-allowed" : "pointer",
                 textAlign: "left",
                 display: "flex",
                 flexDirection: "column",
                 justifyContent: "center",
+                alignItems: "start",
                 outline: "none",
-                boxShadow: "none"
+                boxShadow: "none",
+                transition: "background 0.4s, color 0.4s",
+                whiteSpace: "normal",
+                overflowWrap: "anywhere"
               }}
               disabled={inputDisabled}
               onClick={() => {
@@ -235,16 +282,19 @@ const Chat = () => {
             >
               <span style={{
                 fontWeight: 600,
-                fontSize: 16,
+                fontSize: 15,
                 marginBottom: 5,
                 lineHeight: 1.13,
+                whiteSpace: "nowrap"
               }}>
                 {tpl.title}
               </span>
               <span style={{
-                fontSize: 11,
+                fontSize: 13,
                 color: "#bbb",
-                lineHeight: 1.2,
+                lineHeight: 1.32,
+                wordBreak: "break-word",
+                whiteSpace: "normal"
               }}>
                 {tpl.description}
               </span>
@@ -252,7 +302,7 @@ const Chat = () => {
           ))}
         </div>
       )}
-      {/* Поле для сообщения и кнопка */}
+      {/* Фиксированное поле ввода */}
       <form
         onSubmit={handleSubmit}
         style={{
@@ -262,14 +312,12 @@ const Chat = () => {
           transform: "translateX(-50%)",
           width: `calc(100% - ${sidePad * 2}px)`,
           maxWidth,
-          background: panelBg,
-          borderRadius: borderRadius,
-          height: BTN_SIZE,
+          zIndex: 2600,
           display: "flex",
           alignItems: "center",
-          zIndex: 2600,
-          padding: 0,
+          background: "none",
           boxSizing: "border-box",
+          padding: 0
         }}
       >
         <input
@@ -279,38 +327,49 @@ const Chat = () => {
             border: "none",
             borderRadius: borderRadius,
             height: BTN_SIZE,
-            padding: "0 8px 0 22px",
+            padding: `0 8px 0 ${sidePad}px`,
             fontSize: 19,
-            background: panelBg,
-            color: "#fff",
+            background: theme.inputBg,
+            color: theme.assistantText,
             outline: "none",
+            marginRight: 0, // нет gap справа
+            transition: "background 0.4s, color 0.4s"
           }}
           value={userInput}
           onChange={e => setUserInput(e.target.value)}
           placeholder="Введите ваш вопрос"
           disabled={inputDisabled}
+          className="nora-input"
         />
         <button
           type="submit"
           style={{
-            background: "#fff",
-            color: panelBg,
+            background: theme.userBubble,
+            color: theme.userText,
             border: "none",
             borderRadius: borderRadius,
-            width: BTN_SIZE - 8,
-            height: BTN_SIZE - 8,
-            marginRight: sidePad,
-            marginLeft: 6,
+            width: SEND_BTN_SIZE,
+            height: BTN_SIZE,
+            marginRight: 0,
+            marginLeft: sidePad,
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
             cursor: inputDisabled ? "not-allowed" : "pointer",
             opacity: inputDisabled ? 0.7 : 1,
             boxShadow: "none",
+            transition: "background 0.4s, color 0.4s"
           }}
+          disabled={inputDisabled}
         >
           <img src={ICONS.arrow} alt="Send" style={iconImgSend} />
         </button>
+        <style>{`
+          .nora-input::placeholder {
+            color: ${theme.placeholder};
+            opacity: 1;
+          }
+        `}</style>
       </form>
     </div>
   );
