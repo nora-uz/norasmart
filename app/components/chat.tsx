@@ -2,117 +2,66 @@ import React, { useState, useEffect, useRef } from "react";
 import Markdown from "react-markdown";
 const WELCOME_IMAGE = "https://user-gen-media-assets.s3.amazonaws.com/seedream_images/70a60994-809a-473d-accc-36284ba46e1c.png";
 
-const ICON_SIZE = 24;
+const ICON_SIZE = 28; // чуть больше для мобильной панели
 
 const icons = {
-  sun: (
-    <svg width={ICON_SIZE} height={ICON_SIZE} viewBox="0 0 24 24">
-      <circle cx="12" cy="12" r="6" fill="none" stroke="#fff" strokeWidth="2"/>
-      <g stroke="#fff" strokeWidth="1.5">
-        <line x1="12" y1="1" x2="12" y2="4"/>
-        <line x1="12" y1="20" x2="12" y2="23"/>
-        <line x1="1" y1="12" x2="4" y2="12"/>
-        <line x1="20" y1="12" x2="23" y2="12"/>
-        <line x1="4.2" y1="4.2" x2="6.5" y2="6.5"/>
-        <line x1="19.8" y1="19.8" x2="17.5" y2="17.5"/>
-        <line x1="19.8" y1="4.2" x2="17.5" y2="6.5"/>
-        <line x1="4.2" y1="19.8" x2="6.5" y2="17.5"/>
-      </g>
-    </svg>
-  ),
-  moon: (
-    <svg width={ICON_SIZE} height={ICON_SIZE} viewBox="0 0 24 24">
-      <path d="M17 6.5A9.5 9.5 0 1 1 6.5 17a9.5 9.5 0 0 0 10.5-10.5z" stroke="#fff" strokeWidth="2" fill="none"/>
-    </svg>
-  ),
   refresh: (
-    <svg width={ICON_SIZE} height={ICON_SIZE} viewBox="0 0 24 24"><path d="M5 19A9 9 0 1 1 19 5" stroke="#fff" strokeWidth="2" fill="none" /><polyline points="19 9 19 5 15 5" stroke="#fff" strokeWidth="2" fill="none"/></svg>
+    <svg width={ICON_SIZE} height={ICON_SIZE} viewBox="0 0 24 24"><path d="M5 19A9 9 0 1 1 19 5" stroke="#fff" strokeWidth="2" fill="none"/><polyline points="19 9 19 5 15 5" stroke="#fff" strokeWidth="2" fill="none"/></svg>
   ),
   telegram: (
-    <svg width={ICON_SIZE} height={ICON_SIZE} viewBox="0 0 24 24"><path d="M3.7 12.5L20.3 3.5c.6-.3 1.2.4 1 .9l-3.1 17.3c-.1.6-.7.8-1.1.3l-4.2-5.2-2.5 2c-.4.3-1 .1-1-.4l1-6.4-5-1.2c-.6-.1-.7-.9-.2-1.1z" stroke="#fff" strokeWidth="1.5" fill="none"/></svg>
+    <svg width={ICON_SIZE} height={ICON_SIZE} viewBox="0 0 24 24"><path d="M3.7 12.5L20.3 3.5c.6-.3 1.2.4 1 .9l-3.1 17.3c-.1.6-.7.8-1.1.3l-4.2-5.2-2.5 2c-.4.3-1 .1-1-.4l1-6.4-5-1.2c-.6-.1-.7-.9-.2-1.1z" stroke="#fff" strokeWidth="1.7" fill="none"/></svg>
   ),
   phone: (
-    <svg width={ICON_SIZE} height={ICON_SIZE} viewBox="0 0 24 24" style={{transform:"scaleX(-1)"}}><path d="M6.8 11.5C8.4 13.9 11.2 16.6 13.6 18.2l1.6-1.7c.4-.4 1-.4 1.5-.3 1.2.4 2.4.7 3.7.7.7 0 1.2.5 1.2 1.2v3.1c0 .7-.5 1.2-1.2 1.2-8.1 0-14.7-6.6-14.7-14.7 0-.7.5-1.2 1.2-1.2H8.5c.7 0 1.2.5 1.2 1.2 0 1.2.3 2.4.7 3.7.2.5.1 1.1-.3 1.5l-1.7 1.6z" stroke="#fff" strokeWidth="1.5" fill="none"/></svg>
+    <svg width={ICON_SIZE} height={ICON_SIZE} viewBox="0 0 24 24" style={{transform:"scaleX(-1)"}}><path d="M6.8 11.5C8.4 13.9 11.2 16.6 13.6 18.2l1.6-1.7c.4-.4 1-.4 1.5-.3 1.2.4 2.4.7 3.7.7.7 0 1.2.5 1.2 1.2v3.1c0 .7-.5 1.2-1.2 1.2-8.1 0-14.7-6.6-14.7-14.7 0-.7.5-1.2 1.2-1.2H8.5c.7 0 1.2.5 1.2 1.2 0 1.2.3 2.4.7 3.7.2.5.1 1.1-.3 1.5l-1.7 1.6z" stroke="#fff" strokeWidth="1.7" fill="none"/></svg>
   ),
   send: (
-    <svg width={20} height={20} viewBox="0 0 20 20"><path d="M4 10H16M16 10L10 4M16 10L10 16" stroke="#fff" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" fill="none"/></svg>
+    <svg width={22} height={22} viewBox="0 0 20 20"><path d="M4 10H16M16 10L10 4M16 10L10 16" stroke="#fff" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" fill="none"/></svg>
   )
 };
 
-const renderMessage = (msg, borderRadius, assistantBubble) => {
-  if (msg.role === "assistant") {
-    // SPECIAL: welcome-image заменяем <img> с округлением и макс шириной
-    let text = msg.text;
-    // markdown + image
-    text = text.replace(/\!\[Nora AI\]\(([^)]+)\)/gi,
-      `<img src="$1" style="display:block;margin:12px auto 7px auto;max-width:120px;border-radius:18px;" alt="Nora AI"/>`
-    );
-    return (
-      <div style={{
-        background: assistantBubble,
-        color: "#fff",
-        borderRadius: borderRadius,
-        padding: "10px 14px",
-        fontSize: 17,
-        lineHeight: 1.65,
-        border: "none",
-        maxWidth: "86vw",
-        minWidth: 54,
-        marginRight: "auto"
-      }}>
-        <Markdown components={{
-          img: ({node, ...props}) => (
-            <img
-              {...props}
-              style={{
-                display: 'block',
-                margin: '12px auto 7px auto',
-                maxWidth: 120,
-                borderRadius: borderRadius,
-              }}
-              alt="Nora AI"
-            />
-          )
-        }}>{text}</Markdown>
-      </div>
-    );
-  } else {
-    return (
-      <div style={{
-        background: "none",
-        color: "#fff",
-        borderRadius: borderRadius,
-        padding: "9px 0px",
-        fontSize: 17,
-        lineHeight: 1.65,
-        border: "none",
-        maxWidth: "86vw",
-        minWidth: 54,
-        marginLeft: "auto"
-      }}>
-        <Markdown>{msg.text}</Markdown>
-      </div>
-    );
-  }
-};
+const WelcomeMessage = () => (
+  <div>
+    <div style={{
+      fontWeight: 700,
+      fontSize: "1.18em",
+      marginBottom: "4px"
+    }}>
+      79% мам совершают ошибки на ранних сроках беременности 👶🏻
+    </div>
+    {/* Описание */}
+    <div style={{marginBottom: 16, fontSize: "1em"}}>
+      👩🏻‍💻 Я — Нора, умный помощник для будущих мам на базе знаний NHS.
+      Слежу за состоянием, предупреждаю о рисках, даю советы и поддерживаю.
+    </div>
+    {/* Фото */}
+    <img
+      src={WELCOME_IMAGE}
+      alt="Nora AI"
+      style={{
+        display: "block",
+        margin: "0 auto 7px auto",
+        maxWidth: 120,
+        borderRadius: 18,
+        boxShadow: "0 2px 16px #1113"
+      }}
+    />
+  </div>
+);
 
 const Chat = () => {
   const [userInput, setUserInput] = useState("");
   const [messages, setMessages] = useState([
-    {
-      role: "assistant",
-      text: `
-**79% мам совершают ошибки на ранних сроках беременности 👶🏻**
-
-![Nora AI](${WELCOME_IMAGE})
-
-👩🏻‍💻 Я — Нора, умный помощник для будущих мам на базе знаний NHS.
-Слежу за состоянием, предупреждаю о рисках, даю советы и поддерживаю.
-      `
-    }
+    { role: "assistant", text: "" }
   ]);
   const [inputDisabled, setInputDisabled] = useState(false);
   const messagesEndRef = useRef(null);
+
+  // Welcome: при чистке и первой загрузке
+  useEffect(() => {
+    setMessages([
+      { role: "assistant", text: "" }
+    ]);
+  }, []);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -128,17 +77,7 @@ const Chat = () => {
 
   const clearChat = () => {
     setMessages([
-      {
-        role: "assistant",
-        text: `
-**79% мам совершают ошибки на ранних сроках беременности 👶🏻**
-
-![Nora AI](${WELCOME_IMAGE})
-
-👩🏻‍💻 Я — Нора, умный помощник для будущих мам на базе знаний NHS.
-Слежу за состоянием, предупреждаю о рисках, даю советы и поддерживаю.
-      `
-      }
+      { role: "assistant", text: "" }
     ]);
     setUserInput("");
   };
@@ -147,7 +86,7 @@ const Chat = () => {
   const bgColor = "#1C1C1C";
   const panelBg = "#171717";
   const assistantBubble = panelBg;
-  const inputBg = "#171717";
+  const inputBg = panelBg;
   const borderRadius = 18;
 
   return (
@@ -175,13 +114,40 @@ const Chat = () => {
           alignItems: "center",
           justifyContent: "space-between",
           borderRadius: borderRadius,
-          padding: "0 14px",
+          padding: "0 14px"
         }}>
         <div style={{ fontWeight: 600, fontSize: 15 }}>Nora AI</div>
         <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-          <button onClick={clearChat} aria-label="Очистить чат" style={{background:"none", border:"none", cursor:"pointer"}}>{icons.refresh}</button>
-          <button aria-label="Telegram" style={{background:"none", border:"none", cursor:"pointer"}} onClick={() => window.open("https://t.me/", "_blank")}>{icons.telegram}</button>
-          <button aria-label="Позвонить" style={{background:"none", border:"none", cursor:"pointer"}} onClick={() => window.open("tel:+1234567890")}>{icons.phone}</button>
+          <button style={{
+            background: "none", border: "none", cursor: "pointer",
+            width: ICON_SIZE, height: ICON_SIZE,
+            borderRadius: 10, display: "flex", alignItems: "center", justifyContent: "center"
+          }}
+            onClick={clearChat}
+            aria-label="Очистить чат"
+          >
+            {icons.refresh}
+          </button>
+          <button style={{
+            background: "none", border: "none", cursor: "pointer",
+            width: ICON_SIZE, height: ICON_SIZE,
+            borderRadius: 10, display: "flex", alignItems: "center", justifyContent: "center"
+          }}
+            aria-label="Telegram"
+            onClick={() => window.open("https://t.me/", "_blank")}
+          >
+            {icons.telegram}
+          </button>
+          <button style={{
+            background: "none", border: "none", cursor: "pointer",
+            width: ICON_SIZE, height: ICON_SIZE,
+            borderRadius: 10, display: "flex", alignItems: "center", justifyContent: "center"
+          }}
+            aria-label="Позвонить"
+            onClick={() => window.open("tel:+1234567890")}
+          >
+            {icons.phone}
+          </button>
         </div>
       </div>
       {/* Сообщения */}
@@ -194,15 +160,48 @@ const Chat = () => {
         minHeight: "100vh",
         padding: "85px 15px 70px 15px"
       }}>
-        {messages.map((msg, idx) =>
+        {messages.map((msg, idx) => (
           <div key={idx} style={{
             display: "flex",
             justifyContent: msg.role === "assistant" ? "flex-start" : "flex-end",
             marginBottom: 12,
           }}>
-            {renderMessage(msg, borderRadius, assistantBubble)}
+            {msg.role === "assistant"
+              ? <div style={{
+                  background: assistantBubble,
+                  color: "#fff",
+                  borderRadius: borderRadius,
+                  padding: "10px 14px",
+                  fontSize: 17,
+                  lineHeight: 1.65,
+                  border: "none",
+                  maxWidth: "86vw",
+                  minWidth: 54,
+                  marginRight: "auto"
+                }}>
+                <WelcomeMessage />
+                {/* если есть дополнительный текст, тоже показать */}
+                {msg.text && (
+                  <Markdown>{msg.text}</Markdown>
+                )}
+                </div>
+              : <div style={{
+                  background: "none",
+                  color: "#fff",
+                  borderRadius: borderRadius,
+                  padding: "9px 0px",
+                  fontSize: 17,
+                  lineHeight: 1.65,
+                  border: "none",
+                  maxWidth: "86vw",
+                  minWidth: 54,
+                  marginLeft: "auto"
+                }}>
+                  <Markdown>{msg.text}</Markdown>
+                </div>
+            }
           </div>
-        )}
+        ))}
         <div ref={messagesEndRef} />
       </div>
       {/* Инпут */}
