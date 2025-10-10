@@ -12,7 +12,7 @@ const ICONS = {
 const BANNER = "https://user-gen-media-assets.s3.amazonaws.com/seedream_images/4c36a715-f500-4186-8955-631a09fac0ed.png";
 const ICON_SIZE_PANEL = 18;
 const ICON_SIZE_SEND = 28;
-const BTN_SIZE = 48;
+const BTN_SIZE = 68; // поле стало большим!
 const borderRadius = 22;
 const sidePad = 16;
 const panelHeight = 62;
@@ -53,7 +53,7 @@ const Chat = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  // Высота блока чата скорректирована по макету
+  // Корректируем высоту вида чата с учётом увеличенных полей и шаблонов
   const chatAreaHeight = `calc(100vh - ${panelHeight + sidePad * 2 + 3 * BTN_SIZE + 5 * sidePad}px)`;
 
   const handleSubmit = (e) => {
@@ -137,7 +137,7 @@ const Chat = () => {
           overflow: "hidden",
         }}
       >
-        {/* Баннер — изображение полностью, ширина по контейнеру, пропорции не меняются */}
+        {/* Баннер — изображение полностью и по ширине, пропорции не меняются */}
         <div
           style={{
             width: `calc(100% - ${sidePad * 2}px)`,
@@ -207,14 +207,14 @@ const Chat = () => {
           <div ref={messagesEndRef} />
         </div>
 
-        {/* Готовые ответы — над полем сообщения, размером как поле, с правильным отступом */}
+        {/* Шаблонные ответы — большие, над полем сообщения */}
         <div
           style={{
             width: "100%",
             maxWidth,
             paddingLeft: sidePad,
             paddingRight: sidePad,
-            marginBottom: sidePad // отступ между шаблонами и полем сообщения
+            marginBottom: sidePad // отступ между последним шаблоном и полем для сообщения
           }}
         >
           {PRESET_TEMPLATES.map((tpl, idx) => (
@@ -226,7 +226,7 @@ const Chat = () => {
                 border: "none",
                 borderRadius: borderRadius,
                 padding: "0 22px",
-                fontSize: 15,
+                fontSize: 17,
                 width: "100%",
                 height: BTN_SIZE,
                 marginBottom: sidePad,
@@ -253,13 +253,13 @@ const Chat = () => {
             >
               <span style={{
                 fontWeight: 600,
-                fontSize: 16,
-                marginBottom: 6
+                fontSize: 17,
+                marginBottom: 8
               }}>
                 {tpl.title}
               </span>
               <span style={{
-                fontSize: 12,
+                fontSize: 15,
                 color: "#ccc",
                 lineHeight: 1.5
               }}>
@@ -269,65 +269,69 @@ const Chat = () => {
           ))}
         </div>
 
-        {/* Фиксированное поле ввода снизу */}
+        {/* Форма ввода сообщения — большое поле! */}
         <form
           onSubmit={handleSubmit}
           style={{
-            position: "fixed",
-            left: "50%",
-            bottom: sidePad,
-            transform: "translateX(-50%)",
-            width: `calc(100% - ${sidePad * 2}px)`,
+            width: "100%",
             maxWidth,
-            background: panelBg,
-            borderRadius: borderRadius,
-            height: BTN_SIZE,
-            display: "flex",
-            alignItems: "center",
-            zIndex: 2000,
-            padding: 0,
-            boxSizing: "border-box",
+            paddingLeft: sidePad,
+            paddingRight: sidePad,
+            marginBottom: sidePad,
+            background: "none",
           }}
         >
-          <input
-            type="text"
+          <div
             style={{
-              flex: 1,
-              border: "none",
+              background: panelBg,
               borderRadius: borderRadius,
               height: BTN_SIZE,
-              padding: "0 22px",
-              fontSize: 19,
-              background: panelBg,
-              color: "#fff",
-              outline: "none",
-            }}
-            value={userInput}
-            onChange={e => setUserInput(e.target.value)}
-            placeholder="Введите ваш вопрос"
-            disabled={inputDisabled}
-          />
-          <button
-            type="submit"
-            style={{
-              background: "#fff",
-              color: panelBg,
-              border: "none",
-              borderRadius: BTN_SIZE / 2,
-              width: BTN_SIZE,
-              height: BTN_SIZE,
-              marginLeft: 10,
-              marginRight: 8,
               display: "flex",
-              justifyContent: "center",
               alignItems: "center",
-              cursor: inputDisabled ? "not-allowed" : "pointer",
-              opacity: inputDisabled ? 0.7 : 1,
-              boxShadow: "none",
+              padding: 0,
+              boxSizing: "border-box",
             }}
           >
-            <img src={ICONS.arrow} alt="Send" style={iconImgSend} />
-          </button>
+            <input
+              type="text"
+              style={{
+                flex: 1,
+                border: "none",
+                borderRadius: borderRadius,
+                height: BTN_SIZE,
+                padding: "0 22px",
+                fontSize: 19,
+                background: panelBg,
+                color: "#fff",
+                outline: "none",
+              }}
+              value={userInput}
+              onChange={e => setUserInput(e.target.value)}
+              placeholder="Введите ваш вопрос"
+              disabled={inputDisabled}
+            />
+            <button
+              type="submit"
+              style={{
+                background: "#fff",
+                color: panelBg,
+                border: "none",
+                borderRadius: BTN_SIZE / 2,
+                width: BTN_SIZE,
+                height: BTN_SIZE,
+                marginLeft: 10,
+                marginRight: 8,
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                cursor: inputDisabled ? "not-allowed" : "pointer",
+                opacity: inputDisabled ? 0.7 : 1,
+                boxShadow: "none",
+              }}
+            >
+              <img src={ICONS.arrow} alt="Send" style={iconImgSend} />
+            </button>
+          </div>
         </form>
       </div>
     </div>
