@@ -100,7 +100,7 @@ const Chat = () => {
       transition: "background 0.4s"
     }}>
       <div style={{ height: sidePad }} />
-      {/* Панель с градиентом и линией снизу */}
+      {/* Панель с градиентом и гладкой линией снизу, без тени */}
       <div style={{
         width: `calc(100% - ${sidePad * 2}px)`,
         maxWidth,
@@ -116,8 +116,7 @@ const Chat = () => {
         boxSizing: "border-box",
         position: "relative",
         zIndex: 2000,
-        transition: "background 0.4s, color 0.4s",
-        boxShadow: "0 3px 18px 0 rgba(37,117,252,0.20)"
+        transition: "background 0.4s, color 0.4s"
       }}>
         <div style={{ fontWeight: 800, fontSize: 25, marginRight: sidePad }}>Nora AI</div>
         <div style={{
@@ -139,17 +138,16 @@ const Chat = () => {
             <img src={ICONS.trash} alt="Trash" style={iconImgPanel} />
           </button>
         </div>
-        {/* Градиентная линия-подсветка под панелью */}
+        {/* Линия снизу панели (без тени, гладкая) */}
         <div style={{
           position: "absolute",
-          left: sidePad,
-          right: sidePad,
-          bottom: -4,
-          height: 5,
-          borderRadius: 4,
+          left: 8,
+          right: 8,
+          bottom: -3,
+          height: 4,
+          borderRadius: 2,
           background: GRADIENT,
-          zIndex: 1,
-          boxShadow: "0 2px 18px 0 rgba(37,117,252,0.20)"
+          zIndex: 1
         }} />
       </div>
       <div style={{ height: sidePad }} />
