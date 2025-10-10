@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from "react";
 
 const ICONS = {
   telegram: "https://cdn-icons-png.flaticon.com/512/9821/9821637.png",
-  phone: "https://cdn-icons-png.flaticon.com/512/5068/5068703.png",
   sun: "https://cdn-icons-png.flaticon.com/512/16769/16769231.png",
   moon: "https://cdn-icons-png.flaticon.com/512/16769/16769231.png",
   trash: "https://cdn-icons-png.flaticon.com/512/3917/3917772.png",
@@ -81,7 +80,7 @@ const Chat = () => {
       overflow: "hidden",
       position: "relative",
     }}>
-      {/* Панель — Nora AI меньше, иконки справа */}
+      {/* Панель: иконки правее, порядок — тема, телеграм, мусор */}
       <div style={{
         position: "fixed",
         top: sidePad,
@@ -100,7 +99,6 @@ const Chat = () => {
         boxSizing: "border-box",
         zIndex: 2000,
       }}>
-        {/* Название чуть меньше и слева */}
         <div style={{ fontWeight: 600, fontSize: 17, marginRight: 8 }}>Nora AI</div>
         <div style={{
           display: "flex",
@@ -111,14 +109,11 @@ const Chat = () => {
           <button style={iconBtn(panelBg)} onClick={() => setDarkMode(mode => !mode)}>
             <img src={darkMode ? ICONS.sun : ICONS.moon} alt="Theme" style={iconImgPanel} />
           </button>
-          <button style={iconBtn(panelBg)} onClick={clearChat}>
-            <img src={ICONS.trash} alt="Trash" style={iconImgPanel} />
-          </button>
-          <button style={iconBtn(panelBg)} onClick={() => window.open('tel:+1234567890')}>
-            <img src={ICONS.phone} alt="Phone" style={iconImgPanel} />
-          </button>
           <button style={iconBtn(panelBg)} onClick={() => window.open('https://t.me/', '_blank')}>
             <img src={ICONS.telegram} alt="Telegram" style={iconImgPanel} />
+          </button>
+          <button style={iconBtn(panelBg)} onClick={clearChat}>
+            <img src={ICONS.trash} alt="Trash" style={iconImgPanel} />
           </button>
         </div>
       </div>
@@ -200,7 +195,7 @@ const Chat = () => {
         </div>
       </div>
 
-      {/* Готовые шаблонные ответы над полем, с отступами */}
+      {/* Готовые шаблоны — над полем, равные отступы между, исчезают после сообщения */}
       {showTemplates && (
         <div style={{
           position: "fixed",
@@ -265,7 +260,7 @@ const Chat = () => {
         </div>
       )}
 
-      {/* Поле для сообщения и кнопка - внутри, скругленная как поле */}
+      {/* Поле для сообщения и кнопка (круглая, справа в поле, снаружи одинаковый sidePad) */}
       <form
         onSubmit={handleSubmit}
         style={{
@@ -292,7 +287,7 @@ const Chat = () => {
             border: "none",
             borderRadius: borderRadius,
             height: BTN_SIZE,
-            padding: "0 18px 0 22px",
+            padding: "0 8px 0 22px",
             fontSize: 19,
             background: panelBg,
             color: "#fff",
@@ -309,10 +304,10 @@ const Chat = () => {
             background: "#fff",
             color: panelBg,
             border: "none",
-            borderRadius: borderRadius,
+            borderRadius: BTN_SIZE / 2,
             width: BTN_SIZE - 8,
             height: BTN_SIZE - 8,
-            marginRight: 10,
+            marginRight: sidePad,
             marginLeft: 6,
             display: "flex",
             justifyContent: "center",
