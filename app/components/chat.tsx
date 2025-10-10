@@ -60,17 +60,9 @@ const Chat = () => {
   const [messages, setMessages] = useState([]);
   const [inputDisabled, setInputDisabled] = useState(false);
   const [darkMode, setDarkMode] = useState(true);
-  const [containerHeight, setContainerHeight] = useState(0);
   const messagesEndRef = useRef(null);
   const showTemplates = messages.length === 0;
   const theme = darkMode ? themes.dark : themes.light;
-
-  useEffect(() => {
-    const setVH = () => setContainerHeight(window.innerHeight);
-    setVH();
-    window.addEventListener("resize", setVH);
-    return () => window.removeEventListener("resize", setVH);
-  }, []);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -98,8 +90,7 @@ const Chat = () => {
     <div style={{
       background: theme.bgColor,
       width: "100vw",
-      minHeight: containerHeight,
-      height: containerHeight,
+      minHeight: 540,
       overflow: "hidden",
       position: "relative",
       transition: "background 0.4s"
@@ -143,13 +134,12 @@ const Chat = () => {
         </div>
       </div>
       <div style={{ height: sidePad }} />
-      {/* Фото баннер сразу под панелью! */}
       <div
         style={{
           width: `calc(100% - ${sidePad * 2}px)`,
           maxWidth,
           margin: "0 auto",
-          marginTop: sidePad, // минимальный аккуратный отступ!
+          marginTop: sidePad,
           borderRadius: 26,
           overflow: "hidden",
           boxShadow: "0 4px 28px 0 rgba(55,40,120,0.14)",
@@ -178,7 +168,7 @@ const Chat = () => {
         maxWidth,
         margin: "0 auto",
         boxSizing: "border-box",
-        height: `calc(100vh - ${BTN_SIZE + sidePad}px)`,
+        flex: 1,
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
