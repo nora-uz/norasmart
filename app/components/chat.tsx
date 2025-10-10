@@ -14,7 +14,6 @@ const ICON_SIZE_PANEL = 18;
 const ICON_SIZE_SEND = 28;
 const BTN_SIZE = 62;
 const SEND_BTN_SIZE = 94;
-const TEMPLATE_BTN_SIZE = 88;
 const borderRadius = 22;
 const sidePad = 16;
 const panelHeight = 62;
@@ -52,9 +51,8 @@ const FAKE_ANSWERS = [
   "Пиши свой запрос, я отвечу!",
 ];
 
-const GRADIENT = "linear-gradient(90deg, #6a11cb 0%, #2575fc 100%)";
-
-const INTERACTIVE_HEIGHT = 148; // примерная высота интерактивной панели
+const GRADIENT_1 = "linear-gradient(135deg, #ffb347 0%, #ffcc33 100%)"; // для срока
+const GRADIENT_2 = "linear-gradient(135deg, #6a11cb 0%, #2575fc 100%)"; // для самочувствия, как баннер
 
 const moods = [
   { label: "Отлично", emoji: "😃" },
@@ -63,6 +61,168 @@ const moods = [
   { label: "Не очень", emoji: "😕" },
   { label: "Плохо", emoji: "😣" }
 ];
+
+const InteractiveLine = ({ onSelect }) => {
+  const [showMonthList, setShowMonthList] = useState(false);
+  const [showMoodList, setShowMoodList] = useState(false);
+  const [selectedMonth, setSelectedMonth] = useState(null);
+  const [selectedMood, setSelectedMood] = useState(null);
+  const [hasSent, setHasSent] = useState(false);
+
+  useEffect(() => {
+    if (!hasSent && selectedMonth !== null && selectedMood !== null) {
+      onSelect(`Срок беременности: ${selectedMonth} мес., самочувствие: ${moods[selectedMood].label}`);
+      setHasSent(true);
+    }
+  }, [selectedMonth, selectedMood, onSelect, hasSent]);
+
+  useEffect(() => {
+    if (selectedMonth === null || selectedMood === null) setHasSent(false);
+  }, [selectedMonth, selectedMood]);
+
+  return (
+    <div
+      style={{
+        display: "flex",
+        gap: 22,
+        maxWidth: 520,
+        margin: "32px auto 0 auto",
+        width: "100%",
+        justifyContent: "center"
+      }}
+    >
+      {/* Блок 1: срок беременности */}
+      <div style={{
+        position: "relative",
+        flex: 1,
+        background: GRADIENT_1,
+        borderRadius: 20,
+        padding: "16px",
+        cursor: "pointer",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        minWidth: 128
+      }}>
+        <div
+          onClick={() => setShowMonthList(prev => !prev)}
+          style={{
+            fontWeight: 700,
+            fontSize: 17,
+            color: "#fff",
+            userSelect: "none"
+          }}
+        >
+          {selectedMonth ? `Срок: ${selectedMonth} мес.` : "Выберите срок"}
+        </div>
+        {showMonthList && (
+          <div style={{
+            position: "absolute",
+            top: 54,
+            left: 0,
+            right: 0,
+            background: GRADIENT_1,
+            boxShadow: "none",
+            borderRadius: 18,
+            zIndex: 10,
+            padding: 7
+          }}>
+            {Array.from({ length: 9 }).map((_, i) => (
+              <div
+                key={i}
+                style={{
+                  padding: "9px 0",
+                  textAlign: "center",
+                  color: "#fff",
+                  fontWeight: 600,
+                  fontSize: 16,
+                  borderRadius: 15,
+                  background: selectedMonth === (i + 1) ? "#fff3" : "transparent",
+                  cursor: "pointer",
+                  marginBottom: i < 8 ? 4 : 0,
+                  transition: "background 0.15s"
+                }}
+                onClick={() => {
+                  setSelectedMonth(i + 1);
+                  setShowMonthList(false);
+                }}
+              >
+                {i + 1}
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+      {/* Блок 2: самочувствие */}
+      <div style={{
+        position: "relative",
+        flex: 1,
+        background: GRADIENT_2,
+        borderRadius: 20,
+        padding: "16px",
+        cursor: "pointer",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        minWidth: 128
+      }}>
+        <div
+          onClick={() => setShowMoodList(prev => !prev)}
+          style={{
+            fontWeight: 700,
+            fontSize: 17,
+            color: "#fff",
+            userSelect: "none"
+          }}
+        >
+          {selectedMood !== null
+            ? `Самочувствие: ${moods[selectedMood].emoji} ${moods[selectedMood].label}`
+            : "Выберите самочувствие"}
+        </div>
+        {showMoodList && (
+          <div style={{
+            position: "absolute",
+            top: 54,
+            left: 0,
+            right: 0,
+            background: GRADIENT_2,
+            boxShadow: "none",
+            borderRadius: 18,
+            zIndex: 10,
+            padding: 7
+          }}>
+            {moods.map((item, idx) => (
+              <div
+                key={item.label}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 8,
+                  padding: "9px 0",
+                  color: "#fff",
+                  fontWeight: 600,
+                  fontSize: 16,
+                  borderRadius: 14,
+                  cursor: "pointer",
+                  background: selectedMood === idx ? "#fff4" : "transparent",
+                  marginBottom: idx < moods.length - 1 ? 4 : 0,
+                  transition: "background 0.16s"
+                }}
+                onClick={() => {
+                  setSelectedMood(idx);
+                  setShowMoodList(false);
+                }}
+              >
+                <span style={{ fontSize: 21 }}>{item.emoji}</span>
+                <span>{item.label}</span>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
 
 const Chat = () => {
   const [userInput, setUserInput] = useState("");
@@ -73,38 +233,9 @@ const Chat = () => {
   const showTemplates = messages.length === 0;
   const theme = darkMode ? themes.dark : themes.light;
 
-  // Состояния для интерактива
-  const [selectedMonth, setSelectedMonth] = useState(null);
-  const [selectedMood, setSelectedMood] = useState(null);
-  const [introSent, setIntroSent] = useState(false);
-
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
-
-  // Логика: отправка сообщения только при выборе обоих
-  useEffect(() => {
-    if (!introSent && selectedMonth !== null && selectedMood !== null) {
-      setMessages(prev => [
-        ...prev,
-        {
-          role: "user",
-          text: `Срок беременности: ${selectedMonth + 1} мес., самочувствие: ${moods[selectedMood].label}`
-        }
-      ]);
-      setIntroSent(true);
-      setInputDisabled(true);
-      setTimeout(() => {
-        const reply = FAKE_ANSWERS[Math.floor(Math.random() * FAKE_ANSWERS.length)];
-        setMessages(prev => [...prev, { role: "assistant", text: reply }]);
-        setInputDisabled(false);
-      }, 700);
-    }
-  }, [selectedMonth, selectedMood, introSent]);
-
-  useEffect(() => {
-    if (selectedMonth === null || selectedMood === null) setIntroSent(false);
-  }, [selectedMonth, selectedMood]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -122,10 +253,21 @@ const Chat = () => {
   const clearChat = () => {
     setMessages([]);
     setUserInput("");
-    setSelectedMonth(null);
-    setSelectedMood(null);
-    setIntroSent(false);
   };
+
+  // обработчик из интерактива
+  function handleInteractive(msg) {
+    setMessages(prev => [
+      ...prev,
+      { role: "user", text: msg }
+    ]);
+    setInputDisabled(true);
+    setTimeout(() => {
+      const reply = FAKE_ANSWERS[Math.floor(Math.random() * FAKE_ANSWERS.length)];
+      setMessages(prev => [...prev, { role: "assistant", text: reply }]);
+      setInputDisabled(false);
+    }, 700);
+  }
 
   return (
     <div style={{
@@ -143,7 +285,7 @@ const Chat = () => {
         maxWidth,
         height: panelHeight,
         margin: "0 auto",
-        background: GRADIENT,
+        background: GRADIENT_2,
         color: "#fff",
         display: "flex",
         alignItems: "center",
@@ -206,100 +348,9 @@ const Chat = () => {
         />
       </div>
       <div style={{ height: sidePad }} />
-      {/* --- Интерактивная панель --- */}
+      {/* Два интерактива в одну линию */}
       {showTemplates && (
-        <div style={{
-          width: `calc(100% - ${sidePad * 2}px)`,
-          maxWidth,
-          margin: "0 auto",
-          borderRadius: borderRadius,
-          background: theme.panelBg,
-          marginBottom: sidePad,
-          padding: `${sidePad}px`,
-          display: "flex",
-          flexDirection: "row",
-          gap: 18,
-          alignItems: "center",
-          justifyContent: "space-between"
-        }}>
-          {/* Слева: срок */}
-          <div
-            style={{
-              flex: 1,
-              background: "linear-gradient(135deg, #ffb347 0%, #ffcc33 100%)",
-              borderRadius: 22,
-              padding: 12,
-              display: "flex",
-              alignItems: "center",
-              gap: 8,
-              justifyContent: "center"
-            }}
-          >
-            {Array.from({ length: 9 }).map((_, i) => (
-              <button
-                key={i}
-                style={{
-                  minWidth: 38,
-                  height: 38,
-                  borderRadius: 12,
-                  border: "none",
-                  background: selectedMonth === i ? "#fff6" : "transparent",
-                  color: "#fff",
-                  fontWeight: 600,
-                  fontSize: 16,
-                  cursor: inputDisabled ? "not-allowed" : "pointer",
-                  outline: "none",
-                  transition: "background 0.19s"
-                }}
-                disabled={inputDisabled}
-                onClick={() => setSelectedMonth(i)}
-              >
-                {i + 1}
-              </button>
-            ))}
-          </div>
-          {/* Справа: самочувствие */}
-          <div
-            style={{
-              flex: 2,
-              background: "linear-gradient(135deg, #6a11cb 0%, #2575fc 100%)",
-              borderRadius: 22,
-              padding: 12,
-              display: "flex",
-              alignItems: "center",
-              gap: 8,
-              justifyContent: "center"
-            }}
-          >
-            {moods.map((item, idx) => (
-              <button
-                key={item.label}
-                style={{
-                  background: selectedMood === idx ? "#fff3" : "transparent",
-                  color: "#fff",
-                  border: "none",
-                  borderRadius: 12,
-                  minWidth: 48,
-                  height: 48,
-                  fontSize: 21,
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  fontWeight: 600,
-                  cursor: inputDisabled ? "not-allowed" : "pointer",
-                  outline: "none",
-                  transition: "background 0.2s"
-                }}
-                disabled={inputDisabled}
-                onClick={() => setSelectedMood(idx)}
-              >
-                <span style={{ fontSize: 24 }}>{item.emoji}</span>
-                <span style={{ fontSize: 11 }}>{item.label}</span>
-              </button>
-            ))}
-          </div>
-        </div>
+        <InteractiveLine onSelect={handleInteractive} />
       )}
       {/* Сообщения идут ниже интерактива */}
       <div style={{
@@ -351,9 +402,6 @@ const Chat = () => {
             </div>
           ))}
           <div ref={messagesEndRef} />
-          <div style={{
-            height: (BTN_SIZE + sidePad * 3) + (showTemplates ? INTERACTIVE_HEIGHT : 0)
-          }} />
         </div>
       </div>
       <form
