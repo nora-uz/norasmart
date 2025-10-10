@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 
 const ICON_SIZE = 32;
+const SMALL_ICON = 26;
 
 const ICON_MOON = "https://user-gen-media-assets.s3.amazonaws.com/seedream_images/350cb7b8-4f7f-43db-9c71-c5388ac17f4e.png";
 const ICON_SUN = "https://user-gen-media-assets.s3.amazonaws.com/seedream_images/baf09364-3f86-47e1-8134-0c505aeaf9cc.png";
@@ -51,6 +52,7 @@ const Chat = () => {
         flexDirection: "column",
         alignItems: "center",
         padding: 0,
+        overflow: "hidden"
       }}
     >
       {/* Панель */}
@@ -75,174 +77,23 @@ const Chat = () => {
         <div style={{
           display: "flex",
           alignItems: "center",
-          gap: 14,
+          gap: 12,
         }}>
-          {darkMode ? (
-            <button
-              style={iconBtnStyle}
-              onClick={() => setDarkMode(false)}
-              aria-label="Сменить на светлую тему"
-            >
-              <img src={ICON_SUN} alt="Sun" style={iconImgStyle} />
-            </button>
-          ) : (
-            <button
-              style={iconBtnStyle}
-              onClick={() => setDarkMode(true)}
-              aria-label="Сменить на тёмную тему"
-            >
-              <img src={ICON_MOON} alt="Moon" style={iconImgStyle} />
-            </button>
-          )}
+          <button
+            style={iconBtnStyle}
+            onClick={() => setDarkMode(mode => !mode)}
+            aria-label="Тема"
+          >
+            <img
+              src={darkMode ? ICON_SUN : ICON_MOON}
+              alt="Theme"
+              style={iconImgStyle}
+            />
+          </button>
           <button style={iconBtnStyle} onClick={clearChat} aria-label="Очистить чат">
             <img src={ICON_TRASH} alt="Trash" style={iconImgStyle} />
           </button>
           <button
-            style={iconBtnStyle}
+            style={iconBtnStyleSm}
             aria-label="Позвонить"
-            onClick={() => window.open("tel:+1234567890")}
-          >
-            <img src={ICON_PHONE} alt="Phone" style={iconImgStyle} />
-          </button>
-          <button
-            style={iconBtnStyle}
-            aria-label="Telegram"
-            onClick={() => window.open("https://t.me/", "_blank")}
-          >
-            <img src={ICON_TELEGRAM} alt="Telegram" style={iconImgStyle} />
-          </button>
-        </div>
-      </div>
-      {/* Центрированное изображение Nora AI */}
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          width: "100%",
-          marginTop: panelHeight + 29,
-          marginBottom: 24,
-        }}
-      >
-        <img
-          src={MAIN_IMG}
-          alt="Nora AI"
-          style={{
-            width: `calc(100vw - 2 * ${18 + panelPadH}px)`,
-            maxWidth: 650 - 2 * panelPadH,
-            height: panelHeight * 2,
-            borderRadius: borderRadius,
-            boxShadow: "none",
-            background: "none",
-            display: "block"
-          }}
-        />
-      </div>
-      {/* Сообщения */}
-      <div style={{
-        flex: 1,
-        width: "100%",
-        maxWidth: 650,
-        margin: "0 auto",
-        boxSizing: "border-box",
-        minHeight: "100vh",
-        padding: "0 18px 112px 18px"
-      }}>
-        {messages.map((msg, idx) => (
-          <div key={idx} style={{
-            display: "flex",
-            justifyContent: msg.role === "assistant" ? "flex-start" : "flex-end",
-            marginBottom: 12,
-          }}>
-            <div
-              style={{
-                background: msg.role === "assistant" ? panelBg : "none",
-                color: "#fff",
-                borderRadius: borderRadius,
-                padding: "12px 14px",
-                fontSize: 17,
-                lineHeight: 1.65,
-                border: "none",
-                maxWidth: "86vw",
-                minWidth: 54,
-                marginLeft: msg.role === "user" ? "auto" : 0,
-                marginRight: msg.role === "assistant" ? "auto" : 0
-              }}>
-              {msg.text}
-            </div>
-          </div>
-        ))}
-        <div ref={messagesEndRef} />
-      </div>
-      {/* Поле ввода и кнопка-стрелка */}
-      <form onSubmit={handleSubmit} style={{
-        position: "fixed",
-        left: 18, right: 18, bottom: 18,
-        background: panelBg,
-        borderRadius: borderRadius,
-        height: panelHeight,
-        display: "flex",
-        alignItems: "center",
-        padding: 0,
-        zIndex: 101,
-      }}>
-        <div style={{
-          display: "flex",
-          width: "100%",
-          alignItems: "center",
-        }}>
-          <input
-            type="text"
-            style={{
-              flex: 1,
-              border: "none",
-              borderRadius: borderRadius,
-              height: 40,
-              padding: "0 20px",
-              fontSize: 18,
-              background: panelBg,
-              color: "#fff",
-              outline: "none",
-            }}
-            value={userInput}
-            onChange={e => setUserInput(e.target.value)}
-            placeholder="Введите ваш вопрос"
-            disabled={inputDisabled}
-          />
-          <button type="submit" style={{
-            background: "#fff",
-            color: "#171717",
-            border: "none",
-            borderRadius: borderRadius,
-            width: 40,
-            height: 40,
-            marginRight: 6,
-            marginLeft: 4,
-            marginTop: 2,
-            marginBottom: 2,
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            cursor: inputDisabled ? "not-allowed" : "pointer",
-            opacity: inputDisabled ? 0.7 : 1
-          }}>
-            <img src={ICON_ARROW} alt="Send" style={{width: 22, height: 22}} />
-          </button>
-        </div>
-      </form>
-    </div>
-  );
-};
-
-const iconBtnStyle = {
-  background: "none", border: "none", cursor: "pointer",
-  width: ICON_SIZE, height: ICON_SIZE, borderRadius: 8,
-  padding: 0, display: "flex",
-  alignItems: "center", justifyContent: "center"
-};
-const iconImgStyle = {
-  width: ICON_SIZE,
-  height: ICON_SIZE
-};
-
-export default Chat;
+            onClick={() => window.open("
