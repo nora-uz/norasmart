@@ -52,7 +52,7 @@ const Chat = () => {
         width: "100vw",
         display: "flex",
         justifyContent: "center",
-        alignItems: "center",
+        alignItems: "flex-start",
         overflow: "hidden",
       }}
     >
@@ -105,7 +105,7 @@ const Chat = () => {
             </button>
           </div>
         </div>
-        {/* Контейнер для контента, отступ сверху как у панели */}
+        {/* Контейнер для контента, фото: важный marginTop */}
         <div
           style={{
             width: "100%",
@@ -113,7 +113,7 @@ const Chat = () => {
             margin: "0 auto",
             boxSizing: "border-box",
             flex: 1,
-            paddingTop: sidePad + panelHeight + sidePad,
+            paddingTop: panelHeight + sidePad * 2, // ВАЖНО: фото не уходит под панель!
             paddingBottom: panelHeight + sidePad * 2,
             overflow: "hidden",
             display: "flex",
@@ -122,7 +122,6 @@ const Chat = () => {
             minHeight: `calc(100vh - ${panelHeight + sidePad * 3}px)`,
           }}
         >
-          {/* Фото Nora — между панелью и сообщениями, отступы как у панели */}
           <div
             style={{
               width: `calc(100% - ${sidePad * 2}px)`,
