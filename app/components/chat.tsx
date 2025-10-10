@@ -1,19 +1,22 @@
 import React, { useState, useEffect, useRef } from "react";
 
 const ICONS = {
-  moon: "/icons/moon.png",
-  sun: "/icons/sun.png",
-  trash: "/icons/trash.png",
-  phone: "/icons/phone.png",
-  telegram: "/icons/telegram.png",
-  arrow: "/icons/arrow.png"
+  moon: "https://img.icons8.com/?size=32&id=14148&format=png",      // прозрачный moon
+  sun:  "https://img.icons8.com/?size=32&id=14144&format=png",      // прозрачный sun
+  trash: "https://img.icons8.com/?size=32&id=36793&format=png",     // прозрачный trash
+  phone: "https://img.icons8.com/?size=32&id=16713&format=png",     // прозрачный phone
+  telegram: "https://img.icons8.com/?size=32&id=16713&format=png",  // пример - поменяйте на реальный telegram если нужно
+  arrow: "https://img.icons8.com/?size=32&id=36887&format=png"      // прозрачная стрелка вправо
 };
 
+// Замените URL на ваше реальное изображение — обязательно формат .png или .jpg
+const MAIN_IMG = "https://user-gen-media-assets.s3.amazonaws.com/seedream_images/70a60994-809a-473d-accc-36284ba46e1c.png";
+
 const ICON_SIZE = 32;
-const BTN_SIZE = 44;
-const borderRadius = 18;
+const BTN_SIZE = 48; // вернули больше!
+const borderRadius = 22;
 const sidePad = 18;
-const panelHeight = BTN_SIZE;
+const panelHeight = 62; // больше чем раньше
 
 const Chat = () => {
   const [userInput, setUserInput] = useState("");
@@ -22,155 +25,110 @@ const Chat = () => {
   const [darkMode, setDarkMode] = useState(true);
   const messagesEndRef = useRef(null);
 
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
-
+  useEffect(() => { messagesEndRef.current?.scrollIntoView({ behavior: "smooth" }); }, [messages]);
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!userInput.trim()) return;
     setMessages(prev => [...prev, { role: "user", text: userInput }]);
-    setUserInput("");
-    setInputDisabled(false);
+    setUserInput(""); setInputDisabled(false);
   };
+  const clearChat = () => { setMessages([]); setUserInput(""); };
 
-  const clearChat = () => {
-    setMessages([]);
-    setUserInput("");
-  };
-
-  const panelBg = "#171717";
-  const bgColor = "#1C1C1C";
+  const panelBg = "#171717", bgColor = "#1C1C1C";
 
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        background: bgColor,
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        padding: 0,
-        overflow: "hidden"
-      }}
-    >
+    <div style={{
+      minHeight: "100vh",
+      background: bgColor,
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      padding: 0,
+      overflow: "hidden"
+    }}>
       {/* Панель */}
-      <div
-        style={{
-          position: "fixed",
-          top: sidePad,
-          left: sidePad,
-          right: sidePad,
-          zIndex: 100,
-          height: panelHeight,
-          background: panelBg,
-          color: "#fff",
-          display: "flex",
-          alignItems: "center",
-          borderRadius: borderRadius,
-          padding: "0 18px",
-          justifyContent: "space-between"
-        }}
-      >
-        <div style={{ fontWeight: 600, fontSize: 17 }}>Nora AI</div>
-        <div style={{
-          display: "flex",
-          alignItems: "center",
-          gap: 13
-        }}>
-          <button
-            style={iconBtn(panelBg)}
-            onClick={() => setDarkMode(mode => !mode)}
-            aria-label="Тема"
-          >
-            <img
-              src={darkMode ? ICONS.sun : ICONS.moon}
-              alt="Theme"
-              style={iconImg}
-            />
+      <div style={{
+        position: "fixed",
+        top: sidePad,
+        left: sidePad,
+        right: sidePad,
+        zIndex: 100,
+        height: panelHeight,
+        background: panelBg,
+        color: "#fff",
+        display: "flex",
+        alignItems: "center",
+        borderRadius: borderRadius,
+        padding: "0 18px",
+        justifyContent: "space-between"
+      }}>
+        <div style={{ fontWeight: 600, fontSize: 19 }}>Nora AI</div>
+        <div style={{ display: "flex", alignItems: "center", gap: 13 }}>
+          <button style={iconBtn(panelBg)} onClick={() => setDarkMode(mode => !mode)} aria-label="Тема">
+            <img src={darkMode ? ICONS.sun : ICONS.moon} alt="Theme" style={iconImg} />
           </button>
           <button style={iconBtn(panelBg)} onClick={clearChat} aria-label="Очистить чат">
             <img src={ICONS.trash} alt="Trash" style={iconImg} />
           </button>
-          <button
-            style={iconBtn(panelBg)}
-            aria-label="Позвонить"
-            onClick={() => window.open("tel:+1234567890")}
-          >
+          <button style={iconBtn(panelBg)} aria-label="Позвонить" onClick={() => window.open("tel:+1234567890")}>
             <img src={ICONS.phone} alt="Phone" style={iconImg} />
           </button>
-          <button
-            style={iconBtn(panelBg)}
-            aria-label="Telegram"
-            onClick={() => window.open("https://t.me/", "_blank")}
-          >
+          <button style={iconBtn(panelBg)} aria-label="Telegram" onClick={() => window.open("https://t.me/", "_blank")}>
             <img src={ICONS.telegram} alt="Telegram" style={iconImg} />
           </button>
         </div>
       </div>
-      {/* Картинка - строго под панелью, фиксированная, скруглённая */}
-      <div
-        style={{
-          width: `calc(100vw - ${sidePad * 2}px)`,
-          maxWidth: 650 - sidePad * 2,
-          margin: "0 auto",
-          marginTop: sidePad + panelHeight + 12,
-          borderRadius: borderRadius,
-          overflow: "hidden",
-          background: "none",
-          boxSizing: "border-box"
-        }}
-      >
+      {/* Картинка Nora — ровно под панелью! */}
+      <div style={{
+        width: `calc(100vw - ${sidePad * 2}px)`,
+        maxWidth: 650 - sidePad * 2,
+        margin: "0 auto",
+        marginTop: sidePad + panelHeight + 12,
+        borderRadius: borderRadius,
+        overflow: "hidden",
+        background: "none",
+        boxSizing: "border-box"
+      }}>
         <img
-          src="/main-image.png"
+          src={MAIN_IMG}
           alt="Nora AI"
           style={{
             width: "100%",
             borderRadius: borderRadius,
-            display: "block",
-            background: "none",
-            boxShadow: "none"
+            display: "block", background: "none", boxShadow: "none"
           }}
         />
       </div>
       {/* Сообщения */}
       <div style={{
-        flex: 1,
-        width: "100%",
-        maxWidth: 650,
-        margin: "0 auto",
-        boxSizing: "border-box",
-        minHeight: "100vh",
-        padding: `18px ${sidePad}px 110px ${sidePad}px`,
-        marginTop: "10px"
+        flex: 1, width: "100%", maxWidth: 650, margin: "0 auto",
+        boxSizing: "border-box", minHeight: "100vh",
+        padding: `20px ${sidePad}px 140px ${sidePad}px`,
       }}>
         {messages.map((msg, idx) => (
           <div key={idx} style={{
             display: "flex",
             justifyContent: msg.role === "assistant" ? "flex-start" : "flex-end",
-            marginBottom: 12,
+            marginBottom: 15,
           }}>
-            <div
-              style={{
-                background: msg.role === "assistant" ? panelBg : "none",
-                color: "#fff",
-                borderRadius: borderRadius,
-                padding: "12px 16px",
-                fontSize: 17,
-                lineHeight: 1.65,
-                border: "none",
-                maxWidth: "86vw",
-                minWidth: 54,
-                marginLeft: msg.role === "user" ? "auto" : 0,
-                marginRight: msg.role === "assistant" ? "auto" : 0
-              }}>
+            <div style={{
+              background: msg.role === "assistant" ? panelBg : "none",
+              color: "#fff",
+              borderRadius: borderRadius,
+              padding: "14px 20px",
+              fontSize: 18,
+              lineHeight: 1.7, border: "none",
+              maxWidth: "86vw", minWidth: 54,
+              marginLeft: msg.role === "user" ? "auto" : 0,
+              marginRight: msg.role === "assistant" ? "auto" : 0
+            }}>
               {msg.text}
             </div>
           </div>
         ))}
         <div ref={messagesEndRef} />
       </div>
-      {/* Поле ввода и кнопка PNG стрелка */}
+      {/* Инпут и кнопка */}
       <form onSubmit={handleSubmit} style={{
         position: "fixed",
         left: sidePad, right: sidePad, bottom: sidePad,
@@ -188,9 +146,9 @@ const Chat = () => {
             flex: 1,
             border: "none",
             borderRadius: borderRadius,
-            height: 44,
-            padding: "0 19px",
-            fontSize: 18,
+            height: BTN_SIZE,
+            padding: "0 22px",
+            fontSize: 19,
             background: panelBg,
             color: "#fff",
             outline: "none",
@@ -204,11 +162,11 @@ const Chat = () => {
           background: "#fff",
           color: panelBg,
           border: "none",
-          borderRadius: borderRadius,
+          borderRadius: BTN_SIZE/2,
           width: BTN_SIZE,
           height: BTN_SIZE,
           marginLeft: 10,
-          marginRight: 6,
+          marginRight: 8,
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
