@@ -12,7 +12,7 @@ const ICONS = {
 const BANNER = "https://user-gen-media-assets.s3.amazonaws.com/seedream_images/4c36a715-f500-4186-8955-631a09fac0ed.png";
 const ICON_SIZE_PANEL = 18;
 const ICON_SIZE_SEND = 28;
-const BTN_SIZE = 62;
+const BTN_SIZE = 48;
 const borderRadius = 22;
 const sidePad = 16;
 const panelHeight = 62;
@@ -53,8 +53,8 @@ const Chat = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  // Высота блока чата с учётом новых размеров
-  const chatAreaHeight = `calc(100vh - ${panelHeight + sidePad * 2 + 3 * BTN_SIZE + 3 * sidePad}px)`;
+  // Высота блока чата скорректирована по макету
+  const chatAreaHeight = `calc(100vh - ${panelHeight + sidePad * 2 + 3 * BTN_SIZE + 5 * sidePad}px)`;
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -206,132 +206,130 @@ const Chat = () => {
           ))}
           <div ref={messagesEndRef} />
         </div>
-      </div>
 
-      {/* Готовые ответы — столбец, размер, padding, скругление как у поля для сообщения */}
-      <div
-        style={{
-          position: "fixed",
-          left: "50%",
-          bottom: panelHeight + sidePad * 2 + 3 * BTN_SIZE,
-          transform: "translateX(-50%)",
-          width: `calc(100% - ${sidePad * 2}px)`,
-          maxWidth,
-          zIndex: 2500,
-        }}
-      >
-        {PRESET_TEMPLATES.map((tpl, idx) => (
-          <button
-            key={tpl.title}
-            style={{
-              background: panelBg,
-              color: "#fff",
-              border: "none",
-              borderRadius: borderRadius,
-              padding: "0 22px",
-              fontSize: 19,
-              width: "100%",
-              height: BTN_SIZE,
-              marginBottom: sidePad,
-              boxShadow: "0 2px 10px 0 rgba(55,40,120,0.12)",
-              cursor: inputDisabled ? "not-allowed" : "pointer",
-              textAlign: "left",
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              outline: "none",
-            }}
-            disabled={inputDisabled}
-            onClick={() => {
-              if (inputDisabled) return;
-              setMessages(prev => [...prev, { role: "user", text: tpl.description }]);
-              setInputDisabled(true);
-              setUserInput("");
-              setTimeout(() => {
-                const reply = FAKE_ANSWERS[Math.floor(Math.random() * FAKE_ANSWERS.length)];
-                setMessages(prev => [...prev, { role: "assistant", text: reply }]);
-                setInputDisabled(false);
-              }, 700);
-            }}
-          >
-            <span style={{
-              fontWeight: 600,
-              fontSize: 19,
-            }}>
-              {tpl.title}
-            </span>
-            <span style={{
-              fontSize: 15,
-              color: "#ccc",
-              marginTop: 10,
-              lineHeight: 1.6,
-            }}>
-              {tpl.description}
-            </span>
-          </button>
-        ))}
-      </div>
-
-      {/* Фиксированное поле ввода снизу */}
-      <form
-        onSubmit={handleSubmit}
-        style={{
-          position: "fixed",
-          left: "50%",
-          bottom: sidePad,
-          transform: "translateX(-50%)",
-          width: `calc(100% - ${sidePad * 2}px)`,
-          maxWidth,
-          background: panelBg,
-          borderRadius: borderRadius,
-          height: BTN_SIZE,
-          display: "flex",
-          alignItems: "center",
-          zIndex: 2000,
-          padding: 0,
-          boxSizing: "border-box",
-        }}
-      >
-        <input
-          type="text"
+        {/* Готовые ответы — над полем сообщения, размером как поле, с правильным отступом */}
+        <div
           style={{
-            flex: 1,
-            border: "none",
-            borderRadius: borderRadius,
-            height: BTN_SIZE,
-            padding: "0 22px",
-            fontSize: 19,
-            background: panelBg,
-            color: "#fff",
-            outline: "none",
-          }}
-          value={userInput}
-          onChange={e => setUserInput(e.target.value)}
-          placeholder="Введите ваш вопрос"
-          disabled={inputDisabled}
-        />
-        <button
-          type="submit"
-          style={{
-            background: "#fff",
-            color: panelBg,
-            border: "none",
-            borderRadius: BTN_SIZE / 2,
-            width: BTN_SIZE,
-            height: BTN_SIZE,
-            marginLeft: 10,
-            marginRight: 8,
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            cursor: inputDisabled ? "not-allowed" : "pointer",
-            opacity: inputDisabled ? 0.7 : 1,
-            boxShadow: "none",
+            width: "100%",
+            maxWidth,
+            paddingLeft: sidePad,
+            paddingRight: sidePad,
+            marginBottom: sidePad // отступ между шаблонами и полем сообщения
           }}
         >
-          <img src={ICONS.arrow} alt="Send" style={iconImgSend} />
-        </button>
-      </form>
+          {PRESET_TEMPLATES.map((tpl, idx) => (
+            <button
+              key={tpl.title}
+              style={{
+                background: panelBg,
+                color: "#fff",
+                border: "none",
+                borderRadius: borderRadius,
+                padding: "0 22px",
+                fontSize: 15,
+                width: "100%",
+                height: BTN_SIZE,
+                marginBottom: sidePad,
+                boxShadow: "0 2px 10px 0 rgba(55,40,120,0.12)",
+                cursor: inputDisabled ? "not-allowed" : "pointer",
+                textAlign: "left",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                outline: "none",
+              }}
+              disabled={inputDisabled}
+              onClick={() => {
+                if (inputDisabled) return;
+                setMessages(prev => [...prev, { role: "user", text: tpl.description }]);
+                setInputDisabled(true);
+                setUserInput("");
+                setTimeout(() => {
+                  const reply = FAKE_ANSWERS[Math.floor(Math.random() * FAKE_ANSWERS.length)];
+                  setMessages(prev => [...prev, { role: "assistant", text: reply }]);
+                  setInputDisabled(false);
+                }, 700);
+              }}
+            >
+              <span style={{
+                fontWeight: 600,
+                fontSize: 16,
+                marginBottom: 6
+              }}>
+                {tpl.title}
+              </span>
+              <span style={{
+                fontSize: 12,
+                color: "#ccc",
+                lineHeight: 1.5
+              }}>
+                {tpl.description}
+              </span>
+            </button>
+          ))}
+        </div>
+
+        {/* Фиксированное поле ввода снизу */}
+        <form
+          onSubmit={handleSubmit}
+          style={{
+            position: "fixed",
+            left: "50%",
+            bottom: sidePad,
+            transform: "translateX(-50%)",
+            width: `calc(100% - ${sidePad * 2}px)`,
+            maxWidth,
+            background: panelBg,
+            borderRadius: borderRadius,
+            height: BTN_SIZE,
+            display: "flex",
+            alignItems: "center",
+            zIndex: 2000,
+            padding: 0,
+            boxSizing: "border-box",
+          }}
+        >
+          <input
+            type="text"
+            style={{
+              flex: 1,
+              border: "none",
+              borderRadius: borderRadius,
+              height: BTN_SIZE,
+              padding: "0 22px",
+              fontSize: 19,
+              background: panelBg,
+              color: "#fff",
+              outline: "none",
+            }}
+            value={userInput}
+            onChange={e => setUserInput(e.target.value)}
+            placeholder="Введите ваш вопрос"
+            disabled={inputDisabled}
+          />
+          <button
+            type="submit"
+            style={{
+              background: "#fff",
+              color: panelBg,
+              border: "none",
+              borderRadius: BTN_SIZE / 2,
+              width: BTN_SIZE,
+              height: BTN_SIZE,
+              marginLeft: 10,
+              marginRight: 8,
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              cursor: inputDisabled ? "not-allowed" : "pointer",
+              opacity: inputDisabled ? 0.7 : 1,
+              boxShadow: "none",
+            }}
+          >
+            <img src={ICONS.arrow} alt="Send" style={iconImgSend} />
+          </button>
+        </form>
+      </div>
     </div>
   );
 };
