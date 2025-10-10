@@ -14,7 +14,6 @@ const ICON_SIZE_PANEL = 18;
 const ICON_SIZE_SEND = 28;
 const BTN_SIZE = 62;
 const SEND_BTN_SIZE = 94;
-const TEMPLATE_BTN_SIZE = 88;
 const borderRadius = 22;
 const sidePad = 16;
 const panelHeight = 62;
@@ -22,15 +21,15 @@ const maxWidth = 560;
 
 const themes = {
   dark: {
-    panelBg: "#131313",
-    bgColor: "#181818",
+    panelBg: "#F6F7FB",
+    bgColor: "#F9FAFC",
     userBubble: "#fff",
     userText: "#181818",
-    inputBg: "#131313",
-    inputText: "#eee",
+    inputBg: "#F6F7FB",
+    inputText: "#222",
     placeholder: "#bbb",
-    assistantBubble: "#131313",
-    assistantText: "#fff"
+    assistantBubble: "#E8EAED",
+    assistantText: "#333"
   },
   light: {
     panelBg: "#F6F7FB",
@@ -53,8 +52,7 @@ const FAKE_ANSWERS = [
 ];
 
 const GRADIENT = "linear-gradient(90deg, #6a11cb 0%, #2575fc 100%)";
-
-const INTERACTIVE_HEIGHT = 148; // примерная высота интерактивной панели
+const INTERACTIVE_HEIGHT = 108;
 
 const Chat = () => {
   const [userInput, setUserInput] = useState("");
@@ -97,7 +95,6 @@ const Chat = () => {
       transition: "background 0.4s"
     }}>
       <div style={{ height: sidePad }} />
-      {/* Панель с градиентом, без тени/линии */}
       <div style={{
         width: `calc(100% - ${sidePad * 2}px)`,
         maxWidth,
@@ -173,26 +170,31 @@ const Chat = () => {
           maxWidth,
           margin: "0 auto",
           borderRadius: borderRadius,
-          background: theme.panelBg,
+          background: "#fff", // светлый фон!
           marginBottom: sidePad,
           boxShadow: "0 2px 12px 0 rgba(106,17,203,0.03)",
-          padding: `${sidePad}px`,
+          padding: `${sidePad}px ${sidePad}px`,
           display: "flex",
           flexDirection: "column",
           gap: sidePad,
           alignItems: "center"
         }}>
-          {/* Первый: срок беременности */}
           <div style={{ width: "100%" }}>
-            <div style={{ fontWeight: 700, fontSize: 18, marginBottom: 8, color: "#2575fc", letterSpacing: "0.5px" }}>
+            <div style={{
+              fontWeight: 400,
+              fontSize: 18,
+              marginBottom: 16,
+              color: "#2575fc",
+              letterSpacing: "0.3px"
+            }}>
               Выберите срок беременности:
             </div>
             <div style={{
               display: "flex",
-              gap: 8,
+              gap: 12,
               overflowX: "auto",
-              paddingBottom: 2,
-              justifyContent: "center"
+              justifyContent: "center",
+              marginBottom: 2
             }}>
               {Array.from({ length: 9 }).map((_, i) => (
                 <button
@@ -205,7 +207,7 @@ const Chat = () => {
                     cursor: inputDisabled ? "not-allowed" : "pointer",
                     fontSize: 17,
                     fontWeight: 600,
-                    background: `linear-gradient(135deg, #6a11cb 0%, #2575fc 100%)`,
+                    background: GRADIENT,
                     color: "#fff",
                     boxShadow: "0 2px 6px 0 rgba(37,117,252,0.11)",
                     opacity: inputDisabled ? 0.7 : 1,
@@ -227,60 +229,6 @@ const Chat = () => {
                   }}
                 >
                   {i + 1}
-                </button>
-              ))}
-            </div>
-          </div>
-          {/* Второй: выбор состояния */}
-          <div style={{ width: "100%" }}>
-            <div style={{ fontWeight: 700, fontSize: 18, marginBottom: 8, color: "#2575fc" }}>
-              Как вы себя сегодня чувствуете?
-            </div>
-            <div style={{ display: "flex", gap: 12, justifyContent: "center" }}>
-              {[
-                { emoji: "😊", label: "Отлично" },
-                { emoji: "🙂", label: "Нормально" },
-                { emoji: "🤔", label: "Тревожно" },
-                { emoji: "😣", label: "Есть дискомфорт" },
-                { emoji: "💤", label: "Усталость" },
-              ].map((item, idx) => (
-                <button
-                  key={item.label}
-                  style={{
-                    background: `linear-gradient(135deg, #6a11cb 0%, #2575fc 70%)`,
-                    color: "#fff",
-                    border: "none",
-                    borderRadius: 16,
-                    padding: "8px 10px",
-                    minWidth: 58,
-                    height: 58,
-                    fontSize: 23,
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    fontWeight: 600,
-                    boxShadow: "0 2px 6px 0 rgba(37,117,252,0.09)",
-                    opacity: inputDisabled ? 0.7 : 1,
-                    cursor: inputDisabled ? "not-allowed" : "pointer",
-                    outline: "none",
-                    transition: "box-shadow 0.2s"
-                  }}
-                  disabled={inputDisabled}
-                  onClick={() => {
-                    if (inputDisabled) return;
-                    setMessages(prev => [...prev, { role: "user", text: `Сегодня моё состояние: ${item.label}` }]);
-                    setInputDisabled(true);
-                    setUserInput("");
-                    setTimeout(() => {
-                      const reply = FAKE_ANSWERS[Math.floor(Math.random() * FAKE_ANSWERS.length)];
-                      setMessages(prev => [...prev, { role: "assistant", text: reply }]);
-                      setInputDisabled(false);
-                    }, 700);
-                  }}
-                >
-                  <span style={{ fontSize: 25, marginBottom: 3 }}>{item.emoji}</span>
-                  <span style={{ fontSize: 12, marginTop: 2 }}>{item.label}</span>
                 </button>
               ))}
             </div>
