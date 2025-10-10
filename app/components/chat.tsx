@@ -133,7 +133,7 @@ const Chat = () => {
           overflow: "hidden",
         }}
       >
-        {/* Баннер — оригинальный размер с равными отступами */}
+        {/* Баннер — изображение полностью, ширина по контейнеру, пропорции не меняются */}
         <div
           style={{
             width: `calc(100% - ${sidePad * 2}px)`,
@@ -147,7 +147,6 @@ const Chat = () => {
             justifyContent: "center",
             alignItems: "center",
             flexShrink: 0,
-            height: 208,
             position: "relative",
           }}
         >
@@ -156,13 +155,11 @@ const Chat = () => {
             alt="Nora AI баннер"
             style={{
               width: "100%",
-              height: "100%",
-              objectFit: "cover",
-              objectPosition: "center center",
+              height: "auto",
               display: "block",
+              objectFit: "contain",
+              objectPosition: "center",
               position: "relative",
-              top: 0,
-              left: 0,
             }}
           />
         </div>
@@ -207,7 +204,7 @@ const Chat = () => {
         </div>
       </div>
 
-      {/* Готовые ответы — один столбец, с боковыми отступами и равным отступом снизу */}
+      {/* Готовые ответы — столбец с ровными боковыми и нижним отступами */}
       <div
         style={{
           position: "fixed",
@@ -221,7 +218,6 @@ const Chat = () => {
           gap: sidePad,
           paddingLeft: sidePad,
           paddingRight: sidePad,
-          marginBottom: 0,
           zIndex: 2500,
         }}
       >
