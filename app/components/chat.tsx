@@ -39,6 +39,63 @@ const icons = {
   )
 };
 
+const renderMessage = (msg, borderRadius, assistantBubble) => {
+  if (msg.role === "assistant") {
+    // SPECIAL: welcome-image заменяем <img> с округлением и макс шириной
+    let text = msg.text;
+    // markdown + image
+    text = text.replace(/\!\[Nora AI\]\(([^)]+)\)/gi,
+      `<img src="$1" style="display:block;margin:12px auto 7px auto;max-width:120px;border-radius:18px;" alt="Nora AI"/>`
+    );
+    return (
+      <div style={{
+        background: assistantBubble,
+        color: "#fff",
+        borderRadius: borderRadius,
+        padding: "10px 14px",
+        fontSize: 17,
+        lineHeight: 1.65,
+        border: "none",
+        maxWidth: "86vw",
+        minWidth: 54,
+        marginRight: "auto"
+      }}>
+        <Markdown components={{
+          img: ({node, ...props}) => (
+            <img
+              {...props}
+              style={{
+                display: 'block',
+                margin: '12px auto 7px auto',
+                maxWidth: 120,
+                borderRadius: borderRadius,
+              }}
+              alt="Nora AI"
+            />
+          )
+        }}>{text}</Markdown>
+      </div>
+    );
+  } else {
+    return (
+      <div style={{
+        background: "none",
+        color: "#fff",
+        borderRadius: borderRadius,
+        padding: "9px 0px",
+        fontSize: 17,
+        lineHeight: 1.65,
+        border: "none",
+        maxWidth: "86vw",
+        minWidth: 54,
+        marginLeft: "auto"
+      }}>
+        <Markdown>{msg.text}</Markdown>
+      </div>
+    );
+  }
+};
+
 const Chat = () => {
   const [userInput, setUserInput] = useState("");
   const [messages, setMessages] = useState([
@@ -67,7 +124,6 @@ const Chat = () => {
     setMessages(prev => [...prev, { role: "user", text: userInput }]);
     setUserInput("");
     setInputDisabled(false);
-    // Добавьте отправку сообщения, если требуется
   };
 
   const clearChat = () => {
@@ -90,7 +146,7 @@ const Chat = () => {
   // --- Стили ---
   const bgColor = "#1C1C1C";
   const panelBg = "#171717";
-  const assistantBubble = "#15151A";
+  const assistantBubble = panelBg;
   const inputBg = "#171717";
   const borderRadius = 18;
 
@@ -122,7 +178,7 @@ const Chat = () => {
           padding: "0 14px",
         }}>
         <div style={{ fontWeight: 600, fontSize: 15 }}>Nora AI</div>
-        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
           <button onClick={clearChat} aria-label="Очистить чат" style={{background:"none", border:"none", cursor:"pointer"}}>{icons.refresh}</button>
           <button aria-label="Telegram" style={{background:"none", border:"none", cursor:"pointer"}} onClick={() => window.open("https://t.me/", "_blank")}>{icons.telegram}</button>
           <button aria-label="Позвонить" style={{background:"none", border:"none", cursor:"pointer"}} onClick={() => window.open("tel:+1234567890")}>{icons.phone}</button>
@@ -138,45 +194,15 @@ const Chat = () => {
         minHeight: "100vh",
         padding: "85px 15px 70px 15px"
       }}>
-        {messages.map((msg, idx) => (
+        {messages.map((msg, idx) =>
           <div key={idx} style={{
             display: "flex",
             justifyContent: msg.role === "assistant" ? "flex-start" : "flex-end",
             marginBottom: 12,
           }}>
-            {msg.role === "assistant" ? (
-              <div style={{
-                background: assistantBubble,
-                color: "#fff",
-                borderRadius: borderRadius,
-                padding: "10px 14px",
-                fontSize: 17,
-                lineHeight: 1.65,
-                border: "none",
-                maxWidth: "86vw",
-                minWidth: 54,
-                marginRight: "auto"
-              }}>
-                <Markdown>{msg.text}</Markdown>
-              </div>
-            ) : (
-              <div style={{
-                background: "none",
-                color: "#fff",
-                borderRadius: borderRadius,
-                padding: "9px 0px",
-                fontSize: 17,
-                lineHeight: 1.65,
-                border: "none",
-                maxWidth: "86vw",
-                minWidth: 54,
-                marginLeft: "auto"
-              }}>
-                <Markdown>{msg.text}</Markdown>
-              </div>
-            )}
+            {renderMessage(msg, borderRadius, assistantBubble)}
           </div>
-        ))}
+        )}
         <div ref={messagesEndRef} />
       </div>
       {/* Инпут */}
