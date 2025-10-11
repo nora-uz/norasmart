@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
 
-// ... все ваши константы ICONS, BANNER, темы, TOPICS, API_KEY без изменений
+// ... все ваши константы ICONS, BANNER, themes, TOPICS, API_KEY без изменений
 
 const Chat = () => {
   // ... хуки
@@ -14,7 +14,7 @@ const Chat = () => {
   const [firstMessageSent, setFirstMessageSent] = useState(false);
   const messagesEndRef = useRef(null);
 
-  const theme = darkMode ? theme.dark : theme.light;
+  const theme = darkMode ? themes.dark : themes.light;
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
