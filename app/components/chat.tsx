@@ -16,7 +16,7 @@ const BTN_SIZE = 50;
 const SEND_BTN_SIZE = 78;
 const borderRadius = 22;
 const sidePad = 16;
-const blockMargin = 20;
+const blockMargin = 20; // все отступы в блоках!
 const panelHeight = 62;
 const maxWidth = 560;
 const GRADIENT = "linear-gradient(90deg, #6a11cb 0%, #2575fc 100%)";
@@ -163,7 +163,8 @@ const Chat = () => {
         transition: "background 0.4s"
       }}
     >
-      <div style={{ height: sidePad }} />
+      {/* Отступ после панели */}
+      <div style={{ height: blockMargin }} />
       <div
         style={{
           width: `calc(100% - ${sidePad * 2}px)`,
@@ -214,8 +215,10 @@ const Chat = () => {
           </button>
         </div>
       </div>
-      <div style={{ height: sidePad }} />
+      {/* Отступ после панели */}
+      <div style={{ height: blockMargin }} />
 
+      {/* Фото/баннер */}
       <div
         style={{
           width: `calc(100% - ${sidePad * 2}px)`,
@@ -242,31 +245,37 @@ const Chat = () => {
           }}
         />
       </div>
+      {/* Отступ после баннера */}
       <div style={{ height: blockMargin }} />
 
+      {/* Первый message под баннером, отступ перед ним */}
       {(firstMessageSent && messages.length > 0) && (
-        <div style={{
-          width: "100%",
-          maxWidth,
-          margin: `${blockMargin}px auto 0 auto`
-        }}>
+        <>
+          <div style={{ height: blockMargin }} />
           <div style={{
-            background: "#F6F7FB",
-            color: "#1C1C1C",
-            borderRadius: borderRadius,
-            padding: "14px 20px",
-            fontSize: 16,
-            lineHeight: 1.7,
-            border: "none",
-            boxShadow: "none",
-            textAlign: "left",
-            marginBottom: blockMargin
+            width: "100%",
+            maxWidth,
+            margin: "0 auto"
           }}>
-            {messages[0].text}
+            <div style={{
+              background: "#F6F7FB",
+              color: "#1C1C1C",
+              borderRadius: borderRadius,
+              padding: "14px 20px",
+              fontSize: 16,
+              lineHeight: 1.7,
+              border: "none",
+              boxShadow: "none",
+              textAlign: "left",
+              marginBottom: blockMargin
+            }}>
+              {messages[0].text}
+            </div>
           </div>
-        </div>
+        </>
       )}
 
+      {/* Интерактивы выбора до начала чата */}
       {showSteps && (
         <div
           style={{
@@ -275,25 +284,25 @@ const Chat = () => {
             margin: "0 auto",
             borderRadius: borderRadius,
             background: theme.inputBg,
-            marginBottom: sidePad,
+            marginBottom: blockMargin,
             padding: `${sidePad + 2}px ${sidePad}px ${sidePad + 6}px ${sidePad}px`,
             display: "flex",
             flexDirection: "column",
             alignItems: "center"
           }}
         >
-          {/* Срок беременности */}
+          {/* Заголовок "Выберите срок беременности:" */}
           <div style={{ width: "100%" }}>
             <div style={{
               fontWeight: 400,
               fontSize: 17,
-              marginBottom: 18,
+              marginBottom: blockMargin,
               color: "#fff",
               letterSpacing: "0.03em"
             }}>
               Выберите срок беременности:
             </div>
-            {/* УБРАНО overflowX и scroll */}
+            {/* Кнопки месяцев */}
             <div style={{
               display: "flex",
               gap: 12,
@@ -350,19 +359,21 @@ const Chat = () => {
               })}
             </div>
           </div>
+          {/* Отступ после блок чисел */}
           <div style={{ height: blockMargin }} />
 
-          {/* Темы для обсуждения */}
-          <div style={{ width: "100%", marginBottom: sidePad }}>
+          {/* Заголовок "Выберите тему для обсуждения:" */}
+          <div style={{ width: "100%", marginBottom: 0 }}>
             <div style={{
               fontWeight: 400,
               fontSize: 17,
-              marginBottom: 18,
+              marginBottom: blockMargin,
               color: "#fff",
               letterSpacing: "0.03em"
             }}>
               Выберите тему для обсуждения:
             </div>
+            {/* Кнопки тем */}
             <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
               {TOPICS.map((topic, i) => {
                 let styleBtn;
@@ -437,6 +448,7 @@ const Chat = () => {
         </div>
       )}
 
+      {/* Чат и фиксированное поле ввода, когда выбран срок и тема */}
       {!showSteps && firstMessageSent && (
         <div
           style={{
@@ -451,6 +463,8 @@ const Chat = () => {
             overflow: "hidden"
           }}
         >
+          {/* Отступ перед чатом */}
+          <div style={{ height: blockMargin }} />
           <div
             style={{
               width: "100%",
@@ -501,16 +515,18 @@ const Chat = () => {
         </div>
       )}
 
+      {/* Отступ перед полем */}
+      <div style={{ height: blockMargin }} />
       <form
         onSubmit={handleSubmit}
         style={{
           position: showFixedInput ? "fixed" : "static",
           left: showFixedInput ? "50%" : "auto",
-          bottom: showFixedInput ? sidePad * 2 : "auto",
+          bottom: showFixedInput ? blockMargin : "auto",
           transform: showFixedInput ? "translateX(-50%)" : "none",
           width: `calc(100% - ${sidePad * 2}px)`,
           maxWidth,
-          margin: showFixedInput ? 0 : `${blockMargin}px auto 0 auto`,
+          margin: showFixedInput ? 0 : `0 auto`,
           zIndex: showFixedInput ? 2600 : "auto",
           display: "flex",
           alignItems: "center",
@@ -570,6 +586,7 @@ const Chat = () => {
           }
         `}</style>
       </form>
+      {/* Отступ после поля */}
       <div style={{ height: blockMargin }} />
     </div>
   );
