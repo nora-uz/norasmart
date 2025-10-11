@@ -121,11 +121,9 @@ const Chat: React.FC = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, streamedBotText]);
 
-  // SHOWSTEPS/SHOWINPUT
   const showSteps = !(pickedMonth && pickedTopic) && !firstMessageSent;
   const showFixedInput = pickedMonth && pickedTopic;
 
-  // ЧАТ СТАТУС
   const handleMonthPick = (month: number) => {
     if (inputDisabled) return;
     setPickedMonth(month);
@@ -135,27 +133,24 @@ const Chat: React.FC = () => {
     setMessages([]);
   };
 
-  // СТРИМИНГ БОТ ОТВЕТА
   async function streamBotResponse(msg: string, existing: Message[]) {
     setStreamedBotText("");
     setWaitingBot(true);
     try {
-      // Можно реализовать стриминг через SSE или сторонний endpoint,
-      // а здесь эмулируем по символу.
-      let reply = await getAssistantReply([{ role: "user", text: msg }]);
+      let reply = await getAssistantReply([{ role: "user" as Role, text: msg }]);
       let arr = reply.split("");
       for (let i = 0; i <= arr.length; i++) {
         setStreamedBotText(arr.slice(0, i).join(""));
-        await new Promise(r => setTimeout(r, 13)); // Скорость печати
+        await new Promise(r => setTimeout(r, 13));
       }
       setMessages([
         ...existing,
-        { role: "assistant", text: reply }
+        { role: "assistant" as Role, text: reply }
       ]);
     } catch {
       setMessages([
         ...existing,
-        { role: "assistant", text: "Ошибка ответа ассистента, попробуйте позже." }
+        { role: "assistant" as Role, text: "Ошибка ответа ассистента, попробуйте позже." }
       ]);
     } finally {
       setStreamedBotText("");
@@ -168,28 +163,28 @@ const Chat: React.FC = () => {
     if (inputDisabled || !pickedMonth) return;
     setPickedTopic(topic);
     const templateMessage = `Срок беременности: ${pickedMonth} месяц, хочу обсудить ${topic.title.toLowerCase()} и ${topic.desc.toLowerCase()}.`;
-    setMessages([{ role: "user", text: templateMessage }]);
+    setMessages([{ role: "user" as Role, text: templateMessage }]);
     setFirstMessageSent(true);
     setUserInput("");
     setInputDisabled(true);
     setWaitingBot(true);
-    await streamBotResponse(templateMessage, [{ role: "user", text: templateMessage }]);
+    await streamBotResponse(templateMessage, [{ role: "user" as Role, text: templateMessage }]);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!userInput.trim() || inputDisabled) return;
     const userHistory: Message[] = [
-      ...(pickedMonth ? [{ role: "user", text: `Мой срок беременности: ${pickedMonth} месяц` }] : []),
-      ...(pickedTopic ? [{ role: "user", text: `Тема: ${pickedTopic.title}. ${pickedTopic.desc}` }] : []),
+      ...(pickedMonth ? [{ role: "user" as Role, text: `Мой срок беременности: ${pickedMonth} месяц` }] : []),
+      ...(pickedTopic ? [{ role: "user" as Role, text: `Тема: ${pickedTopic.title}. ${pickedTopic.desc}` }] : []),
       ...messages.filter(msg => msg.role === "user"),
-      { role: "user", text: userInput }
+      { role: "user" as Role, text: userInput }
     ];
-    setMessages(prev => [...prev, { role: "user", text: userInput }]);
+    setMessages(prev => [...prev, { role: "user" as Role, text: userInput }]);
     setUserInput("");
     setInputDisabled(true);
     setWaitingBot(true);
-    await streamBotResponse(userInput, [...messages, { role: "user", text: userInput }]);
+    await streamBotResponse(userInput, [...messages, { role: "user" as Role, text: userInput }]);
   };
 
   const clearChat = () => {
@@ -202,7 +197,6 @@ const Chat: React.FC = () => {
     setStreamedBotText("");
   };
 
-  // СТИЛИ БОТА
   function assistantBubbleStyle() {
     return {
       background: theme.assistantBubble,
@@ -223,7 +217,6 @@ const Chat: React.FC = () => {
     };
   }
 
-  // СТИЛИ ПОЛЬЗОВАТЕЛЯ
   function userBubbleStyle() {
     return {
       background: theme.userBubble,
@@ -359,7 +352,6 @@ const Chat: React.FC = () => {
           flexDirection: "column",
           alignItems: "center"
         }}>
-          {/* MONTHS PICK */}
           <div style={{ width: "100%" }}>
             <div style={{
               fontWeight: 400,
@@ -410,7 +402,6 @@ const Chat: React.FC = () => {
             </div>
           </div>
           <div style={{ height: blockMargin }} />
-          {/* TOPIC PICK */}
           <div style={{ width: "100%", marginBottom: 0 }}>
             <div style={{
               fontWeight: 400,
@@ -475,7 +466,6 @@ const Chat: React.FC = () => {
         </div>
       )}
 
-      {/* ЧАТ-СООБЩЕНИЯ */}
       {!showSteps && firstMessageSent && (
         <div style={{
           width: "100%",
@@ -516,7 +506,6 @@ const Chat: React.FC = () => {
                 )}
               </div>
             ))}
-            {/* STREAMING БОТ */}
             {waitingBot && streamedBotText &&
               <div style={{
                 width: "100%",
@@ -535,7 +524,6 @@ const Chat: React.FC = () => {
         </div>
       )}
 
-      {/* ВВОД СООБЩЕНИЯ */}
       <div style={{ height: blockMargin }} />
       <form
         onSubmit={handleSubmit}
