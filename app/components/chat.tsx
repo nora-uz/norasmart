@@ -10,7 +10,7 @@ const ICONS = {
 };
 
 const BANNER = "https://user-gen-media-assets.s3.amazonaws.com/seedream_images/4c36a715-f500-4186-8955-631a09fac0ed.png";
-const ICON_SIZE_PANEL = 18;
+const ICON_SIZE_PANEL = 24; // увеличено
 const ICON_SIZE_SEND = 28;
 const BTN_SIZE = 50;
 const SEND_BTN_SIZE = 78;
@@ -55,6 +55,7 @@ const TOPICS = [
   { title: "Физическая активность", desc: "Можно ли и какую выбрать?" }
 ];
 
+// --- ВАЖНО: на реальном проекте ключ и вызов OpenAI API должен быть через серверный прокси! ---
 const API_URL = "https://api.openai.com/v1/assistants/asst_O0ENHkHsICvLEjBXleQpyqDx/messages";
 const OPENAI_API_KEY = "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";
 
@@ -86,26 +87,21 @@ const Chat = () => {
   const handleTopicPick = (topic) => {
     if (inputDisabled || !pickedMonth) return;
     setPickedTopic(topic);
-
-    // показываем в чате выбор темы
     setMessages(prev => [
       ...prev,
       { role: "user", text: `Тема: ${topic.title}. ${topic.desc}` }
     ]);
   };
 
-  // Интеграция с OpenAI ассистентом (серверный запрос — не рекомендуется на клиенте! Лучше через бэкенд)
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!userInput.trim() || inputDisabled) return;
 
-    // Показываем сообщение пользователя
     setMessages(prev => [...prev, { role: "user", text: userInput }]);
     setUserInput("");
     setInputDisabled(true);
 
     try {
-      // Формируем структуру сообщений (можно добавить контекст: тему/месяц)
       const history = [
         ...(pickedMonth
           ? [{ role: "user", text: `Мой срок беременности: ${pickedMonth} месяц` }]
@@ -119,7 +115,6 @@ const Chat = () => {
         { role: "user", text: userInput }
       ];
 
-      // Запрос к OpenAI API
       const response = await fetch(API_URL, {
         method: "POST",
         headers: {
@@ -192,7 +187,7 @@ const Chat = () => {
           style={{
             display: "flex",
             alignItems: "center",
-            gap: 6,
+            gap: 10,
             marginLeft: "auto"
           }}
         >
@@ -265,13 +260,13 @@ const Chat = () => {
           {/* Срок беременности */}
           <div style={{ width: "100%" }}>
             <div style={{
-              fontWeight: 400,
-              fontSize: 15,
+              fontWeight: 700,
+              fontSize: 17,
               marginBottom: 18,
-              color: "#1C1C1C",
+              color: "#fff", // белый!
               letterSpacing: "0.03em"
             }}>
-              Выберите срок беременности:
+              Выберите срок
             </div>
             <div style={{
               display: "flex",
@@ -314,13 +309,13 @@ const Chat = () => {
           {/* Темы для обсуждения */}
           <div style={{ width: "100%", marginBottom: sidePad }}>
             <div style={{
-              fontWeight: 400,
-              fontSize: 15,
+              fontWeight: 700,
+              fontSize: 17,
               marginBottom: 18,
-              color: "#1C1C1C",
+              color: "#fff", // белый!
               letterSpacing: "0.03em"
             }}>
-              Выберите тему для обсуждения:
+              Выберите тему
             </div>
             <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
               {TOPICS.map((topic, i) => (
@@ -426,7 +421,8 @@ const Chat = () => {
         </div>
       )}
 
-      {/* Поле сообщения отдельным блоком снизу всегда! */}
+      {/* Поле сообщения отдельным блоком снизу всегда,
+        и если оно не зафиксировано — отступ как между блоками (30px) */}
       <form
         onSubmit={handleSubmit}
         style={{
@@ -436,7 +432,7 @@ const Chat = () => {
           transform: showFixedInput ? "translateX(-50%)" : "none",
           width: `calc(100% - ${sidePad * 2}px)`,
           maxWidth,
-          margin: showFixedInput ? 0 : "36px auto 0 auto",
+          margin: showFixedInput ? 0 : "30px auto 0 auto",
           zIndex: showFixedInput ? 2600 : "auto",
           display: "flex",
           alignItems: "center",
