@@ -45,13 +45,6 @@ const themes = {
   }
 };
 
-const FAKE_ANSWERS = [
-  "Привет! Я Nora, чем могу помочь?",
-  "Расскажи, о чём бы ты хотел поговорить?",
-  "Я готова ответить на любые вопросы!",
-  "Пиши свой запрос, я отвечу!"
-];
-
 const TOPICS = [
   { title: "Сон", desc: "Проблемы с бессонницей и усталостью" },
   { title: "Питание", desc: "Рацион и полезные продукты" },
@@ -61,6 +54,9 @@ const TOPICS = [
   { title: "Витамины", desc: "Что принимать, когда и зачем" },
   { title: "Физическая активность", desc: "Можно ли и какую выбрать?" }
 ];
+
+const API_URL = "https://api.openai.com/v1/assistants/asst_O0ENHkHsICvLEjBXleQpyqDx/messages";
+const OPENAI_API_KEY = "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";
 
 const Chat = () => {
   const [userInput, setUserInput] = useState("");
@@ -77,10 +73,7 @@ const Chat = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  // Показать выбор шагов
   const showSteps = !(pickedMonth && pickedTopic);
-
-  // Фиксировать поле внизу после выбора всего
   const showFixedInput = pickedMonth && pickedTopic;
 
   const handleMonthPick = (month) => {
@@ -93,32 +86,65 @@ const Chat = () => {
   const handleTopicPick = (topic) => {
     if (inputDisabled || !pickedMonth) return;
     setPickedTopic(topic);
+
+    // показываем в чате выбор темы
     setMessages(prev => [
       ...prev,
       { role: "user", text: `Тема: ${topic.title}. ${topic.desc}` }
     ]);
-    setInputDisabled(true);
-    setTimeout(() => {
-      const reply = FAKE_ANSWERS[Math.floor(Math.random() * FAKE_ANSWERS.length)];
-      setMessages(prev => [...prev, { role: "assistant", text: reply }]);
-      setInputDisabled(false);
-    }, 700);
   };
 
-  const handleSubmit = (e) => {
+  // Интеграция с OpenAI ассистентом (серверный запрос — не рекомендуется на клиенте! Лучше через бэкенд)
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!userInput.trim() || inputDisabled) return;
+
+    // Показываем сообщение пользователя
     setMessages(prev => [...prev, { role: "user", text: userInput }]);
     setUserInput("");
     setInputDisabled(true);
-    setTimeout(() => {
-      const reply = FAKE_ANSWERS[Math.floor(Math.random() * FAKE_ANSWERS.length)];
+
+    try {
+      // Формируем структуру сообщений (можно добавить контекст: тему/месяц)
+      const history = [
+        ...(pickedMonth
+          ? [{ role: "user", text: `Мой срок беременности: ${pickedMonth} месяц` }]
+          : []),
+        ...(pickedTopic
+          ? [{ role: "user", text: `Тема: ${pickedTopic.title}. ${pickedTopic.desc}` }]
+          : []),
+        ...messages.filter(msg => msg.role === "user").map(msg => ({
+          role: "user", text: msg.text
+        })),
+        { role: "user", text: userInput }
+      ];
+
+      // Запрос к OpenAI API
+      const response = await fetch(API_URL, {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${OPENAI_API_KEY}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          messages: history.map(m => ({ role: m.role, content: m.text })),
+        })
+      });
+      const result = await response.json();
+      const assistantMessage = result.choices?.[0]?.message?.content || result.result || "Нет ответа";
+
       setMessages(prev => [
         ...prev,
-        { role: "assistant", text: reply }
+        { role: "assistant", text: assistantMessage }
       ]);
+    } catch (error) {
+      setMessages(prev => [
+        ...prev,
+        { role: "assistant", text: "Ошибка ответа ассистента, попробуйте позже." }
+      ]);
+    } finally {
       setInputDisabled(false);
-    }, 700);
+    }
   };
 
   const clearChat = () => {
@@ -222,325 +248,254 @@ const Chat = () => {
 
       {/* Выбор срока и темы до начала чата */}
       {showSteps && (
-        <>
-          <div
-            style={{
-              width: `calc(100% - ${sidePad * 2}px)`,
-              maxWidth,
-              margin: "0 auto",
-              borderRadius: borderRadius,
-              background: theme.inputBg,
-              marginBottom: sidePad,
-              padding: `${sidePad + 2}px ${sidePad}px ${sidePad + 6}px ${sidePad}px`,
+        <div
+          style={{
+            width: `calc(100% - ${sidePad * 2}px)`,
+            maxWidth,
+            margin: "0 auto",
+            borderRadius: borderRadius,
+            background: theme.inputBg,
+            marginBottom: sidePad,
+            padding: `${sidePad + 2}px ${sidePad}px ${sidePad + 6}px ${sidePad}px`,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center"
+          }}
+        >
+          {/* Срок беременности */}
+          <div style={{ width: "100%" }}>
+            <div style={{
+              fontWeight: 400,
+              fontSize: 15,
+              marginBottom: 18,
+              color: "#1C1C1C",
+              letterSpacing: "0.03em"
+            }}>
+              Выберите срок беременности:
+            </div>
+            <div style={{
               display: "flex",
-              flexDirection: "column",
-              alignItems: "center"
-            }}
-          >
-            {/* Срок беременности */}
-            <div style={{ width: "100%" }}>
-              <div style={{
-                fontWeight: 400,
-                fontSize: 15,
-                marginBottom: 18,
-                color: "#c7d3ef",
-                letterSpacing: "0.03em"
-              }}>
-                Выберите срок беременности:
-              </div>
-              <div style={{
-                display: "flex",
-                gap: 12,
-                overflowX: "auto",
-                justifyContent: "flex-start",
-                paddingRight: 32
-              }} className="months-scroll">
-                {Array.from({ length: 9 }).map((_, i) => (
-                  <button
-                    key={i}
-                    style={{
-                      minWidth: 52,
-                      height: 52,
-                      borderRadius: 20,
-                      border: "none",
-                      cursor: inputDisabled ? "not-allowed" : "pointer",
-                      fontSize: 26,
-                      fontWeight: 600,
-                      background: pickedMonth === i + 1 ? "#2575fc" : "#DDDDDD",
-                      color: pickedMonth === i + 1 ? "#fff" : "#888",
-                      filter: pickedMonth === i + 1 ? "none" : "grayscale(1)",
-                      boxShadow: "none",
-                      opacity: inputDisabled ? 0.7 : 1,
-                      outline: "none",
-                      marginRight: i < 8 ? 9 : 0,
-                      transition: "box-shadow 0.2s, background 0.2s, color 0.2s"
-                    }}
-                    disabled={inputDisabled}
-                    onClick={() => handleMonthPick(i + 1)}
-                  >
-                    {i + 1}
-                  </button>
-                ))}
-              </div>
-              <style>{`
-                .months-scroll::-webkit-scrollbar { display: none; }
-                .months-scroll { scrollbar-width: none; -ms-overflow-style: none; }
-              `}</style>
-            </div>
-
-            {/* Отступ между сроком и темами */}
-            <div style={{ height: 30 }} />
-
-            {/* Темы для обсуждения */}
-            <div style={{ width: "100%", marginBottom: sidePad }}>
-              <div style={{
-                fontWeight: 400,
-                fontSize: 15,
-                marginBottom: 18,
-                color: "#c7d3ef",
-                letterSpacing: "0.03em"
-              }}>
-                Выберите тему для обсуждения:
-              </div>
-              <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-                {TOPICS.map((topic, i) => (
-                  <button
-                    key={i}
-                    style={{
-                      width: "100%",
-                      borderRadius: 18,
-                      border: "none",
-                      cursor: inputDisabled || !pickedMonth ? "not-allowed" : "pointer",
-                      background: pickedTopic?.title === topic.title ? "#2575fc" : "#DDDDDD",
-                      color: pickedTopic?.title === topic.title ? "#fff" : "#888",
-                      filter: pickedTopic?.title === topic.title ? "none" : "grayscale(1)",
-                      boxShadow: "none",
-                      opacity: inputDisabled ? 0.7 : pickedMonth ? 1 : 0.5,
-                      outline: "none",
-                      textAlign: "left",
-                      padding: "17px 18px 13px 18px",
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "flex-start",
-                      fontWeight: 600,
-                      transition: "box-shadow 0.2s, background 0.2s, color 0.2s"
-                    }}
-                    disabled={inputDisabled || !pickedMonth}
-                    onClick={() => handleTopicPick(topic)}
-                  >
-                    <span style={{ fontSize: 19, fontWeight: 700, marginBottom: 5 }}>
-                      {topic.title}
-                    </span>
-                    <span style={{ fontSize: 15, fontWeight: 400, opacity: 0.95 }}>
-                      {topic.desc}
-                    </span>
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Отдельный блок с полем сообщения и кнопкой отправки */}
-            <div style={{ width: "100%", marginTop: 10 }}>
-              <form
-                onSubmit={handleSubmit}
-                style={{
-                  width: "100%",
-                  display: "flex",
-                  alignItems: "center",
-                  boxSizing: "border-box"
-                }}
-              >
-                <input
-                  type="text"
-                  style={{
-                    flex: 1,
-                    border: "none",
-                    borderRadius: borderRadius,
-                    height: BTN_SIZE,
-                    padding: `0 8px 0 ${sidePad}px`,
-                    fontSize: 21,
-                    background: theme.inputBg,
-                    color: theme.inputText,
-                    outline: "none",
-                    marginRight: 0,
-                    transition: "background 0.4s, color 0.4s"
-                  }}
-                  value={userInput}
-                  onChange={(e) => setUserInput(e.target.value)}
-                  placeholder="Введите ваш вопрос"
-                  disabled={inputDisabled}
-                  className="nora-input"
-                />
+              gap: 12,
+              overflowX: "auto",
+              justifyContent: "flex-start",
+              paddingRight: 32
+            }} className="months-scroll">
+              {Array.from({ length: 9 }).map((_, i) => (
                 <button
-                  type="submit"
+                  key={i}
                   style={{
-                    background: "#fff",
-                    color: "#2575fc",
+                    minWidth: 52,
+                    height: 52,
+                    borderRadius: 20,
                     border: "none",
-                    borderRadius: borderRadius,
-                    width: SEND_BTN_SIZE,
-                    height: BTN_SIZE,
-                    marginLeft: sidePad,
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
                     cursor: inputDisabled ? "not-allowed" : "pointer",
-                    opacity: inputDisabled ? 0.7 : 1,
+                    fontSize: 26,
+                    fontWeight: 600,
+                    background: pickedMonth === i + 1 ? "#2575fc" : "#DDDDDD",
+                    color: "#1C1C1C",
+                    filter: pickedMonth === i + 1 ? "none" : "grayscale(1)",
                     boxShadow: "none",
-                    transition: "background 0.4s, color 0.4s"
+                    opacity: inputDisabled ? 0.7 : 1,
+                    outline: "none",
+                    marginRight: i < 8 ? 9 : 0,
+                    transition: "box-shadow 0.2s, background 0.2s, color 0.2s"
                   }}
                   disabled={inputDisabled}
+                  onClick={() => handleMonthPick(i + 1)}
                 >
-                  <img src={ICONS.arrow} alt="Send" style={iconImgSend} />
+                  {i + 1}
                 </button>
-                <style>{`
-                  .nora-input::placeholder {
-                    color: ${theme.placeholder};
-                    opacity: 1;
-                    font-size: 21px;
-                  }
-                `}</style>
-              </form>
+              ))}
             </div>
           </div>
-        </>
+          {/* Отступ между сроком и темами */}
+          <div style={{ height: 30 }} />
+
+          {/* Темы для обсуждения */}
+          <div style={{ width: "100%", marginBottom: sidePad }}>
+            <div style={{
+              fontWeight: 400,
+              fontSize: 15,
+              marginBottom: 18,
+              color: "#1C1C1C",
+              letterSpacing: "0.03em"
+            }}>
+              Выберите тему для обсуждения:
+            </div>
+            <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+              {TOPICS.map((topic, i) => (
+                <button
+                  key={i}
+                  style={{
+                    width: "100%",
+                    borderRadius: 18,
+                    border: "none",
+                    cursor: inputDisabled || !pickedMonth ? "not-allowed" : "pointer",
+                    background: pickedTopic?.title === topic.title ? "#2575fc" : "#DDDDDD",
+                    color: "#1C1C1C",
+                    filter: pickedTopic?.title === topic.title ? "none" : "grayscale(1)",
+                    boxShadow: "none",
+                    opacity: inputDisabled ? 0.7 : pickedMonth ? 1 : 0.5,
+                    outline: "none",
+                    textAlign: "left",
+                    padding: "17px 18px 13px 18px",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "flex-start",
+                    fontWeight: 600,
+                    transition: "box-shadow 0.2s, background 0.2s, color 0.2s"
+                  }}
+                  disabled={inputDisabled || !pickedMonth}
+                  onClick={() => handleTopicPick(topic)}
+                >
+                  <span style={{ fontSize: 19, fontWeight: 700, marginBottom: 5 }}>
+                    {topic.title}
+                  </span>
+                  <span style={{ fontSize: 15, fontWeight: 400, opacity: 0.95 }}>
+                    {topic.desc}
+                  </span>
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
       )}
 
-      {/* После выбора — только чат и фиксированное поле ввода */}
+      {/* Чат и фиксированное поле ввода, когда выбран срок и тема */}
       {!showSteps && (
-        <>
+        <div
+          style={{
+            width: "100%",
+            maxWidth,
+            margin: "30px auto 0 auto",
+            boxSizing: "border-box",
+            flex: 1,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            overflow: "hidden"
+          }}
+        >
           <div
             style={{
               width: "100%",
-              maxWidth,
-              margin: "30px auto 0 auto",
-              boxSizing: "border-box",
               flex: 1,
+              minHeight: 0,
+              overflowY: "auto",
               display: "flex",
               flexDirection: "column",
-              alignItems: "center",
-              overflow: "hidden"
+              justifyContent: "flex-start"
             }}
           >
-            <div
-              style={{
-                width: "100%",
-                flex: 1,
-                minHeight: 0,
-                overflowY: "auto",
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "flex-start"
-              }}
-            >
-              {messages.map((msg, idx) => (
+            {messages.map((msg, idx) => (
+              <div
+                key={idx}
+                style={{
+                  display: "flex",
+                  justifyContent: msg.role === "assistant" ? "flex-start" : "flex-end",
+                  marginBottom: 12,
+                  width: "100%"
+                }}
+              >
                 <div
-                  key={idx}
                   style={{
-                    display: "flex",
-                    justifyContent: msg.role === "assistant" ? "flex-start" : "flex-end",
-                    marginBottom: 12,
-                    width: "100%"
+                    background: msg.role === "assistant" ? theme.assistantBubble : theme.userBubble,
+                    color: msg.role === "assistant" ? theme.assistantText : theme.userText,
+                    borderRadius: borderRadius,
+                    padding: "14px 20px",
+                    fontSize: 16,
+                    lineHeight: 1.7,
+                    border: "none",
+                    maxWidth: "70%",
+                    minWidth: 54,
+                    marginLeft: sidePad,
+                    marginRight: sidePad,
+                    wordBreak: "break-word",
+                    alignSelf: msg.role === "assistant" ? "flex-start" : "flex-end",
+                    boxShadow: "none",
+                    transition: "background 0.4s, color 0.4s"
                   }}
                 >
-                  <div
-                    style={{
-                      background: msg.role === "assistant" ? theme.assistantBubble : theme.userBubble,
-                      color: msg.role === "assistant" ? theme.assistantText : theme.userText,
-                      borderRadius: borderRadius,
-                      padding: "14px 20px",
-                      fontSize: 16,
-                      lineHeight: 1.7,
-                      border: "none",
-                      maxWidth: "70%",
-                      minWidth: 54,
-                      marginLeft: sidePad,
-                      marginRight: sidePad,
-                      wordBreak: "break-word",
-                      alignSelf: msg.role === "assistant" ? "flex-start" : "flex-end",
-                      boxShadow: "none",
-                      transition: "background 0.4s, color 0.4s"
-                    }}
-                  >
-                    {msg.text}
-                  </div>
+                  {msg.text}
                 </div>
-              ))}
-              <div ref={messagesEndRef} />
-              <div style={{ height: BTN_SIZE + sidePad * 3 }} />
-            </div>
+              </div>
+            ))}
+            <div ref={messagesEndRef} />
+            <div style={{ height: BTN_SIZE + sidePad * 3 }} />
           </div>
-          {/* Фиксированное поле ввода снизу */}
-          <form
-            onSubmit={handleSubmit}
-            style={{
-              position: "fixed",
-              left: "50%",
-              bottom: sidePad * 2,
-              transform: "translateX(-50%)",
-              width: `calc(100% - ${sidePad * 2}px)`,
-              maxWidth,
-              zIndex: 2600,
-              display: "flex",
-              alignItems: "center",
-              background: "none",
-              boxSizing: "border-box",
-              padding: 0
-            }}
-          >
-            <input
-              type="text"
-              style={{
-                flex: 1,
-                border: "none",
-                borderRadius: borderRadius,
-                height: BTN_SIZE,
-                padding: `0 8px 0 ${sidePad}px`,
-                fontSize: 21,
-                background: theme.inputBg,
-                color: theme.inputText,
-                outline: "none",
-                marginRight: 0,
-                transition: "background 0.4s, color 0.4s"
-              }}
-              value={userInput}
-              onChange={(e) => setUserInput(e.target.value)}
-              placeholder="Введите ваш вопрос"
-              disabled={inputDisabled}
-              className="nora-input"
-            />
-            <button
-              type="submit"
-              style={{
-                background: "#fff",
-                color: "#2575fc",
-                border: "none",
-                borderRadius: borderRadius,
-                width: SEND_BTN_SIZE,
-                height: BTN_SIZE,
-                marginLeft: sidePad,
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                cursor: inputDisabled ? "not-allowed" : "pointer",
-                opacity: inputDisabled ? 0.7 : 1,
-                boxShadow: "none",
-                transition: "background 0.4s, color 0.4s"
-              }}
-              disabled={inputDisabled}
-            >
-              <img src={ICONS.arrow} alt="Send" style={iconImgSend} />
-            </button>
-            <style>{`
-              .nora-input::placeholder {
-                color: ${theme.placeholder};
-                opacity: 1;
-                font-size: 21px;
-              }
-            `}</style>
-          </form>
-        </>
+        </div>
       )}
+
+      {/* Поле сообщения отдельным блоком снизу всегда! */}
+      <form
+        onSubmit={handleSubmit}
+        style={{
+          position: showFixedInput ? "fixed" : "static",
+          left: showFixedInput ? "50%" : "auto",
+          bottom: showFixedInput ? sidePad * 2 : "auto",
+          transform: showFixedInput ? "translateX(-50%)" : "none",
+          width: `calc(100% - ${sidePad * 2}px)`,
+          maxWidth,
+          margin: showFixedInput ? 0 : "36px auto 0 auto",
+          zIndex: showFixedInput ? 2600 : "auto",
+          display: "flex",
+          alignItems: "center",
+          background: "none",
+          boxSizing: "border-box",
+          padding: 0
+        }}
+      >
+        <input
+          type="text"
+          style={{
+            flex: 1,
+            border: "none",
+            borderRadius: borderRadius,
+            height: BTN_SIZE,
+            padding: `0 8px 0 ${sidePad}px`,
+            fontSize: 21,
+            background: theme.inputBg,
+            color: theme.inputText,
+            outline: "none",
+            marginRight: 0,
+            transition: "background 0.4s, color 0.4s"
+          }}
+          value={userInput}
+          onChange={(e) => setUserInput(e.target.value)}
+          placeholder="Введите ваш вопрос"
+          disabled={inputDisabled}
+          className="nora-input"
+        />
+        <button
+          type="submit"
+          style={{
+            background: "#fff",
+            color: "#2575fc",
+            border: "none",
+            borderRadius: borderRadius,
+            width: SEND_BTN_SIZE,
+            height: BTN_SIZE,
+            marginLeft: sidePad,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            cursor: inputDisabled ? "not-allowed" : "pointer",
+            opacity: inputDisabled ? 0.7 : 1,
+            boxShadow: "none",
+            transition: "background 0.4s, color 0.4s"
+          }}
+          disabled={inputDisabled}
+        >
+          <img src={ICONS.arrow} alt="Send" style={iconImgSend} />
+        </button>
+        <style>{`
+          .nora-input::placeholder {
+            color: ${theme.placeholder};
+            opacity: 1;
+            font-size: 21px;
+          }
+        `}</style>
+      </form>
     </div>
   );
 };
