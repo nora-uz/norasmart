@@ -124,6 +124,7 @@ const Chat: React.FC = () => {
       setWaitingBot(false);
     }
   };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!userInput.trim() || inputDisabled) return;
@@ -165,15 +166,183 @@ const Chat: React.FC = () => {
     setWaitingBot(false);
   };
 
-  // ... остальной jsx код рендера остаётся прежним, как был выше ...
-  // (этот кусок просто очень длинный, его копипастить не нужно — без изменений оставьте интерфейс).
-
+  // --- JSX код интерфейса ниже! ---
   return (
-    // ...весь ваш большой JSX с UI остаётся здесь...
-    <div> {/* ...всё как в прошлом примере... */} </div>
+    <div style={{
+      maxWidth,
+      margin: "0 auto",
+      background: theme.bgColor,
+      minHeight: "100vh",
+      borderRadius: borderRadius,
+      padding: sidePad,
+      position: "relative"
+    }}>
+      {/* Панель управления */}
+      <div style={{
+        background: theme.panelBg,
+        display: "flex",
+        alignItems: "center",
+        padding: "8px 16px",
+        borderRadius: 16,
+        marginBottom: blockMargin,
+        height: panelHeight,
+        justifyContent: "space-between"
+      }}>
+        <img src={BANNER} alt="Баннер" style={{ height: 40, borderRadius: 8 }} />
+        <div style={{ display: "flex", gap: 10 }}>
+          <button onClick={() => setDarkMode(!darkMode)} style={iconBtn(theme.panelBg)}>
+            <img src={darkMode ? ICONS.sun : ICONS.moon} style={iconImgPanel} alt="Тема" />
+          </button>
+          <button onClick={clearChat} style={iconBtn(theme.panelBg)}>
+            <img src={ICONS.trash} style={iconImgPanel} alt="Очистить" />
+          </button>
+        </div>
+      </div>
+
+      {/* Выбор месяца и темы */}
+      {showSteps && (
+        <div>
+          <h3 style={{ color: theme.userText, marginBottom: 12 }}>Выберите срок беременности</h3>
+          <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 18 }}>
+            {[...Array(10)].map((_, i) => (
+              <button key={i+1}
+                onClick={() => handleMonthPick(i+1)}
+                style={{
+                  padding: "6px 16px",
+                  borderRadius: 14,
+                  border: pickedMonth === i+1 ? `2px solid #2575fc` : "1px solid #888",
+                  background: pickedMonth === i+1 ? "#2575fc" : theme.inputBg,
+                  color: pickedMonth === i+1 ? "#fff" : theme.userText,
+                  cursor: "pointer"
+                }}
+              >{i+1}</button>
+            ))}
+          </div>
+
+          {pickedMonth && (
+            <>
+              <h3 style={{ color: theme.userText, marginBottom: 12 }}>Выберите тему</h3>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+                {TOPICS.map((topic) => (
+                  <button
+                    key={topic.title}
+                    style={{
+                      padding: "6px 12px",
+                      borderRadius: 14,
+                      border: pickedTopic?.title === topic.title ? `2px solid #2575fc` : "1px solid #888",
+                      background: pickedTopic?.title === topic.title ? "#2575fc" : theme.inputBg,
+                      color: pickedTopic?.title === topic.title ? "#fff" : theme.userText,
+                      cursor: "pointer",
+                      minWidth: 140,
+                      textAlign: "left"
+                    }}
+                    onClick={() => handleTopicPick(topic)}
+                  >
+                    <div style={{ fontWeight: 600 }}>{topic.title}</div>
+                    <div style={{ fontSize: 12, color: theme.placeholder }}>{topic.desc}</div>
+                  </button>
+                ))}
+              </div>
+            </>
+          )}
+        </div>
+      )}
+
+      {/* История чата */}
+      {(!showSteps || firstMessageSent) && (
+        <div style={{
+          minHeight: 220,
+          maxHeight: 420,
+          overflowY: "auto",
+          padding: "12px 0",
+          marginTop: 10,
+          marginBottom: 10
+        }}>
+          {messages.map((msg, idx) => (
+            <div key={idx}
+              style={{
+                display: "flex",
+                flexDirection: msg.role === "user" ? "row-reverse" : "row",
+                alignItems: "flex-end",
+                marginBottom: 8
+              }}
+            >
+              <div style={{
+                maxWidth: "78%",
+                background: msg.role === "user" ? theme.userBubble : theme.assistantBubble,
+                color: msg.role === "user" ? theme.userText : theme.assistantText,
+                padding: "12px 18px",
+                borderRadius: 14,
+                wordBreak: "break-word",
+                fontSize: 16
+              }}>{msg.text}</div>
+            </div>
+          ))}
+          {waitingBot &&
+            <div style={{
+              color: theme.assistantText,
+              fontStyle: "italic",
+              marginLeft: 8,
+              marginBottom: 8
+            }}>
+              Ассистент печатает...
+            </div>
+          }
+          <div ref={messagesEndRef} />
+        </div>
+      )}
+
+      {/* Ввод сообщения */}
+      {showFixedInput && (
+        <form onSubmit={handleSubmit} style={{
+          display: "flex",
+          alignItems: "center",
+          background: theme.inputBg,
+          borderRadius: 16,
+          padding: "10px 10px",
+          marginTop: 10
+        }}>
+          <input
+            style={{
+              flex: 1,
+              border: "none",
+              outline: "none",
+              background: "transparent",
+              color: theme.inputText,
+              fontSize: 16,
+              padding: "8px 8px"
+            }}
+            value={userInput}
+            onChange={e => setUserInput(e.target.value)}
+            disabled={inputDisabled}
+            placeholder="Введите сообщение..."
+          />
+          <button
+            type="submit"
+            disabled={inputDisabled || !userInput.trim()}
+            style={{
+              background: GRADIENT,
+              border: "none",
+              borderRadius: 16,
+              width: SEND_BTN_SIZE,
+              height: SEND_BTN_SIZE,
+              marginLeft: 12,
+              cursor: inputDisabled || !userInput.trim() ? "not-allowed" : "pointer",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center"
+            }}
+          >
+            <img src={ICONS.arrow} style={iconImgSend}
+              alt="Отправить" />
+          </button>
+        </form>
+      )}
+    </div>
   );
 };
-// стили для кнопок
+
+// Стили для кнопок
 const iconBtn = (color: string) => ({
   background: color,
   border: "none",
