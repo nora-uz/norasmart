@@ -59,14 +59,11 @@ const TOPICS = [
 type Role = "user" | "assistant";
 type Message = { role: Role; text: string };
 
-// fetch для чата теперь идет на /api/chat, без ключа!
 async function getAssistantReply(messagesArr: Message[]) {
   try {
     const res = await fetch("/api/chat", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ messages: messagesArr })
     });
     const data = await res.json();
@@ -109,7 +106,6 @@ const Chat: React.FC = () => {
     if (inputDisabled || !pickedMonth) return;
     setPickedTopic(topic);
     const templateMessage = `Срок беременности: ${pickedMonth} месяц, хочу обсудить ${topic.title.toLowerCase()} и ${topic.desc.toLowerCase()}.`;
-
     setMessages([{ role: "user" as Role, text: templateMessage }]);
     setFirstMessageSent(true);
     setUserInput("");
@@ -117,7 +113,9 @@ const Chat: React.FC = () => {
     setWaitingBot(true);
 
     try {
-      const assistantReply = await getAssistantReply([{ role: "user" as Role, text: templateMessage }]);
+      const assistantReply = await getAssistantReply([
+        { role: "user" as Role, text: templateMessage }
+      ]);
       setMessages(prev => [...prev, { role: "assistant" as Role, text: assistantReply }]);
     } catch {
       setMessages(prev => [
@@ -133,19 +131,16 @@ const Chat: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!userInput.trim() || inputDisabled) return;
-
     const userHistory: Message[] = [
       ...(pickedMonth ? [{ role: "user" as Role, text: `Мой срок беременности: ${pickedMonth} месяц` }] : []),
       ...(pickedTopic ? [{ role: "user" as Role, text: `Тема: ${pickedTopic.title}. ${pickedTopic.desc}` }] : []),
       ...messages.filter(msg => msg.role === "user"),
       { role: "user" as Role, text: userInput }
     ];
-
     setMessages(prev => [...prev, { role: "user" as Role, text: userInput }]);
     setUserInput("");
     setInputDisabled(true);
     setWaitingBot(true);
-
     try {
       const assistantReply = await getAssistantReply(userHistory);
       setMessages(prev => [...prev, { role: "assistant" as Role, text: assistantReply }]);
@@ -169,20 +164,20 @@ const Chat: React.FC = () => {
     setWaitingBot(false);
   };
 
-  // Весь визуальный UI-слой, который был в твоём коде – оставляй, менять не нужно
-
-  // ... Ниже твой layout/components as is ...
   return (
-    <div style={{
-      background: theme.bgColor,
-      width: "100vw",
-      minHeight: 800,
-      overflow: "hidden",
-      position: "relative",
-      transition: "background 0.4s"
-    }}>
-      {/* ... Весь остальной UI-код ... */}
-      {/* Тут баннер, выбор месяца/темы, история, форма ввода и кнопки — весь твой дизайн! */}
+    <div
+      style={{
+        background: theme.bgColor,
+        width: "100vw",
+        minHeight: 800,
+        overflow: "hidden",
+        position: "relative",
+        transition: "background 0.4s"
+      }}
+    >
+      {/* Дальше копируй полностью ВСЮ визуальную часть! */}
+      {/* ... твоя панель, баннер, строки выбора, чаты, кнопки ... */}
+      {/* ... без изменений! */}
     </div>
   );
 };
