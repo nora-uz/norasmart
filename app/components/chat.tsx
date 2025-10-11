@@ -20,9 +20,6 @@ const blockMargin = 20;
 const panelHeight = 62;
 const maxWidth = 560;
 const GRADIENT = "linear-gradient(90deg, #6a11cb 0%, #2575fc 100%)";
-const GRADIENT_GRAY = "linear-gradient(90deg, #dbeafd 0%, #e3e7ea 100%)";
-const GRADIENT_DARK = "linear-gradient(90deg, #C6C9CE 0%, #BEC2C6 100%)";
-const GRADIENT_DISABLED = "linear-gradient(90deg, #edf0f3 0%, #e8e9ea 100%)";
 
 const themes = {
   dark: {
@@ -306,9 +303,25 @@ const Chat = () => {
               paddingRight: 32
             }}>
               {Array.from({ length: 9 }).map((_, i) => {
-                // пока не выбран срок, все яркие
                 let styleBtn;
-                if (!pickedMonth) {
+                if (pickedMonth === i + 1) {
+                  styleBtn = {
+                    minWidth: 52,
+                    height: 52,
+                    borderRadius: 20,
+                    border: "none",
+                    cursor: inputDisabled ? "not-allowed" : "pointer",
+                    fontSize: 26,
+                    fontWeight: 600,
+                    background: "#fff",
+                    color: "#2575fc",
+                    opacity: 1,
+                    boxShadow: "none",
+                    outline: "none",
+                    marginRight: i < 8 ? 9 : 0,
+                    transition: "box-shadow 0.2s, background 0.2s, color 0.2s"
+                  };
+                } else {
                   styleBtn = {
                     minWidth: 52,
                     height: 52,
@@ -325,40 +338,6 @@ const Chat = () => {
                     marginRight: i < 8 ? 9 : 0,
                     transition: "box-shadow 0.2s, background 0.2s, color 0.2s"
                   };
-                } else {
-                  styleBtn = pickedMonth === i + 1
-                    ? {
-                        minWidth: 52,
-                        height: 52,
-                        borderRadius: 20,
-                        border: "none",
-                        cursor: inputDisabled ? "not-allowed" : "pointer",
-                        fontSize: 26,
-                        fontWeight: 600,
-                        background: GRADIENT,
-                        color: "#fff",
-                        opacity: 1,
-                        boxShadow: "none",
-                        outline: "none",
-                        marginRight: i < 8 ? 9 : 0,
-                        transition: "box-shadow 0.2s, background 0.2s, color 0.2s"
-                      }
-                    : {
-                        minWidth: 52,
-                        height: 52,
-                        borderRadius: 20,
-                        border: "none",
-                        cursor: inputDisabled ? "not-allowed" : "pointer",
-                        fontSize: 26,
-                        fontWeight: 600,
-                        background: GRADIENT_GRAY,
-                        color: "#fff",
-                        opacity: 0.5,
-                        boxShadow: "none",
-                        outline: "none",
-                        marginRight: i < 8 ? 9 : 0,
-                        transition: "box-shadow 0.2s, background 0.2s, color 0.2s"
-                      };
                 }
                 return (
                   <button
@@ -390,60 +369,44 @@ const Chat = () => {
               {TOPICS.map((topic, i) => {
                 let styleBtn;
                 let isSelected = pickedTopic?.title === topic.title;
-                if (!pickedMonth) {
+                if (isSelected) {
                   styleBtn = {
                     width: "100%",
                     borderRadius: 18,
                     border: "none",
-                    cursor: "not-allowed",
-                    background: GRADIENT_DISABLED,
-                    color: "#fff",
-                    opacity: 0.4,
+                    cursor: inputDisabled ? "not-allowed" : "pointer",
+                    background: "#fff",
+                    color: "#2575fc",
+                    opacity: 1,
                     textAlign: "left",
                     padding: "17px 18px 13px 18px",
                     display: "flex",
                     flexDirection: "column",
                     alignItems: "flex-start",
-                    fontWeight: 600
+                    fontWeight: 600,
+                    boxShadow: "none",
+                    outline: "none",
+                    transition: "box-shadow 0.2s, background 0.2s, color 0.2s"
                   };
                 } else {
-                  styleBtn = isSelected
-                    ? {
-                        width: "100%",
-                        borderRadius: 18,
-                        border: "none",
-                        cursor: inputDisabled ? "not-allowed" : "pointer",
-                        background: GRADIENT,
-                        color: "#fff",
-                        opacity: 1,
-                        textAlign: "left",
-                        padding: "17px 18px 13px 18px",
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "flex-start",
-                        fontWeight: 600,
-                        boxShadow: "none",
-                        outline: "none",
-                        transition: "box-shadow 0.2s, background 0.2s, color 0.2s"
-                      }
-                    : {
-                        width: "100%",
-                        borderRadius: 18,
-                        border: "none",
-                        cursor: inputDisabled ? "not-allowed" : "pointer",
-                        background: GRADIENT_GRAY,
-                        color: "#fff",
-                        opacity: 0.7,
-                        textAlign: "left",
-                        padding: "17px 18px 13px 18px",
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "flex-start",
-                        fontWeight: 600,
-                        boxShadow: "none",
-                        outline: "none",
-                        transition: "box-shadow 0.2s, background 0.2s, color 0.2s"
-                      };
+                  styleBtn = {
+                    width: "100%",
+                    borderRadius: 18,
+                    border: "none",
+                    cursor: inputDisabled || !pickedMonth ? "not-allowed" : "pointer",
+                    background: GRADIENT,
+                    color: "#fff",
+                    opacity: 1,
+                    textAlign: "left",
+                    padding: "17px 18px 13px 18px",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "flex-start",
+                    fontWeight: 600,
+                    boxShadow: "none",
+                    outline: "none",
+                    transition: "box-shadow 0.2s, background 0.2s, color 0.2s"
+                  };
                 }
                 return (
                   <button
@@ -456,7 +419,7 @@ const Chat = () => {
                       fontSize: 19,
                       fontWeight: 700,
                       marginBottom: 5,
-                      color: "#fff"
+                      color: isSelected ? "#2575fc" : "#fff"
                     }}>
                       {topic.title}
                     </span>
@@ -464,7 +427,7 @@ const Chat = () => {
                       fontSize: 15,
                       fontWeight: 400,
                       opacity: 0.95,
-                      color: "#fff"
+                      color: isSelected ? "#2575fc" : "#fff"
                     }}>
                       {topic.desc}
                     </span>
@@ -476,7 +439,6 @@ const Chat = () => {
         </div>
       )}
 
-      {/* Чат и фиксированное поле ввода, когда выбран срок и тема */}
       {!showSteps && firstMessageSent && (
         <div
           style={{
