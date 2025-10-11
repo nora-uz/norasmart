@@ -1,65 +1,10 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
 
-const ICONS = {
-  telegram: "https://cdn-icons-png.flaticon.com/512/9821/9821637.png",
-  sun: "https://cdn-icons-png.flaticon.com/512/16769/16769231.png",
-  moon: "https://cdn-icons-png.flaticon.com/512/16769/16769231.png",
-  trash: "https://cdn-icons-png.flaticon.com/512/3917/3917772.png",
-  arrow: "https://cdn-icons-png.flaticon.com/512/3916/3916848.png"
-};
-
-const BANNER = "https://user-gen-media-assets.s3.amazonaws.com/seedream_images/4c36a715-f500-4186-8955-631a09fac0ed.png";
-const ICON_SIZE_PANEL = 18;
-const ICON_SIZE_SEND = 28;
-const BTN_SIZE = 50;
-const SEND_BTN_SIZE = 78;
-const borderRadius = 22;
-const sidePad = 16;
-const blockMargin = 20;
-const panelHeight = 62;
-const maxWidth = 560;
-const GRADIENT = "linear-gradient(90deg, #6a11cb 0%, #2575fc 100%)";
-
-const themes = {
-  dark: {
-    panelBg: "#232323",
-    bgColor: "#1C1C1C",
-    userBubble: "#343434",
-    userText: "#fff",
-    inputBg: "#232323",
-    inputText: "#fff",
-    placeholder: "#888",
-    assistantBubble: "#262939",
-    assistantText: "#fff"
-  },
-  light: {
-    panelBg: "#F6F7FB",
-    bgColor: "#F9FAFC",
-    userBubble: "#fff",
-    userText: "#333",
-    inputBg: "#F6F7FB",
-    inputText: "#222",
-    placeholder: "#333",
-    assistantBubble: "#E8EAED",
-    assistantText: "#333"
-  }
-};
-
-const TOPICS = [
-  { title: "Сон", desc: "Проблемы с бессонницей и усталостью" },
-  { title: "Питание", desc: "Рацион и полезные продукты" },
-  { title: "Стрессы", desc: "Как управлять тревогой" },
-  { title: "Готовность к родам", desc: "Что знать заранее" },
-  { title: "Самочувствие", desc: "Физическое и эмоциональное состояние" },
-  { title: "Витамины", desc: "Что принимать, когда и зачем" },
-  { title: "Физическая активность", desc: "Можно ли и какую выбрать?" }
-];
-
-const API_URL = "https://api.openai.com/v1/assistants/asst_O0ENHkHsICvLEjBXleQpyqDx/messages";
-const OPENAI_API_KEY = "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";
+// ... все ваши константы ICONS, BANNER, темы, TOPICS, API_KEY без изменений
 
 const Chat = () => {
+  // ... хуки
   const [userInput, setUserInput] = useState("");
   const [messages, setMessages] = useState([]);
   const [inputDisabled, setInputDisabled] = useState(false);
@@ -78,6 +23,12 @@ const Chat = () => {
   const showSteps = !(pickedMonth && pickedTopic) && !firstMessageSent;
   const showFixedInput = pickedMonth && pickedTopic;
 
+  // Формируем автоматическое сообщение при выборе месяца и темы
+  function makeFirstUserMsg(month, topic) {
+    if (!month || !topic) return "";
+    return `Срок беременности: ${month} месяц\nХочу обсудить: ${topic.title}, ${topic.desc}`;
+  }
+
   const handleMonthPick = (month) => {
     if (inputDisabled) return;
     setPickedMonth(month);
@@ -90,7 +41,7 @@ const Chat = () => {
     if (inputDisabled || !pickedMonth) return;
     setPickedTopic(topic);
     setMessages([
-      { role: "user", text: `Тема: ${topic.title}. ${topic.desc}` }
+      { role: "user", text: makeFirstUserMsg(pickedMonth, topic), first: true }
     ]);
     setFirstMessageSent(true);
     setUserInput("");
@@ -163,7 +114,6 @@ const Chat = () => {
         transition: "background 0.4s"
       }}
     >
-      {/* --- ГЛОБАЛЬНЫЕ СТИЛИ --- */}
       <style>{`
         .months-scroll::-webkit-scrollbar { display: none; }
         .months-scroll { scrollbar-width: none; -ms-overflow-style: none; }
@@ -248,32 +198,7 @@ const Chat = () => {
         />
       </div>
       <div style={{ height: blockMargin }} />
-      {(firstMessageSent && messages.length > 0) && (
-        <>
-          <div style={{ height: blockMargin }} />
-          <div style={{
-            width: "100%",
-            maxWidth,
-            margin: "0 auto"
-          }}>
-            <div style={{
-              background: "#F6F7FB",
-              color: "#1C1C1C",
-              borderRadius: borderRadius,
-              padding: "14px 20px",
-              fontSize: 16,
-              lineHeight: 1.7,
-              border: "none",
-              boxShadow: "none",
-              textAlign: "left",
-              marginBottom: blockMargin
-            }}>
-              {messages[0].text}
-            </div>
-          </div>
-        </>
-      )}
-      {/* --- ВЫБОР МЕСЯЦА и ТЕМЫ --- */}
+
       {showSteps && (
         <div
           style={{
@@ -289,7 +214,6 @@ const Chat = () => {
             alignItems: "center"
           }}
         >
-          {/* Заголовок "Выберите срок беременности:" */}
           <div style={{ width: "100%" }}>
             <div style={{
               fontWeight: 400,
@@ -462,28 +386,51 @@ const Chat = () => {
                 style={{
                   width: "100%",
                   display: "flex",
-                  justifyContent: msg.role === "assistant" ? "flex-start" : "flex-end",
-                  marginBottom: 12,
+                  justifyContent: msg.first ? "center" : msg.role === "assistant" ? "flex-start" : "flex-end",
+                  marginBottom: 12
                 }}
               >
                 <div
-                  style={{
-                    background: msg.role === "assistant" ? theme.assistantBubble : theme.userBubble,
-                    color: msg.role === "assistant" ? theme.assistantText : theme.userText,
-                    borderRadius: borderRadius,
-                    padding: "14px 20px",
-                    fontSize: 16,
-                    lineHeight: 1.7,
-                    border: "none",
-                    maxWidth: "70%",
-                    minWidth: 54,
-                    marginLeft: sidePad,
-                    marginRight: sidePad,
-                    wordBreak: "break-word",
-                    alignSelf: "flex-start",
-                    boxShadow: "none",
-                    transition: "background 0.4s, color 0.4s"
-                  }}
+                  style={
+                    msg.first
+                      ? {
+                          background: theme.userBubble,
+                          color: theme.userText,
+                          borderRadius: borderRadius,
+                          padding: "14px 20px",
+                          fontSize: 16,
+                          lineHeight: 1.7,
+                          border: "none",
+                          maxWidth: "100%",
+                          width: "100%",
+                          minWidth: 54,
+                          marginLeft: 0,
+                          marginRight: 0,
+                          wordBreak: "break-word",
+                          alignSelf: "center",
+                          boxShadow: "none",
+                          whiteSpace: "pre-line",
+                          textAlign: "left",
+                          transition: "background 0.4s, color 0.4s"
+                        }
+                      : {
+                          background: msg.role === "assistant" ? theme.assistantBubble : theme.userBubble,
+                          color: msg.role === "assistant" ? theme.assistantText : theme.userText,
+                          borderRadius: borderRadius,
+                          padding: "14px 20px",
+                          fontSize: 16,
+                          lineHeight: 1.7,
+                          border: "none",
+                          maxWidth: "70%",
+                          minWidth: 54,
+                          marginLeft: sidePad,
+                          marginRight: sidePad,
+                          wordBreak: "break-word",
+                          alignSelf: "flex-start",
+                          boxShadow: "none",
+                          transition: "background 0.4s, color 0.4s"
+                        }
+                  }
                 >
                   {msg.text}
                 </div>
@@ -574,31 +521,6 @@ const Chat = () => {
   );
 };
 
-const iconBtn = (color) => ({
-  background: color,
-  border: "none",
-  cursor: "pointer",
-  width: BTN_SIZE,
-  height: BTN_SIZE,
-  borderRadius: BTN_SIZE / 2,
-  padding: 0,
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  boxShadow: "none"
-});
-const iconImgPanel = {
-  width: ICON_SIZE_PANEL,
-  height: ICON_SIZE_PANEL,
-  display: "block",
-  background: "none",
-  filter: "brightness(0) invert(1)"
-};
-const iconImgSend = {
-  width: ICON_SIZE_SEND,
-  height: ICON_SIZE_SEND,
-  display: "block",
-  background: "none"
-};
+// ...iconBtn, iconImgPanel, iconImgSend без изменений
 
 export default Chat;
