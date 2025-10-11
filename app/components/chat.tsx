@@ -67,8 +67,6 @@ const Chat = () => {
   const [pickedMonth, setPickedMonth] = useState(null);
   const [pickedTopic, setPickedTopic] = useState(null);
   const [firstMessageSent, setFirstMessageSent] = useState(false);
-  const [monthWindow, setMonthWindow] = useState(0); // Месяцы листаются свайпом
-  const [touchStartX, setTouchStartX] = useState(null); // для свайпа
   const messagesEndRef = useRef(null);
 
   const theme = darkMode ? themes.dark : themes.light;
@@ -77,7 +75,7 @@ const Chat = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  // showSteps теперь скрывается если человек начал писать (firstMessageSent)
+  // showSteps скрывается если выбран месяц+тема ИЛИ пользователь начал писать
   const showSteps = !(pickedMonth && pickedTopic) && !firstMessageSent;
   const showFixedInput = pickedMonth && pickedTopic;
 
@@ -153,30 +151,7 @@ const Chat = () => {
     setPickedMonth(null);
     setPickedTopic(null);
     setFirstMessageSent(false);
-    setMonthWindow(0);
   };
-
-  // swipe месяцы по 3
-  const visibleMonths = Array.from({ length: 3 }, (_, i) => i + 1 + monthWindow);
-
-  // свайп жесты
-  const handleTouchStart = (e) => {
-    setTouchStartX(e.touches[0].clientX);
-  };
-  const handleTouchMove = (e) => {
-    if (touchStartX === null) return;
-    const currentX = e.touches[0].clientX;
-    const diffX = currentX - touchStartX;
-    if (Math.abs(diffX) > 30) {
-      if (diffX > 0 && monthWindow > 0) {
-        setMonthWindow(monthWindow - 1);
-      } else if (diffX < 0 && monthWindow < 6) {
-        setMonthWindow(monthWindow + 1);
-      }
-      setTouchStartX(null);
-    }
-  };
-  const handleTouchEnd = () => setTouchStartX(null);
 
   return (
     <div
@@ -322,52 +297,32 @@ const Chat = () => {
             </div>
             <div
               style={{
-                display: 'flex',
+                display: "flex",
                 gap: 12,
-                justifyContent: "flex-start",
-                paddingRight: 32
+                overflowX: "auto",
+                padding: "6px 0 6px 0",
+                scrollSnapType: "x mandatory"
               }}
-              onTouchStart={handleTouchStart}
-              onTouchMove={handleTouchMove}
-              onTouchEnd={handleTouchEnd}
             >
-              {visibleMonths.map(month => {
-                let styleBtn;
-                if (pickedMonth === month) {
-                  styleBtn = {
-                    minWidth: 52,
-                    height: 52,
-                    borderRadius: 20,
-                    border: "none",
-                    cursor: inputDisabled ? "not-allowed" : "pointer",
-                    fontSize: 26,
-                    fontWeight: 600,
-                    background: "#fff",
-                    color: "#2575fc",
-                    opacity: 1,
-                    boxShadow: "none",
-                    outline: "none",
-                    marginRight: 9,
-                    transition: "box-shadow 0.2s, background 0.2s, color 0.2s"
-                  };
-                } else {
-                  styleBtn = {
-                    minWidth: 52,
-                    height: 52,
-                    borderRadius: 20,
-                    border: "none",
-                    cursor: inputDisabled ? "not-allowed" : "pointer",
-                    fontSize: 26,
-                    fontWeight: 600,
-                    background: GRADIENT,
-                    color: "#fff",
-                    opacity: 1,
-                    boxShadow: "none",
-                    outline: "none",
-                    marginRight: 9,
-                    transition: "box-shadow 0.2s, background 0.2s, color 0.2s"
-                  };
-                }
+              {[...Array(9)].map((_, i) => {
+                let month = i + 1;
+                let styleBtn = {
+                  minWidth: 52,
+                  height: 52,
+                  borderRadius: 20,
+                  border: "none",
+                  cursor: inputDisabled ? "not-allowed" : "pointer",
+                  fontSize: 26,
+                  fontWeight: 600,
+                  background: pickedMonth === month ? "#fff" : GRADIENT,
+                  color: pickedMonth === month ? "#2575fc" : "#fff",
+                  opacity: 1,
+                  boxShadow: "none",
+                  outline: "none",
+                  scrollSnapAlign: "center",
+                  marginRight: i < 8 ? 9 : 0,
+                  transition: "box-shadow 0.2s, background 0.2s, color 0.2s"
+                };
                 return (
                   <button
                     key={month}
@@ -497,7 +452,7 @@ const Chat = () => {
                 key={idx}
                 style={{
                   display: "flex",
-                  justifyContent: msg.role === "assistant" ? "flex-start" : "flex-end",
+                  justifyContent: "flex-start", // одинаково для всех
                   marginBottom: 12,
                   width: "100%"
                 }}
@@ -516,7 +471,7 @@ const Chat = () => {
                     marginLeft: sidePad,
                     marginRight: sidePad,
                     wordBreak: "break-word",
-                    alignSelf: msg.role === "assistant" ? "flex-start" : "flex-end",
+                    alignSelf: "flex-start",
                     boxShadow: "none",
                     transition: "background 0.4s, color 0.4s"
                   }}
