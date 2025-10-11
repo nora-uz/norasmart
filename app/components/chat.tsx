@@ -10,17 +10,19 @@ const ICONS = {
 };
 
 const BANNER = "https://user-gen-media-assets.s3.amazonaws.com/seedream_images/4c36a715-f500-4186-8955-631a09fac0ed.png";
-const ICON_SIZE_PANEL = 18; // уменьшено
+const ICON_SIZE_PANEL = 18;
 const ICON_SIZE_SEND = 28;
 const BTN_SIZE = 50;
 const SEND_BTN_SIZE = 78;
 const borderRadius = 22;
 const sidePad = 16;
-const blockMargin = 20; // чуть меньше отступ под фотографией
+const blockMargin = 20;
 const panelHeight = 62;
 const maxWidth = 560;
 const GRADIENT = "linear-gradient(90deg, #6a11cb 0%, #2575fc 100%)";
-const GRADIENT_DARK = "linear-gradient(90deg, #232323 0%, #343434 100%)";
+const GRADIENT_GRAY = "linear-gradient(90deg, #dbeafd 0%, #e3e7ea 100%)";
+const GRADIENT_DARK = "linear-gradient(90deg, #C6C9CE 0%, #BEC2C6 100%)";
+const GRADIENT_DISABLED = "linear-gradient(90deg, #edf0f3 0%, #e8e9ea 100%)";
 
 const themes = {
   dark: {
@@ -303,10 +305,11 @@ const Chat = () => {
               justifyContent: "flex-start",
               paddingRight: 32
             }}>
-              {Array.from({ length: 9 }).map((_, i) => (
-                <button
-                  key={i}
-                  style={{
+              {Array.from({ length: 9 }).map((_, i) => {
+                // пока не выбран срок, все яркие
+                let styleBtn;
+                if (!pickedMonth) {
+                  styleBtn = {
                     minWidth: 52,
                     height: 52,
                     borderRadius: 20,
@@ -314,22 +317,60 @@ const Chat = () => {
                     cursor: inputDisabled ? "not-allowed" : "pointer",
                     fontSize: 26,
                     fontWeight: 600,
-                    background: pickedMonth === i + 1
-                      ? GRADIENT
-                      : "linear-gradient(90deg, #ABAAB0 0%, #838383 100%)",
+                    background: GRADIENT,
                     color: "#fff",
-                    opacity: pickedMonth === i + 1 ? 1 : 0.55,
+                    opacity: 1,
                     boxShadow: "none",
                     outline: "none",
                     marginRight: i < 8 ? 9 : 0,
                     transition: "box-shadow 0.2s, background 0.2s, color 0.2s"
-                  }}
-                  disabled={inputDisabled}
-                  onClick={() => handleMonthPick(i + 1)}
-                >
-                  {i + 1}
-                </button>
-              ))}
+                  };
+                } else {
+                  styleBtn = pickedMonth === i + 1
+                    ? {
+                        minWidth: 52,
+                        height: 52,
+                        borderRadius: 20,
+                        border: "none",
+                        cursor: inputDisabled ? "not-allowed" : "pointer",
+                        fontSize: 26,
+                        fontWeight: 600,
+                        background: GRADIENT,
+                        color: "#fff",
+                        opacity: 1,
+                        boxShadow: "none",
+                        outline: "none",
+                        marginRight: i < 8 ? 9 : 0,
+                        transition: "box-shadow 0.2s, background 0.2s, color 0.2s"
+                      }
+                    : {
+                        minWidth: 52,
+                        height: 52,
+                        borderRadius: 20,
+                        border: "none",
+                        cursor: inputDisabled ? "not-allowed" : "pointer",
+                        fontSize: 26,
+                        fontWeight: 600,
+                        background: GRADIENT_GRAY,
+                        color: "#fff",
+                        opacity: 0.5,
+                        boxShadow: "none",
+                        outline: "none",
+                        marginRight: i < 8 ? 9 : 0,
+                        transition: "box-shadow 0.2s, background 0.2s, color 0.2s"
+                      };
+                }
+                return (
+                  <button
+                    key={i}
+                    style={styleBtn}
+                    disabled={inputDisabled}
+                    onClick={() => handleMonthPick(i + 1)}
+                  >
+                    {i + 1}
+                  </button>
+                );
+              })}
             </div>
           </div>
           <div style={{ height: blockMargin }} />
@@ -346,48 +387,90 @@ const Chat = () => {
               Выберите тему для обсуждения:
             </div>
             <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-              {TOPICS.map((topic, i) => (
-                <button
-                  key={i}
-                  style={{
+              {TOPICS.map((topic, i) => {
+                let styleBtn;
+                let isSelected = pickedTopic?.title === topic.title;
+                if (!pickedMonth) {
+                  styleBtn = {
                     width: "100%",
                     borderRadius: 18,
                     border: "none",
-                    cursor: inputDisabled || !pickedMonth ? "not-allowed" : "pointer",
-                    background: pickedTopic?.title === topic.title
-                      ? GRADIENT
-                      : "linear-gradient(90deg, #ABAAB0 0%, #838383 100%)",
+                    cursor: "not-allowed",
+                    background: GRADIENT_DISABLED,
                     color: "#fff",
-                    opacity: pickedTopic?.title === topic.title ? 1 : 0.55,
+                    opacity: 0.4,
                     textAlign: "left",
                     padding: "17px 18px 13px 18px",
                     display: "flex",
                     flexDirection: "column",
                     alignItems: "flex-start",
-                    fontWeight: 600,
-                    transition: "box-shadow 0.2s, background 0.2s, color 0.2s"
-                  }}
-                  disabled={inputDisabled || !pickedMonth}
-                  onClick={() => handleTopicPick(topic)}
-                >
-                  <span style={{
-                    fontSize: 19,
-                    fontWeight: 700,
-                    marginBottom: 5,
-                    color: "#fff"
-                  }}>
-                    {topic.title}
-                  </span>
-                  <span style={{
-                    fontSize: 15,
-                    fontWeight: 400,
-                    opacity: 0.95,
-                    color: "#fff"
-                  }}>
-                    {topic.desc}
-                  </span>
-                </button>
-              ))}
+                    fontWeight: 600
+                  };
+                } else {
+                  styleBtn = isSelected
+                    ? {
+                        width: "100%",
+                        borderRadius: 18,
+                        border: "none",
+                        cursor: inputDisabled ? "not-allowed" : "pointer",
+                        background: GRADIENT,
+                        color: "#fff",
+                        opacity: 1,
+                        textAlign: "left",
+                        padding: "17px 18px 13px 18px",
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "flex-start",
+                        fontWeight: 600,
+                        boxShadow: "none",
+                        outline: "none",
+                        transition: "box-shadow 0.2s, background 0.2s, color 0.2s"
+                      }
+                    : {
+                        width: "100%",
+                        borderRadius: 18,
+                        border: "none",
+                        cursor: inputDisabled ? "not-allowed" : "pointer",
+                        background: GRADIENT_GRAY,
+                        color: "#fff",
+                        opacity: 0.7,
+                        textAlign: "left",
+                        padding: "17px 18px 13px 18px",
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "flex-start",
+                        fontWeight: 600,
+                        boxShadow: "none",
+                        outline: "none",
+                        transition: "box-shadow 0.2s, background 0.2s, color 0.2s"
+                      };
+                }
+                return (
+                  <button
+                    key={i}
+                    style={styleBtn}
+                    disabled={inputDisabled || !pickedMonth}
+                    onClick={() => handleTopicPick(topic)}
+                  >
+                    <span style={{
+                      fontSize: 19,
+                      fontWeight: 700,
+                      marginBottom: 5,
+                      color: "#fff"
+                    }}>
+                      {topic.title}
+                    </span>
+                    <span style={{
+                      fontSize: 15,
+                      fontWeight: 400,
+                      opacity: 0.95,
+                      color: "#fff"
+                    }}>
+                      {topic.desc}
+                    </span>
+                  </button>
+                );
+              })}
             </div>
           </div>
         </div>
