@@ -14,7 +14,7 @@ const Chat = () => {
   const [firstMessageSent, setFirstMessageSent] = useState(false);
   const messagesEndRef = useRef(null);
 
-  const theme = darkMode ? themes.dark : themes.light;
+  const theme = darkMode ? theme.dark : theme.light;
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
