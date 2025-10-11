@@ -9,8 +9,7 @@ const ICONS = {
   arrow: "https://cdn-icons-png.flaticon.com/512/3916/3916848.png"
 };
 
-const BANNER =
-  "https://user-gen-media-assets.s3.amazonaws.com/seedream_images/4c36a715-f500-4186-8955-631a09fac0ed.png";
+const BANNER = "https://user-gen-media-assets.s3.amazonaws.com/seedream_images/4c36a715-f500-4186-8955-631a09fac0ed.png";
 const ICON_SIZE_PANEL = 18;
 const ICON_SIZE_SEND = 28;
 const BTN_SIZE = 50;
@@ -63,27 +62,6 @@ const TOPICS = [
   { title: "Физическая активность", desc: "Можно ли и какую выбрать?" }
 ];
 
-const iconBtn = (bg = "#fff") => ({
-  background: bg,
-  width: BTN_SIZE,
-  height: BTN_SIZE,
-  borderRadius: BTN_SIZE / 2,
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  border: "none",
-  cursor: "pointer"
-});
-const iconImgPanel = {
-  width: ICON_SIZE_PANEL,
-  height: ICON_SIZE_PANEL
-};
-
-const iconImgSend = {
-  width: ICON_SIZE_SEND,
-  height: ICON_SIZE_SEND
-};
-
 const Chat = () => {
   const [userInput, setUserInput] = useState("");
   const [messages, setMessages] = useState([]);
@@ -93,17 +71,21 @@ const Chat = () => {
   const [pickedTopic, setPickedTopic] = useState(null);
   const messagesEndRef = useRef(null);
 
+  const showTemplates = messages.length === 0;
+  const theme = darkMode ? themes.dark : themes.light;
+
   useEffect(() => {
-    window.scrollTo(0, 0);
+    window.scrollTo({ top: 0, behavior: "auto" });
   }, []);
+
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  const showTemplates = messages.length === 0;
-  const theme = darkMode ? themes.dark : themes.light;
+  // Показывать нефиксированное поле, если ещё не выбраны месяц и тема (на главной)
   const showUnfixedInput = showTemplates && (!pickedMonth || !pickedTopic);
-  const showFixedInput = pickedMonth && pickedTopic && showTemplates;
+  // Показывать фиксированное поле, если выбран месяц и тема
+  const showFixedInput = pickedMonth && pickedTopic;
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -159,13 +141,7 @@ const Chat = () => {
           transition: "background 0.4s, color 0.4s"
         }}
       >
-        <div
-          style={{
-            fontWeight: 800,
-            fontSize: 25,
-            marginRight: sidePad
-          }}
-        >
+        <div style={{ fontWeight: 800, fontSize: 25, marginRight: sidePad }}>
           Nora AI
         </div>
         <div
@@ -242,27 +218,22 @@ const Chat = () => {
         >
           {/* Срок беременности */}
           <div style={{ width: "100%" }}>
-            <div
-              style={{
-                fontWeight: 400,
-                fontSize: 15,
-                marginBottom: 18,
-                color: "#c7d3ef",
-                letterSpacing: "0.03em"
-              }}
-            >
+            <div style={{
+              fontWeight: 400,
+              fontSize: 15,
+              marginBottom: 18,
+              color: "#c7d3ef",
+              letterSpacing: "0.03em"
+            }}>
               Выберите срок беременности:
             </div>
-            <div
-              className="months-scroll"
-              style={{
-                display: "flex",
-                gap: 12,
-                overflowX: "auto",
-                justifyContent: "flex-start",
-                paddingRight: 32
-              }}
-            >
+            <div style={{
+              display: "flex",
+              gap: 12,
+              overflowX: "auto",
+              justifyContent: "flex-start",
+              paddingRight: 32
+            }} className="months-scroll">
               {Array.from({ length: 9 }).map((_, i) => (
                 <button
                   key={i}
@@ -292,7 +263,7 @@ const Chat = () => {
                     ]);
                     setInputDisabled(true);
                     setUserInput("");
-                    setPickedTopic(null);
+                    setPickedTopic(null); // сбросить готовую тему
                     setTimeout(() => {
                       const reply = FAKE_ANSWERS[Math.floor(Math.random() * FAKE_ANSWERS.length)];
                       setMessages((prev) => [
@@ -307,25 +278,22 @@ const Chat = () => {
                 </button>
               ))}
             </div>
-            <style>
-              {`
+            <style>{`
               .months-scroll::-webkit-scrollbar { display: none; }
               .months-scroll { scrollbar-width: none; -ms-overflow-style: none; }
-              `}
-            </style>
+            `}</style>
           </div>
+          {/* Отступ между сроком и темами */}
           <div style={{ height: sidePad }} />
           {/* Темы для обсуждения */}
           <div style={{ width: "100%", marginBottom: sidePad }}>
-            <div
-              style={{
-                fontWeight: 400,
-                fontSize: 15,
-                marginBottom: 18,
-                color: "#c7d3ef",
-                letterSpacing: "0.03em"
-              }}
-            >
+            <div style={{
+              fontWeight: 400,
+              fontSize: 15,
+              marginBottom: 18,
+              color: "#c7d3ef",
+              letterSpacing: "0.03em"
+            }}>
               Выберите тему для обсуждения:
             </div>
             <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
@@ -353,10 +321,10 @@ const Chat = () => {
                   disabled={inputDisabled || !pickedMonth}
                   onClick={() => {
                     if (inputDisabled || !pickedMonth) return;
-                    setPickedTopic(topic.title);
+                    setPickedTopic(topic);
                     setMessages((prev) => [
                       ...prev,
-                      { role: "user", text: `Я выбрала тему: ${topic.title}` }
+                      { role: "user", text: `Тема: ${topic.title}. ${topic.desc}` }
                     ]);
                     setInputDisabled(true);
                     setUserInput("");
@@ -370,126 +338,250 @@ const Chat = () => {
                     }, 700);
                   }}
                 >
-                  {topic.title}
-                  <span
-                    style={{
-                      fontWeight: 400,
-                      fontSize: 14,
-                      color: "#eef",
-                      marginTop: 2
-                    }}
-                  >
+                  <span style={{ fontSize: 19, fontWeight: 700, marginBottom: 5 }}>
+                    {topic.title}
+                  </span>
+                  <span style={{ fontSize: 15, fontWeight: 400, opacity: 0.95 }}>
                     {topic.desc}
                   </span>
                 </button>
               ))}
             </div>
           </div>
+          {/* Обычное поле ввода, если НЕ выбраны месяц и тема */}
+          {showUnfixedInput && (
+            <form
+              onSubmit={handleSubmit}
+              style={{
+                width: "100%",
+                marginTop: sidePad,
+                display: "flex",
+                alignItems: "center",
+                boxSizing: "border-box"
+              }}
+            >
+              <input
+                type="text"
+                style={{
+                  flex: 1,
+                  border: "none",
+                  borderRadius: borderRadius,
+                  height: BTN_SIZE,
+                  padding: `0 8px 0 ${sidePad}px`,
+                  fontSize: 21,
+                  background: theme.inputBg,
+                  color: theme.inputText,
+                  outline: "none",
+                  marginRight: 0,
+                  transition: "background 0.4s, color 0.4s"
+                }}
+                value={userInput}
+                onChange={(e) => setUserInput(e.target.value)}
+                placeholder="Введите ваш вопрос"
+                disabled={inputDisabled}
+                className="nora-input"
+              />
+              <button
+                type="submit"
+                style={{
+                  background: "#fff",
+                  color: "#2575fc",
+                  border: "none",
+                  borderRadius: borderRadius,
+                  width: SEND_BTN_SIZE,
+                  height: BTN_SIZE,
+                  marginLeft: sidePad,
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  cursor: inputDisabled ? "not-allowed" : "pointer",
+                  opacity: inputDisabled ? 0.7 : 1,
+                  boxShadow: "none",
+                  transition: "background 0.4s, color 0.4s"
+                }}
+                disabled={inputDisabled}
+              >
+                <img src={ICONS.arrow} alt="Send" style={iconImgSend} />
+              </button>
+            </form>
+          )}
         </div>
       )}
 
-      {/* Сообщения чата */}
       <div
         style={{
-          width: `calc(100% - ${sidePad * 2}px)`,
+          width: "100%",
           maxWidth,
           margin: "0 auto",
-          marginBottom: sidePad,
-          borderRadius: borderRadius,
-          background: theme.panelBg,
-          minHeight: 200,
-          padding: "22px 12px 18px 12px",
-          boxSizing: "border-box"
+          boxSizing: "border-box",
+          flex: 1,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          overflow: "hidden"
         }}
       >
-        {messages.map((msg, idx) => (
-          <div
-            key={idx}
-            style={{
-              display: "flex",
-              justifyContent:
-                msg.role === "user" ? "flex-end" : "flex-start",
-              marginBottom: 14
-            }}
-          >
+        <div
+          style={{
+            width: "100%",
+            flex: 1,
+            minHeight: 0,
+            overflowY: "auto",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "flex-start"
+          }}
+        >
+          {messages.map((msg, idx) => (
             <div
+              key={idx}
               style={{
-                background:
-                  msg.role === "user"
-                    ? theme.userBubble
-                    : theme.assistantBubble,
-                color:
-                  msg.role === "user"
-                    ? theme.userText
-                    : theme.assistantText,
-                borderRadius: 18,
-                padding: "10px 20px",
-                maxWidth: 400,
-                fontWeight: 440,
-                fontSize: 16,
-                whiteSpace: "pre-wrap"
+                display: "flex",
+                justifyContent: msg.role === "assistant" ? "flex-start" : "flex-end",
+                marginBottom: 12,
+                width: "100%"
               }}
             >
-              {msg.text}
+              <div
+                style={{
+                  background: msg.role === "assistant" ? theme.assistantBubble : theme.userBubble,
+                  color: msg.role === "assistant" ? theme.assistantText : theme.userText,
+                  borderRadius: borderRadius,
+                  padding: "14px 20px",
+                  fontSize: 16,
+                  lineHeight: 1.7,
+                  border: "none",
+                  maxWidth: "70%",
+                  minWidth: 54,
+                  marginLeft: sidePad,
+                  marginRight: sidePad,
+                  wordBreak: "break-word",
+                  alignSelf: msg.role === "assistant" ? "flex-start" : "flex-end",
+                  boxShadow: "none",
+                  transition: "background 0.4s, color 0.4s"
+                }}
+              >
+                {msg.text}
+              </div>
             </div>
-          </div>
-        ))}
-        <div ref={messagesEndRef} />
+          ))}
+          <div ref={messagesEndRef} />
+          <div style={{ height: BTN_SIZE + sidePad * 3 }} />
+        </div>
       </div>
 
-      {/* Форма отправки сообщения */}
-      <form
-        style={{
-          width: `calc(100% - ${sidePad * 2}px)`,
-          maxWidth,
-          margin: "0 auto",
-          marginBottom: sidePad,
-          display: "flex",
-          alignItems: "center",
-          gap: 8
-        }}
-        onSubmit={handleSubmit}
-      >
-        <input
-          style={{
-            flex: 1,
-            border: "none",
-            outline: "none",
-            borderRadius: 20,
-            fontSize: 17,
-            background: theme.inputBg,
-            color: theme.inputText,
-            padding: "16px 18px",
-            boxSizing: "border-box",
-            fontWeight: 500,
-            transition: "background 0.3s, color 0.3s"
-          }}
-          placeholder={inputDisabled ? "..." : "Напишите сообщение..."}
-          value={userInput}
-          onChange={(e) => setUserInput(e.target.value)}
-          disabled={inputDisabled}
-        />
-        <button
-          type="submit"
-          style={{
-            width: SEND_BTN_SIZE,
-            height: SEND_BTN_SIZE,
-            borderRadius: SEND_BTN_SIZE / 2,
-            border: "none",
-            background: GRADIENT,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            cursor: inputDisabled ? "not-allowed" : "pointer",
-            opacity: inputDisabled ? 0.7 : 1
-          }}
-          disabled={inputDisabled}
-        >
-          <img src={ICONS.arrow} alt="Send" style={iconImgSend} />
-        </button>
-      </form>
+      {/* Фиксированное поле ввода отображается только если выбран месяц и тема */}
+      {showFixedInput && (
+        <>
+          <div
+            style={{
+              width: "100vw",
+              height: 36,
+              background: darkMode ? "#181A1B" : "#F2F4F5",
+              transition: "background 0.4s"
+            }}
+          />
+          <form
+            onSubmit={handleSubmit}
+            style={{
+              position: "fixed",
+              left: "50%",
+              bottom: sidePad,
+              transform: "translateX(-50%)",
+              width: `calc(100% - ${sidePad * 2}px)`,
+              maxWidth,
+              zIndex: 2600,
+              display: "flex",
+              alignItems: "center",
+              background: "none",
+              boxSizing: "border-box",
+              padding: 0
+            }}
+          >
+            <input
+              type="text"
+              style={{
+                flex: 1,
+                border: "none",
+                borderRadius: borderRadius,
+                height: BTN_SIZE,
+                padding: `0 8px 0 ${sidePad}px`,
+                fontSize: 21,
+                background: theme.inputBg,
+                color: theme.inputText,
+                outline: "none",
+                marginRight: 0,
+                transition: "background 0.4s, color 0.4s"
+              }}
+              value={userInput}
+              onChange={(e) => setUserInput(e.target.value)}
+              placeholder="Введите ваш вопрос"
+              disabled={inputDisabled}
+              className="nora-input"
+            />
+            <button
+              type="submit"
+              style={{
+                background: "#fff",
+                color: "#2575fc",
+                border: "none",
+                borderRadius: borderRadius,
+                width: SEND_BTN_SIZE,
+                height: BTN_SIZE,
+                marginLeft: sidePad,
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                cursor: inputDisabled ? "not-allowed" : "pointer",
+                opacity: inputDisabled ? 0.7 : 1,
+                boxShadow: "none",
+                transition: "background 0.4s, color 0.4s"
+              }}
+              disabled={inputDisabled}
+            >
+              <img src={ICONS.arrow} alt="Send" style={iconImgSend} />
+            </button>
+            <style>{`
+              .nora-input::placeholder {
+                color: ${theme.placeholder};
+                opacity: 1;
+                font-size: 21px;
+              }
+            `}</style>
+          </form>
+        </>
+      )}
     </div>
   );
+};
+
+const iconBtn = (color) => ({
+  background: color,
+  border: "none",
+  cursor: "pointer",
+  width: BTN_SIZE,
+  height: BTN_SIZE,
+  borderRadius: BTN_SIZE / 2,
+  padding: 0,
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  boxShadow: "none"
+});
+
+const iconImgPanel = {
+  width: ICON_SIZE_PANEL,
+  height: ICON_SIZE_PANEL,
+  display: "block",
+  background: "none",
+  filter: "brightness(0) invert(1)"
+};
+
+const iconImgSend = {
+  width: ICON_SIZE_SEND,
+  height: ICON_SIZE_SEND,
+  display: "block",
+  background: "none"
 };
 
 export default Chat;
