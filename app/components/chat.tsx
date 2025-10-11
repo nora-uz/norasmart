@@ -9,7 +9,6 @@ const ICONS = {
   trash: "https://cdn-icons-png.flaticon.com/512/3917/3917772.png",
   arrow: "https://cdn-icons-png.flaticon.com/512/3916/3916848.png"
 };
-
 const BANNER = "https://user-gen-media-assets.s3.amazonaws.com/seedream_images/4c36a715-f500-4186-8955-631a09fac0ed.png";
 const ICON_SIZE_PANEL = 18;
 const ICON_SIZE_SEND = 28;
@@ -307,9 +306,31 @@ const Chat: React.FC = () => {
           }}
         />
       </div>
+
+      {/* шаблонное сообщение сразу после баннера */}
+      {(firstMessageSent && messages.length > 0) && (
+        <div style={{
+          width: "100%",
+          maxWidth,
+          margin: "20px auto 0 auto",
+          marginLeft: 20,
+          marginRight: 20,
+          background: "#F6F7FB",
+          color: "#232323",
+          borderRadius: borderRadius,
+          padding: "18px 22px",
+          fontSize: 16,
+          lineHeight: 1.7,
+          border: "none",
+          boxShadow: "none",
+          textAlign: "left"
+        }}>
+          {messages[0]?.text}
+        </div>
+      )}
+
       <div style={{ height: blockMargin }} />
 
-      {/* Выбор месяца и темы */}
       {showSteps && (
         <div style={{
           width: `calc(100% - 40px)`,
@@ -437,41 +458,14 @@ const Chat: React.FC = () => {
         </div>
       )}
 
-      {/* Только шаблонный первый вопрос, без быстрых ответов */}
-      {(firstMessageSent && messages.length > 0) && (
-        <>
-          <div style={{ height: blockMargin }} />
-          <div style={{
-            width: "100%",
-            maxWidth,
-            margin: "0 auto",
-            paddingLeft: 20,
-            paddingRight: 20
-          }}>
-            <div style={{
-              background: "#F6F7FB",
-              color: "#232323",
-              borderRadius: borderRadius,
-              padding: "14px 20px",
-              fontSize: 16,
-              lineHeight: 1.7,
-              border: "none",
-              boxShadow: "none",
-              textAlign: "left",
-              marginBottom: blockMargin
-            }}>
-              {messages[0]?.text}
-            </div>
-          </div>
-        </>
-      )}
-
-      {/* Чат сообщения */}
+      {/* Чат сообщения ниже шаблона */}
       {!showSteps && firstMessageSent && (
         <div style={{
           width: "100%",
           maxWidth,
-          margin: "0 auto",
+          margin: "20px auto 0 auto",
+          marginLeft: 20,
+          marginRight: 20,
           boxSizing: "border-box",
           flex: 1,
           display: "flex",
@@ -529,69 +523,73 @@ const Chat: React.FC = () => {
       <form
         onSubmit={handleSubmit}
         style={{
-          position: showFixedInput ? "fixed" as const : "static" as const,
-          left: showFixedInput ? "50%" : "auto",
-          bottom: showFixedInput ? blockMargin : "auto",
-          transform: showFixedInput ? "translateX(-50%)" : "none",
-          width: `calc(100% - 40px)`,
+          width: "100%",
           maxWidth,
-          margin: showFixedInput ? 0 : `0 auto`,
-          zIndex: showFixedInput ? 2600 : "auto",
+          margin: "0 auto",
+          padding: "0 20px",
           display: "flex",
-          alignItems: "center" as const,
-          background: "none",
-          boxSizing: "border-box",
-          padding: 0
+          alignItems: "center",
+          boxSizing: "border-box"
         }}
       >
-        <input
-          type="text"
-          style={{
-            flex: 1,
-            border: "none",
-            borderRadius: borderRadius,
-            height: BTN_SIZE,
-            padding: `0 8px 0 16px`,
-            fontSize: 21,
-            background: theme.inputBg,
-            color: theme.inputText,
-            outline: "none",
-            marginRight: 0,
-            transition: "background 0.4s, color 0.4s"
-          }}
-          value={userInput}
-          onChange={(e) => setUserInput(e.target.value)}
-          placeholder="Введите ваш вопрос"
-          disabled={inputDisabled}
-          className="nora-input"
-        />
-        <button
-          type="submit"
-          style={{
-            background: "#fff",
-            color: "#2575fc",
-            border: "none",
-            borderRadius: borderRadius,
-            width: SEND_BTN_SIZE,
-            height: BTN_SIZE,
-            marginLeft: 16,
-            display: "flex",
-            justifyContent: "center" as const,
-            alignItems: "center" as const,
-            cursor: inputDisabled ? "not-allowed" : "pointer",
-            opacity: inputDisabled ? 0.7 : 1,
-            boxShadow: "none",
-            transition: "background 0.4s, color 0.4s"
-          }}
-          disabled={inputDisabled}
-        >
-          <img src={ICONS.arrow} alt="Send" style={iconImgSend} />
-        </button>
+        <div style={{
+          display: "flex",
+          alignItems: "center",
+          background: theme.inputBg,
+          borderRadius: borderRadius,
+          flex: 1,
+          height: 62,
+          boxShadow: "none"
+        }}>
+          <input
+            type="text"
+            style={{
+              flex: 1,
+              border: "none",
+              borderRadius: borderRadius,
+              height: "100%",
+              padding: "0 12px",
+              fontSize: 22,
+              background: "transparent",
+              color: theme.inputText,
+              outline: "none"
+            }}
+            value={userInput}
+            onChange={e => setUserInput(e.target.value)}
+            placeholder="Введите ваш вопрос"
+            disabled={inputDisabled}
+            className="nora-input"
+          />
+          <button
+            type="submit"
+            style={{
+              background: "#fff",
+              color: "#2575fc",
+              border: "none",
+              borderTopRightRadius: borderRadius,
+              borderBottomRightRadius: borderRadius,
+              borderTopLeftRadius: 0,
+              borderBottomLeftRadius: 0,
+              width: 62,
+              height: 62,
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              cursor: inputDisabled ? "not-allowed" : "pointer",
+              opacity: inputDisabled ? 0.7 : 1,
+              boxShadow: "none",
+              marginLeft: 0
+            }}
+            disabled={inputDisabled}
+          >
+            <img src={ICONS.arrow} alt="Send" style={iconImgSend} />
+          </button>
+        </div>
         <style>{`
           .nora-input::placeholder {
             color: ${theme.placeholder};
             opacity: 1;
-            font-size: 21px;
+            font-size: 22px;
           }
         `}</style>
       </form>
