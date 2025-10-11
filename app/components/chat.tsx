@@ -56,8 +56,77 @@ const TOPICS = [
   { title: "Физическая активность", desc: "Можно ли и какую выбрать?" }
 ];
 
-const API_URL = "https://api.openai.com/v1/assistants/asst_O0ENHkHsICvLEjBXleQpyqDx/messages";
 const OPENAI_API_KEY = "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";
+const ASSISTANT_ID = "asst_O0ENHkHsICvLEjBXleQpyqDx";
+
+async function getAssistantReply(messagesArr) {
+  // 1. Создаём Thread
+  const threadRes = await fetch("https://api.openai.com/v1/threads", {
+    method: "POST",
+    headers: {
+      "Authorization": `Bearer ${OPENAI_API_KEY}`,
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({})
+  });
+  const threadData = await threadRes.json();
+  const thread_id = threadData.id;
+
+  // 2. Добавляем сообщения
+  for (const message of messagesArr) {
+    await fetch(`https://api.openai.com/v1/threads/${thread_id}/messages`, {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${OPENAI_API_KEY}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        role: message.role,
+        content: message.text
+      })
+    });
+  }
+
+  // 3. Запускаем ассистента
+  const runRes = await fetch(`https://api.openai.com/v1/threads/${thread_id}/runs`, {
+    method: "POST",
+    headers: {
+      "Authorization": `Bearer ${OPENAI_API_KEY}`,
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      assistant_id: ASSISTANT_ID
+    })
+  });
+  const runData = await runRes.json();
+  const run_id = runData.id;
+
+  // 4. Ожидаем завершения run через polling
+  let status = runData.status;
+  while (status !== "completed" && status !== "failed" && status !== "requires_action" && status !== "expired") {
+    await new Promise(res => setTimeout(res, 1200));
+    const pollRes = await fetch(`https://api.openai.com/v1/threads/${thread_id}/runs/${run_id}`, {
+      headers: {
+        "Authorization": `Bearer ${OPENAI_API_KEY}`,
+        "Content-Type": "application/json"
+      }
+    });
+    const pollData = await pollRes.json();
+    status = pollData.status;
+  }
+
+  // 5. Получаем все сообщения и находим ответ ассистента
+  const msgRes = await fetch(`https://api.openai.com/v1/threads/${thread_id}/messages`, {
+    headers: {
+      "Authorization": `Bearer ${OPENAI_API_KEY}`,
+      "Content-Type": "application/json"
+    }
+  });
+  const msgData = await msgRes.json();
+  const assistantMsgObj = msgData.data.reverse().find(m => m.role === "assistant");
+  const assistantMessage = assistantMsgObj?.content?.[0]?.text || assistantMsgObj?.content?.[0]?.value || "Нет ответа";
+  return assistantMessage;
+}
 
 const Chat = () => {
   const [userInput, setUserInput] = useState("");
@@ -96,30 +165,17 @@ const Chat = () => {
     ]);
     setFirstMessageSent(true);
     setUserInput("");
-
     setInputDisabled(true);
-    try {
-      const history = [
-        { role: "user", text: templateMessage }
-      ];
-      const response = await fetch(API_URL, {
-        method: "POST",
-        headers: {
-          "Authorization": `Bearer ${OPENAI_API_KEY}`,
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          messages: history.map(m => ({ role: m.role, content: m.text })),
-        })
-      });
-      const result = await response.json();
-      const assistantMessage = result.choices?.[0]?.message?.content || result.result || "Нет ответа";
 
+    try {
+      const assistantReply = await getAssistantReply([
+        { role: "user", text: templateMessage }
+      ]);
       setMessages(prev => [
         ...prev,
-        { role: "assistant", text: assistantMessage }
+        { role: "assistant", text: assistantReply }
       ]);
-    } catch (error) {
+    } catch {
       setMessages(prev => [
         ...prev,
         { role: "assistant", text: "Ошибка ответа ассистента, попробуйте позже." }
@@ -137,7 +193,7 @@ const Chat = () => {
     setInputDisabled(true);
 
     try {
-      const history = [
+      const userHistory = [
         ...(pickedMonth
           ? [{ role: "user", text: `Мой срок беременности: ${pickedMonth} месяц` }]
           : []),
@@ -149,25 +205,12 @@ const Chat = () => {
         })),
         { role: "user", text: userInput }
       ];
-
-      const response = await fetch(API_URL, {
-        method: "POST",
-        headers: {
-          "Authorization": `Bearer ${OPENAI_API_KEY}`,
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          messages: history.map(m => ({ role: m.role, content: m.text })),
-        })
-      });
-      const result = await response.json();
-      const assistantMessage = result.choices?.[0]?.message?.content || result.result || "Нет ответа";
-
+      const assistantReply = await getAssistantReply(userHistory);
       setMessages(prev => [
         ...prev,
-        { role: "assistant", text: assistantMessage }
+        { role: "assistant", text: assistantReply }
       ]);
-    } catch (error) {
+    } catch {
       setMessages(prev => [
         ...prev,
         { role: "assistant", text: "Ошибка ответа ассистента, попробуйте позже." }
@@ -196,12 +239,10 @@ const Chat = () => {
         transition: "background 0.4s"
       }}
     >
-      {/* --- ГЛОБАЛЬНЫЕ СТИЛИ --- */}
       <style>{`
         .months-scroll::-webkit-scrollbar { display: none; }
         .months-scroll { scrollbar-width: none; -ms-overflow-style: none; }
       `}</style>
-
       <div style={{ height: blockMargin }} />
       <div
         style={{
@@ -306,7 +347,6 @@ const Chat = () => {
           </div>
         </>
       )}
-      {/* --- ВЫБОР МЕСЯЦА и ТЕМЫ --- */}
       {showSteps && (
         <div
           style={{
@@ -322,7 +362,6 @@ const Chat = () => {
             alignItems: "center"
           }}
         >
-          {/* Заголовок "Выберите срок беременности:" */}
           <div style={{ width: "100%" }}>
             <div style={{
               fontWeight: 400,
@@ -462,7 +501,6 @@ const Chat = () => {
           </div>
         </div>
       )}
-      {/* ---- Чат ---- */} 
       {!showSteps && firstMessageSent && (
         <div
           style={{
