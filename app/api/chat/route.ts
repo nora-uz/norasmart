@@ -2,15 +2,16 @@ import { NextRequest } from "next/server";
 import OpenAI from "openai";
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
-const assistant_id = process.env.OPENAI_ASSISTANT_ID; // ваш ID ассистента
+const assistant_id = process.env.OPENAI_ASSISTANT_ID; // Ваш assistant_id из платформы OpenAI
 
 export async function POST(req: NextRequest) {
   try {
     const { messages } = await req.json();
-    // Создаём thread, если его ещё нет
+
+    // Создание thread для сессии диалога
     const thread = await openai.beta.threads.create();
 
-    // Добавляем сообщение пользователя
+    // Добавляем последнее сообщение пользователя
     await openai.beta.threads.messages.create(thread.id, {
       role: "user",
       content: messages.at(-1).text,
@@ -21,21 +22,28 @@ export async function POST(req: NextRequest) {
       assistant_id,
     });
 
-    // Ожидаем завершения (или опрашиваем статусы, если хотите)
+    // Дожидаемся завершения run
     let status = run.status;
     let run_id = run.id;
-    while (status !== "completed" && status !== "failed" && status !== "cancelled") {
-      // Можно явно ждать пару секунд между запросами
+    while (
+      status !== "completed" &&
+      status !== "failed" &&
+      status !== "cancelled"
+    ) {
       await new Promise((res) => setTimeout(res, 1500));
       const updatedRun = await openai.beta.threads.runs.retrieve(thread.id, run_id);
       status = updatedRun.status;
     }
 
-    // Получаем сообщения ассистента
+    // Получаю последнее сообщение ассистента, только текст!
     const threadMessages = await openai.beta.threads.messages.list(thread.id);
-    const assistantMsg = threadMessages.data.find(
-      (msg) => msg.role === "assistant"
-    )?.content[0]?.text.value;
+
+    const assistantMessage = threadMessages.data.find((msg: any) => msg.role === "assistant");
+    let assistantMsg = "";
+    if (assistantMessage) {
+      const textBlock = assistantMessage.content.find((block: any) => block.type === "text");
+      assistantMsg = textBlock ? textBlock.text.value : "";
+    }
 
     return new Response(JSON.stringify({ reply: assistantMsg }), {
       status: 200,
