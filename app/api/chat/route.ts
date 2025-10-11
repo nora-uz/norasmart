@@ -1,8 +1,8 @@
 import { NextRequest } from "next/server";
 import OpenAI from "openai";
 
-// Впишите ваш личный assistant_id:
-const assistant_id = "ваш_id_ассистента"; // пример: "asst_abc123..."
+// Ваш assistant_id:
+const assistant_id = "asst_O0ENHkHsICvLEjBXleQpyqDx";
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
@@ -10,10 +10,10 @@ export async function POST(req: NextRequest) {
   try {
     const { messages } = await req.json();
 
-    // Создать thread для диалога
+    // Создать thread
     const thread = await openai.beta.threads.create();
 
-    // Добавить новое сообщение пользователя
+    // Добавить последнее сообщение пользователя
     const userText = messages.at(-1)?.text;
     if (!userText) throw new Error("User message cannot be empty.");
     await openai.beta.threads.messages.create(thread.id, {
@@ -26,7 +26,7 @@ export async function POST(req: NextRequest) {
       assistant_id,
     });
 
-    // Дождаться завершения работы ассистента
+    // Ждать завершения работы ассистента (polling)
     let status = run.status;
     let run_id = run.id;
     while (status !== "completed" && status !== "failed" && status !== "cancelled") {
@@ -35,7 +35,7 @@ export async function POST(req: NextRequest) {
       status = updatedRun.status;
     }
 
-    // Получить и собрать текстовые блоки из ответа ассистента
+    // Собрать все текстовые блоки из ответа ассистента
     const threadMessages = await openai.beta.threads.messages.list(thread.id);
     const assistantMessage = threadMessages.data.find((msg: any) => msg.role === "assistant");
     let assistantMsg = "";
@@ -51,7 +51,7 @@ export async function POST(req: NextRequest) {
       headers: { "Content-Type": "application/json" }
     });
   } catch (error: any) {
-    // Логируем ошибку для дальнейшей диагностики
+    // Показываем текст ошибки для диагностики
     console.error(error);
     return new Response(JSON.stringify({ error: String(error?.message ?? error) }), {
       status: 500,
