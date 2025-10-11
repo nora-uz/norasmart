@@ -22,31 +22,7 @@ const panelHeight = 62;
 const maxWidth = 560;
 const GRADIENT = "linear-gradient(90deg, #6a11cb 0%, #2575fc 100%)";
 
-const themes = {
-  dark: {
-    panelBg: "#232323",
-    bgColor: "#1C1C1C",
-    userBubble: "#343434",
-    userText: "#fff",
-    inputBg: "#232323",
-    inputText: "#fff",
-    placeholder: "#888",
-    assistantBubble: "#262939",
-    assistantText: "#fff"
-  },
-  light: {
-    panelBg: "#F6F7FB",
-    bgColor: "#F9FAFC",
-    userBubble: "#fff",
-    userText: "#333",
-    inputBg: "#F6F7FB",
-    inputText: "#222",
-    placeholder: "#333",
-    assistantBubble: "#E8EAED",
-    assistantText: "#333"
-  }
-};
-
+// темы для выбора
 const TOPICS = [
   { title: "Сон", desc: "Проблемы с бессонницей и усталостью" },
   { title: "Питание", desc: "Рацион и полезные продукты" },
@@ -55,6 +31,15 @@ const TOPICS = [
   { title: "Самочувствие", desc: "Физическое и эмоциональное состояние" },
   { title: "Витамины", desc: "Что принимать, когда и зачем" },
   { title: "Физическая активность", desc: "Можно ли и какую выбрать?" }
+];
+
+// готовые ответы для выбора
+const READY_ANSWERS = [
+  "Что принимать при бессоннице?",
+  "Как улучшить питание?",
+  "Нормы витаминов в 6 месяц?",
+  "Физическая активность для беременных?",
+  "Как справиться со стрессом?"
 ];
 
 type Role = "user" | "assistant";
@@ -102,6 +87,31 @@ const iconImgSend = {
   height: ICON_SIZE_SEND,
   display: "block" as const,
   background: "none"
+};
+
+const themes = {
+  dark: {
+    panelBg: "#232323",
+    bgColor: "#1C1C1C",
+    userBubble: "#343434",
+    userText: "#fff",
+    inputBg: "#232323",
+    inputText: "#fff",
+    placeholder: "#888",
+    assistantBubble: "#262939",
+    assistantText: "#fff"
+  },
+  light: {
+    panelBg: "#F6F7FB",
+    bgColor: "#F9FAFC",
+    userBubble: "#fff",
+    userText: "#333",
+    inputBg: "#F6F7FB",
+    inputText: "#222",
+    placeholder: "#333",
+    assistantBubble: "#E8EAED",
+    assistantText: "#333"
+  }
 };
 
 const Chat: React.FC = () => {
@@ -171,6 +181,11 @@ const Chat: React.FC = () => {
     await streamBotResponse(templateMessage, [{ role: "user" as Role, text: templateMessage }]);
   };
 
+  const handleReadyAnswer = (answer: string) => {
+    setUserInput(answer);
+    setFirstMessageSent(true);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!userInput.trim() || inputDisabled) return;
@@ -200,9 +215,9 @@ const Chat: React.FC = () => {
       fontSize: 16,
       lineHeight: 1.7,
       border: "none",
-      width: `calc(100% - ${sidePad * 4}px)`,
-      marginLeft: sidePad * 2,
-      marginRight: sidePad * 2,
+      width: `calc(100% - 40px)`,
+      marginLeft: 20,
+      marginRight: 20,
       wordBreak: "break-word" as const,
       alignSelf: "flex-start" as const,
       boxShadow: "none",
@@ -221,8 +236,8 @@ const Chat: React.FC = () => {
       border: "none",
       maxWidth: "65%",
       minWidth: 54,
-      marginLeft: sidePad * 2,
-      marginRight: sidePad * 2,
+      marginLeft: 20,
+      marginRight: 20,
       wordBreak: "break-word" as const,
       alignSelf: "flex-end" as const,
       boxShadow: "none",
@@ -249,7 +264,7 @@ const Chat: React.FC = () => {
       <div style={{ height: blockMargin }} />
       <div
         style={{
-          width: `calc(100% - ${sidePad * 2}px)`,
+          width: `calc(100% - 40px)`,
           maxWidth,
           height: panelHeight,
           margin: "0 auto",
@@ -284,7 +299,7 @@ const Chat: React.FC = () => {
       <div style={{ height: blockMargin }} />
       <div
         style={{
-          width: `calc(100% - ${sidePad * 2}px)`,
+          width: `calc(100% - 40px)`,
           maxWidth,
           margin: "0 auto",
           borderRadius: 26,
@@ -310,47 +325,192 @@ const Chat: React.FC = () => {
       </div>
       <div style={{ height: blockMargin }} />
 
+      {/* Выбор месяца и темы */}
+      {showSteps && (
+        <div style={{
+          width: `calc(100% - 40px)`,
+          maxWidth,
+          margin: "0 auto",
+          borderRadius: borderRadius,
+          background: theme.inputBg,
+          marginBottom: blockMargin,
+          padding: `${sidePad + 2}px 20px ${sidePad + 6}px 20px`,
+          display: "flex",
+          flexDirection: "column" as const,
+          alignItems: "center" as const
+        }}>
+          <div style={{ width: "100%" }}>
+            <div style={{
+              fontWeight: 400,
+              fontSize: 17,
+              marginBottom: blockMargin,
+              color: "#fff",
+              letterSpacing: "0.03em"
+            }}>
+              Выберите срок беременности:
+            </div>
+            <div className="months-scroll" style={{
+              display: "flex",
+              gap: 12,
+              overflowX: "auto",
+              padding: "6px 0 6px 0",
+              scrollSnapType: "x mandatory"
+            }}>
+              {[...Array(9)].map((_, i) => {
+                let month = i + 1;
+                let styleBtn = {
+                  minWidth: 52,
+                  height: 52,
+                  borderRadius: 20,
+                  border: "none",
+                  cursor: inputDisabled ? "not-allowed" : "pointer",
+                  fontSize: 26,
+                  fontWeight: 600,
+                  background: pickedMonth === month ? "#fff" : GRADIENT,
+                  color: pickedMonth === month ? "#2575fc" : "#fff",
+                  opacity: 1,
+                  boxShadow: "none",
+                  outline: "none",
+                  scrollSnapAlign: "center" as const,
+                  marginRight: i < 8 ? 9 : 0,
+                  transition: "box-shadow 0.2s, background 0.2s, color 0.2s"
+                };
+                return (
+                  <button
+                    key={month}
+                    style={styleBtn}
+                    disabled={inputDisabled}
+                    onClick={() => handleMonthPick(month)}
+                  >
+                    {month}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+          <div style={{ height: blockMargin }} />
+          <div style={{ width: "100%", marginBottom: 0 }}>
+            <div style={{
+              fontWeight: 400,
+              fontSize: 17,
+              marginBottom: blockMargin,
+              color: "#fff",
+              letterSpacing: "0.03em"
+            }}>
+              Выберите тему для обсуждения:
+            </div>
+            <div style={{ display: "flex", flexDirection: "column" as const, gap: 16 }}>
+              {TOPICS.map((topic, i) => {
+                let isSelected = pickedTopic?.title === topic.title;
+                let disabled = inputDisabled || !pickedMonth;
+                let styleBtn = {
+                  width: "100%",
+                  borderRadius: 18,
+                  border: "none",
+                  cursor: disabled ? "not-allowed" : "pointer",
+                  background: isSelected ? "#fff" : GRADIENT,
+                  color: isSelected ? "#2575fc" : "#fff",
+                  opacity: disabled ? 0.45 : 1,
+                  textAlign: "left" as const,
+                  padding: "17px 18px 13px 18px",
+                  display: "flex",
+                  flexDirection: "column" as const,
+                  alignItems: "flex-start" as const,
+                  fontWeight: 600,
+                  boxShadow: "none",
+                  outline: "none",
+                  filter: disabled ? "brightness(0.7) grayscale(0.4)" : "none",
+                  transition: "box-shadow 0.2s, background 0.2s, color 0.2s"
+                };
+                return (
+                  <button
+                    key={i}
+                    style={styleBtn}
+                    disabled={disabled}
+                    onClick={() => handleTopicPick(topic)}
+                  >
+                    <span style={{
+                      fontSize: 19,
+                      fontWeight: 700,
+                      marginBottom: 5,
+                      color: isSelected ? "#2575fc" : "#fff"
+                    }}>
+                      {topic.title}
+                    </span>
+                    <span style={{
+                      fontSize: 15,
+                      fontWeight: 400,
+                      opacity: 0.95,
+                      color: isSelected ? "#2575fc" : "#fff"
+                    }}>
+                      {topic.desc}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Шаблонный вопрос и готовые ответы */}
       {(firstMessageSent && messages.length > 0) && (
         <>
           <div style={{ height: blockMargin }} />
-          <div style={{ width: "100%", maxWidth, margin: "0 auto" }}>
+          <div style={{
+            width: "100%",
+            maxWidth,
+            margin: "0 auto",
+            paddingLeft: 20,
+            paddingRight: 20
+          }}>
             <div style={{
               background: "#F6F7FB",
-              color: "#1C1C1C",
+              color: "#232323",
               borderRadius: borderRadius,
               padding: "14px 20px",
               fontSize: 16,
               lineHeight: 1.7,
               border: "none",
               boxShadow: "none",
-              textAlign: "left" as const,
+              textAlign: "left",
               marginBottom: blockMargin
             }}>
-              {messages[0].text}
+              {messages[0]?.text}
+            </div>
+            {/* Готовые ответы */}
+            <div style={{
+              display: "flex",
+              flexWrap: "wrap",
+              gap: 10,
+              marginBottom: blockMargin
+            }}>
+              {READY_ANSWERS.map((answer, idx) => (
+                <button
+                  key={idx}
+                  style={{
+                    background: GRADIENT,
+                    color: "#fff",
+                    border: "none",
+                    borderRadius: 14,
+                    padding: "12px 16px",
+                    fontSize: 15,
+                    cursor: inputDisabled ? "not-allowed" : "pointer",
+                    opacity: inputDisabled ? 0.6 : 1,
+                    marginBottom: 6,
+                  }}
+                  disabled={inputDisabled}
+                  onClick={() => handleReadyAnswer(answer)}
+                >
+                  {answer}
+                </button>
+              ))}
             </div>
           </div>
         </>
       )}
 
-      {showSteps && (
-        <div style={{
-          width: `calc(100% - ${sidePad * 2}px)`,
-          maxWidth,
-          margin: "0 auto",
-          borderRadius: borderRadius,
-          background: theme.inputBg,
-          marginBottom: blockMargin,
-          padding: `${sidePad + 2}px ${sidePad}px ${sidePad + 6}px ${sidePad}px`,
-          display: "flex",
-          flexDirection: "column" as const,
-          alignItems: "center" as const
-        }}>
-          {/* ... Выбор месяца и темы, без изменений ... */}
-          {/* ... Оставьте как в вашей оригинальной рабочей версии ... */}
-          {/* ... Для краткости не дублирую, т.к. отличий от вашего примера нет ... */}
-        </div>
-      )}
-
+      {/* Сообщения чата */}
       {!showSteps && firstMessageSent && (
         <div style={{
           width: "100%",
@@ -410,6 +570,7 @@ const Chat: React.FC = () => {
       )}
 
       <div style={{ height: blockMargin }} />
+      {/* Поле ввода сообщения */}
       <form
         onSubmit={handleSubmit}
         style={{
@@ -417,7 +578,7 @@ const Chat: React.FC = () => {
           left: showFixedInput ? "50%" : "auto",
           bottom: showFixedInput ? blockMargin : "auto",
           transform: showFixedInput ? "translateX(-50%)" : "none",
-          width: `calc(100% - ${sidePad * 2}px)`,
+          width: `calc(100% - 40px)`,
           maxWidth,
           margin: showFixedInput ? 0 : `0 auto`,
           zIndex: showFixedInput ? 2600 : "auto",
@@ -444,12 +605,7 @@ const Chat: React.FC = () => {
             transition: "background 0.4s, color 0.4s"
           }}
           value={userInput}
-          onChange={(e) => {
-            setUserInput(e.target.value);
-            if (e.target.value.trim() && !firstMessageSent) {
-              setFirstMessageSent(true);
-            }
-          }}
+          onChange={(e) => setUserInput(e.target.value)}
           placeholder="Введите ваш вопрос"
           disabled={inputDisabled}
           className="nora-input"
