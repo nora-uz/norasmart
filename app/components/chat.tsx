@@ -1,7 +1,31 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
 
-// ...Const ICONS, themes, TOPICS, другие стили и константы оставьте без изменений...
+// --- темы ---
+const themes = {
+  dark: {
+    bgColor: "#22232e",
+    inputBg: "#2f3141",
+    inputText: "#fff",
+    placeholder: "#535572",
+    userBubble: "#303246",
+    userText: "#fff",
+    assistantBubble: "#344378",
+    assistantText: "#fff",
+  },
+  light: {
+    bgColor: "#f8f8f8",
+    inputBg: "#fff",
+    inputText: "#22232e",
+    placeholder: "#b3bad0",
+    userBubble: "#ededfa",
+    userText: "#22232e",
+    assistantBubble: "#e9f5ff",
+    assistantText: "#22232e",
+  }
+};
+
+// ...ICONS, BANNER, TOPICS, переменные стиля и пр. (оставь как у себя)
 
 const Chat = () => {
   const [userInput, setUserInput] = useState("");
@@ -66,14 +90,16 @@ const Chat = () => {
         { role: "user", text: userInput }
       ];
 
-      // --- ВАЖНО: отправка только на свой API ---
+      // Здесь запрос идет к своему API, а не к OpenAI напрямую!
       const response = await fetch("/api/chat", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json"
+        },
         body: JSON.stringify({ messages: history })
       });
       const result = await response.json();
-      const assistantMessage = result.message || "Нет ответа";
+      const assistantMessage = result.text || "Нет ответа";
 
       setMessages(prev => [
         ...prev,
@@ -97,82 +123,12 @@ const Chat = () => {
     setFirstMessageSent(false);
   };
 
+  // ... весь render как у тебя, без изменений
+
   return (
-    <div>
-      {/* --- ВАШИ СТИЛИ, ПАНЕЛЬ, БАННЕР И ВЫБОР МЕСЯЦА/ТЕМЫ без изменений... --- */}
-      {/* --- Рендер сообщений --- */}
-      {!showSteps && firstMessageSent && (
-        <div style={{
-          width: "100%", maxWidth, margin: "0 auto", flex: 1, display: "flex", flexDirection: "column", alignItems: "center", overflow: "hidden"
-        }}>
-          <div style={{ height: blockMargin }} />
-          <div style={{ width: "100%", flex: 1, minHeight: 0, overflowY: "auto", display: "flex", flexDirection: "column", justifyContent: "flex-start" }}>
-            {messages.slice(1).map((msg, idx) => (
-              <div
-                key={idx}
-                style={{
-                  width: "100%",
-                  display: "flex",
-                  justifyContent: msg.first ? "center" : msg.role === "assistant" ? "flex-start" : "flex-end",
-                  marginBottom: 12
-                }}
-              >
-                <div
-                  style={
-                    msg.first
-                      ? {
-                          background: theme.userBubble,
-                          color: theme.userText,
-                          borderRadius: borderRadius,
-                          padding: "14px 20px",
-                          fontSize: 16,
-                          lineHeight: 1.7,
-                          border: "none",
-                          maxWidth: "100%",
-                          width: "100%",
-                          minWidth: 54,
-                          marginLeft: 0,
-                          marginRight: 0,
-                          wordBreak: "break-word",
-                          alignSelf: "center",
-                          boxShadow: "none",
-                          whiteSpace: "pre-line",
-                          textAlign: "left",
-                          transition: "background 0.4s, color 0.4s"
-                        }
-                      : {
-                          background: msg.role === "assistant" ? theme.assistantBubble : theme.userBubble,
-                          color: msg.role === "assistant" ? theme.assistantText : theme.userText,
-                          borderRadius: borderRadius,
-                          padding: "14px 20px",
-                          fontSize: 16,
-                          lineHeight: 1.7,
-                          border: "none",
-                          maxWidth: "70%",
-                          minWidth: 54,
-                          marginLeft: sidePad,
-                          marginRight: sidePad,
-                          wordBreak: "break-word",
-                          alignSelf: "flex-start",
-                          boxShadow: "none",
-                          transition: "background 0.4s, color 0.4s"
-                        }
-                  }
-                >
-                  {msg.text}
-                </div>
-              </div>
-            ))}
-            <div ref={messagesEndRef} />
-            <div style={{ height: BTN_SIZE + sidePad * 3 }} />
-          </div>
-        </div>
-      )}
-      {/* --- Поле ввода, кнопка отправки без изменений... --- */}
-    </div>
+    // ... твоя верстка, все стили, возвращаемая JSX-структура
+    // главное что fetch идет на /api/chat
   );
 };
-
-// ...iconBtn, iconImgPanel, iconImgSend без изменений
 
 export default Chat;
