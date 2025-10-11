@@ -16,13 +16,11 @@ const ICON_SIZE_SEND = 28;
 const BTN_SIZE = 50;
 const SEND_BTN_SIZE = 78;
 const borderRadius = 22;
-const sidePad = 16;
 const blockMargin = 20;
 const panelHeight = 62;
 const maxWidth = 560;
 const GRADIENT = "linear-gradient(90deg, #6a11cb 0%, #2575fc 100%)";
 
-// темы для выбора
 const TOPICS = [
   { title: "Сон", desc: "Проблемы с бессонницей и усталостью" },
   { title: "Питание", desc: "Рацион и полезные продукты" },
@@ -31,15 +29,6 @@ const TOPICS = [
   { title: "Самочувствие", desc: "Физическое и эмоциональное состояние" },
   { title: "Витамины", desc: "Что принимать, когда и зачем" },
   { title: "Физическая активность", desc: "Можно ли и какую выбрать?" }
-];
-
-// готовые ответы для выбора
-const READY_ANSWERS = [
-  "Что принимать при бессоннице?",
-  "Как улучшить питание?",
-  "Нормы витаминов в 6 месяц?",
-  "Физическая активность для беременных?",
-  "Как справиться со стрессом?"
 ];
 
 type Role = "user" | "assistant";
@@ -181,11 +170,6 @@ const Chat: React.FC = () => {
     await streamBotResponse(templateMessage, [{ role: "user" as Role, text: templateMessage }]);
   };
 
-  const handleReadyAnswer = (answer: string) => {
-    setUserInput(answer);
-    setFirstMessageSent(true);
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!userInput.trim() || inputDisabled) return;
@@ -273,7 +257,7 @@ const Chat: React.FC = () => {
           display: "flex",
           alignItems: "center" as const,
           borderRadius: borderRadius,
-          padding: `0 ${sidePad}px`,
+          padding: `0 16px`,
           justifyContent: "flex-start" as const,
           boxSizing: "border-box",
           position: "relative",
@@ -281,7 +265,7 @@ const Chat: React.FC = () => {
           transition: "background 0.4s, color 0.4s"
         }}
       >
-        <div style={{ fontWeight: 800, fontSize: 25, marginRight: sidePad }}>
+        <div style={{ fontWeight: 800, fontSize: 25, marginRight: 16 }}>
           Nora AI
         </div>
         <div style={{ display: "flex", alignItems: "center" as const, gap: 7, marginLeft: "auto" }}>
@@ -291,7 +275,7 @@ const Chat: React.FC = () => {
           <button style={iconBtn("transparent")} onClick={() => window.open("https://t.me/", "_blank")}>
             <img src={ICONS.telegram} alt="Telegram" style={iconImgPanel} />
           </button>
-          <button style={{ ...iconBtn("transparent"), marginRight: -sidePad }} onClick={clearChat}>
+          <button style={{ ...iconBtn("transparent"), marginRight: -16 }} onClick={clearChat}>
             <img src={ICONS.trash} alt="Trash" style={iconImgPanel} />
           </button>
         </div>
@@ -334,7 +318,7 @@ const Chat: React.FC = () => {
           borderRadius: borderRadius,
           background: theme.inputBg,
           marginBottom: blockMargin,
-          padding: `${sidePad + 2}px 20px ${sidePad + 6}px 20px`,
+          padding: `18px 20px 22px 20px`,
           display: "flex",
           flexDirection: "column" as const,
           alignItems: "center" as const
@@ -453,7 +437,7 @@ const Chat: React.FC = () => {
         </div>
       )}
 
-      {/* Шаблонный вопрос и готовые ответы */}
+      {/* Только шаблонный первый вопрос, без быстрых ответов */}
       {(firstMessageSent && messages.length > 0) && (
         <>
           <div style={{ height: blockMargin }} />
@@ -478,39 +462,11 @@ const Chat: React.FC = () => {
             }}>
               {messages[0]?.text}
             </div>
-            {/* Готовые ответы */}
-            <div style={{
-              display: "flex",
-              flexWrap: "wrap",
-              gap: 10,
-              marginBottom: blockMargin
-            }}>
-              {READY_ANSWERS.map((answer, idx) => (
-                <button
-                  key={idx}
-                  style={{
-                    background: GRADIENT,
-                    color: "#fff",
-                    border: "none",
-                    borderRadius: 14,
-                    padding: "12px 16px",
-                    fontSize: 15,
-                    cursor: inputDisabled ? "not-allowed" : "pointer",
-                    opacity: inputDisabled ? 0.6 : 1,
-                    marginBottom: 6,
-                  }}
-                  disabled={inputDisabled}
-                  onClick={() => handleReadyAnswer(answer)}
-                >
-                  {answer}
-                </button>
-              ))}
-            </div>
           </div>
         </>
       )}
 
-      {/* Сообщения чата */}
+      {/* Чат сообщения */}
       {!showSteps && firstMessageSent && (
         <div style={{
           width: "100%",
@@ -564,13 +520,12 @@ const Chat: React.FC = () => {
               </div>
             }
             <div ref={messagesEndRef} />
-            <div style={{ height: BTN_SIZE + sidePad * 3 }} />
+            <div style={{ height: BTN_SIZE + 48 }} />
           </div>
         </div>
       )}
 
       <div style={{ height: blockMargin }} />
-      {/* Поле ввода сообщения */}
       <form
         onSubmit={handleSubmit}
         style={{
@@ -596,7 +551,7 @@ const Chat: React.FC = () => {
             border: "none",
             borderRadius: borderRadius,
             height: BTN_SIZE,
-            padding: `0 8px 0 ${sidePad}px`,
+            padding: `0 8px 0 16px`,
             fontSize: 21,
             background: theme.inputBg,
             color: theme.inputText,
@@ -619,7 +574,7 @@ const Chat: React.FC = () => {
             borderRadius: borderRadius,
             width: SEND_BTN_SIZE,
             height: BTN_SIZE,
-            marginLeft: sidePad,
+            marginLeft: 16,
             display: "flex",
             justifyContent: "center" as const,
             alignItems: "center" as const,
