@@ -244,7 +244,6 @@ const Chat = () => {
       </div>
       <div style={{ height: blockMargin }} />
 
-      {/* Первый message под баннером с уменьшенным отступом */}
       {(firstMessageSent && messages.length > 0) && (
         <div style={{
           width: "100%",
@@ -268,7 +267,6 @@ const Chat = () => {
         </div>
       )}
 
-      {/* Интерактивы выбора до начала чата */}
       {showSteps && (
         <div
           style={{
@@ -295,10 +293,10 @@ const Chat = () => {
             }}>
               Выберите срок беременности:
             </div>
+            {/* УБРАНО overflowX и scroll */}
             <div style={{
               display: "flex",
               gap: 12,
-              overflowX: "auto",
               justifyContent: "flex-start",
               paddingRight: 32
             }}>
