@@ -1,8 +1,8 @@
 import { NextRequest } from "next/server";
 import OpenAI from "openai";
 
-// Укажите ваш собственный assistant_id здесь:
-const assistant_id = "ваш_id_ассистента"; // Замените на свой!
+// Впишите ваш личный assistant_id:
+const assistant_id = "ваш_id_ассистента"; // пример: "asst_abc123..."
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
@@ -10,21 +10,23 @@ export async function POST(req: NextRequest) {
   try {
     const { messages } = await req.json();
 
-    // 1. Создаём новый thread (диалог)
+    // Создать thread для диалога
     const thread = await openai.beta.threads.create();
 
-    // 2. Добавляем последнее сообщение пользователя
+    // Добавить новое сообщение пользователя
+    const userText = messages.at(-1)?.text;
+    if (!userText) throw new Error("User message cannot be empty.");
     await openai.beta.threads.messages.create(thread.id, {
       role: "user",
-      content: messages.at(-1).text,
+      content: userText,
     });
 
-    // 3. Запускаем ассистента
+    // Запустить ассистента
     const run = await openai.beta.threads.runs.create(thread.id, {
       assistant_id,
     });
 
-    // 4. Ожидаем завершения работы ассистента
+    // Дождаться завершения работы ассистента
     let status = run.status;
     let run_id = run.id;
     while (status !== "completed" && status !== "failed" && status !== "cancelled") {
@@ -33,7 +35,7 @@ export async function POST(req: NextRequest) {
       status = updatedRun.status;
     }
 
-    // 5. Получаем ответ ассистента (все текстовые блоки)
+    // Получить и собрать текстовые блоки из ответа ассистента
     const threadMessages = await openai.beta.threads.messages.list(thread.id);
     const assistantMessage = threadMessages.data.find((msg: any) => msg.role === "assistant");
     let assistantMsg = "";
@@ -48,8 +50,10 @@ export async function POST(req: NextRequest) {
       status: 200,
       headers: { "Content-Type": "application/json" }
     });
-  } catch (error) {
-    return new Response(JSON.stringify({ error: "Server error" }), {
+  } catch (error: any) {
+    // Логируем ошибку для дальнейшей диагностики
+    console.error(error);
+    return new Response(JSON.stringify({ error: String(error?.message ?? error) }), {
       status: 500,
       headers: { "Content-Type": "application/json" }
     });
