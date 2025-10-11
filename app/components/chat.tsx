@@ -1,7 +1,31 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
 
-// ... все ваши константы ICONS, BANNER, themes, TOPICS, API_KEY без изменений
+// --- Объявление темы (замени значения на свои/оставь как есть для теста) ---
+const themes = {
+  dark: {
+    bgColor: "#22232e",
+    inputBg: "#2f3141",
+    inputText: "#fff",
+    placeholder: "#535572",
+    userBubble: "#303246",
+    userText: "#fff",
+    assistantBubble: "#344378",
+    assistantText: "#fff",
+  },
+  light: {
+    bgColor: "#f8f8f8",
+    inputBg: "#fff",
+    inputText: "#22232e",
+    placeholder: "#b3bad0",
+    userBubble: "#ededfa",
+    userText: "#22232e",
+    assistantBubble: "#e9f5ff",
+    assistantText: "#22232e",
+  }
+};
+
+// ... остальные ваши константы ICONS, BANNER, TOPICS, API_KEY и пр. без изменений
 
 const Chat = () => {
   // ... хуки
