@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
+import ReactMarkdown from "react-markdown";
 
 const ICONS = {
   telegram: "https://cdn-icons-png.flaticon.com/512/9821/9821637.png",
@@ -74,6 +75,35 @@ async function getAssistantReply(messagesArr: Message[]) {
   }
 }
 
+function iconBtn(color: string) {
+  return {
+    background: color,
+    border: "none",
+    cursor: "pointer",
+    width: BTN_SIZE,
+    height: BTN_SIZE,
+    borderRadius: BTN_SIZE / 2,
+    padding: 0,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    boxShadow: "none"
+  };
+}
+const iconImgPanel = {
+  width: ICON_SIZE_PANEL,
+  height: ICON_SIZE_PANEL,
+  display: "block",
+  background: "none",
+  filter: "brightness(0) invert(1)"
+};
+const iconImgSend = {
+  width: ICON_SIZE_SEND,
+  height: ICON_SIZE_SEND,
+  display: "block",
+  background: "none"
+};
+
 const Chat: React.FC = () => {
   const [userInput, setUserInput] = useState("");
   const [messages, setMessages] = useState<Message[]>([]);
@@ -83,16 +113,19 @@ const Chat: React.FC = () => {
   const [pickedTopic, setPickedTopic] = useState<typeof TOPICS[0] | null>(null);
   const [firstMessageSent, setFirstMessageSent] = useState(false);
   const [waitingBot, setWaitingBot] = useState(false);
+  const [streamedBotText, setStreamedBotText] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const theme = darkMode ? themes.dark : themes.light;
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+  }, [messages, streamedBotText]);
 
+  // SHOWSTEPS/SHOWINPUT
   const showSteps = !(pickedMonth && pickedTopic) && !firstMessageSent;
   const showFixedInput = pickedMonth && pickedTopic;
 
+  // ЧАТ СТАТУС
   const handleMonthPick = (month: number) => {
     if (inputDisabled) return;
     setPickedMonth(month);
@@ -102,55 +135,61 @@ const Chat: React.FC = () => {
     setMessages([]);
   };
 
+  // СТРИМИНГ БОТ ОТВЕТА
+  async function streamBotResponse(msg: string, existing: Message[]) {
+    setStreamedBotText("");
+    setWaitingBot(true);
+    try {
+      // Можно реализовать стриминг через SSE или сторонний endpoint,
+      // а здесь эмулируем по символу.
+      let reply = await getAssistantReply([{ role: "user", text: msg }]);
+      let arr = reply.split("");
+      for (let i = 0; i <= arr.length; i++) {
+        setStreamedBotText(arr.slice(0, i).join(""));
+        await new Promise(r => setTimeout(r, 13)); // Скорость печати
+      }
+      setMessages([
+        ...existing,
+        { role: "assistant", text: reply }
+      ]);
+    } catch {
+      setMessages([
+        ...existing,
+        { role: "assistant", text: "Ошибка ответа ассистента, попробуйте позже." }
+      ]);
+    } finally {
+      setStreamedBotText("");
+      setInputDisabled(false);
+      setWaitingBot(false);
+    }
+  }
+
   const handleTopicPick = async (topic: typeof TOPICS[0]) => {
     if (inputDisabled || !pickedMonth) return;
     setPickedTopic(topic);
     const templateMessage = `Срок беременности: ${pickedMonth} месяц, хочу обсудить ${topic.title.toLowerCase()} и ${topic.desc.toLowerCase()}.`;
-    setMessages([{ role: "user" as Role, text: templateMessage }]);
+    setMessages([{ role: "user", text: templateMessage }]);
     setFirstMessageSent(true);
     setUserInput("");
     setInputDisabled(true);
     setWaitingBot(true);
-
-    try {
-      const assistantReply = await getAssistantReply([{ role: "user" as Role, text: templateMessage }]);
-      setMessages(prev => [...prev, { role: "assistant" as Role, text: assistantReply }]);
-    } catch {
-      setMessages(prev => [
-        ...prev,
-        { role: "assistant" as Role, text: "Ошибка ответа ассистента, попробуйте позже." }
-      ]);
-    } finally {
-      setInputDisabled(false);
-      setWaitingBot(false);
-    }
+    await streamBotResponse(templateMessage, [{ role: "user", text: templateMessage }]);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!userInput.trim() || inputDisabled) return;
     const userHistory: Message[] = [
-      ...(pickedMonth ? [{ role: "user" as Role, text: `Мой срок беременности: ${pickedMonth} месяц` }] : []),
-      ...(pickedTopic ? [{ role: "user" as Role, text: `Тема: ${pickedTopic.title}. ${pickedTopic.desc}` }] : []),
+      ...(pickedMonth ? [{ role: "user", text: `Мой срок беременности: ${pickedMonth} месяц` }] : []),
+      ...(pickedTopic ? [{ role: "user", text: `Тема: ${pickedTopic.title}. ${pickedTopic.desc}` }] : []),
       ...messages.filter(msg => msg.role === "user"),
-      { role: "user" as Role, text: userInput }
+      { role: "user", text: userInput }
     ];
-    setMessages(prev => [...prev, { role: "user" as Role, text: userInput }]);
+    setMessages(prev => [...prev, { role: "user", text: userInput }]);
     setUserInput("");
     setInputDisabled(true);
     setWaitingBot(true);
-    try {
-      const assistantReply = await getAssistantReply(userHistory);
-      setMessages(prev => [...prev, { role: "assistant" as Role, text: assistantReply }]);
-    } catch {
-      setMessages(prev => [
-        ...prev,
-        { role: "assistant" as Role, text: "Ошибка ответа ассистента, попробуйте позже." }
-      ]);
-    } finally {
-      setInputDisabled(false);
-      setWaitingBot(false);
-    }
+    await streamBotResponse(userInput, [...messages, { role: "user", text: userInput }]);
   };
 
   const clearChat = () => {
@@ -160,7 +199,51 @@ const Chat: React.FC = () => {
     setPickedTopic(null);
     setFirstMessageSent(false);
     setWaitingBot(false);
+    setStreamedBotText("");
   };
+
+  // СТИЛИ БОТА
+  function assistantBubbleStyle() {
+    return {
+      background: theme.assistantBubble,
+      color: theme.assistantText,
+      borderRadius: borderRadius,
+      padding: "16px 32px",
+      fontSize: 16,
+      lineHeight: 1.7,
+      border: "none",
+      width: `calc(100% - ${sidePad * 4}px)`,
+      marginLeft: sidePad * 2,
+      marginRight: sidePad * 2,
+      wordBreak: "break-word",
+      alignSelf: "flex-start",
+      boxShadow: "none",
+      textAlign: "left",
+      transition: "background 0.4s, color 0.4s"
+    };
+  }
+
+  // СТИЛИ ПОЛЬЗОВАТЕЛЯ
+  function userBubbleStyle() {
+    return {
+      background: theme.userBubble,
+      color: theme.userText,
+      borderRadius: borderRadius,
+      padding: "14px 32px",
+      fontSize: 16,
+      lineHeight: 1.7,
+      border: "none",
+      maxWidth: "65%",
+      minWidth: 54,
+      marginLeft: sidePad * 2,
+      marginRight: sidePad * 2,
+      wordBreak: "break-word",
+      alignSelf: "flex-end",
+      boxShadow: "none",
+      textAlign: "right",
+      transition: "background 0.4s, color 0.4s"
+    };
+  }
 
   return (
     <div
@@ -276,6 +359,7 @@ const Chat: React.FC = () => {
           flexDirection: "column",
           alignItems: "center"
         }}>
+          {/* MONTHS PICK */}
           <div style={{ width: "100%" }}>
             <div style={{
               fontWeight: 400,
@@ -326,6 +410,7 @@ const Chat: React.FC = () => {
             </div>
           </div>
           <div style={{ height: blockMargin }} />
+          {/* TOPIC PICK */}
           <div style={{ width: "100%", marginBottom: 0 }}>
             <div style={{
               fontWeight: 400,
@@ -340,48 +425,25 @@ const Chat: React.FC = () => {
               {TOPICS.map((topic, i) => {
                 let isSelected = pickedTopic?.title === topic.title;
                 let disabled = inputDisabled || !pickedMonth;
-                let styleBtn;
-                if (isSelected) {
-                  styleBtn = {
-                    width: "100%",
-                    borderRadius: 18,
-                    border: "none",
-                    cursor: disabled ? "not-allowed" : "pointer",
-                    background: "#fff",
-                    color: "#2575fc",
-                    opacity: disabled ? 0.45 : 1,
-                    textAlign: "left",
-                    padding: "17px 18px 13px 18px",
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "flex-start",
-                    fontWeight: 600,
-                    boxShadow: "none",
-                    outline: "none",
-                    filter: disabled ? "brightness(0.7) grayscale(0.4)" : "none",
-                    transition: "box-shadow 0.2s, background 0.2s, color 0.2s"
-                  };
-                } else {
-                  styleBtn = {
-                    width: "100%",
-                    borderRadius: 18,
-                    border: "none",
-                    cursor: disabled ? "not-allowed" : "pointer",
-                    background: GRADIENT,
-                    color: "#fff",
-                    opacity: disabled ? 0.45 : 1,
-                    textAlign: "left",
-                    padding: "17px 18px 13px 18px",
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "flex-start",
-                    fontWeight: 600,
-                    boxShadow: "none",
-                    outline: "none",
-                    filter: disabled ? "brightness(0.7) grayscale(0.4)" : "none",
-                    transition: "box-shadow 0.2s, background 0.2s, color 0.2s"
-                  };
-                }
+                let styleBtn = {
+                  width: "100%",
+                  borderRadius: 18,
+                  border: "none",
+                  cursor: disabled ? "not-allowed" : "pointer",
+                  background: isSelected ? "#fff" : GRADIENT,
+                  color: isSelected ? "#2575fc" : "#fff",
+                  opacity: disabled ? 0.45 : 1,
+                  textAlign: "left",
+                  padding: "17px 18px 13px 18px",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "flex-start",
+                  fontWeight: 600,
+                  boxShadow: "none",
+                  outline: "none",
+                  filter: disabled ? "brightness(0.7) grayscale(0.4)" : "none",
+                  transition: "box-shadow 0.2s, background 0.2s, color 0.2s"
+                };
                 return (
                   <button
                     key={i}
@@ -413,6 +475,7 @@ const Chat: React.FC = () => {
         </div>
       )}
 
+      {/* ЧАТ-СООБЩЕНИЯ */}
       {!showSteps && firstMessageSent && (
         <div style={{
           width: "100%",
@@ -440,45 +503,29 @@ const Chat: React.FC = () => {
                 width: "100%",
                 display: "flex",
                 justifyContent: msg.role === "assistant" ? "flex-start" : "flex-end",
-                marginBottom: 12,
+                marginBottom: 12
               }}>
-                <div style={{
-                  background: msg.role === "assistant" ? theme.assistantBubble : theme.userBubble,
-                  color: msg.role === "assistant" ? theme.assistantText : theme.userText,
-                  borderRadius: borderRadius,
-                  padding: "14px 32px",
-                  fontSize: 16,
-                  lineHeight: 1.7,
-                  border: "none",
-                  maxWidth: "65%",
-                  minWidth: 54,
-                  marginLeft: sidePad * 2,
-                  marginRight: sidePad * 2,
-                  wordBreak: "break-word",
-                  alignSelf: "flex-start",
-                  boxShadow: "none",
-                  transition: "background 0.4s, color 0.4s"
-                }}>
-                  {msg.text}
-                </div>
+                {msg.role === "assistant" ? (
+                  <div style={assistantBubbleStyle()}>
+                    <ReactMarkdown>{msg.text}</ReactMarkdown>
+                  </div>
+                ) : (
+                  <div style={userBubbleStyle()}>
+                    {msg.text}
+                  </div>
+                )}
               </div>
             ))}
-            {waitingBot &&
+            {/* STREAMING БОТ */}
+            {waitingBot && streamedBotText &&
               <div style={{
                 width: "100%",
                 display: "flex",
-                justifyContent: "center",
-                marginBottom: 8
+                justifyContent: "flex-start",
+                marginBottom: 12
               }}>
-                <div style={{
-                  background: "#eee",
-                  color: "#2575fc",
-                  borderRadius: borderRadius,
-                  padding: "10px 25px",
-                  fontSize: 15,
-                  fontStyle: "italic"
-                }}>
-                  Ожидание ответа...
+                <div style={assistantBubbleStyle()}>
+                  <ReactMarkdown>{streamedBotText}</ReactMarkdown>
                 </div>
               </div>
             }
@@ -488,6 +535,7 @@ const Chat: React.FC = () => {
         </div>
       )}
 
+      {/* ВВОД СООБЩЕНИЯ */}
       <div style={{ height: blockMargin }} />
       <form
         onSubmit={handleSubmit}
@@ -566,33 +614,6 @@ const Chat: React.FC = () => {
       <div style={{ height: blockMargin }} />
     </div>
   );
-};
-
-const iconBtn = (color: string) => ({
-  background: color,
-  border: "none",
-  cursor: "pointer",
-  width: BTN_SIZE,
-  height: BTN_SIZE,
-  borderRadius: BTN_SIZE / 2,
-  padding: 0,
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  boxShadow: "none"
-});
-const iconImgPanel = {
-  width: ICON_SIZE_PANEL,
-  height: ICON_SIZE_PANEL,
-  display: "block",
-  background: "none",
-  filter: "brightness(0) invert(1)"
-};
-const iconImgSend = {
-  width: ICON_SIZE_SEND,
-  height: ICON_SIZE_SEND,
-  display: "block",
-  background: "none"
 };
 
 export default Chat;
