@@ -59,72 +59,90 @@ const TOPICS = [
 const OPENAI_API_KEY = "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";
 const ASSISTANT_ID = "asst_O0ENHkHsICvLEjBXleQpyqDx";
 
+/** Ассистент-флоу с обработкой таймаута, ошибок и разблокировкой ввода */
 async function getAssistantReply(messagesArr) {
-  // 1. Создаём Thread
-  const threadRes = await fetch("https://api.openai.com/v1/threads", {
-    method: "POST",
-    headers: {
-      "Authorization": `Bearer ${OPENAI_API_KEY}`,
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({})
-  });
-  const threadData = await threadRes.json();
-  const thread_id = threadData.id;
+  let thread_id = null;
+  let assistantMessage = "Нет ответа";
+  try {
+    // 1. Thread
+    const threadRes = await fetch("https://api.openai.com/v1/threads", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${OPENAI_API_KEY}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({})
+    });
+    const threadData = await threadRes.json();
+    thread_id = threadData.id;
+    if (!thread_id) throw new Error("Ошибка создания thread");
 
-  // 2. Добавляем сообщения
-  for (const message of messagesArr) {
-    await fetch(`https://api.openai.com/v1/threads/${thread_id}/messages`, {
+    // 2. Messages
+    for (const message of messagesArr) {
+      await fetch(`https://api.openai.com/v1/threads/${thread_id}/messages`, {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${OPENAI_API_KEY}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          role: message.role,
+          content: message.text
+        })
+      });
+    }
+
+    // 3. Run ассистента
+    const runRes = await fetch(`https://api.openai.com/v1/threads/${thread_id}/runs`, {
       method: "POST",
       headers: {
         "Authorization": `Bearer ${OPENAI_API_KEY}`,
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        role: message.role,
-        content: message.text
+        assistant_id: ASSISTANT_ID
       })
     });
-  }
+    const runData = await runRes.json();
+    const run_id = runData.id;
+    if (!run_id) throw new Error("Ошибка запуска run");
 
-  // 3. Запускаем ассистента
-  const runRes = await fetch(`https://api.openai.com/v1/threads/${thread_id}/runs`, {
-    method: "POST",
-    headers: {
-      "Authorization": `Bearer ${OPENAI_API_KEY}`,
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      assistant_id: ASSISTANT_ID
-    })
-  });
-  const runData = await runRes.json();
-  const run_id = runData.id;
+    // 4. Polling с лимитом времени
+    let status = runData.status;
+    let attempts = 0;
+    const maxAttempts = 25;
+    while (
+      status !== "completed" &&
+      status !== "failed" &&
+      status !== "requires_action" &&
+      status !== "expired"
+    ) {
+      if (++attempts > maxAttempts) throw new Error("Превышено время ожидания ответа ассистента");
+      await new Promise(res => setTimeout(res, 1200));
+      const pollRes = await fetch(`https://api.openai.com/v1/threads/${thread_id}/runs/${run_id}`, {
+        headers: {
+          "Authorization": `Bearer ${OPENAI_API_KEY}`,
+          "Content-Type": "application/json"
+        }
+      });
+      const pollData = await pollRes.json();
+      status = pollData.status;
+    }
+    if (status !== "completed") throw new Error("Ассистент не ответил, статус: " + status);
 
-  // 4. Ожидаем завершения run через polling
-  let status = runData.status;
-  while (status !== "completed" && status !== "failed" && status !== "requires_action" && status !== "expired") {
-    await new Promise(res => setTimeout(res, 1200));
-    const pollRes = await fetch(`https://api.openai.com/v1/threads/${thread_id}/runs/${run_id}`, {
+    // 5. Получить сообщения ассистента
+    const msgRes = await fetch(`https://api.openai.com/v1/threads/${thread_id}/messages`, {
       headers: {
         "Authorization": `Bearer ${OPENAI_API_KEY}`,
         "Content-Type": "application/json"
       }
     });
-    const pollData = await pollRes.json();
-    status = pollData.status;
+    const msgData = await msgRes.json();
+    const assistantMsgObj = msgData.data.reverse().find(m => m.role === "assistant");
+    assistantMessage = assistantMsgObj?.content?.[0]?.text || assistantMsgObj?.content?.[0]?.value || "Нет ответа";
+  } catch (error) {
+    assistantMessage = `Ошибка: ${error.message}`;
   }
-
-  // 5. Получаем все сообщения и находим ответ ассистента
-  const msgRes = await fetch(`https://api.openai.com/v1/threads/${thread_id}/messages`, {
-    headers: {
-      "Authorization": `Bearer ${OPENAI_API_KEY}`,
-      "Content-Type": "application/json"
-    }
-  });
-  const msgData = await msgRes.json();
-  const assistantMsgObj = msgData.data.reverse().find(m => m.role === "assistant");
-  const assistantMessage = assistantMsgObj?.content?.[0]?.text || assistantMsgObj?.content?.[0]?.value || "Нет ответа";
   return assistantMessage;
 }
 
@@ -136,6 +154,7 @@ const Chat = () => {
   const [pickedMonth, setPickedMonth] = useState(null);
   const [pickedTopic, setPickedTopic] = useState(null);
   const [firstMessageSent, setFirstMessageSent] = useState(false);
+  const [waitingBot, setWaitingBot] = useState(false);
   const messagesEndRef = useRef(null);
 
   const theme = darkMode ? themes.dark : themes.light;
@@ -160,12 +179,11 @@ const Chat = () => {
     setPickedTopic(topic);
     const templateMessage = `Срок беременности: ${pickedMonth} месяц, хочу обсудить ${topic.title.toLowerCase()} и ${topic.desc.toLowerCase()}.`;
 
-    setMessages([
-      { role: "user", text: templateMessage }
-    ]);
+    setMessages([{ role: "user", text: templateMessage }]);
     setFirstMessageSent(true);
     setUserInput("");
     setInputDisabled(true);
+    setWaitingBot(true);
 
     try {
       const assistantReply = await getAssistantReply([
@@ -182,6 +200,7 @@ const Chat = () => {
       ]);
     } finally {
       setInputDisabled(false);
+      setWaitingBot(false);
     }
   };
 
@@ -191,18 +210,13 @@ const Chat = () => {
     setMessages(prev => [...prev, { role: "user", text: userInput }]);
     setUserInput("");
     setInputDisabled(true);
+    setWaitingBot(true);
 
     try {
       const userHistory = [
-        ...(pickedMonth
-          ? [{ role: "user", text: `Мой срок беременности: ${pickedMonth} месяц` }]
-          : []),
-        ...(pickedTopic
-          ? [{ role: "user", text: `Тема: ${pickedTopic.title}. ${pickedTopic.desc}` }]
-          : []),
-        ...messages.filter(msg => msg.role === "user").map(msg => ({
-          role: "user", text: msg.text
-        })),
+        ...(pickedMonth ? [{ role: "user", text: `Мой срок беременности: ${pickedMonth} месяц` }] : []),
+        ...(pickedTopic ? [{ role: "user", text: `Тема: ${pickedTopic.title}. ${pickedTopic.desc}` }] : []),
+        ...messages.filter(msg => msg.role === "user").map(msg => ({ role: "user", text: msg.text })),
         { role: "user", text: userInput }
       ];
       const assistantReply = await getAssistantReply(userHistory);
@@ -217,6 +231,7 @@ const Chat = () => {
       ]);
     } finally {
       setInputDisabled(false);
+      setWaitingBot(false);
     }
   };
 
@@ -226,6 +241,7 @@ const Chat = () => {
     setPickedMonth(null);
     setPickedTopic(null);
     setFirstMessageSent(false);
+    setWaitingBot(false);
   };
 
   return (
@@ -560,6 +576,27 @@ const Chat = () => {
                 </div>
               </div>
             ))}
+            {waitingBot &&
+              <div
+                style={{
+                  width: "100%",
+                  display: "flex",
+                  justifyContent: "center",
+                  marginBottom: 8
+                }}>
+                <div
+                  style={{
+                    background: "#eee",
+                    color: "#2575fc",
+                    borderRadius: borderRadius,
+                    padding: "10px 25px",
+                    fontSize: 15,
+                    fontStyle: "italic"
+                  }}>
+                  Ожидание ответа...
+                </div>
+              </div>
+            }
             <div ref={messagesEndRef} />
             <div style={{ height: BTN_SIZE + sidePad * 3 }} />
           </div>
