@@ -355,17 +355,18 @@ const Chat = () => {
             </div>
             <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
               {TOPICS.map((topic, i) => {
-                let styleBtn;
                 let isSelected = pickedTopic?.title === topic.title;
+                let disabled = inputDisabled || !pickedMonth;
+                let styleBtn;
                 if (isSelected) {
                   styleBtn = {
                     width: "100%",
                     borderRadius: 18,
                     border: "none",
-                    cursor: inputDisabled ? "not-allowed" : "pointer",
+                    cursor: disabled ? "not-allowed" : "pointer",
                     background: "#fff",
                     color: "#2575fc",
-                    opacity: 1,
+                    opacity: disabled ? 0.45 : 1,
                     textAlign: "left",
                     padding: "17px 18px 13px 18px",
                     display: "flex",
@@ -374,6 +375,7 @@ const Chat = () => {
                     fontWeight: 600,
                     boxShadow: "none",
                     outline: "none",
+                    filter: disabled ? "brightness(0.7) grayscale(0.4)" : "none",
                     transition: "box-shadow 0.2s, background 0.2s, color 0.2s"
                   };
                 } else {
@@ -381,10 +383,10 @@ const Chat = () => {
                     width: "100%",
                     borderRadius: 18,
                     border: "none",
-                    cursor: inputDisabled || !pickedMonth ? "not-allowed" : "pointer",
+                    cursor: disabled ? "not-allowed" : "pointer",
                     background: GRADIENT,
                     color: "#fff",
-                    opacity: 1,
+                    opacity: disabled ? 0.45 : 1,
                     textAlign: "left",
                     padding: "17px 18px 13px 18px",
                     display: "flex",
@@ -393,6 +395,7 @@ const Chat = () => {
                     fontWeight: 600,
                     boxShadow: "none",
                     outline: "none",
+                    filter: disabled ? "brightness(0.7) grayscale(0.4)" : "none",
                     transition: "box-shadow 0.2s, background 0.2s, color 0.2s"
                   };
                 }
@@ -400,7 +403,7 @@ const Chat = () => {
                   <button
                     key={i}
                     style={styleBtn}
-                    disabled={inputDisabled || !pickedMonth}
+                    disabled={disabled}
                     onClick={() => handleTopicPick(topic)}
                   >
                     <span style={{
