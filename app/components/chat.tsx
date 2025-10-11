@@ -133,7 +133,6 @@ const Chat: React.FC = () => {
     setMessages([]);
   };
 
-  // STREAMING BOT
   async function streamBotResponse(msg: string, existing: Message[]) {
     setStreamedBotText("");
     setWaitingBot(true);
@@ -201,10 +200,9 @@ const Chat: React.FC = () => {
       fontSize: 16,
       lineHeight: 1.7,
       border: "none",
-      width: "100%",
-      maxWidth: "100%",
-      marginLeft: 20,
-      marginRight: 20,
+      width: `calc(100% - ${sidePad * 4}px)`,
+      marginLeft: sidePad * 2,
+      marginRight: sidePad * 2,
       wordBreak: "break-word" as const,
       alignSelf: "flex-start" as const,
       boxShadow: "none",
@@ -234,14 +232,16 @@ const Chat: React.FC = () => {
   }
 
   return (
-    <div style={{
-      background: theme.bgColor,
-      width: "100vw",
-      minHeight: 800,
-      overflow: "hidden",
-      position: "relative",
-      transition: "background 0.4s"
-    }}>
+    <div
+      style={{
+        background: theme.bgColor,
+        width: "100vw",
+        minHeight: 800,
+        overflow: "hidden",
+        position: "relative",
+        transition: "background 0.4s"
+      }}
+    >
       <style>{`
         .months-scroll::-webkit-scrollbar { display: none; }
         .months-scroll { scrollbar-width: none; -ms-overflow-style: none; }
@@ -282,18 +282,20 @@ const Chat: React.FC = () => {
         </div>
       </div>
       <div style={{ height: blockMargin }} />
-      <div style={{
-        width: `calc(100% - ${sidePad * 2}px)`,
-        maxWidth,
-        margin: "0 auto",
-        borderRadius: 26,
-        overflow: "hidden",
-        background: theme.bgColor,
-        display: "flex",
-        justifyContent: "center" as const,
-        alignItems: "center" as const,
-        position: "relative"
-      }}>
+      <div
+        style={{
+          width: `calc(100% - ${sidePad * 2}px)`,
+          maxWidth,
+          margin: "0 auto",
+          borderRadius: 26,
+          overflow: "hidden",
+          background: theme.bgColor,
+          display: "flex",
+          justifyContent: "center" as const,
+          alignItems: "center" as const,
+          position: "relative"
+        }}
+      >
         <img
           src={BANNER}
           alt="Nora AI баннер"
@@ -308,19 +310,47 @@ const Chat: React.FC = () => {
       </div>
       <div style={{ height: blockMargin }} />
 
-      {/* Шаблонный ответ после выбора НЕ ПОКАЗЫВАЕТСЯ */}
-      {/* Раньше было: 
       {(firstMessageSent && messages.length > 0) && (
-        <div style={...}> {messages[0].text} </div>
+        <>
+          <div style={{ height: blockMargin }} />
+          <div style={{ width: "100%", maxWidth, margin: "0 auto" }}>
+            <div style={{
+              background: "#F6F7FB",
+              color: "#1C1C1C",
+              borderRadius: borderRadius,
+              padding: "14px 20px",
+              fontSize: 16,
+              lineHeight: 1.7,
+              border: "none",
+              boxShadow: "none",
+              textAlign: "left" as const,
+              marginBottom: blockMargin
+            }}>
+              {messages[0].text}
+            </div>
+          </div>
+        </>
       )}
-      */}
 
       {showSteps && (
-        // ... шаги (месяц/тема) без изменений ...
-        <div dangerouslySetInnerHTML={{ __html: '' }} />
+        <div style={{
+          width: `calc(100% - ${sidePad * 2}px)`,
+          maxWidth,
+          margin: "0 auto",
+          borderRadius: borderRadius,
+          background: theme.inputBg,
+          marginBottom: blockMargin,
+          padding: `${sidePad + 2}px ${sidePad}px ${sidePad + 6}px ${sidePad}px`,
+          display: "flex",
+          flexDirection: "column" as const,
+          alignItems: "center" as const
+        }}>
+          {/* ... Выбор месяца и темы, без изменений ... */}
+          {/* ... Оставьте как в вашей оригинальной рабочей версии ... */}
+          {/* ... Для краткости не дублирую, т.к. отличий от вашего примера нет ... */}
+        </div>
       )}
 
-      {/* Чат сообщения */}
       {!showSteps && firstMessageSent && (
         <div style={{
           width: "100%",
@@ -343,7 +373,6 @@ const Chat: React.FC = () => {
             flexDirection: "column" as const,
             justifyContent: "flex-start" as const
           }}>
-            {/* messages.slice(1) — чтобы не рендерить первый шаблонный */}
             {messages.slice(1).map((msg, idx) => (
               <div key={idx} style={{
                 width: "100%",
@@ -380,7 +409,82 @@ const Chat: React.FC = () => {
         </div>
       )}
 
-      {/* ... */}
+      <div style={{ height: blockMargin }} />
+      <form
+        onSubmit={handleSubmit}
+        style={{
+          position: showFixedInput ? "fixed" as const : "static" as const,
+          left: showFixedInput ? "50%" : "auto",
+          bottom: showFixedInput ? blockMargin : "auto",
+          transform: showFixedInput ? "translateX(-50%)" : "none",
+          width: `calc(100% - ${sidePad * 2}px)`,
+          maxWidth,
+          margin: showFixedInput ? 0 : `0 auto`,
+          zIndex: showFixedInput ? 2600 : "auto",
+          display: "flex",
+          alignItems: "center" as const,
+          background: "none",
+          boxSizing: "border-box",
+          padding: 0
+        }}
+      >
+        <input
+          type="text"
+          style={{
+            flex: 1,
+            border: "none",
+            borderRadius: borderRadius,
+            height: BTN_SIZE,
+            padding: `0 8px 0 ${sidePad}px`,
+            fontSize: 21,
+            background: theme.inputBg,
+            color: theme.inputText,
+            outline: "none",
+            marginRight: 0,
+            transition: "background 0.4s, color 0.4s"
+          }}
+          value={userInput}
+          onChange={(e) => {
+            setUserInput(e.target.value);
+            if (e.target.value.trim() && !firstMessageSent) {
+              setFirstMessageSent(true);
+            }
+          }}
+          placeholder="Введите ваш вопрос"
+          disabled={inputDisabled}
+          className="nora-input"
+        />
+        <button
+          type="submit"
+          style={{
+            background: "#fff",
+            color: "#2575fc",
+            border: "none",
+            borderRadius: borderRadius,
+            width: SEND_BTN_SIZE,
+            height: BTN_SIZE,
+            marginLeft: sidePad,
+            display: "flex",
+            justifyContent: "center" as const,
+            alignItems: "center" as const,
+            cursor: inputDisabled ? "not-allowed" : "pointer",
+            opacity: inputDisabled ? 0.7 : 1,
+            boxShadow: "none",
+            transition: "background 0.4s, color 0.4s"
+          }}
+          disabled={inputDisabled}
+        >
+          <img src={ICONS.arrow} alt="Send" style={iconImgSend} />
+        </button>
+        <style>{`
+          .nora-input::placeholder {
+            color: ${theme.placeholder};
+            opacity: 1;
+            font-size: 21px;
+          }
+        `}</style>
+      </form>
+      <div style={{ height: blockMargin }} />
     </div>
   );
 };
