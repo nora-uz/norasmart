@@ -133,6 +133,7 @@ const Chat: React.FC = () => {
     setMessages([]);
   };
 
+  // STREAMING BOT
   async function streamBotResponse(msg: string, existing: Message[]) {
     setStreamedBotText("");
     setWaitingBot(true);
@@ -200,7 +201,8 @@ const Chat: React.FC = () => {
       fontSize: 16,
       lineHeight: 1.7,
       border: "none",
-      width: "auto",
+      width: "100%",
+      maxWidth: "100%",
       marginLeft: 20,
       marginRight: 20,
       wordBreak: "break-word" as const,
@@ -306,35 +308,19 @@ const Chat: React.FC = () => {
       </div>
       <div style={{ height: blockMargin }} />
 
+      {/* Шаблонный ответ после выбора НЕ ПОКАЗЫВАЕТСЯ */}
+      {/* Раньше было: 
       {(firstMessageSent && messages.length > 0) && (
-        <>
-          <div style={{ height: blockMargin }} />
-          <div style={{ width: "100%", maxWidth, margin: "0 auto" }}>
-            <div style={{
-              background: "#F6F7FB",
-              color: "#1C1C1C",
-              borderRadius: borderRadius,
-              padding: "14px 20px",
-              fontSize: 16,
-              lineHeight: 1.7,
-              border: "none",
-              boxShadow: "none",
-              textAlign: "left" as const,
-              marginBottom: blockMargin,
-              marginLeft: 20,
-              marginRight: 20
-            }}>
-              {messages[0].text}
-            </div>
-          </div>
-        </>
+        <div style={...}> {messages[0].text} </div>
       )}
+      */}
 
       {showSteps && (
-        // ... не менялось
+        // ... шаги (месяц/тема) без изменений ...
         <div dangerouslySetInnerHTML={{ __html: '' }} />
       )}
 
+      {/* Чат сообщения */}
       {!showSteps && firstMessageSent && (
         <div style={{
           width: "100%",
@@ -357,6 +343,7 @@ const Chat: React.FC = () => {
             flexDirection: "column" as const,
             justifyContent: "flex-start" as const
           }}>
+            {/* messages.slice(1) — чтобы не рендерить первый шаблонный */}
             {messages.slice(1).map((msg, idx) => (
               <div key={idx} style={{
                 width: "100%",
@@ -393,7 +380,7 @@ const Chat: React.FC = () => {
         </div>
       )}
 
-      {/* ... остальной код формы и т.д. не менялся */}
+      {/* ... */}
     </div>
   );
 };
