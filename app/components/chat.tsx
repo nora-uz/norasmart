@@ -110,19 +110,19 @@ const Chat: React.FC = () => {
     setPickedTopic(topic);
     const templateMessage = `Срок беременности: ${pickedMonth} месяц, хочу обсудить ${topic.title.toLowerCase()} и ${topic.desc.toLowerCase()}.`;
 
-    setMessages([{ role: "user", text: templateMessage }]);
+    setMessages([{ role: "user" as Role, text: templateMessage }]);
     setFirstMessageSent(true);
     setUserInput("");
     setInputDisabled(true);
     setWaitingBot(true);
 
     try {
-      const assistantReply = await getAssistantReply([{ role: "user", text: templateMessage }]);
-      setMessages(prev => [...prev, { role: "assistant", text: assistantReply }]);
+      const assistantReply = await getAssistantReply([{ role: "user" as Role, text: templateMessage }]);
+      setMessages(prev => [...prev, { role: "assistant" as Role, text: assistantReply }]);
     } catch {
       setMessages(prev => [
         ...prev,
-        { role: "assistant", text: "Ошибка ответа ассистента, попробуйте позже." }
+        { role: "assistant" as Role, text: "Ошибка ответа ассистента, попробуйте позже." }
       ]);
     } finally {
       setInputDisabled(false);
@@ -135,27 +135,24 @@ const Chat: React.FC = () => {
     if (!userInput.trim() || inputDisabled) return;
 
     const userHistory: Message[] = [
-      ...(pickedMonth ? [{ role: "user", text: `Мой срок беременности: ${pickedMonth} месяц` }] : []),
-      ...(pickedTopic ? [{ role: "user", text: `Тема: ${pickedTopic.title}. ${pickedTopic.desc}` }] : []),
-      ...messages.filter(msg => msg.role === "user").map(msg => ({
-        role: "user" as const,
-        text: msg.text
-      })),
-      { role: "user", text: userInput }
+      ...(pickedMonth ? [{ role: "user" as Role, text: `Мой срок беременности: ${pickedMonth} месяц` }] : []),
+      ...(pickedTopic ? [{ role: "user" as Role, text: `Тема: ${pickedTopic.title}. ${pickedTopic.desc}` }] : []),
+      ...messages.filter(msg => msg.role === "user"),
+      { role: "user" as Role, text: userInput }
     ];
 
-    setMessages(prev => [...prev, { role: "user", text: userInput }]);
+    setMessages(prev => [...prev, { role: "user" as Role, text: userInput }]);
     setUserInput("");
     setInputDisabled(true);
     setWaitingBot(true);
 
     try {
       const assistantReply = await getAssistantReply(userHistory);
-      setMessages(prev => [...prev, { role: "assistant", text: assistantReply }]);
+      setMessages(prev => [...prev, { role: "assistant" as Role, text: assistantReply }]);
     } catch {
       setMessages(prev => [
         ...prev,
-        { role: "assistant", text: "Ошибка ответа ассистента, попробуйте позже." }
+        { role: "assistant" as Role, text: "Ошибка ответа ассистента, попробуйте позже." }
       ]);
     } finally {
       setInputDisabled(false);
@@ -172,9 +169,9 @@ const Chat: React.FC = () => {
     setWaitingBot(false);
   };
 
-  // ... Весь твой UI как раньше, полностью совместим
+  // Весь визуальный UI-слой, который был в твоём коде – оставляй, менять не нужно
 
-  // --- пример layout ниже ---
+  // ... Ниже твой layout/components as is ...
   return (
     <div style={{
       background: theme.bgColor,
@@ -184,14 +181,12 @@ const Chat: React.FC = () => {
       position: "relative",
       transition: "background 0.4s"
     }}>
-      {/* ... остальной твой красивый UI-код ... */}
-      {/* код оформления панели, баннера, выбора месяца/темы, истории чата, формы ввода — полностью оставляй как было */}
-      {/* Логика работы сохранена — только связь теперь идёт через сервер */}
+      {/* ... Весь остальной UI-код ... */}
+      {/* Тут баннер, выбор месяца/темы, история, форма ввода и кнопки — весь твой дизайн! */}
     </div>
   );
 };
 
-// Объявления style-helpers для кнопок!
 const iconBtn = (color: string) => ({
   background: color,
   border: "none",
