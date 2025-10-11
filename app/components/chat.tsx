@@ -212,11 +212,10 @@ const Chat: React.FC = () => {
       wordBreak: "break-word",
       alignSelf: "flex-start",
       boxShadow: "none",
-      textAlign: "left",
+      textAlign: "left" as const,       // <-- исправлено!
       transition: "background 0.4s, color 0.4s"
     };
   }
-
   function userBubbleStyle() {
     return {
       background: theme.userBubble,
@@ -233,7 +232,7 @@ const Chat: React.FC = () => {
       wordBreak: "break-word",
       alignSelf: "flex-end",
       boxShadow: "none",
-      textAlign: "right",
+      textAlign: "right" as const,      // <-- исправлено!
       transition: "background 0.4s, color 0.4s"
     };
   }
@@ -330,7 +329,7 @@ const Chat: React.FC = () => {
               lineHeight: 1.7,
               border: "none",
               boxShadow: "none",
-              textAlign: "left",
+              textAlign: "left" as const,
               marginBottom: blockMargin
             }}>
               {messages[0].text}
@@ -424,7 +423,7 @@ const Chat: React.FC = () => {
                   background: isSelected ? "#fff" : GRADIENT,
                   color: isSelected ? "#2575fc" : "#fff",
                   opacity: disabled ? 0.45 : 1,
-                  textAlign: "left",
+                  textAlign: "left" as const,                // исправлено!
                   padding: "17px 18px 13px 18px",
                   display: "flex",
                   flexDirection: "column" as const,
