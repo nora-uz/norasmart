@@ -10,12 +10,13 @@ const ICONS = {
 };
 
 const BANNER = "https://user-gen-media-assets.s3.amazonaws.com/seedream_images/4c36a715-f500-4186-8955-631a09fac0ed.png";
-const ICON_SIZE_PANEL = 24; // увеличено
+const ICON_SIZE_PANEL = 24;
 const ICON_SIZE_SEND = 28;
 const BTN_SIZE = 50;
 const SEND_BTN_SIZE = 78;
 const borderRadius = 22;
 const sidePad = 16;
+const blockMargin = 30; // для универсального отступа между большими блоками
 const panelHeight = 62;
 const maxWidth = 560;
 const GRADIENT = "linear-gradient(90deg, #6a11cb 0%, #2575fc 100%)";
@@ -55,17 +56,17 @@ const TOPICS = [
   { title: "Физическая активность", desc: "Можно ли и какую выбрать?" }
 ];
 
-// --- ВАЖНО: на реальном проекте ключ и вызов OpenAI API должен быть через серверный прокси! ---
 const API_URL = "https://api.openai.com/v1/assistants/asst_O0ENHkHsICvLEjBXleQpyqDx/messages";
 const OPENAI_API_KEY = "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";
 
 const Chat = () => {
   const [userInput, setUserInput] = useState("");
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState([]); // вся история
   const [inputDisabled, setInputDisabled] = useState(false);
   const [darkMode, setDarkMode] = useState(true);
   const [pickedMonth, setPickedMonth] = useState(null);
   const [pickedTopic, setPickedTopic] = useState(null);
+  const [firstMessageSent, setFirstMessageSent] = useState(false); // специальная метка
   const messagesEndRef = useRef(null);
 
   const theme = darkMode ? themes.dark : themes.light;
@@ -75,6 +76,7 @@ const Chat = () => {
   }, [messages]);
 
   const showSteps = !(pickedMonth && pickedTopic);
+  // Показывать фиксированное поле, если выбран месяц и тема
   const showFixedInput = pickedMonth && pickedTopic;
 
   const handleMonthPick = (month) => {
@@ -82,21 +84,24 @@ const Chat = () => {
     setPickedMonth(month);
     setPickedTopic(null);
     setUserInput("");
+    setFirstMessageSent(false);
   };
 
   const handleTopicPick = (topic) => {
     if (inputDisabled || !pickedMonth) return;
     setPickedTopic(topic);
-    setMessages(prev => [
-      ...prev,
+    // Первый "чатовый" вывод делаем не в основном чате, а под баннером и не фиксируем его!
+    setMessages([
       { role: "user", text: `Тема: ${topic.title}. ${topic.desc}` }
     ]);
+    setFirstMessageSent(true);
+    setUserInput("");
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!userInput.trim() || inputDisabled) return;
-
+    // Обычные сообщения асистенту
     setMessages(prev => [...prev, { role: "user", text: userInput }]);
     setUserInput("");
     setInputDisabled(true);
@@ -147,6 +152,7 @@ const Chat = () => {
     setUserInput("");
     setPickedMonth(null);
     setPickedTopic(null);
+    setFirstMessageSent(false);
   };
 
   return (
@@ -241,7 +247,31 @@ const Chat = () => {
       </div>
       <div style={{ height: sidePad }} />
 
-      {/* Выбор срока и темы до начала чата */}
+      {/* Первый message под баннером с отступом после выбора темы */}
+      {(firstMessageSent && messages.length > 0) && (
+        <div style={{
+          width: "100%",
+          maxWidth,
+          margin: `${blockMargin}px auto 0 auto`
+        }}>
+          <div style={{
+            background: "#F6F7FB",
+            color: "#1C1C1C",
+            borderRadius: borderRadius,
+            padding: "14px 20px",
+            fontSize: 16,
+            lineHeight: 1.7,
+            border: "none",
+            boxShadow: "none",
+            textAlign: "left",
+            marginBottom: blockMargin
+          }}>
+            {messages[0].text}
+          </div>
+        </div>
+      )}
+
+      {/* Интерактивы выбора до начала чата */}
       {showSteps && (
         <div
           style={{
@@ -260,13 +290,13 @@ const Chat = () => {
           {/* Срок беременности */}
           <div style={{ width: "100%" }}>
             <div style={{
-              fontWeight: 700,
+              fontWeight: 400,
               fontSize: 17,
               marginBottom: 18,
-              color: "#fff", // белый!
+              color: "#fff", // просто белый!
               letterSpacing: "0.03em"
             }}>
-              Выберите срок
+              Выберите срок беременности:
             </div>
             <div style={{
               display: "flex",
@@ -303,19 +333,18 @@ const Chat = () => {
               ))}
             </div>
           </div>
-          {/* Отступ между сроком и темами */}
-          <div style={{ height: 30 }} />
+          <div style={{ height: blockMargin }} />
 
           {/* Темы для обсуждения */}
           <div style={{ width: "100%", marginBottom: sidePad }}>
             <div style={{
-              fontWeight: 700,
+              fontWeight: 400,
               fontSize: 17,
               marginBottom: 18,
-              color: "#fff", // белый!
+              color: "#fff", // просто белый!
               letterSpacing: "0.03em"
             }}>
-              Выберите тему
+              Выберите тему для обсуждения:
             </div>
             <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
               {TOPICS.map((topic, i) => (
@@ -357,12 +386,12 @@ const Chat = () => {
       )}
 
       {/* Чат и фиксированное поле ввода, когда выбран срок и тема */}
-      {!showSteps && (
+      {!showSteps && firstMessageSent && (
         <div
           style={{
             width: "100%",
             maxWidth,
-            margin: "30px auto 0 auto",
+            margin: "0 auto",
             boxSizing: "border-box",
             flex: 1,
             display: "flex",
@@ -382,7 +411,8 @@ const Chat = () => {
               justifyContent: "flex-start"
             }}
           >
-            {messages.map((msg, idx) => (
+            {/* Пропуск первого специального message, начинаем с index 1 */}
+            {messages.slice(1).map((msg, idx) => (
               <div
                 key={idx}
                 style={{
@@ -422,7 +452,8 @@ const Chat = () => {
       )}
 
       {/* Поле сообщения отдельным блоком снизу всегда,
-        и если оно не зафиксировано — отступ как между блоками (30px) */}
+        и если оно не зафиксировано — отступ как между блоками (30px),
+        и отступ снизу после поля такой же */}
       <form
         onSubmit={handleSubmit}
         style={{
@@ -432,7 +463,7 @@ const Chat = () => {
           transform: showFixedInput ? "translateX(-50%)" : "none",
           width: `calc(100% - ${sidePad * 2}px)`,
           maxWidth,
-          margin: showFixedInput ? 0 : "30px auto 0 auto",
+          margin: showFixedInput ? 0 : `${blockMargin}px auto 0 auto`,
           zIndex: showFixedInput ? 2600 : "auto",
           display: "flex",
           alignItems: "center",
@@ -492,6 +523,8 @@ const Chat = () => {
           }
         `}</style>
       </form>
+      {/* Отступ после поля для визуального баланса */}
+      <div style={{ height: blockMargin }} />
     </div>
   );
 };
