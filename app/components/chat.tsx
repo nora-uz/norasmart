@@ -349,7 +349,7 @@ const Chat: React.FC = () => {
           marginBottom: blockMargin,
           padding: `${sidePad + 2}px ${sidePad}px ${sidePad + 6}px ${sidePad}px`,
           display: "flex",
-          flexDirection: "column",
+          flexDirection: "column" as const,
           alignItems: "center"
         }}>
           <div style={{ width: "100%" }}>
@@ -412,7 +412,7 @@ const Chat: React.FC = () => {
             }}>
               Выберите тему для обсуждения:
             </div>
-            <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+            <div style={{ display: "flex", flexDirection: "column" as const, gap: 16 }}>
               {TOPICS.map((topic, i) => {
                 let isSelected = pickedTopic?.title === topic.title;
                 let disabled = inputDisabled || !pickedMonth;
@@ -427,7 +427,7 @@ const Chat: React.FC = () => {
                   textAlign: "left",
                   padding: "17px 18px 13px 18px",
                   display: "flex",
-                  flexDirection: "column",
+                  flexDirection: "column" as const,
                   alignItems: "flex-start",
                   fontWeight: 600,
                   boxShadow: "none",
@@ -474,7 +474,7 @@ const Chat: React.FC = () => {
           boxSizing: "border-box",
           flex: 1,
           display: "flex",
-          flexDirection: "column",
+          flexDirection: "column" as const,
           alignItems: "center",
           overflow: "hidden"
         }}>
@@ -485,7 +485,7 @@ const Chat: React.FC = () => {
             minHeight: 0,
             overflowY: "auto",
             display: "flex",
-            flexDirection: "column",
+            flexDirection: "column" as const,
             justifyContent: "flex-start"
           }}>
             {messages.slice(1).map((msg, idx) => (
