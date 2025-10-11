@@ -86,14 +86,47 @@ const Chat = () => {
     setFirstMessageSent(false);
   };
 
-  const handleTopicPick = (topic) => {
+  const handleTopicPick = async (topic) => {
     if (inputDisabled || !pickedMonth) return;
     setPickedTopic(topic);
+    const templateMessage = `Срок беременности: ${pickedMonth} месяц, хочу обсудить ${topic.title.toLowerCase()} и ${topic.desc.toLowerCase()}.`;
+
     setMessages([
-      { role: "user", text: `Тема: ${topic.title}. ${topic.desc}` }
+      { role: "user", text: templateMessage }
     ]);
     setFirstMessageSent(true);
     setUserInput("");
+
+    setInputDisabled(true);
+    try {
+      const history = [
+        { role: "user", text: templateMessage }
+      ];
+      const response = await fetch(API_URL, {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${OPENAI_API_KEY}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          messages: history.map(m => ({ role: m.role, content: m.text })),
+        })
+      });
+      const result = await response.json();
+      const assistantMessage = result.choices?.[0]?.message?.content || result.result || "Нет ответа";
+
+      setMessages(prev => [
+        ...prev,
+        { role: "assistant", text: assistantMessage }
+      ]);
+    } catch (error) {
+      setMessages(prev => [
+        ...prev,
+        { role: "assistant", text: "Ошибка ответа ассистента, попробуйте позже." }
+      ]);
+    } finally {
+      setInputDisabled(false);
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -471,14 +504,14 @@ const Chat = () => {
                     background: msg.role === "assistant" ? theme.assistantBubble : theme.userBubble,
                     color: msg.role === "assistant" ? theme.assistantText : theme.userText,
                     borderRadius: borderRadius,
-                    padding: "14px 20px",
+                    padding: "14px 32px",
                     fontSize: 16,
                     lineHeight: 1.7,
                     border: "none",
-                    maxWidth: "70%",
+                    maxWidth: "65%",
                     minWidth: 54,
-                    marginLeft: sidePad,
-                    marginRight: sidePad,
+                    marginLeft: sidePad * 2,
+                    marginRight: sidePad * 2,
                     wordBreak: "break-word",
                     alignSelf: "flex-start",
                     boxShadow: "none",
