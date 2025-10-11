@@ -85,22 +85,22 @@ function iconBtn(color: string) {
     borderRadius: BTN_SIZE / 2,
     padding: 0,
     display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: "center" as const,
+    justifyContent: "center" as const,
     boxShadow: "none"
   };
 }
 const iconImgPanel = {
   width: ICON_SIZE_PANEL,
   height: ICON_SIZE_PANEL,
-  display: "block",
+  display: "block" as const,
   background: "none",
   filter: "brightness(0) invert(1)"
 };
 const iconImgSend = {
   width: ICON_SIZE_SEND,
   height: ICON_SIZE_SEND,
-  display: "block",
+  display: "block" as const,
   background: "none"
 };
 
@@ -209,10 +209,10 @@ const Chat: React.FC = () => {
       width: `calc(100% - ${sidePad * 4}px)`,
       marginLeft: sidePad * 2,
       marginRight: sidePad * 2,
-      wordBreak: "break-word",
-      alignSelf: "flex-start",
+      wordBreak: "break-word" as const,
+      alignSelf: "flex-start" as const,
       boxShadow: "none",
-      textAlign: "left" as const,       // <-- исправлено!
+      textAlign: "left" as const,
       transition: "background 0.4s, color 0.4s"
     };
   }
@@ -229,10 +229,10 @@ const Chat: React.FC = () => {
       minWidth: 54,
       marginLeft: sidePad * 2,
       marginRight: sidePad * 2,
-      wordBreak: "break-word",
-      alignSelf: "flex-end",
+      wordBreak: "break-word" as const,
+      alignSelf: "flex-end" as const,
       boxShadow: "none",
-      textAlign: "right" as const,      // <-- исправлено!
+      textAlign: "right" as const,
       transition: "background 0.4s, color 0.4s"
     };
   }
@@ -262,10 +262,10 @@ const Chat: React.FC = () => {
           background: GRADIENT,
           color: "#fff",
           display: "flex",
-          alignItems: "center",
+          alignItems: "center" as const,
           borderRadius: borderRadius,
           padding: `0 ${sidePad}px`,
-          justifyContent: "flex-start",
+          justifyContent: "flex-start" as const,
           boxSizing: "border-box",
           position: "relative",
           zIndex: 2000,
@@ -275,7 +275,7 @@ const Chat: React.FC = () => {
         <div style={{ fontWeight: 800, fontSize: 25, marginRight: sidePad }}>
           Nora AI
         </div>
-        <div style={{ display: "flex", alignItems: "center", gap: 7, marginLeft: "auto" }}>
+        <div style={{ display: "flex", alignItems: "center" as const, gap: 7, marginLeft: "auto" }}>
           <button style={iconBtn("transparent")} onClick={() => setDarkMode((prev) => !prev)}>
             <img src={darkMode ? ICONS.sun : ICONS.moon} alt="Theme" style={iconImgPanel} />
           </button>
@@ -297,8 +297,8 @@ const Chat: React.FC = () => {
           overflow: "hidden",
           background: theme.bgColor,
           display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
+          justifyContent: "center" as const,
+          alignItems: "center" as const,
           position: "relative"
         }}
       >
@@ -349,7 +349,7 @@ const Chat: React.FC = () => {
           padding: `${sidePad + 2}px ${sidePad}px ${sidePad + 6}px ${sidePad}px`,
           display: "flex",
           flexDirection: "column" as const,
-          alignItems: "center"
+          alignItems: "center" as const
         }}>
           <div style={{ width: "100%" }}>
             <div style={{
@@ -383,7 +383,7 @@ const Chat: React.FC = () => {
                   opacity: 1,
                   boxShadow: "none",
                   outline: "none",
-                  scrollSnapAlign: "center",
+                  scrollSnapAlign: "center" as const,
                   marginRight: i < 8 ? 9 : 0,
                   transition: "box-shadow 0.2s, background 0.2s, color 0.2s"
                 };
@@ -423,11 +423,11 @@ const Chat: React.FC = () => {
                   background: isSelected ? "#fff" : GRADIENT,
                   color: isSelected ? "#2575fc" : "#fff",
                   opacity: disabled ? 0.45 : 1,
-                  textAlign: "left" as const,                // исправлено!
+                  textAlign: "left" as const,
                   padding: "17px 18px 13px 18px",
                   display: "flex",
                   flexDirection: "column" as const,
-                  alignItems: "flex-start",
+                  alignItems: "flex-start" as const,
                   fontWeight: 600,
                   boxShadow: "none",
                   outline: "none",
@@ -474,7 +474,7 @@ const Chat: React.FC = () => {
           flex: 1,
           display: "flex",
           flexDirection: "column" as const,
-          alignItems: "center",
+          alignItems: "center" as const,
           overflow: "hidden"
         }}>
           <div style={{ height: blockMargin }} />
@@ -485,13 +485,13 @@ const Chat: React.FC = () => {
             overflowY: "auto",
             display: "flex",
             flexDirection: "column" as const,
-            justifyContent: "flex-start"
+            justifyContent: "flex-start" as const
           }}>
             {messages.slice(1).map((msg, idx) => (
               <div key={idx} style={{
                 width: "100%",
                 display: "flex",
-                justifyContent: msg.role === "assistant" ? "flex-start" : "flex-end",
+                justifyContent: msg.role === "assistant" ? "flex-start" as const : "flex-end" as const,
                 marginBottom: 12
               }}>
                 {msg.role === "assistant" ? (
@@ -509,7 +509,7 @@ const Chat: React.FC = () => {
               <div style={{
                 width: "100%",
                 display: "flex",
-                justifyContent: "flex-start",
+                justifyContent: "flex-start" as const,
                 marginBottom: 12
               }}>
                 <div style={assistantBubbleStyle()}>
@@ -527,7 +527,7 @@ const Chat: React.FC = () => {
       <form
         onSubmit={handleSubmit}
         style={{
-          position: showFixedInput ? "fixed" : "static",
+          position: showFixedInput ? "fixed" as const : "static" as const,
           left: showFixedInput ? "50%" : "auto",
           bottom: showFixedInput ? blockMargin : "auto",
           transform: showFixedInput ? "translateX(-50%)" : "none",
@@ -536,7 +536,7 @@ const Chat: React.FC = () => {
           margin: showFixedInput ? 0 : `0 auto`,
           zIndex: showFixedInput ? 2600 : "auto",
           display: "flex",
-          alignItems: "center",
+          alignItems: "center" as const,
           background: "none",
           boxSizing: "border-box",
           padding: 0
@@ -579,8 +579,8 @@ const Chat: React.FC = () => {
             height: BTN_SIZE,
             marginLeft: sidePad,
             display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
+            justifyContent: "center" as const,
+            alignItems: "center" as const,
             cursor: inputDisabled ? "not-allowed" : "pointer",
             opacity: inputDisabled ? 0.7 : 1,
             boxShadow: "none",
