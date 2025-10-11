@@ -10,16 +10,17 @@ const ICONS = {
 };
 
 const BANNER = "https://user-gen-media-assets.s3.amazonaws.com/seedream_images/4c36a715-f500-4186-8955-631a09fac0ed.png";
-const ICON_SIZE_PANEL = 24;
+const ICON_SIZE_PANEL = 18; // уменьшено
 const ICON_SIZE_SEND = 28;
 const BTN_SIZE = 50;
 const SEND_BTN_SIZE = 78;
 const borderRadius = 22;
 const sidePad = 16;
-const blockMargin = 30; // для универсального отступа между большими блоками
+const blockMargin = 20; // чуть меньше отступ под фотографией
 const panelHeight = 62;
 const maxWidth = 560;
 const GRADIENT = "linear-gradient(90deg, #6a11cb 0%, #2575fc 100%)";
+const GRADIENT_DARK = "linear-gradient(90deg, #232323 0%, #343434 100%)";
 
 const themes = {
   dark: {
@@ -61,12 +62,12 @@ const OPENAI_API_KEY = "sk-proj-4mU-o8430fWtndYcbznNt6eZqYYssRxLkFw1FCOxnoOgHCoK
 
 const Chat = () => {
   const [userInput, setUserInput] = useState("");
-  const [messages, setMessages] = useState([]); // вся история
+  const [messages, setMessages] = useState([]);
   const [inputDisabled, setInputDisabled] = useState(false);
   const [darkMode, setDarkMode] = useState(true);
   const [pickedMonth, setPickedMonth] = useState(null);
   const [pickedTopic, setPickedTopic] = useState(null);
-  const [firstMessageSent, setFirstMessageSent] = useState(false); // специальная метка
+  const [firstMessageSent, setFirstMessageSent] = useState(false);
   const messagesEndRef = useRef(null);
 
   const theme = darkMode ? themes.dark : themes.light;
@@ -76,7 +77,6 @@ const Chat = () => {
   }, [messages]);
 
   const showSteps = !(pickedMonth && pickedTopic);
-  // Показывать фиксированное поле, если выбран месяц и тема
   const showFixedInput = pickedMonth && pickedTopic;
 
   const handleMonthPick = (month) => {
@@ -90,7 +90,6 @@ const Chat = () => {
   const handleTopicPick = (topic) => {
     if (inputDisabled || !pickedMonth) return;
     setPickedTopic(topic);
-    // Первый "чатовый" вывод делаем не в основном чате, а под баннером и не фиксируем его!
     setMessages([
       { role: "user", text: `Тема: ${topic.title}. ${topic.desc}` }
     ]);
@@ -101,7 +100,6 @@ const Chat = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!userInput.trim() || inputDisabled) return;
-    // Обычные сообщения асистенту
     setMessages(prev => [...prev, { role: "user", text: userInput }]);
     setUserInput("");
     setInputDisabled(true);
@@ -193,7 +191,7 @@ const Chat = () => {
           style={{
             display: "flex",
             alignItems: "center",
-            gap: 10,
+            gap: 7,
             marginLeft: "auto"
           }}
         >
@@ -245,9 +243,9 @@ const Chat = () => {
           }}
         />
       </div>
-      <div style={{ height: sidePad }} />
+      <div style={{ height: blockMargin }} />
 
-      {/* Первый message под баннером с отступом после выбора темы */}
+      {/* Первый message под баннером с уменьшенным отступом */}
       {(firstMessageSent && messages.length > 0) && (
         <div style={{
           width: "100%",
@@ -293,7 +291,7 @@ const Chat = () => {
               fontWeight: 400,
               fontSize: 17,
               marginBottom: 18,
-              color: "#fff", // просто белый!
+              color: "#fff",
               letterSpacing: "0.03em"
             }}>
               Выберите срок беременности:
@@ -304,7 +302,7 @@ const Chat = () => {
               overflowX: "auto",
               justifyContent: "flex-start",
               paddingRight: 32
-            }} className="months-scroll">
+            }}>
               {Array.from({ length: 9 }).map((_, i) => (
                 <button
                   key={i}
@@ -316,11 +314,12 @@ const Chat = () => {
                     cursor: inputDisabled ? "not-allowed" : "pointer",
                     fontSize: 26,
                     fontWeight: 600,
-                    background: pickedMonth === i + 1 ? "#2575fc" : "#DDDDDD",
-                    color: "#1C1C1C",
-                    filter: pickedMonth === i + 1 ? "none" : "grayscale(1)",
+                    background: pickedMonth === i + 1
+                      ? GRADIENT
+                      : "linear-gradient(90deg, #ABAAB0 0%, #838383 100%)",
+                    color: "#fff",
+                    opacity: pickedMonth === i + 1 ? 1 : 0.55,
                     boxShadow: "none",
-                    opacity: inputDisabled ? 0.7 : 1,
                     outline: "none",
                     marginRight: i < 8 ? 9 : 0,
                     transition: "box-shadow 0.2s, background 0.2s, color 0.2s"
@@ -341,7 +340,7 @@ const Chat = () => {
               fontWeight: 400,
               fontSize: 17,
               marginBottom: 18,
-              color: "#fff", // просто белый!
+              color: "#fff",
               letterSpacing: "0.03em"
             }}>
               Выберите тему для обсуждения:
@@ -355,12 +354,11 @@ const Chat = () => {
                     borderRadius: 18,
                     border: "none",
                     cursor: inputDisabled || !pickedMonth ? "not-allowed" : "pointer",
-                    background: pickedTopic?.title === topic.title ? "#2575fc" : "#DDDDDD",
-                    color: "#1C1C1C",
-                    filter: pickedTopic?.title === topic.title ? "none" : "grayscale(1)",
-                    boxShadow: "none",
-                    opacity: inputDisabled ? 0.7 : pickedMonth ? 1 : 0.5,
-                    outline: "none",
+                    background: pickedTopic?.title === topic.title
+                      ? GRADIENT
+                      : "linear-gradient(90deg, #ABAAB0 0%, #838383 100%)",
+                    color: "#fff",
+                    opacity: pickedTopic?.title === topic.title ? 1 : 0.55,
                     textAlign: "left",
                     padding: "17px 18px 13px 18px",
                     display: "flex",
@@ -372,10 +370,20 @@ const Chat = () => {
                   disabled={inputDisabled || !pickedMonth}
                   onClick={() => handleTopicPick(topic)}
                 >
-                  <span style={{ fontSize: 19, fontWeight: 700, marginBottom: 5 }}>
+                  <span style={{
+                    fontSize: 19,
+                    fontWeight: 700,
+                    marginBottom: 5,
+                    color: "#fff"
+                  }}>
                     {topic.title}
                   </span>
-                  <span style={{ fontSize: 15, fontWeight: 400, opacity: 0.95 }}>
+                  <span style={{
+                    fontSize: 15,
+                    fontWeight: 400,
+                    opacity: 0.95,
+                    color: "#fff"
+                  }}>
                     {topic.desc}
                   </span>
                 </button>
@@ -411,7 +419,6 @@ const Chat = () => {
               justifyContent: "flex-start"
             }}
           >
-            {/* Пропуск первого специального message, начинаем с index 1 */}
             {messages.slice(1).map((msg, idx) => (
               <div
                 key={idx}
@@ -451,9 +458,6 @@ const Chat = () => {
         </div>
       )}
 
-      {/* Поле сообщения отдельным блоком снизу всегда,
-        и если оно не зафиксировано — отступ как между блоками (30px),
-        и отступ снизу после поля такой же */}
       <form
         onSubmit={handleSubmit}
         style={{
@@ -523,7 +527,6 @@ const Chat = () => {
           }
         `}</style>
       </form>
-      {/* Отступ после поля для визуального баланса */}
       <div style={{ height: blockMargin }} />
     </div>
   );
