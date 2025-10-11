@@ -238,7 +238,7 @@ const Chat: React.FC = () => {
         transition: "background 0.4s"
       }}
     >
-      {/* Панель управления */}
+      {/* Панель */}
       <div style={{
         width: "100%",
         maxWidth,
