@@ -16,7 +16,7 @@ const BTN_SIZE = 50;
 const SEND_BTN_SIZE = 78;
 const borderRadius = 22;
 const sidePad = 16;
-const blockMargin = 20; // все отступы в блоках!
+const blockMargin = 20;
 const panelHeight = 62;
 const maxWidth = 560;
 const GRADIENT = "linear-gradient(90deg, #6a11cb 0%, #2575fc 100%)";
@@ -67,6 +67,7 @@ const Chat = () => {
   const [pickedMonth, setPickedMonth] = useState(null);
   const [pickedTopic, setPickedTopic] = useState(null);
   const [firstMessageSent, setFirstMessageSent] = useState(false);
+  const [monthWindow, setMonthWindow] = useState(0); // Новый стейт для листания месяцев
   const messagesEndRef = useRef(null);
 
   const theme = darkMode ? themes.dark : themes.light;
@@ -75,7 +76,8 @@ const Chat = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  const showSteps = !(pickedMonth && pickedTopic);
+  // ! Изменено условие: после отправки первого сообщения экран выбора скрывается!
+  const showSteps = !(pickedMonth && pickedTopic) && !firstMessageSent;
   const showFixedInput = pickedMonth && pickedTopic;
 
   const handleMonthPick = (month) => {
@@ -150,7 +152,11 @@ const Chat = () => {
     setPickedMonth(null);
     setPickedTopic(null);
     setFirstMessageSent(false);
+    setMonthWindow(0);
   };
+
+  // Листаем месяцы по 3. 
+  const visibleMonths = Array.from({ length: 3 }, (_, i) => i + 1 + monthWindow);
 
   return (
     <div
@@ -163,7 +169,6 @@ const Chat = () => {
         transition: "background 0.4s"
       }}
     >
-      {/* Отступ после панели */}
       <div style={{ height: blockMargin }} />
       <div
         style={{
@@ -215,10 +220,7 @@ const Chat = () => {
           </button>
         </div>
       </div>
-      {/* Отступ после панели */}
       <div style={{ height: blockMargin }} />
-
-      {/* Фото/баннер */}
       <div
         style={{
           width: `calc(100% - ${sidePad * 2}px)`,
@@ -245,10 +247,7 @@ const Chat = () => {
           }}
         />
       </div>
-      {/* Отступ после баннера */}
       <div style={{ height: blockMargin }} />
-
-      {/* Первый message под баннером, отступ перед ним */}
       {(firstMessageSent && messages.length > 0) && (
         <>
           <div style={{ height: blockMargin }} />
@@ -275,7 +274,7 @@ const Chat = () => {
         </>
       )}
 
-      {/* Интерактивы выбора до начала чата */}
+      {/* --- ВЫБОР МЕСЯЦА И ТЕМЫ --- */}
       {showSteps && (
         <div
           style={{
@@ -302,16 +301,34 @@ const Chat = () => {
             }}>
               Выберите срок беременности:
             </div>
-            {/* Кнопки месяцев */}
             <div style={{
               display: "flex",
+              alignItems: 'center',
               gap: 12,
               justifyContent: "flex-start",
               paddingRight: 32
             }}>
-              {Array.from({ length: 9 }).map((_, i) => {
+              <button
+                onClick={() => setMonthWindow((prev) => Math.max(0, prev - 1))}
+                disabled={monthWindow === 0}
+                style={{
+                  minWidth: 32,
+                  height: 52,
+                  borderRadius: 20,
+                  border: "none",
+                  cursor: monthWindow === 0 ? "not-allowed" : "pointer",
+                  fontSize: 30,
+                  background: "#fff",
+                  color: "#2575fc",
+                  opacity: monthWindow === 0 ? 0.4 : 1,
+                  marginRight: 9,
+                }}
+              >
+                ‹
+              </button>
+              {visibleMonths.map(month => {
                 let styleBtn;
-                if (pickedMonth === i + 1) {
+                if (pickedMonth === month) {
                   styleBtn = {
                     minWidth: 52,
                     height: 52,
@@ -325,7 +342,7 @@ const Chat = () => {
                     opacity: 1,
                     boxShadow: "none",
                     outline: "none",
-                    marginRight: i < 8 ? 9 : 0,
+                    marginRight: 9,
                     transition: "box-shadow 0.2s, background 0.2s, color 0.2s"
                   };
                 } else {
@@ -342,27 +359,41 @@ const Chat = () => {
                     opacity: 1,
                     boxShadow: "none",
                     outline: "none",
-                    marginRight: i < 8 ? 9 : 0,
+                    marginRight: 9,
                     transition: "box-shadow 0.2s, background 0.2s, color 0.2s"
                   };
                 }
                 return (
                   <button
-                    key={i}
+                    key={month}
                     style={styleBtn}
                     disabled={inputDisabled}
-                    onClick={() => handleMonthPick(i + 1)}
+                    onClick={() => handleMonthPick(month)}
                   >
-                    {i + 1}
+                    {month}
                   </button>
                 );
               })}
+              <button
+                onClick={() => setMonthWindow((prev) => Math.min(6, prev + 1))}
+                disabled={monthWindow === 6}
+                style={{
+                  minWidth: 32,
+                  height: 52,
+                  borderRadius: 20,
+                  border: "none",
+                  cursor: monthWindow === 6 ? "not-allowed" : "pointer",
+                  fontSize: 30,
+                  background: "#fff",
+                  color: "#2575fc",
+                  opacity: monthWindow === 6 ? 0.4 : 1
+                }}
+              >
+                ›
+              </button>
             </div>
           </div>
-          {/* Отступ после блок чисел */}
           <div style={{ height: blockMargin }} />
-
-          {/* Заголовок "Выберите тему для обсуждения:" */}
           <div style={{ width: "100%", marginBottom: 0 }}>
             <div style={{
               fontWeight: 400,
@@ -373,7 +404,6 @@ const Chat = () => {
             }}>
               Выберите тему для обсуждения:
             </div>
-            {/* Кнопки тем */}
             <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
               {TOPICS.map((topic, i) => {
                 let styleBtn;
@@ -447,8 +477,8 @@ const Chat = () => {
           </div>
         </div>
       )}
-
-      {/* Чат и фиксированное поле ввода, когда выбран срок и тема */}
+     
+      {/* ---- Чат ---- */} 
       {!showSteps && firstMessageSent && (
         <div
           style={{
@@ -463,7 +493,6 @@ const Chat = () => {
             overflow: "hidden"
           }}
         >
-          {/* Отступ перед чатом */}
           <div style={{ height: blockMargin }} />
           <div
             style={{
@@ -514,8 +543,6 @@ const Chat = () => {
           </div>
         </div>
       )}
-
-      {/* Отступ перед полем */}
       <div style={{ height: blockMargin }} />
       <form
         onSubmit={handleSubmit}
@@ -586,12 +613,12 @@ const Chat = () => {
           }
         `}</style>
       </form>
-      {/* Отступ после поля */}
       <div style={{ height: blockMargin }} />
     </div>
   );
 };
 
+// --- Стили кнопок ---
 const iconBtn = (color) => ({
   background: color,
   border: "none",
@@ -605,7 +632,6 @@ const iconBtn = (color) => ({
   justifyContent: "center",
   boxShadow: "none"
 });
-
 const iconImgPanel = {
   width: ICON_SIZE_PANEL,
   height: ICON_SIZE_PANEL,
@@ -613,7 +639,6 @@ const iconImgPanel = {
   background: "none",
   filter: "brightness(0) invert(1)"
 };
-
 const iconImgSend = {
   width: ICON_SIZE_SEND,
   height: ICON_SIZE_SEND,
