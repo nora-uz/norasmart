@@ -75,7 +75,6 @@ const Chat = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  // showSteps скрывается если выбран месяц+тема ИЛИ пользователь начал писать
   const showSteps = !(pickedMonth && pickedTopic) && !firstMessageSent;
   const showFixedInput = pickedMonth && pickedTopic;
 
@@ -164,6 +163,12 @@ const Chat = () => {
         transition: "background 0.4s"
       }}
     >
+      {/* --- ГЛОБАЛЬНЫЕ СТИЛИ --- */}
+      <style>{`
+        .months-scroll::-webkit-scrollbar { display: none; }
+        .months-scroll { scrollbar-width: none; -ms-overflow-style: none; }
+      `}</style>
+
       <div style={{ height: blockMargin }} />
       <div
         style={{
@@ -296,6 +301,7 @@ const Chat = () => {
               Выберите срок беременности:
             </div>
             <div
+              className="months-scroll"
               style={{
                 display: "flex",
                 gap: 12,
@@ -451,10 +457,10 @@ const Chat = () => {
               <div
                 key={idx}
                 style={{
+                  width: "100%",
                   display: "flex",
-                  justifyContent: "flex-start", // одинаково для всех
+                  justifyContent: msg.role === "assistant" ? "flex-start" : "flex-end",
                   marginBottom: 12,
-                  width: "100%"
                 }}
               >
                 <div
