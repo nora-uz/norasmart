@@ -2,7 +2,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import ReactMarkdown from "react-markdown";
 
-// Новый стиль и цвета
 const NORA_COLOR = "#2e2e2e";
 const ICON_SIZE = 23;
 const ICONS = {
@@ -15,12 +14,11 @@ const ICONS = {
   ),
 };
 const filterNora = "invert(13%) sepia(4%) saturate(271%) hue-rotate(175deg) brightness(92%) contrast(93%)";
-const BANNER = "/banner.webp"; // Можно заменить на вашу ссылку
+const BANNER = "/banner.webp"; // Ваш путь к баннеру!
 const borderRadius = 22;
 const panelHeight = 62;
 const maxWidth = 560;
 const GRADIENT = "linear-gradient(90deg, #eff5fe 0%, #e5e8ed 100%)";
-
 const TOPICS = [
   { title: "Сон", desc: "Проблемы с бессонницей и усталостью" },
   { title: "Питание", desc: "Рацион и полезные продукты" },
@@ -137,7 +135,7 @@ const Chat: React.FC = () => {
   return (
     <div
       style={{
-        background: "#f8fdff", // новый фон
+        background: "#f8fdff",
         width: "100vw",
         minHeight: "100vh",
         overflow: "hidden",
@@ -146,7 +144,6 @@ const Chat: React.FC = () => {
       }}
     >
       <div style={{ height: 20 }} />
-      {/* верхняя панель */}
       <div style={{
         width: "calc(100% - 40px)",
         maxWidth,
@@ -168,7 +165,7 @@ const Chat: React.FC = () => {
           marginRight: 10,
           color: NORA_COLOR,
           display: "flex",
-          flexDirection: "column",
+          flexDirection: "column" as const,
           justifyContent: "center",
           minWidth: 0
         }}>
@@ -239,8 +236,8 @@ const Chat: React.FC = () => {
           marginBottom: 20,
           padding: "18px 20px 22px 20px",
           display: "flex",
-          flexDirection: "column",
-          alignItems: "center"
+          flexDirection: "column" as const,
+          alignItems: "center" as const
         }}>
           <div style={{ width: "100%" }}>
             <div style={{
@@ -304,7 +301,7 @@ const Chat: React.FC = () => {
             }}>
               Выберите тему для обсуждения:
             </div>
-            <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+            <div style={{ display: "flex", flexDirection: "column" as const, gap: 16 }}>
               {TOPICS.map((topic, i) => {
                 let isSelected = pickedTopic?.title === topic.title;
                 let disabled = inputDisabled || !pickedMonth;
@@ -319,8 +316,8 @@ const Chat: React.FC = () => {
                   textAlign: "left",
                   padding: "17px 18px 13px 18px",
                   display: "flex",
-                  flexDirection: "column",
-                  alignItems: "flex-start",
+                  flexDirection: "column" as const,
+                  alignItems: "flex-start" as const,
                   fontWeight: 600,
                   boxShadow: isSelected ? "0 2px 14px 0 rgba(155,175,205,0.07)" : "none",
                   outline: "none",
@@ -358,7 +355,6 @@ const Chat: React.FC = () => {
         </div>
       )}
 
-      {/* Первый (шаблонный) вопрос */}
       {(firstMessageSent && messages.length > 0) && (
         <>
           <div style={{ height: 20 }} />
@@ -387,7 +383,6 @@ const Chat: React.FC = () => {
         </>
       )}
 
-      {/* Чат-сообщения */}
       {!showSteps && firstMessageSent && (
         <div style={{
           width: "100%",
@@ -396,8 +391,8 @@ const Chat: React.FC = () => {
           boxSizing: "border-box",
           flex: 1,
           display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
+          flexDirection: "column" as const,
+          alignItems: "center" as const,
           overflow: "hidden"
         }}>
           <div style={{ height: 20 }} />
@@ -407,8 +402,8 @@ const Chat: React.FC = () => {
             minHeight: 0,
             overflowY: "auto",
             display: "flex",
-            flexDirection: "column",
-            justifyContent: "flex-start"
+            flexDirection: "column" as const,
+            justifyContent: "flex-start" as const
           }}>
             {messages.slice(1).map((msg, idx) => (
               <div key={idx} style={{
@@ -430,7 +425,7 @@ const Chat: React.FC = () => {
                     marginLeft: 20,
                     marginRight: 20,
                     wordBreak: "break-word",
-                    alignSelf: "flex-start",
+                    alignSelf: "flex-start" as const,
                     boxShadow: "none",
                     textAlign: "left",
                     transition: "background 0.4s, color 0.4s"
@@ -451,7 +446,7 @@ const Chat: React.FC = () => {
                     marginLeft: 20,
                     marginRight: 20,
                     wordBreak: "break-word",
-                    alignSelf: "flex-end",
+                    alignSelf: "flex-end" as const,
                     boxShadow: "0 2px 14px 0 rgba(155,175,205,0.07)",
                     textAlign: "right",
                     transition: "background 0.4s, color 0.4s"
@@ -480,7 +475,7 @@ const Chat: React.FC = () => {
                   marginLeft: 20,
                   marginRight: 20,
                   wordBreak: "break-word",
-                  alignSelf: "flex-start",
+                  alignSelf: "flex-start" as const,
                   boxShadow: "none",
                   textAlign: "left",
                   transition: "background 0.4s, color 0.4s"
@@ -495,11 +490,10 @@ const Chat: React.FC = () => {
         </div>
       )}
 
-      {/* Фиксированное поле ввода */}
       <form
         onSubmit={handleSubmit}
         style={{
-          position: showFixedInput ? "fixed" : "static",
+          position: showFixedInput ? "fixed" as const : "static" as const,
           left: showFixedInput ? "50%" : "auto",
           bottom: showFixedInput ? 20 : "auto",
           transform: showFixedInput ? "translateX(-50%)" : "none",
@@ -508,7 +502,7 @@ const Chat: React.FC = () => {
           margin: showFixedInput ? 0 : "0 auto",
           zIndex: showFixedInput ? 2600 : "auto",
           display: "flex",
-          alignItems: "center",
+          alignItems: "center" as const,
           background: "#f8fdff",
           boxSizing: "border-box",
           padding: 0
@@ -548,8 +542,8 @@ const Chat: React.FC = () => {
             cursor: inputDisabled ? "not-allowed" : "pointer",
             opacity: inputDisabled ? 0.7 : 1,
             display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
+            alignItems: "center" as const,
+            justifyContent: "center" as const,
             boxShadow: "0 2px 14px 0 rgba(155,175,205,0.12)"
           }}
           disabled={inputDisabled}
