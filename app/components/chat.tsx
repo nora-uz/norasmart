@@ -2,10 +2,11 @@
 
 import React, { useState, useEffect, useRef } from "react";
 
-// Путь к фото ребёнка (замени на актуальный если нужно)
-const BABY_IMG = "/1000004249-removebg-preview-1.jpg";
+// Ссылка на фотографию ребенка — такая же манера, как у тебя:
+const BABY_IMG =
+  "https://user-gen-media-assets.s3.amazonaws.com/seedream_images/4c36a715-f500-4186-8955-631a09fac0ed.png";
 
-// Описания для каждого месяца
+// Описания развития по месяцам
 const BABY_DESCRIPTIONS = [
   "Сейчас малыш похож на маленькое зернышко, но с каждым днём быстро развивается.",
   "Малыш активно растёт, формируются основные органы.",
@@ -44,8 +45,14 @@ const NoraOnboarding: React.FC = () => {
   if (step === 0) {
     return (
       <div style={pageStyle}>
-        <img src={BABY_IMG} alt="Ребёнок" style={imgStyle} />
-        <h2 style={{ fontWeight: 700, textAlign: "center", marginTop: 40 }}>Добро пожаловать в Nora AI</h2>
+        <img
+          src={BABY_IMG}
+          alt="Ребёнок"
+          style={{ ...imgStyle, objectFit: "contain" as const }}
+        />
+        <h2 style={{ fontWeight: 700, textAlign: "center", marginTop: 40 }}>
+          Добро пожаловать в Nora AI
+        </h2>
         <p style={{ textAlign: "center", fontSize: 20, margin: "20px 0" }}>
           Я помогаю будущим мамам на каждом этапе беременности: отвечаю на вопросы, напоминаю о важных делах,
           слежу за самочувствием и даю полезные советы, основанные на медицине и заботе.
@@ -59,9 +66,17 @@ const NoraOnboarding: React.FC = () => {
   if (step === 1) {
     return (
       <div style={pageStyle}>
-        <img src={BABY_IMG} alt="Ребёнок" style={imgStyle} />
-        <h2 style={{ fontWeight: 700, textAlign: "center", marginTop: 40 }}>Заполните, для точных ответов.</h2>
-        <div style={{ display: "flex", gap: 12, margin: "20px 0", justifyContent: "center" }}>
+        <img
+          src={BABY_IMG}
+          alt="Ребёнок"
+          style={{ ...imgStyle, objectFit: "contain" as const }}
+        />
+        <h2 style={{ fontWeight: 700, textAlign: "center", marginTop: 40 }}>
+          Заполните, для точных ответов.
+        </h2>
+        <div style={{
+          display: "flex", gap: 12, margin: "20px 0", justifyContent: "center", flexWrap: "wrap"
+        }}>
           {/* Месяцы */}
           <div style={cardStyle}>
             <div>Срок беременности:</div>
@@ -136,19 +151,37 @@ const NoraOnboarding: React.FC = () => {
     return (
       <div style={pageStyle}>
         <div style={{ position: "relative", textAlign: "center", marginBottom: 16 }}>
-          <img src={BABY_IMG} alt="Ребёнок" style={imgStyle} />
+          <img
+            src={BABY_IMG}
+            alt="Ребёнок"
+            style={{ ...imgStyle, objectFit: "contain" as const }}
+          />
           <div style={{
-            position: "absolute", left: "50%", top: "22%", transform: "translate(-50%, 0)",
-            background: "#F2A5A5", padding: "18px 28px",
-            borderRadius: 25, fontSize: 20, color: "#fff", fontWeight: 500, width: 320,
-            maxWidth: "calc(100vw - 40px)", boxSizing: "border-box"
+            position: "absolute",
+            left: "50%",
+            top: "22%", transform: "translate(-50%, 0)",
+            background: "#F2A5A5",
+            padding: "18px 28px",
+            borderRadius: 25,
+            fontSize: 20,
+            color: "#fff",
+            fontWeight: 500,
+            width: 320,
+            maxWidth: "calc(100vw - 40px)",
+            boxSizing: "border-box"
           }}>
-            {BABY_DESCRIPTIONS[month-1]}
+            {BABY_DESCRIPTIONS[month - 1]}
           </div>
           <div style={{
-            position: "absolute", right: "10%", top: "58%",
-            background: "#F2A5A5", color: "#fff", padding: "10px 20px",
-            borderRadius: 20, fontSize: 22, fontWeight: 700
+            position: "absolute",
+            right: "10%",
+            top: "58%",
+            background: "#F2A5A5",
+            color: "#fff",
+            padding: "10px 20px",
+            borderRadius: 20,
+            fontSize: 22,
+            fontWeight: 700
           }}>
             Ваш срок <br /> беременности <span style={{ fontSize: 32 }}>{month}</span>
           </div>
@@ -158,35 +191,51 @@ const NoraOnboarding: React.FC = () => {
         </h2>
         {/* Темы обсуждения */}
         <div style={{
-          display: "flex", flexWrap: "wrap", gap: 18, justifyContent: "center",
-          maxWidth: 700, margin: "0 auto 24px"
+          display: "flex",
+          flexWrap: "wrap",
+          gap: 18,
+          justifyContent: "center",
+          maxWidth: 700,
+          margin: "0 auto 24px"
         }}>
           {THEMES.map((t, idx) => (
             <div
               key={t.title}
               style={{
-                background: "#F7F8FA", borderRadius: 19,
+                background: "#F7F8FA",
+                borderRadius: 19,
                 boxShadow: selectedTheme === t.title ? "0 0 0 2px #F2A5A5 inset" : "none",
-                padding: "22px 28px", width: 240, cursor: "pointer"
+                padding: "22px 28px",
+                width: 240,
+                cursor: "pointer"
               }}
               onClick={() => setSelectedTheme(t.title)}
             >
               <div style={{ fontWeight: 700, fontSize: 21, marginBottom: 7 }}>
                 {t.title} <span style={{ marginLeft: 12, fontSize: 22 }}>{t.icon}</span>
               </div>
-              <div style={{ color: "#444" }}>{BABY_DESCRIPTIONS[month-1]}</div>
+              <div style={{ color: "#444" }}>{BABY_DESCRIPTIONS[month - 1]}</div>
             </div>
           ))}
         </div>
         {/* Поле ввода вопроса */}
         <div style={{
-          display: "flex", alignItems: "center", maxWidth: 600, margin: "0 auto",
-          gap: 12, borderRadius: 22, background: "#F7F8FA", padding: "10px 28px"
+          display: "flex",
+          alignItems: "center",
+          maxWidth: 600,
+          margin: "0 auto",
+          gap: 12,
+          borderRadius: 22,
+          background: "#F7F8FA",
+          padding: "10px 28px"
         }}>
           <input
             style={{
-              flex: 1, border: "none", fontSize: 26,
-              background: "transparent", color: "#222"
+              flex: 1,
+              border: "none",
+              fontSize: 26,
+              background: "transparent",
+              color: "#222"
             }}
             placeholder="Введите вопрос..."
             value={userMsg}
@@ -194,8 +243,11 @@ const NoraOnboarding: React.FC = () => {
           />
           <button
             style={{
-              border: "none", background: "none", color: "#F2A5A5",
-              fontSize: 36, cursor: "pointer"
+              border: "none",
+              background: "none",
+              color: "#F2A5A5",
+              fontSize: 36,
+              cursor: "pointer"
             }}
           >✈️</button>
         </div>
@@ -207,10 +259,55 @@ const NoraOnboarding: React.FC = () => {
 };
 
 // ---- Стили ----
-const pageStyle = { background: "#F8FBFC", minHeight: "100vh", width: "100vw", padding: "32px 0", position: "relative" } as React.CSSProperties;
-const imgStyle = { width: 230, height: 230, objectFit: "contain", display: "block", margin: "0 auto" };
-const btnStyle = { background: "linear-gradient(90deg,#F2A5A5,#F2A5A5)", color: "#fff", borderRadius: 19, height: 58, fontWeight: 600, fontSize: 22, border: "none", margin: "30px auto", display: "block", width: 340, cursor: "pointer" };
-const cardStyle = { background: "#F7F8FA", borderRadius: 17, padding: "12px 24px", minWidth: 110, fontSize: 19, color: "#222", textAlign: "center", marginRight: 8 } as React.CSSProperties;
-const selectStyle = { borderRadius: 13, padding: "8px 0", fontWeight: 700, fontSize: 32, minWidth: 50, textAlign: "center", margin: "0 2px", cursor: "pointer" } as React.CSSProperties;
+const pageStyle = {
+  background: "#F8FBFC",
+  minHeight: "100vh",
+  width: "100vw",
+  padding: "32px 0",
+  position: "relative"
+} as React.CSSProperties;
+
+const imgStyle = {
+  width: 230,
+  height: 230,
+  display: "block",
+  margin: "0 auto"
+};
+
+const btnStyle = {
+  background: "linear-gradient(90deg,#F2A5A5,#F2A5A5)",
+  color: "#fff",
+  borderRadius: 19,
+  height: 58,
+  fontWeight: 600,
+  fontSize: 22,
+  border: "none",
+  margin: "30px auto",
+  display: "block",
+  width: 340,
+  cursor: "pointer"
+};
+
+const cardStyle = {
+  background: "#F7F8FA",
+  borderRadius: 17,
+  padding: "12px 24px",
+  minWidth: 110,
+  fontSize: 19,
+  color: "#222",
+  textAlign: "center",
+  marginRight: 8
+} as React.CSSProperties;
+
+const selectStyle = {
+  borderRadius: 13,
+  padding: "8px 0",
+  fontWeight: 700,
+  fontSize: 32,
+  minWidth: 50,
+  textAlign: "center",
+  margin: "0 2px",
+  cursor: "pointer"
+} as React.CSSProperties;
 
 export default NoraOnboarding;
