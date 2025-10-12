@@ -4,9 +4,10 @@ import ReactMarkdown from "react-markdown";
 
 const NORA_COLOR = "#2e2e2e";
 const ICON_SIZE = 23;
-const PANEL_TOP = 20; // Панель на 20px ниже окна!
-const FIRST_MSG_OFFSET = 30; // Отступ после панели для всех сообщений
-const BANNER_BOTTOM_OFFSET = 60; // СТАРЫЙ (40) + новый (20) отступ после баннера
+const PANEL_TOP = 20; // отступ панели сверху
+const FIRST_MSG_OFFSET = 30; // стандартный отступ под панелью
+const ADDITIONAL_PANEL_OFFSET = 10; // твой дополнительный отступ
+const BANNER_BOTTOM_OFFSET = 60; // баннеру нужен отступ 40 + 20
 const ICONS = {
   telegram: "https://cdn-icons-png.flaticon.com/512/1946/1946547.png",
   trash: "https://cdn-icons-png.flaticon.com/512/1345/1345823.png",
@@ -98,15 +99,17 @@ const Chat: React.FC = () => {
     }
   };
 
+  // ====== Вся история чата отправляется в API! ======
   const sendMessageToGPT = async (text: string) => {
     setLoading(true);
-    setChatHistory(prev => [...prev, { text, sender: "user" }]);
+    const newHistory = [...chatHistory, { text, sender: "user" }];
+    setChatHistory(newHistory);
     setBotProgress("");
     try {
       const res = await fetch("/api/gpt", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: text, thread_id: threadId }),
+        body: JSON.stringify({ messages: newHistory, thread_id: threadId }),
       });
       const data = await res.json();
       if (data.thread_id) setThreadId(data.thread_id);
@@ -185,7 +188,7 @@ const Chat: React.FC = () => {
     );
   }
 
-  // Основной контейнер с корректными оступами
+  // Главный контейнер: большой отступ (панель + твой доп. отступ + 30px)
   return (
     <div
       style={{
@@ -198,7 +201,7 @@ const Chat: React.FC = () => {
         flexDirection: "column",
         alignItems: "center",
         boxSizing: "border-box",
-        paddingTop: panelHeight + PANEL_TOP + FIRST_MSG_OFFSET // ВСЕГДА не меньше 30px под панелью!
+        paddingTop: panelHeight + PANEL_TOP + FIRST_MSG_OFFSET + ADDITIONAL_PANEL_OFFSET
       }}
     >
       {/* Фиксированная панель */}
@@ -290,7 +293,7 @@ const Chat: React.FC = () => {
             }}
           />
         </div>
-        <div style={{ height: BANNER_BOTTOM_OFFSET }} /> {/* 60px (реально: старый + новый!) */}
+        <div style={{ height: BANNER_BOTTOM_OFFSET }} /> {/* 60px под фото */}
         <div style={{
           width: "calc(100% - 40px)", maxWidth, textAlign: "center"
         }}>
@@ -373,7 +376,7 @@ const Chat: React.FC = () => {
           maxWidth,
           padding: "0 20px",
           margin: "0 auto",
-          marginTop: 0, // paddingTop у всего контейнера уже большой!
+          marginTop: 0, // paddingTop главного контейнера гарантирует отсутствие перекрытия с панелью!
           flex: 1,
           overflowY: "auto"
         }}>
