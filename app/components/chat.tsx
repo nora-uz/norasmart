@@ -1,601 +1,470 @@
 "use client";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
 
+const NORA_COLOR = "#2e2e2e";
+const ICON_SIZE = 23;
 const ICONS = {
-  telegram: "https://cdn-icons-png.flaticon.com/512/9821/9821637.png",
-  sun: "https://cdn-icons-png.flaticon.com/512/16769/16769231.png",
-  moon: "https://cdn-icons-png.flaticon.com/512/16769/16769231.png",
-  trash: "https://cdn-icons-png.flaticon.com/512/3917/3917772.png",
-  arrow: "https://cdn-icons-png.flaticon.com/512/3916/3916848.png"
+  telegram: "https://cdn-icons-png.flaticon.com/512/1946/1946547.png",
+  trash: "https://cdn-icons-png.flaticon.com/512/1345/1345823.png",
+  share: "https://cdn-icons-png.flaticon.com/512/535/535285.png",
+  arrowRight: (
+    <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+      <path d="M6 11H16M16 11L12 7M16 11L12 15" stroke={NORA_COLOR} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
+  ),
 };
-
-const BANNER = "https://user-gen-media-assets.s3.amazonaws.com/seedream_images/4c36a715-f500-4186-8955-631a09fac0ed.png";
-const ICON_SIZE_PANEL = 18;
-const ICON_SIZE_SEND = 28;
-const BTN_SIZE = 50;
-const SEND_BTN_SIZE = 78;
+const filterNora = "invert(13%) sepia(4%) saturate(271%) hue-rotate(175deg) brightness(92%) contrast(93%)";
+const BANNER = "/banner.webp";
 const borderRadius = 22;
-const blockMargin = 20;
 const panelHeight = 62;
 const maxWidth = 560;
-const GRADIENT = "linear-gradient(90deg, #6a11cb 0%, #2575fc 100%)";
-
-const TOPICS = [
-  { title: "Сон", desc: "Проблемы с бессонницей и усталостью" },
-  { title: "Питание", desc: "Рацион и полезные продукты" },
-  { title: "Стрессы", desc: "Как управлять тревогой" },
-  { title: "Готовность к родам", desc: "Что знать заранее" },
-  { title: "Самочувствие", desc: "Физическое и эмоциональное состояние" },
-  { title: "Витамины", desc: "Что принимать, когда и зачем" },
-  { title: "Физическая активность", desc: "Можно ли и какую выбрать?" }
+const GRADIENT = "linear-gradient(90deg, #eff5fe 0%, #e5e8ed 100%)";
+const topics = [
+  {
+    title: "Постоянная усталость и сонливость",
+    description: "Чувствуете невозможную усталость? Узнайте, чем это вызвано и как минимально повысить энергию без вреда для малыша.",
+    query: "Почему беременные так быстро устают и что делать?"
+  },
+  {
+    title: "Тревоги, страхи и стресс",
+    description: "Беспокойство перед родами, страхи, паника — что делать, когда эмоции мешают наслаждаться ожиданием счастливого события?",
+    query: "Как справиться с тревогой во время беременности?"
+  },
+  {
+    title: "Рацион, питание, витамины",
+    description: "Что должно быть на столе будущей мамы? Какие витамины необходимы именно сейчас? Лёгкие идеи для меню на каждый день.",
+    query: "Какие продукты полезны беременным и какие витамины пить?"
+  },
+  {
+    title: "Проблемы со сном",
+    description: "Невозможно быстро заснуть, часто просыпаетесь ночью. Рабочие советы для комфортного сна и отдыха.",
+    query: "Как улучшить качество сна во время беременности?"
+  }
 ];
 
-type Role = "user" | "assistant";
-type Message = { role: Role; text: string };
+// Markdown форматирование ответа бота
+function formatBotText(text: string) {
+  if (!text) return "";
+  // Считаем первое предложение до точки (или !/?)
+  const firstSentenceMatch = text.match(/^([^.!?]+[.!?])/);
+  const firstSentence = firstSentenceMatch ? firstSentenceMatch[1].trim() : "";
+  const restText = firstSentence ? text.slice(firstSentence.length).trim() : text;
+  const lines = restText.split('\n').filter(Boolean);
+  let description = lines.slice(0, -1).join("\n").trim();
+  let question = lines.length > 1 ? lines[lines.length - 1].trim() : "";
 
-async function getAssistantReply(messagesArr: Message[]) {
-  try {
-    const res = await fetch("/api/chat", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ messages: messagesArr })
-    });
-    const data = await res.json();
-    if (data.reply) return data.reply;
-    return data.error || "Ошибка получения ответа ассистента";
-  } catch (error: any) {
-    return "Ошибка: " + error.message;
-  }
+  let result = "";
+  if (firstSentence) result += `**${firstSentence}**\n\n`;
+  if (description) result += `${description}\n\n`;
+  if (question) result += `${question}`;
+  return result.trim();
 }
-
-function iconBtn(color: string) {
-  return {
-    background: color,
-    border: "none",
-    cursor: "pointer",
-    width: BTN_SIZE,
-    height: BTN_SIZE,
-    borderRadius: BTN_SIZE / 2,
-    padding: 0,
-    display: "flex",
-    alignItems: "center" as const,
-    justifyContent: "center" as const,
-    boxShadow: "none"
-  };
-}
-const iconImgPanel = {
-  width: ICON_SIZE_PANEL,
-  height: ICON_SIZE_PANEL,
-  display: "block" as const,
-  background: "none",
-  filter: "brightness(0) invert(1)"
-};
-const iconImgSend = {
-  width: ICON_SIZE_SEND,
-  height: ICON_SIZE_SEND,
-  display: "block" as const,
-  background: "none"
-};
-
-const themes = {
-  dark: {
-    panelBg: "#232323",
-    bgColor: "#b4b4b4",
-    userBubble: "#343434",
-    userText: "#fff",
-    inputBg: "#232323",
-    inputText: "#fff",
-    placeholder: "#888",
-    assistantBubble: "#262939",
-    assistantText: "#fff"
-  },
-  light: {
-    panelBg: "#F6F7FB",
-    bgColor: "#b4b4b4",
-    userBubble: "#fff",
-    userText: "#333",
-    inputBg: "#F6F7FB",
-    inputText: "#222",
-    placeholder: "#333",
-    assistantBubble: "#E8EAED",
-    assistantText: "#333"
-  }
-};
 
 const Chat: React.FC = () => {
-  const [userInput, setUserInput] = useState("");
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [inputDisabled, setInputDisabled] = useState(false);
-  const [darkMode, setDarkMode] = useState(true);
-  const [pickedMonth, setPickedMonth] = useState<number | null>(null);
-  const [pickedTopic, setPickedTopic] = useState<typeof TOPICS[0] | null>(null);
-  const [firstMessageSent, setFirstMessageSent] = useState(false);
-  const [waitingBot, setWaitingBot] = useState(false);
-  const [streamedBotText, setStreamedBotText] = useState("");
-  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const [showWelcome, setShowWelcome] = useState(true);
+  const [preloading, setPreloading] = useState(true);
+  const [message, setMessage] = useState("");
+  const [showTopics, setShowTopics] = useState(true);
+  const [chatHistory, setChatHistory] = useState<{text: string, sender: "user"|"bot"}[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [threadId, setThreadId] = useState<string | null>(null);
+  const [isTyping, setIsTyping] = useState(false);
 
-  const theme = darkMode ? themes.dark : themes.light;
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages, streamedBotText]);
+    document.body.style.overflow = "hidden";
+    return () => { document.body.style.overflow = "auto"; };
+  }, []);
+  useEffect(() => {
+    const timer = setTimeout(() => setPreloading(false), 1000);
+    return () => clearTimeout(timer);
+  }, []);
 
-  const showSteps = !(pickedMonth && pickedTopic) && !firstMessageSent;
-  const showFixedInput = pickedMonth && pickedTopic;
-
-  const handleMonthPick = (month: number) => {
-    if (inputDisabled) return;
-    setPickedMonth(month);
-    setPickedTopic(null);
-    setUserInput("");
-    setFirstMessageSent(false);
-    setMessages([]);
-  };
-
-  async function streamBotResponse(msg: string, existing: Message[]) {
-    setStreamedBotText("");
-    setWaitingBot(true);
-    try {
-      let reply = await getAssistantReply([{ role: "user" as Role, text: msg }]);
-      let arr = reply.split("");
-      for (let i = 0; i <= arr.length; i++) {
-        setStreamedBotText(arr.slice(0, i).join(""));
-        await new Promise(r => setTimeout(r, 13));
-      }
-      setMessages([
-        ...existing,
-        { role: "assistant" as Role, text: reply }
-      ]);
-    } catch {
-      setMessages([
-        ...existing,
-        { role: "assistant" as Role, text: "Ошибка ответа ассистента, попробуйте позже." }
-      ]);
-    } finally {
-      setStreamedBotText("");
-      setInputDisabled(false);
-      setWaitingBot(false);
+  const handleShare = () => {
+    if (navigator.share) {
+      navigator.share({
+        title: "Nora AI — Ассистент для будущих мам",
+        text: "Современный ассистент для будущих мам на базе NHS — все рекомендации по беременности в одном месте.",
+        url: window.location.href
+      });
+    } else {
+      alert("Ваш браузер не поддерживает Web Share API");
     }
-  }
-
-  const handleTopicPick = async (topic: typeof TOPICS[0]) => {
-    if (inputDisabled || !pickedMonth) return;
-    setPickedTopic(topic);
-    const templateMessage = `Срок беременности: ${pickedMonth} месяц, хочу обсудить ${topic.title.toLowerCase()} и ${topic.desc.toLowerCase()}.`;
-    setMessages([{ role: "user" as Role, text: templateMessage }]);
-    setFirstMessageSent(true);
-    setUserInput("");
-    setInputDisabled(true);
-    setWaitingBot(true);
-    await streamBotResponse(templateMessage, [{ role: "user" as Role, text: templateMessage }]);
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!userInput.trim() || inputDisabled) return;
-    setMessages(prev => [...prev, { role: "user" as Role, text: userInput }]);
-    setUserInput("");
-    setInputDisabled(true);
-    setWaitingBot(true);
-    await streamBotResponse(userInput, [...messages, { role: "user" as Role, text: userInput }]);
+  // Ассинхронная отправка сообщения - с threadId и индикатором typing
+  const sendMessageToGPT = async (text: string) => {
+    setLoading(true);
+    setIsTyping(true);
+    setChatHistory(prev => [...prev, { text, sender: "user" }]);
+    try {
+      const res = await fetch("/api/gpt", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: text, thread_id: threadId }),
+      });
+      const data = await res.json();
+      if (data.thread_id) setThreadId(data.thread_id);
+
+      let botReply = data.reply;
+      if (res.status !== 200 || !botReply) {
+        botReply = data.error 
+          ? (typeof data.error === 'string'
+              ? `Ошибка сервера: ${data.error}`
+              : `Ассистент не ответил (ошибка сервера)`)
+          : "Извините, нет ответа от ассистента.";
+      }
+      setChatHistory(prev => [...prev, { text: botReply, sender: "bot" }]);
+    } catch (error) {
+      setChatHistory(prev => [...prev, { text: "Ошибка: не удалось получить ответ.", sender: "bot" }]);
+    } finally {
+      setLoading(false);
+      setIsTyping(false);
+    }
   };
 
-  const clearChat = () => {
-    setMessages([]);
-    setUserInput("");
-    setPickedMonth(null);
-    setPickedTopic(null);
-    setFirstMessageSent(false);
-    setWaitingBot(false);
-    setStreamedBotText("");
+  const handleSendMessage = () => {
+    if (message.trim() && !loading) {
+      sendMessageToGPT(message.trim());
+      setMessage("");
+    }
+  };
+  const handleTopicClick = (topic: typeof topics[0]) => {
+    setShowTopics(false);
+    sendMessageToGPT(`Хочу обсудить ${topic.title.toLowerCase()}`);
+    setMessage("");
   };
 
-  function assistantBubbleStyle() {
-    return {
-      background: theme.assistantBubble,
-      color: theme.assistantText,
-      borderRadius: borderRadius,
-      padding: "16px 32px",
-      fontSize: 16,
-      lineHeight: 1.7,
-      border: "none",
-      width: `calc(100% - 40px)`,
-      marginLeft: 20,
-      marginRight: 20,
-      wordBreak: "break-word" as const,
-      alignSelf: "flex-start" as const,
-      boxShadow: "none",
-      textAlign: "left" as const,
-      transition: "background 0.4s, color 0.4s"
-    };
-  }
-  function userBubbleStyle() {
-    return {
-      background: theme.userBubble,
-      color: theme.userText,
-      borderRadius: borderRadius,
-      padding: "14px 32px",
-      fontSize: 16,
-      lineHeight: 1.7,
-      border: "none",
-      maxWidth: "65%",
-      minWidth: 54,
-      marginLeft: 20,
-      marginRight: 20,
-      wordBreak: "break-word" as const,
-      alignSelf: "flex-end" as const,
-      boxShadow: "none",
-      textAlign: "right" as const,
-      transition: "background 0.4s, color 0.4s"
-    };
+  if (preloading) {
+    return (
+      <div style={{
+        background: "#f8fdff",
+        width: "100vw",
+        height: "100vh",
+        minHeight: "100vh",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        position: "fixed",
+        top: 0,
+        left: 0,
+        zIndex: 10000,
+        margin: 0, padding: 0
+      }}>
+        <span style={{
+          fontWeight: 800,
+          fontSize: "38px",
+          color: NORA_COLOR,
+          letterSpacing: "0.07em",
+          animation: "noraPulse 1.4s infinite linear"
+        }}>Nora AI</span>
+        <style>{`
+          @keyframes noraPulse {
+            0% { opacity: 0.30; }
+            50% { opacity: 1; }
+            100% { opacity: 0.30; }
+          }
+        `}</style>
+      </div>
+    );
   }
 
   return (
-    <div
-      style={{
-        background: theme.bgColor,
-        width: "100vw",
-        minHeight: 800,
-        overflow: "hidden",
-        position: "relative",
-        transition: "background 0.4s"
-      }}
-    >
-      <style>{`
-        .months-scroll::-webkit-scrollbar { display: none; }
-        .months-scroll { scrollbar-width: none; -ms-overflow-style: none; }
-      `}</style>
-      <div style={{ height: blockMargin }} />
-      <div
-        style={{
-          width: `calc(100% - 40px)`,
-          maxWidth,
-          height: panelHeight,
-          margin: "0 auto",
-          background: GRADIENT,
-          color: "#fff",
+    <div style={{
+      background: "#f8fdff", width: "100vw", height: "100vh",
+      overflow: "hidden", position: "relative", display: "flex",
+      flexDirection: "column", alignItems: "center", boxSizing: "border-box"
+    }}>
+      <div style={{ height: 20 }} />
+      {/* Панель всегда */}
+      <div style={{
+        width: "calc(100% - 40px)",
+        maxWidth,
+        minHeight: panelHeight,
+        background: GRADIENT,
+        color: NORA_COLOR,
+        margin: "0px auto 0 auto",
+        display: "flex",
+        alignItems: "center",
+        borderRadius: borderRadius,
+        paddingLeft: 20,
+        paddingRight: 12,
+        paddingTop: 5,
+        paddingBottom: 5,
+        justifyContent: "flex-start",
+        boxSizing: "border-box"
+      }}>
+        <div style={{
+          marginRight: 10,
+          color: NORA_COLOR,
           display: "flex",
-          alignItems: "center" as const,
-          borderRadius: borderRadius,
-          padding: `0 16px`,
-          justifyContent: "flex-start" as const,
-          boxSizing: "border-box",
-          position: "relative",
-          zIndex: 2000,
-          transition: "background 0.4s, color 0.4s"
-        }}
-      >
-        <div style={{ fontWeight: 800, fontSize: 25, marginRight: 16 }}>
-          Nora AI
+          flexDirection: "column",
+          justifyContent: "center",
+          minWidth: 0
+        }}>
+          <span style={{
+            fontWeight: 800, fontSize: "17px", lineHeight: 1.06,
+            whiteSpace: "nowrap", marginBottom: 7
+          }}>Nora AI</span>
+          <span style={{
+            fontWeight: 400, fontSize: "11px", color: "#565656",
+            lineHeight: 1.04, whiteSpace: "nowrap"
+          }}>Ассистент для будущих мам</span>
         </div>
-        <div style={{ display: "flex", alignItems: "center" as const, gap: 7, marginLeft: "auto" }}>
-          <button style={iconBtn("transparent")} onClick={() => setDarkMode((prev) => !prev)}>
-            <img src={darkMode ? ICONS.sun : ICONS.moon} alt="Theme" style={iconImgPanel} />
+        <div style={{ display: "flex", alignItems: "center", gap: 8, marginLeft: "auto" }}>
+          <button style={{
+            background: "transparent", border: "none", cursor: "pointer",
+            width: 38, height: 38, borderRadius: 19,
+            display: "flex", alignItems: "center", justifyContent: "center"
+          }} onClick={handleShare}>
+            <img src={ICONS.share} alt="Share"
+              style={{ width: ICON_SIZE, height: ICON_SIZE, filter: filterNora }} />
           </button>
-          <button style={iconBtn("transparent")} onClick={() => window.open("https://t.me/", "_blank")}>
-            <img src={ICONS.telegram} alt="Telegram" style={iconImgPanel} />
+          <button style={{
+            background: "transparent", border: "none", cursor: "pointer",
+            width: 38, height: 38, borderRadius: 19,
+            display: "flex", alignItems: "center", justifyContent: "center"
+          }} onClick={() => window.open("https://t.me/norasmart", "_blank")}>
+            <img src={ICONS.telegram} alt="Telegram"
+              style={{ width: ICON_SIZE, height: ICON_SIZE, filter: filterNora }} />
           </button>
-          <button style={{ ...iconBtn("transparent"), marginRight: -16 }} onClick={clearChat}>
-            <img src={ICONS.trash} alt="Trash" style={iconImgPanel} />
+          <button style={{
+            background: "transparent", border: "none", cursor: "pointer",
+            width: 38, height: 38, borderRadius: 19,
+            display: "flex", alignItems: "center", justifyContent: "center"
+          }} onClick={() => {
+            setChatHistory([]);
+            setThreadId(null);
+            setShowWelcome(true);
+            setShowTopics(true);
+          }}>
+            <img src={ICONS.trash} alt="Trash"
+              style={{ width: ICON_SIZE, height: ICON_SIZE, filter: filterNora }} />
           </button>
         </div>
       </div>
-      <div style={{ height: blockMargin }} />
-      <div
-        style={{
-          width: `calc(100% - 40px)`,
-          maxWidth,
-          margin: "0 auto",
-          borderRadius: 26,
-          overflow: "hidden",
-          background: theme.bgColor,
-          display: "flex",
-          justifyContent: "center" as const,
-          alignItems: "center" as const,
-          position: "relative"
-        }}
-      >
-        <img
-          src={BANNER}
-          alt="Nora AI баннер"
+
+      {/* --- Welcome & Topics --- */}
+      {showWelcome ? (
+        <>
+        <div style={{
+          width: "calc(100% - 40px)", maxWidth, borderRadius: 26,
+          overflow: "hidden", margin: "40px auto 0 auto",
+          display: "flex", justifyContent: "center", alignItems: "center"
+        }}>
+          <img src={BANNER} alt="Nora AI баннер"
+            style={{
+              width: "100%", height: "auto", display: "block",
+              objectFit: "contain", objectPosition: "center"
+            }}
+            loading="lazy" fetchPriority="high"
+          />
+        </div>
+        <div style={{ height: 40 }} />
+        <div style={{
+          width: "calc(100% - 40px)", maxWidth, textAlign: "center"
+        }}>
+          <div style={{
+            fontWeight: 700, fontSize: "22px", color: NORA_COLOR, marginBottom: 14
+          }}>Добро пожаловать в Nora AI</div>
+          <div style={{
+            fontWeight: 400, fontSize: "15px", margin: "0 auto 0 auto",
+            maxWidth: 400, padding: "0 20px", lineHeight: 1.75,
+            color: NORA_COLOR, display: "inline-block"
+          }}>
+            Я помогаю будущим мамам на каждом этапе беременности: отвечаю на вопросы, напоминаю о важных делах, слежу за самочувствием и даю советы, основанные на медицине Великобритании NHS.
+          </div>
+          <div style={{ height: 40 }} />
+        </div>
+        <button
           style={{
             width: "100%",
-            height: "auto",
-            display: "block",
-            objectFit: "contain",
-            objectPosition: "center"
+            maxWidth: 290,
+            background: GRADIENT,
+            color: NORA_COLOR,
+            border: "none",
+            borderRadius: borderRadius,
+            fontWeight: 700,
+            fontSize: "17px",
+            padding: "15px 0",
+            margin: "0 20px",
+            cursor: "pointer",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center"
           }}
-        />
-      </div>
-      <div style={{ height: blockMargin }} />
-
-      {/* Выбор месяца и темы */}
-      {showSteps && (
-        <div style={{
-          width: `calc(100% - 40px)`,
-          maxWidth,
-          margin: "0 auto",
-          borderRadius: borderRadius,
-          background: theme.inputBg,
-          marginBottom: blockMargin,
-          padding: `18px 20px 22px 20px`,
-          display: "flex",
-          flexDirection: "column" as const,
-          alignItems: "center" as const
-        }}>
-          <div style={{ width: "100%" }}>
-            <div style={{
-              fontWeight: 400,
-              fontSize: 17,
-              marginBottom: blockMargin,
-              color: "#fff",
-              letterSpacing: "0.03em"
-            }}>
-              Выберите срок беременности:
-            </div>
-            <div className="months-scroll" style={{
-              display: "flex",
-              gap: 12,
-              overflowX: "auto",
-              padding: "6px 0 6px 0",
-              scrollSnapType: "x mandatory"
-            }}>
-              {[...Array(9)].map((_, i) => {
-                let month = i + 1;
-                let styleBtn = {
-                  minWidth: 52,
-                  height: 52,
-                  borderRadius: 20,
-                  border: "none",
-                  cursor: inputDisabled ? "not-allowed" : "pointer",
-                  fontSize: 26,
-                  fontWeight: 600,
-                  background: pickedMonth === month ? "#fff" : GRADIENT,
-                  color: pickedMonth === month ? "#2575fc" : "#fff",
-                  opacity: 1,
-                  boxShadow: "none",
-                  outline: "none",
-                  scrollSnapAlign: "center" as const,
-                  marginRight: i < 8 ? 9 : 0,
-                  transition: "box-shadow 0.2s, background 0.2s, color 0.2s"
-                };
-                return (
-                  <button
-                    key={month}
-                    style={styleBtn}
-                    disabled={inputDisabled}
-                    onClick={() => handleMonthPick(month)}
-                  >
-                    {month}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-          <div style={{ height: blockMargin }} />
-          <div style={{ width: "100%", marginBottom: 0 }}>
-            <div style={{
-              fontWeight: 400,
-              fontSize: 17,
-              marginBottom: blockMargin,
-              color: "#fff",
-              letterSpacing: "0.03em"
-            }}>
-              Выберите тему для обсуждения:
-            </div>
-            <div style={{ display: "flex", flexDirection: "column" as const, gap: 16 }}>
-              {TOPICS.map((topic, i) => {
-                let isSelected = pickedTopic?.title === topic.title;
-                let disabled = inputDisabled || !pickedMonth;
-                let styleBtn = {
-                  width: "100%",
-                  borderRadius: 18,
-                  border: "none",
-                  cursor: disabled ? "not-allowed" : "pointer",
-                  background: isSelected ? "#fff" : GRADIENT,
-                  color: isSelected ? "#2575fc" : "#fff",
-                  opacity: disabled ? 0.45 : 1,
-                  textAlign: "left" as const,
-                  padding: "17px 18px 13px 18px",
-                  display: "flex",
-                  flexDirection: "column" as const,
-                  alignItems: "flex-start" as const,
-                  fontWeight: 600,
-                  boxShadow: "none",
-                  outline: "none",
-                  filter: disabled ? "brightness(0.7) grayscale(0.4)" : "none",
-                  transition: "box-shadow 0.2s, background 0.2s, color 0.2s"
-                };
-                return (
-                  <button
-                    key={i}
-                    style={styleBtn}
-                    disabled={disabled}
-                    onClick={() => handleTopicPick(topic)}
-                  >
-                    <span style={{
-                      fontSize: 19,
-                      fontWeight: 700,
-                      marginBottom: 5,
-                      color: isSelected ? "#2575fc" : "#fff"
-                    }}>
-                      {topic.title}
-                    </span>
-                    <span style={{
-                      fontSize: 15,
-                      fontWeight: 400,
-                      opacity: 0.95,
-                      color: isSelected ? "#2575fc" : "#fff"
-                    }}>
-                      {topic.desc}
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Только шаблонный первый вопрос, без быстрых ответов */}
-      {(firstMessageSent && messages.length > 0) && (
+          onClick={() => setShowWelcome(false)}
+        >
+          Начать пользоваться&nbsp;
+          <span style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+            {ICONS.arrowRight}
+          </span>
+        </button>
+        </>
+      ) : (
         <>
-          <div style={{ height: blockMargin }} />
+        {showTopics && (
           <div style={{
             width: "100%",
-            maxWidth,
-            margin: "0 auto",
-            paddingLeft: 20,
-            paddingRight: 20
+            maxWidth: 520,
+            padding: "0 20px",
+            display: "flex",
+            flexDirection: "column",
+            gap: 20,
+            margin: "20px auto 0 auto",
           }}>
-            <div style={{
-              background: "#F6F7FB",
-              color: "#232323",
-              borderRadius: borderRadius,
-              padding: "14px 20px",
-              fontSize: 16,
-              lineHeight: 1.7,
-              border: "none",
-              boxShadow: "none",
-              textAlign: "left",
-              marginBottom: blockMargin
-            }}>
-              {messages[0]?.text}
-            </div>
+            {topics.map((topic, idx) => (
+              <div key={idx}
+                style={{
+                  background: GRADIENT,
+                  borderRadius: borderRadius,
+                  padding: "15px 20px",
+                  display: "flex", flexDirection: "column",
+                  alignItems: "flex-start", boxSizing: "border-box",
+                  cursor: "pointer",
+                  boxShadow: "0 2px 14px 0 rgba(155,175,205,0.07)"
+                }}
+                onClick={() => handleTopicClick(topic)}
+              >
+                <div style={{
+                  fontWeight: 600, fontSize: "16px", color: NORA_COLOR, marginBottom: 7
+                }}>{topic.title}</div>
+                <div style={{
+                  fontWeight: 400, fontSize: "13px", color: "#565656", lineHeight: 1.4
+                }}>{topic.description}</div>
+              </div>
+            ))}
           </div>
-        </>
-      )}
+        )}
 
-      {/* Чат сообщения */}
-      {!showSteps && firstMessageSent && (
+        {/* История сообщений */}
         <div style={{
           width: "100%",
           maxWidth,
+          padding: "0 20px",
+          margin: "0 auto",
+          marginTop: showTopics ? 20 : 32,
+          flex: 1,
+          overflowY: "auto"
+        }}>
+          {chatHistory.map((msg, idx) => (
+            <div
+              key={idx}
+              style={{
+                display: "flex",
+                justifyContent: msg.sender === "user" ? "flex-end" : "flex-start",
+                width: "100%",
+                marginBottom: 20,
+              }}
+            >
+              <span
+                style={{
+                  background: msg.sender === "user" ? GRADIENT : "transparent",
+                  color: NORA_COLOR,
+                  borderRadius: msg.sender === "user" ? 16 : 0,
+                  padding: "18px 28px",
+                  lineHeight: 1.7,
+                  fontSize: 17,
+                  minWidth: 0,
+                  boxShadow: msg.sender === "user" ? "0 2px 14px 0 rgba(155,175,205,0.07)" : "none",
+                  maxWidth: msg.sender === "user" ? "70%" : "100%",
+                  marginRight: msg.sender === "user" ? "0" : "auto",
+                  marginLeft: msg.sender === "user" ? "auto" : "0",
+                  wordBreak: "break-word",
+                  fontWeight: msg.sender === "user" ? 400 : 400,
+                  margin: 0,
+                }}
+              >
+                {msg.sender === "bot"
+                  ? <ReactMarkdown>{formatBotText(msg.text)}</ReactMarkdown>
+                  : msg.text
+                }
+              </span>
+            </div>
+          ))}
+          {isTyping && (
+            <div style={{ textAlign: "left", marginBottom: 20 }}>
+              <span style={{
+                fontWeight: 400,
+                fontSize: 17,
+                color: "#bfbfbf",
+                letterSpacing: "0.12em",
+                fontStyle: "italic"
+              }}>
+                Ассистент печатает
+                <span style={{ animation: "dots 1.5s infinite linear" }}>...</span>
+              </span>
+              <style>{`
+                @keyframes dots {
+                  0% { opacity: 0.3;}
+                  50% { opacity: 1;}
+                  100% { opacity: 0.3;}
+                }
+              `}</style>
+            </div>
+          )}
+        </div>
+        {/* Поле ввода фиксировано внизу */}
+        <div style={{
+          width: "100%",
+          padding: "0 20px",
+          display: "flex",
+          alignItems: "center",
           margin: "0 auto",
           boxSizing: "border-box",
-          flex: 1,
-          display: "flex",
-          flexDirection: "column" as const,
-          alignItems: "center" as const,
-          overflow: "hidden"
+          maxWidth: maxWidth,
+          position: "fixed",
+          left: 0,
+          bottom: 20,
+          background: "#f8fdff",
+          zIndex: 20
         }}>
-          <div style={{ height: blockMargin }} />
-          <div style={{
-            width: "100%",
-            flex: 1,
-            minHeight: 0,
-            overflowY: "auto",
-            display: "flex",
-            flexDirection: "column" as const,
-            justifyContent: "flex-start" as const
-          }}>
-            {messages.slice(1).map((msg, idx) => (
-              <div key={idx} style={{
-                width: "100%",
-                display: "flex",
-                justifyContent: msg.role === "assistant" ? "flex-start" as const : "flex-end" as const,
-                marginBottom: 12
-              }}>
-                {msg.role === "assistant" ? (
-                  <div style={assistantBubbleStyle()}>
-                    <ReactMarkdown>{msg.text}</ReactMarkdown>
-                  </div>
-                ) : (
-                  <div style={userBubbleStyle()}>
-                    {msg.text}
-                  </div>
-                )}
-              </div>
-            ))}
-            {waitingBot && streamedBotText &&
-              <div style={{
-                width: "100%",
-                display: "flex",
-                justifyContent: "flex-start" as const,
-                marginBottom: 12
-              }}>
-                <div style={assistantBubbleStyle()}>
-                  <ReactMarkdown>{streamedBotText}</ReactMarkdown>
-                </div>
-              </div>
-            }
-            <div ref={messagesEndRef} />
-            <div style={{ height: BTN_SIZE + 48 }} />
-          </div>
+          <input
+            type="text"
+            value={message}
+            onChange={e => setMessage(e.target.value)}
+            placeholder="Введите сообщение..."
+            style={{
+              flex: 1,
+              height: 48,
+              fontSize: "16px",
+              borderRadius: borderRadius,
+              border: "1px solid #e5e8ed",
+              padding: "0 18px",
+              background: "#fff",
+              color: NORA_COLOR,
+              boxSizing: "border-box",
+              marginRight: 8
+            }}
+            onKeyDown={e => { if (e.key === 'Enter') handleSendMessage(); }}
+            disabled={loading}
+          />
+          <button
+            style={{
+              width: 48,
+              height: 48,
+              background: GRADIENT,
+              color: NORA_COLOR,
+              border: "none",
+              borderRadius: borderRadius,
+              fontWeight: 700,
+              fontSize: "17px",
+              cursor: loading ? "not-allowed" : "pointer",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              boxShadow: "0 2px 14px 0 rgba(155,175,205,0.12)"
+            }}
+            onClick={handleSendMessage}
+            disabled={loading}
+          >
+            <span style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+              {ICONS.arrowRight}
+            </span>
+          </button>
         </div>
+        </>
       )}
-
-      <div style={{ height: blockMargin }} />
-      <form
-        onSubmit={handleSubmit}
-        style={{
-          position: showFixedInput ? "fixed" as const : "static" as const,
-          left: showFixedInput ? "50%" : "auto",
-          bottom: showFixedInput ? blockMargin : "auto",
-          transform: showFixedInput ? "translateX(-50%)" : "none",
-          width: `calc(100% - 40px)`,
-          maxWidth,
-          margin: showFixedInput ? 0 : `0 auto`,
-          zIndex: showFixedInput ? 2600 : "auto",
-          display: "flex",
-          alignItems: "center" as const,
-          background: "none",
-          boxSizing: "border-box",
-          padding: 0
-        }}
-      >
-        <input
-          type="text"
-          style={{
-            flex: 1,
-            border: "none",
-            borderRadius: borderRadius,
-            height: BTN_SIZE,
-            padding: `0 8px 0 16px`,
-            fontSize: 21,
-            background: theme.inputBg,
-            color: theme.inputText,
-            outline: "none",
-            marginRight: 0,
-            transition: "background 0.4s, color 0.4s"
-          }}
-          value={userInput}
-          onChange={(e) => setUserInput(e.target.value)}
-          placeholder="Введите ваш вопрос"
-          disabled={inputDisabled}
-          className="nora-input"
-        />
-        <button
-          type="submit"
-          style={{
-            background: "#fff",
-            color: "#2575fc",
-            border: "none",
-            borderRadius: borderRadius,
-            width: SEND_BTN_SIZE,
-            height: BTN_SIZE,
-            marginLeft: 16,
-            display: "flex",
-            justifyContent: "center" as const,
-            alignItems: "center" as const,
-            cursor: inputDisabled ? "not-allowed" : "pointer",
-            opacity: inputDisabled ? 0.7 : 1,
-            boxShadow: "none",
-            transition: "background 0.4s, color 0.4s"
-          }}
-          disabled={inputDisabled}
-        >
-          <img src={ICONS.arrow} alt="Send" style={iconImgSend} />
-        </button>
-        <style>{`
-          .nora-input::placeholder {
-            color: ${theme.placeholder};
-            opacity: 1;
-            font-size: 21px;
-          }
-        `}</style>
-      </form>
-      <div style={{ height: blockMargin }} />
     </div>
   );
 };
