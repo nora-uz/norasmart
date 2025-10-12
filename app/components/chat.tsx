@@ -7,7 +7,8 @@ const ICON_SIZE = 23;
 const PANEL_TOP = 20;
 const FIRST_MSG_OFFSET = 30;
 const ADDITIONAL_PANEL_OFFSET = 10;
-const BANNER_BOTTOM_OFFSET = 50; // между фото и заголовком теперь 50px!
+const BANNER_BOTTOM_OFFSET = 50;
+
 const ICONS = {
   telegram: "https://cdn-icons-png.flaticon.com/512/1946/1946547.png",
   trash: "https://cdn-icons-png.flaticon.com/512/1345/1345823.png",
@@ -48,12 +49,10 @@ const topics = [
   }
 ];
 
-// Запрет на любые звездочки
 function filterAsterisks(str: string) {
   return str.replace(/\*/g, "");
 }
 
-// Форматирование ответа без звездочек
 function formatBotText(text: string) {
   if (!text) return "";
   let cleaned = filterAsterisks(text).replace(/_/g, "");
@@ -63,11 +62,10 @@ function formatBotText(text: string) {
   let result = "";
   if (firstSentence) result += `**${firstSentence}** `;
   if (restText) result += restText;
-  result = result.replace(/\*\*(.*?)\*\*[*]+/g, "$1"); // на всякий случай
+  result = result.replace(/\*\*(.*?)\*\*[*]+/g, "$1");
   return result.trim();
 }
 
-// Типизация сообщений для правильной работы
 type Message = { text: string; sender: "user" | "bot" };
 
 const Chat: React.FC = () => {
@@ -108,6 +106,7 @@ const Chat: React.FC = () => {
     }
   };
 
+  // Передавай всю историю!
   const sendMessageToGPT = async (text: string) => {
     setLoading(true);
     const newHistory: Message[] = [...chatHistory, { text: filterAsterisks(text), sender: "user" }];
@@ -243,11 +242,11 @@ const Chat: React.FC = () => {
           minWidth: 0
         }}>
           <span style={{
-            fontWeight: 800, fontSize: "17px", lineHeight: 1.06,
+            fontWeight: 800, fontSize: "19px", lineHeight: 1.06, // увеличил!
             whiteSpace: "nowrap", marginBottom: 7
           }}>Nora AI</span>
           <span style={{
-            fontWeight: 400, fontSize: "11px", color: "#565656",
+            fontWeight: 400, fontSize: "13px", color: "#565656", // увеличил!
             lineHeight: 1.04, whiteSpace: "nowrap"
           }}>Ассистент для будущих мам</span>
         </div>
@@ -285,10 +284,9 @@ const Chat: React.FC = () => {
         </div>
       </div>
 
-      {/* --- Welcome & Topics --- */}
       {showWelcome ? (
         <>
-        {/* Теперь marginTop: 10px между панелью и фото */}
+        {/* Баннер: marginTop 10px между панелью и фото! */}
         <div style={{
           width: "calc(100% - 40px)", maxWidth, borderRadius: 26,
           overflow: "hidden", margin: "10px auto 0 auto",
@@ -301,13 +299,13 @@ const Chat: React.FC = () => {
             }}
           />
         </div>
-        <div style={{ height: BANNER_BOTTOM_OFFSET }} /> {/* 50px под фото до заголовка */}
+        <div style={{ height: BANNER_BOTTOM_OFFSET }} />
         <div style={{
           width: "calc(100% - 40px)", maxWidth, textAlign: "center"
         }}>
           <div style={{
             fontWeight: 700, fontSize: "22px", color: NORA_COLOR, marginBottom: 14
-          }}>Добро пожаловать в Nora AI</div>
+          }}>Добро пожаловать, Я Nora</div>
           <div style={{
             fontWeight: 400, fontSize: "15px", margin: "0 auto 0 auto",
             maxWidth: 400, padding: "0 20px", lineHeight: 1.75,
@@ -378,7 +376,6 @@ const Chat: React.FC = () => {
           </div>
         )}
 
-        {/* История сообщений и анимация печати */}
         <div style={{
           width: "100%",
           maxWidth,
@@ -453,7 +450,6 @@ const Chat: React.FC = () => {
           )}
           <div ref={messagesEndRef} />
         </div>
-        {/* Поле ввода фиксировано внизу */}
         <div style={{
           width: "100%",
           padding: "0 20px",
