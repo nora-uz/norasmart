@@ -43,22 +43,17 @@ const topics = [
   }
 ];
 
-// Форматирование ответа бота: жирное первое предложение, никаких курсивов/лишних звезд
+// Форматирование ответа без курсива и с жирным первым предложением
 function formatBotText(text: string) {
   if (!text) return "";
-  // Удаляем _ и standalone *
+  // Удаляем _ и одиночные *
   let cleaned = text.replace(/_/g, "").replace(/(\*){1}(?!\*)/g, "");
-
-  // Находим первое предложение по точке, вопросу или восклицательному знаку
   const firstSentenceMatch = cleaned.match(/^([^.!?]+[.!?])/);
   const firstSentence = firstSentenceMatch ? firstSentenceMatch[1].trim() : "";
   const restText = firstSentence ? cleaned.slice(firstSentence.length).trim() : cleaned.trim();
-
   let result = "";
   if (firstSentence) result += `**${firstSentence}** `;
   if (restText) result += restText;
-
-  // Очищаем ошибочный markdown внутри жирного:
   result = result.replace(/\*\*(.*?)\*\*[*]+/g, "**$1**");
   return result.trim();
 }
@@ -71,8 +66,7 @@ const Chat: React.FC = () => {
   const [chatHistory, setChatHistory] = useState<{text: string, sender: "user"|"bot"}[]>([]);
   const [loading, setLoading] = useState(false);
   const [threadId, setThreadId] = useState<string | null>(null);
-  const [botProgress, setBotProgress] = useState(""); // для печати ответа
-
+  const [botProgress, setBotProgress] = useState(""); // для печати ответа  
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -125,7 +119,7 @@ const Chat: React.FC = () => {
       }
 
       let i = 0;
-      setBotProgress(""); // очищаем предыдущий прогресс
+      setBotProgress("");
       const interval = setInterval(() => {
         setBotProgress(botReply.slice(0, i));
         i++;
@@ -331,7 +325,7 @@ const Chat: React.FC = () => {
             display: "flex",
             flexDirection: "column",
             gap: 20,
-            margin: "30px auto 0 auto", // <-- ОТСТУП ВЕРХНИЙ для тем!
+            margin: "30px auto 0 auto", // <-- ОТСТУП ВЕРХНИЙ
           }}>
             {topics.map((topic, idx) => (
               <div key={idx}
@@ -363,7 +357,7 @@ const Chat: React.FC = () => {
           maxWidth,
           padding: "0 20px",
           margin: "0 auto",
-          marginTop: showTopics ? 0 : 30, // Отступ для первого сообщения при отсутствии тем
+          marginTop: showTopics ? 0 : 30, // <-- ОТСТУП ВЕРХНИЙ ТОЛЬКО ЕСЛИ showTopics = false !!!
           flex: 1,
           overflowY: "auto"
         }}>
