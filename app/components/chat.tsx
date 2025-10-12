@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import ReactMarkdown from "react-markdown";
 
 const NORA_COLOR = "#2e2e2e";
@@ -43,11 +43,18 @@ const topics = [
   }
 ];
 
-// Форматирование ответа бота без *
+// Форматирование ответа бота с жирным первым предложением
 function formatBotText(text: string) {
   if (!text) return "";
-  // Запрещаем символ * полностью
-  return text.replace(/\*/g, "").trim();
+  const firstSentenceMatch = text.match(/^([^.!?]+[.!?])/);
+  const firstSentence = firstSentenceMatch ? firstSentenceMatch[1].trim() : "";
+  const restText = firstSentence ? text.slice(firstSentence.length).trim() : text;
+  // Сохраняем жирность для markdown: используем ** ... ** для первого
+  let result = "";
+  if (firstSentence) result += `**${firstSentence}** `;
+  if (restText) result += restText;
+  // Запрещаем использовать * вне форматирования
+  return result.replace(/(?!\*\*)(\*)/g, "").trim();
 }
 
 const Chat: React.FC = () => {
@@ -60,6 +67,8 @@ const Chat: React.FC = () => {
   const [threadId, setThreadId] = useState<string | null>(null);
   const [botProgress, setBotProgress] = useState(""); // для печати ответа
 
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     document.body.style.overflow = "hidden";
     return () => { document.body.style.overflow = "auto"; };
@@ -68,6 +77,13 @@ const Chat: React.FC = () => {
     const timer = setTimeout(() => setPreloading(false), 1000);
     return () => clearTimeout(timer);
   }, []);
+
+  // Скроллинг вниз при новом сообщении или botProgress
+  useEffect(() => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [chatHistory, botProgress]);
 
   const handleShare = () => {
     if (navigator.share) {
@@ -355,7 +371,8 @@ const Chat: React.FC = () => {
                 display: "flex",
                 justifyContent: msg.sender === "user" ? "flex-end" : "flex-start",
                 width: "100%",
-                marginBottom: 20,
+                marginTop: 30,
+                marginBottom: 30,
               }}
             >
               <span
@@ -363,7 +380,7 @@ const Chat: React.FC = () => {
                   background: msg.sender === "user" ? GRADIENT : "transparent",
                   color: NORA_COLOR,
                   borderRadius: msg.sender === "user" ? 16 : 0,
-                  padding: "18px 28px",
+                  padding: msg.sender === "user" ? "18px 28px" : "0px",
                   lineHeight: 1.7,
                   fontSize: 17,
                   minWidth: 0,
@@ -372,7 +389,7 @@ const Chat: React.FC = () => {
                   marginRight: msg.sender === "user" ? "0" : "auto",
                   marginLeft: msg.sender === "user" ? "auto" : "0",
                   wordBreak: "break-word",
-                  fontWeight: msg.sender === "user" ? 400 : 400,
+                  fontWeight: 400,
                   margin: 0,
                 }}
               >
@@ -389,13 +406,14 @@ const Chat: React.FC = () => {
                 display: "flex",
                 justifyContent: "flex-start",
                 width: "100%",
-                marginBottom: 20,
+                marginTop: 30,
+                marginBottom: 30,
               }}
             >
               <span
                 style={{
                   color: NORA_COLOR,
-                  padding: "18px 28px",
+                  padding: "0px",
                   lineHeight: 1.7,
                   fontSize: 17,
                   minWidth: 0,
@@ -409,6 +427,7 @@ const Chat: React.FC = () => {
               </span>
             </div>
           )}
+          <div ref={messagesEndRef} />
         </div>
         {/* Поле ввода фиксировано внизу */}
         <div style={{
