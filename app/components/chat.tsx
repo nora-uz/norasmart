@@ -4,9 +4,9 @@ import ReactMarkdown from "react-markdown";
 
 const NORA_COLOR = "#2e2e2e";
 const ICON_SIZE = 23;
-const PANEL_TOP = 0; // ОТСТУП панели сверху — теперь 0
-const FIRST_MSG_OFFSET = 30; // Всегда минимум 30px от панели до сообщения
-const BANNER_BOTTOM_OFFSET = 20; // Отступ после фото до заголовка
+const PANEL_TOP = 20; // Панель на 20px ниже окна!
+const FIRST_MSG_OFFSET = 30; // Отступ после панели для всех сообщений
+const BANNER_BOTTOM_OFFSET = 60; // СТАРЫЙ (40) + новый (20) отступ после баннера
 const ICONS = {
   telegram: "https://cdn-icons-png.flaticon.com/512/1946/1946547.png",
   trash: "https://cdn-icons-png.flaticon.com/512/1345/1345823.png",
@@ -185,7 +185,7 @@ const Chat: React.FC = () => {
     );
   }
 
-  // Основной контейнер с выравниванием чата ниже панели и с нужным отступом
+  // Основной контейнер с корректными оступами
   return (
     <div
       style={{
@@ -198,7 +198,7 @@ const Chat: React.FC = () => {
         flexDirection: "column",
         alignItems: "center",
         boxSizing: "border-box",
-        paddingTop: panelHeight + PANEL_TOP + FIRST_MSG_OFFSET
+        paddingTop: panelHeight + PANEL_TOP + FIRST_MSG_OFFSET // ВСЕГДА не меньше 30px под панелью!
       }}
     >
       {/* Фиксированная панель */}
@@ -277,10 +277,10 @@ const Chat: React.FC = () => {
       {/* --- Welcome & Topics --- */}
       {showWelcome ? (
         <>
-        {/* Баннер сразу под панелью, НЕТ отступа сверху */}
+        {/* Баннер сразу под панелью */}
         <div style={{
           width: "calc(100% - 40px)", maxWidth, borderRadius: 26,
-          overflow: "hidden", margin: "0 auto 0 auto", // убран верхний маргин!
+          overflow: "hidden", margin: "0 auto 0 auto",
           display: "flex", justifyContent: "center", alignItems: "center"
         }}>
           <img src={BANNER} alt="Nora AI баннер"
@@ -290,7 +290,7 @@ const Chat: React.FC = () => {
             }}
           />
         </div>
-        <div style={{ height: BANNER_BOTTOM_OFFSET }} /> {/* 20px отступ под фото */}
+        <div style={{ height: BANNER_BOTTOM_OFFSET }} /> {/* 60px (реально: старый + новый!) */}
         <div style={{
           width: "calc(100% - 40px)", maxWidth, textAlign: "center"
         }}>
