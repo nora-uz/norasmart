@@ -42,26 +42,32 @@ const topics = [
   }
 ];
 
-// Функция: возвращает ответ "абзацами" — без html-тегов и без форматирования
+// --- Эффект GPT-печати и фильтрация *-символа ---
+
+function sanitizeAsterisk(text: string) {
+  // Удалить символы *
+  return text.replace(/\*/g, "");
+}
+
+function getFirstSentence(text: string) {
+  const match = text.match(/^([^\n]+?[.!?][^\n]*)(?:\n|$)/);
+  return match ? match[1].replace(/[\n\r]+/g, " ").trim() : "";
+}
+
 function formatBotText(text: string) {
-  if (!text) return "";
-  // Первое предложение до знака препинания и любого переноса строки
-  const firstSentenceMatch = text.match(/^([^\n]+?[.!?][^\n]*)(?:\n|$)/);
-  let firstSentence = firstSentenceMatch ? firstSentenceMatch[1].replace(/[\n\r]+/g, " ").trim() : "";
+  // Удалить все символы *
+  text = sanitizeAsterisk(text);
+
+  if (!text) return { first: "", rest: "" };
+  let firstSentence = getFirstSentence(text);
   const restText = firstSentence && text.length > firstSentence.length
     ? text.slice(firstSentence.length).trim()
     : text.trim();
 
-  const lines = restText.split('\n').filter(Boolean);
-  let description = lines.slice(0, -1).join("\n").trim();
-  let question = lines.length > 1 ? lines[lines.length - 1].trim() : lines[0] || "";
-
-  // Просто склеиваем абзацы
-  let output = "";
-  if (firstSentence) output += firstSentence + "\n\n";
-  if (description) output += description + "\n\n";
-  if (question && question !== description) output += question;
-  return output.trim();
+  return {
+    first: firstSentence,
+    rest: restText
+  };
 }
 
 const Chat: React.FC = () => {
@@ -72,6 +78,10 @@ const Chat: React.FC = () => {
   const [chatHistory, setChatHistory] = useState<{text: string, sender: "user"|"bot"}[]>([]);
   const [loading, setLoading] = useState(false);
   const [threadId, setThreadId] = useState<string | null>(null);
+
+  // --- Эффект печати для последнего сообщения ---
+  const [printed, setPrinted] = useState("");
+  const typingTimeout = useRef<NodeJS.Timeout | null>(null);
 
   const historyEndRef = useRef<HTMLDivElement>(null);
 
@@ -86,7 +96,33 @@ const Chat: React.FC = () => {
 
   useEffect(() => {
     historyEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [chatHistory, showTopics, showWelcome]);
+  }, [chatHistory, showTopics, showWelcome, printed]);
+
+  // Включить быстрый и полностью мгновенный эффект "печати"
+  useEffect(() => {
+    if (
+      chatHistory.length > 0 &&
+      chatHistory[chatHistory.length - 1].sender === "bot"
+    ) {
+      const formatted = formatBotText(chatHistory[chatHistory.length - 1].text);
+      setPrinted(""); // сбрасываем
+      if (typingTimeout.current) clearTimeout(typingTimeout.current);
+      let i = 0;
+      let full = `${formatted.first}\n\n${formatted.rest}`.trim();
+      typingTimeout.current = setInterval(() => {
+        setPrinted(full.slice(0, i));
+        i += 6; // скорость 6 символов за tick - быстро!
+        if (i > full.length) {
+          setPrinted(full); // печать завершена
+          clearInterval(typingTimeout.current!);
+          typingTimeout.current = null;
+        }
+      }, 8); // каждый тик 8мс
+      return () => {
+        if (typingTimeout.current) clearInterval(typingTimeout.current);
+      }
+    }
+  }, [chatHistory]);
 
   const handleShare = () => {
     if (navigator.share) {
@@ -181,9 +217,10 @@ const Chat: React.FC = () => {
       overflow: "hidden", position: "relative", display: "flex",
       flexDirection: "column", alignItems: "center", boxSizing: "border-box"
     }}>
+      {/* всегда 20пх сверху */}
       <div style={{ height: 20 }} />
 
-      {/* ФИКСИРОВАННАЯ ПАНЕЛЬ */}
+      {/* ФИКСИРОВАННАЯ ПАНЕЛЬ с отступом 20px сверху */}
       <div style={{
         width: "calc(100% - 40px)",
         maxWidth,
@@ -200,8 +237,8 @@ const Chat: React.FC = () => {
         paddingBottom: 5,
         justifyContent: "flex-start",
         boxSizing: "border-box",
-        position: "fixed",           // <-- панель всегда наверху!
-        top: 0,
+        position: "fixed",
+        top: 20,       // <-- отступ сверху!
         left: "50%",
         transform: `translateX(-50%)`,
         zIndex: 100,
@@ -255,210 +292,249 @@ const Chat: React.FC = () => {
           </button>
         </div>
       </div>
+      {/* отступ для смещения всего содержимого вниз после фиксации меню */}
+      <div style={{ height: panelHeight + 40 }} /> {/* 20 + 62 + сверху темы/чаты! */}
 
-      {/* --- Welcome & Topics --- */}
-      <div style={{ height: panelHeight + 20 }} /> {/* Для смещения страницы из-за фиксированной панели */}
-      {showWelcome ? (
-        <>
-        <div style={{
-          width: "calc(100% - 40px)", maxWidth, borderRadius: 26,
-          overflow: "hidden", margin: "40px auto 0 auto",
-          display: "flex", justifyContent: "center", alignItems: "center"
-        }}>
-          <img src={BANNER} alt="Nora AI баннер"
-            style={{
-              width: "100%", height: "auto", display: "block",
-              objectFit: "contain", objectPosition: "center"
-            }}
-            loading="lazy" fetchPriority="high"
-          />
+      {/* Темы для обсуждения (только если showTopics), с отступом 20px под меню */}
+      {(showWelcome || showTopics) && (
+        <div style={{ marginTop: 20 }}>
+          {showWelcome && (
+            <div>
+              <div style={{
+                width: "calc(100% - 40px)", maxWidth, borderRadius: 26,
+                overflow: "hidden", margin: "40px auto 0 auto",
+                display: "flex", justifyContent: "center", alignItems: "center"
+              }}>
+                <img src={BANNER} alt="Nora AI баннер"
+                  style={{
+                    width: "100%", height: "auto", display: "block",
+                    objectFit: "contain", objectPosition: "center"
+                  }}
+                />
+              </div>
+              <div style={{ height: 40 }} />
+              <div style={{
+                width: "calc(100% - 40px)", maxWidth, textAlign: "center"
+              }}>
+                <div style={{
+                  fontWeight: 700, fontSize: "22px", color: NORA_COLOR, marginBottom: 14
+                }}>Добро пожаловать в Nora AI</div>
+                <div style={{
+                  fontWeight: 400, fontSize: "15px", margin: "0 auto 0 auto",
+                  maxWidth: 400, padding: "0 20px", lineHeight: 1.75,
+                  color: NORA_COLOR, display: "inline-block"
+                }}>
+                  Я помогаю будущим мамам на каждом этапе беременности: отвечаю на вопросы, напоминаю о важных делах, слежу за самочувствием и даю советы, основанные на медицине Великобритании NHS.
+                </div>
+                <div style={{ height: 40 }} />
+              </div>
+              <button
+                style={{
+                  width: "100%",
+                  maxWidth: 290,
+                  background: GRADIENT,
+                  color: NORA_COLOR,
+                  border: "none",
+                  borderRadius: borderRadius,
+                  fontWeight: 700,
+                  fontSize: "17px",
+                  padding: "15px 0",
+                  margin: "0 20px",
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center"
+                }}
+                onClick={() => setShowWelcome(false)}
+              >
+                Начать пользоваться&nbsp;
+                <span style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+                  {ICONS.arrowRight}
+                </span>
+              </button>
+            </div>
+          )}
+          {showTopics && (
+            <div style={{
+              width: "100%",
+              maxWidth: 520,
+              padding: "0 20px",
+              display: "flex",
+              flexDirection: "column",
+              gap: 20,
+              margin: "20px auto 0 auto",
+            }}>
+              {topics.map((topic, idx) => (
+                <div key={idx}
+                  style={{
+                    background: GRADIENT,
+                    borderRadius: borderRadius,
+                    padding: "15px 20px",
+                    display: "flex", flexDirection: "column",
+                    alignItems: "flex-start", boxSizing: "border-box",
+                    cursor: "pointer",
+                    boxShadow: "0 2px 14px 0 rgba(155,175,205,0.07)"
+                  }}
+                  onClick={() => handleTopicClick(topic)}
+                >
+                  <div style={{
+                    fontWeight: 600, fontSize: "16px", color: NORA_COLOR, marginBottom: 7
+                  }}>{topic.title}</div>
+                  <div style={{
+                    fontWeight: 400, fontSize: "13px", color: "#565656", lineHeight: 1.4
+                  }}>{topic.description}</div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
-        <div style={{ height: 40 }} />
+      )}
+
+      {/* История сообщений */}
+      {!showWelcome && (
         <div style={{
-          width: "calc(100% - 40px)", maxWidth, textAlign: "center"
+          width: "100%",
+          maxWidth,
+          padding: "0 20px",
+          margin: "0 auto",
+          marginTop: showTopics ? 20 : 0,
+          flex: 1,
+          overflowY: "auto",
+          paddingBottom: 80
         }}>
-          <div style={{
-            fontWeight: 700, fontSize: "22px", color: NORA_COLOR, marginBottom: 14
-          }}>Добро пожаловать в Nora AI</div>
-          <div style={{
-            fontWeight: 400, fontSize: "15px", margin: "0 auto 0 auto",
-            maxWidth: 400, padding: "0 20px", lineHeight: 1.75,
-            color: NORA_COLOR, display: "inline-block"
-          }}>
-            Я помогаю будущим мамам на каждом этапе беременности: отвечаю на вопросы, напоминаю о важных делах, слежу за самочувствием и даю советы, основанные на медицине Великобритании NHS.
-          </div>
-          <div style={{ height: 40 }} />
+          {chatHistory.map((msg, idx) => {
+            const isLastBotMsg = msg.sender === "bot" && idx === chatHistory.length - 1;
+            // Эффект печати для последнего сообщения bot
+            let { first, rest } = formatBotText(msg.text);
+            return (
+              <div
+                key={idx}
+                style={{
+                  display: "flex",
+                  justifyContent: msg.sender === "user" ? "flex-end" : "flex-start",
+                  width: "100%",
+                  marginBottom: 20,
+                }}
+              >
+                {msg.sender === "bot"
+                  ? (
+                    <span
+                      style={{
+                        background: "transparent",
+                        color: NORA_COLOR,
+                        borderRadius: 0,
+                        padding: "18px 28px",
+                        lineHeight: 1.7,
+                        fontSize: 17,
+                        minWidth: 0,
+                        boxShadow: "none",
+                        maxWidth: "100%",
+                        wordBreak: "break-word",
+                        fontWeight: 400,
+                        margin: 0,
+                        whiteSpace: "pre-line",
+                      }}
+                    >
+                      {/* Первое предложение жирное, далее напечатанное "эффектом" */}
+                      <span style={{ fontWeight: 800 }}>
+                        {isLastBotMsg ? printed.split("\n\n")[0] : first}
+                      </span>
+                      {isLastBotMsg
+                        ? printed.replace(printed.split("\n\n")[0], "")
+                        : ("\n\n" + rest)
+                      }
+                    </span>
+                  )
+                  : (
+                    <span
+                      style={{
+                        background: GRADIENT,
+                        color: NORA_COLOR,
+                        borderRadius: 16,
+                        padding: "18px 28px",
+                        lineHeight: 1.7,
+                        fontSize: 17,
+                        minWidth: 0,
+                        boxShadow: "0 2px 14px 0 rgba(155,175,205,0.07)",
+                        maxWidth: "70%",
+                        marginRight: 0,
+                        marginLeft: "auto",
+                        wordBreak: "break-word",
+                        fontWeight: 400,
+                        margin: 0,
+                        whiteSpace: "pre-line",
+                      }}
+                    >
+                      {msg.text}
+                    </span>
+                  )
+                }
+              </div>
+            );
+          })}
+          <div ref={historyEndRef} />
         </div>
+      )}
+
+      {/* Поле ввода фиксировано внизу */}
+      <div style={{
+        width: "100%",
+        padding: "0 20px",
+        display: "flex",
+        alignItems: "center",
+        margin: "0 auto",
+        boxSizing: "border-box",
+        maxWidth: maxWidth,
+        position: "fixed",
+        left: 0,
+        bottom: 20,
+        background: "#f8fdff",
+        zIndex: 20
+      }}>
+        <input
+          type="text"
+          value={message}
+          onChange={e => setMessage(e.target.value)}
+          placeholder="Введите сообщение..."
+          style={{
+            flex: 1,
+            height: 48,
+            fontSize: "16px",
+            borderRadius: borderRadius,
+            border: "1px solid #e5e8ed",
+            padding: "0 18px",
+            background: "#fff",
+            color: NORA_COLOR,
+            boxSizing: "border-box",
+            marginRight: 8
+          }}
+          onKeyDown={e => { if (e.key === 'Enter') handleSendMessage(); }}
+          disabled={loading}
+        />
         <button
           style={{
-            width: "100%",
-            maxWidth: 290,
+            width: 48,
+            height: 48,
             background: GRADIENT,
             color: NORA_COLOR,
             border: "none",
             borderRadius: borderRadius,
             fontWeight: 700,
             fontSize: "17px",
-            padding: "15px 0",
-            margin: "0 20px",
-            cursor: "pointer",
+            cursor: loading ? "not-allowed" : "pointer",
             display: "flex",
             alignItems: "center",
-            justifyContent: "center"
+            justifyContent: "center",
+            boxShadow: "0 2px 14px 0 rgba(155,175,205,0.12)"
           }}
-          onClick={() => setShowWelcome(false)}
+          onClick={handleSendMessage}
+          disabled={loading}
         >
-          Начать пользоваться&nbsp;
           <span style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
             {ICONS.arrowRight}
           </span>
         </button>
-        </>
-      ) : (
-        <>
-        {showTopics && (
-          <div style={{
-            width: "100%",
-            maxWidth: 520,
-            padding: "0 20px",
-            display: "flex",
-            flexDirection: "column",
-            gap: 20,
-            margin: "20px auto 0 auto",
-          }}>
-            {topics.map((topic, idx) => (
-              <div key={idx}
-                style={{
-                  background: GRADIENT,
-                  borderRadius: borderRadius,
-                  padding: "15px 20px",
-                  display: "flex", flexDirection: "column",
-                  alignItems: "flex-start", boxSizing: "border-box",
-                  cursor: "pointer",
-                  boxShadow: "0 2px 14px 0 rgba(155,175,205,0.07)"
-                }}
-                onClick={() => handleTopicClick(topic)}
-              >
-                <div style={{
-                  fontWeight: 600, fontSize: "16px", color: NORA_COLOR, marginBottom: 7
-                }}>{topic.title}</div>
-                <div style={{
-                  fontWeight: 400, fontSize: "13px", color: "#565656", lineHeight: 1.4
-                }}>{topic.description}</div>
-              </div>
-            ))}
-          </div>
-        )}
-        {/* История сообщений */}
-        <div style={{
-          width: "100%",
-          maxWidth,
-          padding: "0 20px",
-          margin: "0 auto",
-          marginTop: showTopics ? 20 : 32,
-          flex: 1,
-          overflowY: "auto",
-          paddingBottom: 80 // увеличенный отступ снизу, чтобы поле ввода не перекрывало последние сообщения
-        }}>
-          {chatHistory.map((msg, idx) => (
-            <div
-              key={idx}
-              style={{
-                display: "flex",
-                justifyContent: msg.sender === "user" ? "flex-end" : "flex-start",
-                width: "100%",
-                marginBottom: 20,
-              }}
-            >
-              <span
-                style={{
-                  background: msg.sender === "user" ? GRADIENT : "transparent",
-                  color: NORA_COLOR,
-                  borderRadius: msg.sender === "user" ? 16 : 0,
-                  padding: "18px 28px",
-                  lineHeight: 1.7,
-                  fontSize: 17,
-                  minWidth: 0,
-                  boxShadow: msg.sender === "user" ? "0 2px 14px 0 rgba(155,175,205,0.07)" : "none",
-                  maxWidth: msg.sender === "user" ? "70%" : "100%",
-                  marginRight: msg.sender === "user" ? "0" : "auto",
-                  marginLeft: msg.sender === "user" ? "auto" : "0",
-                  wordBreak: "break-word",
-                  fontWeight: 400,
-                  margin: 0,
-                  whiteSpace: "pre-line",
-                }}
-              >
-                {msg.sender === "bot"
-                  ? formatBotText(msg.text)
-                  : msg.text
-                }
-              </span>
-            </div>
-          ))}
-          <div ref={historyEndRef} />
-        </div>
-        {/* Поле ввода фиксировано внизу */}
-        <div style={{
-          width: "100%",
-          padding: "0 20px",
-          display: "flex",
-          alignItems: "center",
-          margin: "0 auto",
-          boxSizing: "border-box",
-          maxWidth: maxWidth,
-          position: "fixed",
-          left: 0,
-          bottom: 20,
-          background: "#f8fdff",
-          zIndex: 20
-        }}>
-          <input
-            type="text"
-            value={message}
-            onChange={e => setMessage(e.target.value)}
-            placeholder="Введите сообщение..."
-            style={{
-              flex: 1,
-              height: 48,
-              fontSize: "16px",
-              borderRadius: borderRadius,
-              border: "1px solid #e5e8ed",
-              padding: "0 18px",
-              background: "#fff",
-              color: NORA_COLOR,
-              boxSizing: "border-box",
-              marginRight: 8
-            }}
-            onKeyDown={e => { if (e.key === 'Enter') handleSendMessage(); }}
-            disabled={loading}
-          />
-          <button
-            style={{
-              width: 48,
-              height: 48,
-              background: GRADIENT,
-              color: NORA_COLOR,
-              border: "none",
-              borderRadius: borderRadius,
-              fontWeight: 700,
-              fontSize: "17px",
-              cursor: loading ? "not-allowed" : "pointer",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              boxShadow: "0 2px 14px 0 rgba(155,175,205,0.12)"
-            }}
-            onClick={handleSendMessage}
-            disabled={loading}
-          >
-            <span style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
-              {ICONS.arrowRight}
-            </span>
-          </button>
-        </div>
-        </>
-      )}
+      </div>
     </div>
   );
 };
