@@ -43,10 +43,9 @@ const topics = [
   }
 ];
 
-// Форматирование ответа без курсива и с жирным первым предложением
+// Жирное первое предложение, без курсивов
 function formatBotText(text: string) {
   if (!text) return "";
-  // Удаляем _ и одиночные *
   let cleaned = text.replace(/_/g, "").replace(/(\*){1}(?!\*)/g, "");
   const firstSentenceMatch = cleaned.match(/^([^.!?]+[.!?])/);
   const firstSentence = firstSentenceMatch ? firstSentenceMatch[1].trim() : "";
@@ -66,7 +65,7 @@ const Chat: React.FC = () => {
   const [chatHistory, setChatHistory] = useState<{text: string, sender: "user"|"bot"}[]>([]);
   const [loading, setLoading] = useState(false);
   const [threadId, setThreadId] = useState<string | null>(null);
-  const [botProgress, setBotProgress] = useState(""); // для печати ответа  
+  const [botProgress, setBotProgress] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -183,21 +182,33 @@ const Chat: React.FC = () => {
     );
   }
 
+  // --- Fixed панель ---
   return (
-    <div style={{
-      background: "#f8fdff", width: "100vw", height: "100vh",
-      overflow: "hidden", position: "relative", display: "flex",
-      flexDirection: "column", alignItems: "center", boxSizing: "border-box"
-    }}>
-      <div style={{ height: 20 }} />
-      {/* Панель всегда */}
+    <div
+      style={{
+        background: "#f8fdff",
+        width: "100vw",
+        height: "100vh",
+        overflow: "hidden",
+        position: "relative",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        boxSizing: "border-box",
+        paddingTop: panelHeight + 20 // отступ для фиксированной панели
+      }}
+    >
+      {/* Фиксируем меню! */}
       <div style={{
         width: "calc(100% - 40px)",
         maxWidth,
         minHeight: panelHeight,
         background: GRADIENT,
         color: NORA_COLOR,
-        margin: "0px auto 0 auto",
+        position: "fixed",
+        top: 0,
+        left: "50%",
+        transform: "translateX(-50%)",
         display: "flex",
         alignItems: "center",
         borderRadius: borderRadius,
@@ -206,7 +217,8 @@ const Chat: React.FC = () => {
         paddingTop: 5,
         paddingBottom: 5,
         justifyContent: "flex-start",
-        boxSizing: "border-box"
+        boxSizing: "border-box",
+        zIndex: 100
       }}>
         <div style={{
           marginRight: 10,
@@ -351,7 +363,7 @@ const Chat: React.FC = () => {
           </div>
         )}
 
-        {/* История сообщений + botProgress по буквам */}
+        {/* История сообщений и анимация печати */}
         <div style={{
           width: "100%",
           maxWidth,
@@ -368,7 +380,7 @@ const Chat: React.FC = () => {
                 display: "flex",
                 justifyContent: msg.sender === "user" ? "flex-end" : "flex-start",
                 width: "100%",
-                marginTop: idx === 0 ? 0 : 30, // Только между НЕ первым сообщением!
+                marginTop: idx === 0 ? 0 : 30,
                 marginBottom: 30,
               }}
             >
@@ -403,7 +415,7 @@ const Chat: React.FC = () => {
                 display: "flex",
                 justifyContent: "flex-start",
                 width: "100%",
-                marginTop: chatHistory.length === 0 ? 0 : 30, // Только между не первым!
+                marginTop: chatHistory.length === 0 ? 0 : 30,
                 marginBottom: 30,
               }}
             >
