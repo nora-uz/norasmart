@@ -4,10 +4,10 @@ import ReactMarkdown from "react-markdown";
 
 const NORA_COLOR = "#2e2e2e";
 const ICON_SIZE = 23;
-const PANEL_TOP = 20; // отступ панели сверху
-const FIRST_MSG_OFFSET = 30; // стандартный отступ под панелью
-const ADDITIONAL_PANEL_OFFSET = 10; // твой дополнительный отступ
-const BANNER_BOTTOM_OFFSET = 60; // баннеру нужен отступ 40 + 20
+const PANEL_TOP = 20;
+const FIRST_MSG_OFFSET = 30;
+const ADDITIONAL_PANEL_OFFSET = 10;
+const BANNER_BOTTOM_OFFSET = 60;
 const ICONS = {
   telegram: "https://cdn-icons-png.flaticon.com/512/1946/1946547.png",
   trash: "https://cdn-icons-png.flaticon.com/512/1345/1345823.png",
@@ -47,6 +47,9 @@ const topics = [
   }
 ];
 
+// Типизация сообщений для правильной работы
+type Message = { text: string; sender: "user" | "bot" };
+
 // Жирное первое предложение, без курсивов
 function formatBotText(text: string) {
   if (!text) return "";
@@ -66,7 +69,7 @@ const Chat: React.FC = () => {
   const [preloading, setPreloading] = useState(true);
   const [message, setMessage] = useState("");
   const [showTopics, setShowTopics] = useState(true);
-  const [chatHistory, setChatHistory] = useState<{text: string, sender: "user"|"bot"}[]>([]);
+  const [chatHistory, setChatHistory] = useState<Message[]>([]);
   const [loading, setLoading] = useState(false);
   const [threadId, setThreadId] = useState<string | null>(null);
   const [botProgress, setBotProgress] = useState("");
@@ -99,10 +102,10 @@ const Chat: React.FC = () => {
     }
   };
 
-  // ====== Вся история чата отправляется в API! ======
+  // ВСЯ история передается в API
   const sendMessageToGPT = async (text: string) => {
     setLoading(true);
-    const newHistory = [...chatHistory, { text, sender: "user" }];
+    const newHistory: Message[] = [...chatHistory, { text, sender: "user" }];
     setChatHistory(newHistory);
     setBotProgress("");
     try {
@@ -188,7 +191,7 @@ const Chat: React.FC = () => {
     );
   }
 
-  // Главный контейнер: большой отступ (панель + твой доп. отступ + 30px)
+  // Главный контейнер с корректным paddingTop
   return (
     <div
       style={{
@@ -201,7 +204,7 @@ const Chat: React.FC = () => {
         flexDirection: "column",
         alignItems: "center",
         boxSizing: "border-box",
-        paddingTop: panelHeight + PANEL_TOP + FIRST_MSG_OFFSET + ADDITIONAL_PANEL_OFFSET
+        paddingTop: panelHeight + PANEL_TOP + FIRST_MSG_OFFSET + ADDITIONAL_PANEL_OFFSET,
       }}
     >
       {/* Фиксированная панель */}
@@ -293,7 +296,7 @@ const Chat: React.FC = () => {
             }}
           />
         </div>
-        <div style={{ height: BANNER_BOTTOM_OFFSET }} /> {/* 60px под фото */}
+        <div style={{ height: BANNER_BOTTOM_OFFSET }} />
         <div style={{
           width: "calc(100% - 40px)", maxWidth, textAlign: "center"
         }}>
@@ -376,7 +379,7 @@ const Chat: React.FC = () => {
           maxWidth,
           padding: "0 20px",
           margin: "0 auto",
-          marginTop: 0, // paddingTop главного контейнера гарантирует отсутствие перекрытия с панелью!
+          marginTop: 0,
           flex: 1,
           overflowY: "auto"
         }}>
