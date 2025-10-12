@@ -2,24 +2,24 @@
 import React, { useState, useEffect, useRef } from "react";
 import ReactMarkdown from "react-markdown";
 
+// Новый стиль и цвета
+const NORA_COLOR = "#2e2e2e";
+const ICON_SIZE = 23;
 const ICONS = {
-  telegram: "https://cdn-icons-png.flaticon.com/512/9821/9821637.png",
-  sun: "https://cdn-icons-png.flaticon.com/512/16769/16769231.png",
-  moon: "https://cdn-icons-png.flaticon.com/512/16769/16769231.png",
-  trash: "https://cdn-icons-png.flaticon.com/512/3917/3917772.png",
-  arrow: "https://cdn-icons-png.flaticon.com/512/3916/3916848.png"
+  telegram: "https://cdn-icons-png.flaticon.com/512/1946/1946547.png",
+  trash: "https://cdn-icons-png.flaticon.com/512/1345/1345823.png",
+  arrow: (
+    <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+      <path d="M6 11H16M16 11L12 7M16 11L12 15" stroke={NORA_COLOR} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
+  ),
 };
-
-const BANNER = "https://user-gen-media-assets.s3.amazonaws.com/seedream_images/4c36a715-f500-4186-8955-631a09fac0ed.png";
-const ICON_SIZE_PANEL = 18;
-const ICON_SIZE_SEND = 28;
-const BTN_SIZE = 50;
-const SEND_BTN_SIZE = 78;
+const filterNora = "invert(13%) sepia(4%) saturate(271%) hue-rotate(175deg) brightness(92%) contrast(93%)";
+const BANNER = "/banner.webp"; // Можно заменить на вашу ссылку
 const borderRadius = 22;
-const blockMargin = 20;
 const panelHeight = 62;
 const maxWidth = 560;
-const GRADIENT = "linear-gradient(90deg, #6a11cb 0%, #2575fc 100%)";
+const GRADIENT = "linear-gradient(90deg, #eff5fe 0%, #e5e8ed 100%)";
 
 const TOPICS = [
   { title: "Сон", desc: "Проблемы с бессонницей и усталостью" },
@@ -49,65 +49,10 @@ async function getAssistantReply(messagesArr: Message[]) {
   }
 }
 
-function iconBtn(color: string) {
-  return {
-    background: color,
-    border: "none",
-    cursor: "pointer",
-    width: BTN_SIZE,
-    height: BTN_SIZE,
-    borderRadius: BTN_SIZE / 2,
-    padding: 0,
-    display: "flex",
-    alignItems: "center" as const,
-    justifyContent: "center" as const,
-    boxShadow: "none"
-  };
-}
-const iconImgPanel = {
-  width: ICON_SIZE_PANEL,
-  height: ICON_SIZE_PANEL,
-  display: "block" as const,
-  background: "none",
-  filter: "brightness(0) invert(1)"
-};
-const iconImgSend = {
-  width: ICON_SIZE_SEND,
-  height: ICON_SIZE_SEND,
-  display: "block" as const,
-  background: "none"
-};
-
-const themes = {
-  dark: {
-    panelBg: "#232323",
-    bgColor: "#b4b4b4",
-    userBubble: "#343434",
-    userText: "#fff",
-    inputBg: "#232323",
-    inputText: "#fff",
-    placeholder: "#888",
-    assistantBubble: "#262939",
-    assistantText: "#fff"
-  },
-  light: {
-    panelBg: "#F6F7FB",
-    bgColor: "#b4b4b4",
-    userBubble: "#fff",
-    userText: "#333",
-    inputBg: "#F6F7FB",
-    inputText: "#222",
-    placeholder: "#333",
-    assistantBubble: "#E8EAED",
-    assistantText: "#333"
-  }
-};
-
 const Chat: React.FC = () => {
   const [userInput, setUserInput] = useState("");
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputDisabled, setInputDisabled] = useState(false);
-  const [darkMode, setDarkMode] = useState(true);
   const [pickedMonth, setPickedMonth] = useState<number | null>(null);
   const [pickedTopic, setPickedTopic] = useState<typeof TOPICS[0] | null>(null);
   const [firstMessageSent, setFirstMessageSent] = useState(false);
@@ -115,7 +60,6 @@ const Chat: React.FC = () => {
   const [streamedBotText, setStreamedBotText] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  const theme = darkMode ? themes.dark : themes.light;
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, streamedBotText]);
@@ -190,108 +134,83 @@ const Chat: React.FC = () => {
     setStreamedBotText("");
   };
 
-  function assistantBubbleStyle() {
-    return {
-      background: theme.assistantBubble,
-      color: theme.assistantText,
-      borderRadius: borderRadius,
-      padding: "16px 32px",
-      fontSize: 16,
-      lineHeight: 1.7,
-      border: "none",
-      width: `calc(100% - 40px)`,
-      marginLeft: 20,
-      marginRight: 20,
-      wordBreak: "break-word" as const,
-      alignSelf: "flex-start" as const,
-      boxShadow: "none",
-      textAlign: "left" as const,
-      transition: "background 0.4s, color 0.4s"
-    };
-  }
-  function userBubbleStyle() {
-    return {
-      background: theme.userBubble,
-      color: theme.userText,
-      borderRadius: borderRadius,
-      padding: "14px 32px",
-      fontSize: 16,
-      lineHeight: 1.7,
-      border: "none",
-      maxWidth: "65%",
-      minWidth: 54,
-      marginLeft: 20,
-      marginRight: 20,
-      wordBreak: "break-word" as const,
-      alignSelf: "flex-end" as const,
-      boxShadow: "none",
-      textAlign: "right" as const,
-      transition: "background 0.4s, color 0.4s"
-    };
-  }
-
   return (
     <div
       style={{
-        background: theme.bgColor,
+        background: "#f8fdff", // новый фон
         width: "100vw",
-        minHeight: 800,
+        minHeight: "100vh",
         overflow: "hidden",
         position: "relative",
         transition: "background 0.4s"
       }}
     >
-      <style>{`
-        .months-scroll::-webkit-scrollbar { display: none; }
-        .months-scroll { scrollbar-width: none; -ms-overflow-style: none; }
-      `}</style>
-      <div style={{ height: blockMargin }} />
-      <div
-        style={{
-          width: `calc(100% - 40px)`,
-          maxWidth,
-          height: panelHeight,
-          margin: "0 auto",
-          background: GRADIENT,
-          color: "#fff",
+      <div style={{ height: 20 }} />
+      {/* верхняя панель */}
+      <div style={{
+        width: "calc(100% - 40px)",
+        maxWidth,
+        minHeight: panelHeight,
+        background: GRADIENT,
+        color: NORA_COLOR,
+        margin: "0px auto 0 auto",
+        display: "flex",
+        alignItems: "center",
+        borderRadius: borderRadius,
+        paddingLeft: 20,
+        paddingRight: 12,
+        paddingTop: 5,
+        paddingBottom: 5,
+        justifyContent: "flex-start",
+        boxSizing: "border-box"
+      }}>
+        <div style={{
+          marginRight: 10,
+          color: NORA_COLOR,
           display: "flex",
-          alignItems: "center" as const,
-          borderRadius: borderRadius,
-          padding: `0 16px`,
-          justifyContent: "flex-start" as const,
-          boxSizing: "border-box",
-          position: "relative",
-          zIndex: 2000,
-          transition: "background 0.4s, color 0.4s"
-        }}
-      >
-        <div style={{ fontWeight: 800, fontSize: 25, marginRight: 16 }}>
-          Nora AI
+          flexDirection: "column",
+          justifyContent: "center",
+          minWidth: 0
+        }}>
+          <span style={{
+            fontWeight: 800, fontSize: "17px", lineHeight: 1.06,
+            whiteSpace: "nowrap", marginBottom: 7
+          }}>Nora AI</span>
+          <span style={{
+            fontWeight: 400, fontSize: "11px", color: "#565656",
+            lineHeight: 1.04, whiteSpace: "nowrap"
+          }}>Ассистент для будущих мам</span>
         </div>
-        <div style={{ display: "flex", alignItems: "center" as const, gap: 7, marginLeft: "auto" }}>
-          <button style={iconBtn("transparent")} onClick={() => setDarkMode((prev) => !prev)}>
-            <img src={darkMode ? ICONS.sun : ICONS.moon} alt="Theme" style={iconImgPanel} />
+        <div style={{ display: "flex", alignItems: "center", gap: 8, marginLeft: "auto" }}>
+          <button style={{
+            background: "transparent", border: "none", cursor: "pointer",
+            width: 38, height: 38, borderRadius: 19,
+            display: "flex", alignItems: "center", justifyContent: "center"
+          }} onClick={() => window.open("https://t.me/", "_blank")}>
+            <img src={ICONS.telegram} alt="Telegram"
+              style={{ width: ICON_SIZE, height: ICON_SIZE, filter: filterNora }} />
           </button>
-          <button style={iconBtn("transparent")} onClick={() => window.open("https://t.me/", "_blank")}>
-            <img src={ICONS.telegram} alt="Telegram" style={iconImgPanel} />
-          </button>
-          <button style={{ ...iconBtn("transparent"), marginRight: -16 }} onClick={clearChat}>
-            <img src={ICONS.trash} alt="Trash" style={iconImgPanel} />
+          <button style={{
+            background: "transparent", border: "none", cursor: "pointer",
+            width: 38, height: 38, borderRadius: 19,
+            display: "flex", alignItems: "center", justifyContent: "center"
+          }} onClick={clearChat}>
+            <img src={ICONS.trash} alt="Trash"
+              style={{ width: ICON_SIZE, height: ICON_SIZE, filter: filterNora }} />
           </button>
         </div>
       </div>
-      <div style={{ height: blockMargin }} />
+      <div style={{ height: 20 }} />
       <div
         style={{
-          width: `calc(100% - 40px)`,
+          width: "calc(100% - 40px)",
           maxWidth,
-          margin: "0 auto",
           borderRadius: 26,
           overflow: "hidden",
-          background: theme.bgColor,
+          background: "#f8fdff",
           display: "flex",
-          justifyContent: "center" as const,
-          alignItems: "center" as const,
+          justifyContent: "center",
+          alignItems: "center",
           position: "relative"
         }}
       >
@@ -307,33 +226,34 @@ const Chat: React.FC = () => {
           }}
         />
       </div>
-      <div style={{ height: blockMargin }} />
+      <div style={{ height: 20 }} />
 
       {/* Выбор месяца и темы */}
       {showSteps && (
         <div style={{
-          width: `calc(100% - 40px)`,
+          width: "calc(100% - 40px)",
           maxWidth,
           margin: "0 auto",
           borderRadius: borderRadius,
-          background: theme.inputBg,
-          marginBottom: blockMargin,
-          padding: `18px 20px 22px 20px`,
+          background: "#fff",
+          marginBottom: 20,
+          padding: "18px 20px 22px 20px",
           display: "flex",
-          flexDirection: "column" as const,
-          alignItems: "center" as const
+          flexDirection: "column",
+          alignItems: "center"
         }}>
           <div style={{ width: "100%" }}>
             <div style={{
-              fontWeight: 400,
+              fontWeight: 600,
               fontSize: 17,
-              marginBottom: blockMargin,
-              color: "#fff",
-              letterSpacing: "0.03em"
+              marginBottom: 20,
+              color: NORA_COLOR,
+              letterSpacing: "0.03em",
+              textAlign: "left"
             }}>
               Выберите срок беременности:
             </div>
-            <div className="months-scroll" style={{
+            <div style={{
               display: "flex",
               gap: 12,
               overflowX: "auto",
@@ -350,12 +270,12 @@ const Chat: React.FC = () => {
                   cursor: inputDisabled ? "not-allowed" : "pointer",
                   fontSize: 26,
                   fontWeight: 600,
-                  background: pickedMonth === month ? "#fff" : GRADIENT,
-                  color: pickedMonth === month ? "#2575fc" : "#fff",
+                  background: pickedMonth === month ? "#eff5fe" : GRADIENT,
+                  color: pickedMonth === month ? NORA_COLOR : NORA_COLOR,
                   opacity: 1,
-                  boxShadow: "none",
+                  boxShadow: pickedMonth === month ? "0 2px 14px 0 rgba(155,175,205,0.07)" : "none",
                   outline: "none",
-                  scrollSnapAlign: "center" as const,
+                  scrollSnapAlign: "center",
                   marginRight: i < 8 ? 9 : 0,
                   transition: "box-shadow 0.2s, background 0.2s, color 0.2s"
                 };
@@ -372,18 +292,19 @@ const Chat: React.FC = () => {
               })}
             </div>
           </div>
-          <div style={{ height: blockMargin }} />
+          <div style={{ height: 20 }} />
           <div style={{ width: "100%", marginBottom: 0 }}>
             <div style={{
-              fontWeight: 400,
+              fontWeight: 600,
               fontSize: 17,
-              marginBottom: blockMargin,
-              color: "#fff",
-              letterSpacing: "0.03em"
+              marginBottom: 20,
+              color: NORA_COLOR,
+              letterSpacing: "0.03em",
+              textAlign: "left"
             }}>
               Выберите тему для обсуждения:
             </div>
-            <div style={{ display: "flex", flexDirection: "column" as const, gap: 16 }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
               {TOPICS.map((topic, i) => {
                 let isSelected = pickedTopic?.title === topic.title;
                 let disabled = inputDisabled || !pickedMonth;
@@ -392,16 +313,16 @@ const Chat: React.FC = () => {
                   borderRadius: 18,
                   border: "none",
                   cursor: disabled ? "not-allowed" : "pointer",
-                  background: isSelected ? "#fff" : GRADIENT,
-                  color: isSelected ? "#2575fc" : "#fff",
+                  background: isSelected ? "#eff5fe" : GRADIENT,
+                  color: isSelected ? NORA_COLOR : NORA_COLOR,
                   opacity: disabled ? 0.45 : 1,
-                  textAlign: "left" as const,
+                  textAlign: "left",
                   padding: "17px 18px 13px 18px",
                   display: "flex",
-                  flexDirection: "column" as const,
-                  alignItems: "flex-start" as const,
+                  flexDirection: "column",
+                  alignItems: "flex-start",
                   fontWeight: 600,
-                  boxShadow: "none",
+                  boxShadow: isSelected ? "0 2px 14px 0 rgba(155,175,205,0.07)" : "none",
                   outline: "none",
                   filter: disabled ? "brightness(0.7) grayscale(0.4)" : "none",
                   transition: "box-shadow 0.2s, background 0.2s, color 0.2s"
@@ -417,7 +338,7 @@ const Chat: React.FC = () => {
                       fontSize: 19,
                       fontWeight: 700,
                       marginBottom: 5,
-                      color: isSelected ? "#2575fc" : "#fff"
+                      color: isSelected ? NORA_COLOR : NORA_COLOR
                     }}>
                       {topic.title}
                     </span>
@@ -425,7 +346,7 @@ const Chat: React.FC = () => {
                       fontSize: 15,
                       fontWeight: 400,
                       opacity: 0.95,
-                      color: isSelected ? "#2575fc" : "#fff"
+                      color: isSelected ? NORA_COLOR : "#565656"
                     }}>
                       {topic.desc}
                     </span>
@@ -437,10 +358,10 @@ const Chat: React.FC = () => {
         </div>
       )}
 
-      {/* Только шаблонный первый вопрос, без быстрых ответов */}
+      {/* Первый (шаблонный) вопрос */}
       {(firstMessageSent && messages.length > 0) && (
         <>
-          <div style={{ height: blockMargin }} />
+          <div style={{ height: 20 }} />
           <div style={{
             width: "100%",
             maxWidth,
@@ -449,8 +370,8 @@ const Chat: React.FC = () => {
             paddingRight: 20
           }}>
             <div style={{
-              background: "#F6F7FB",
-              color: "#232323",
+              background: "#eff5fe",
+              color: NORA_COLOR,
               borderRadius: borderRadius,
               padding: "14px 20px",
               fontSize: 16,
@@ -458,7 +379,7 @@ const Chat: React.FC = () => {
               border: "none",
               boxShadow: "none",
               textAlign: "left",
-              marginBottom: blockMargin
+              marginBottom: 20
             }}>
               {messages[0]?.text}
             </div>
@@ -466,7 +387,7 @@ const Chat: React.FC = () => {
         </>
       )}
 
-      {/* Чат сообщения */}
+      {/* Чат-сообщения */}
       {!showSteps && firstMessageSent && (
         <div style={{
           width: "100%",
@@ -475,33 +396,66 @@ const Chat: React.FC = () => {
           boxSizing: "border-box",
           flex: 1,
           display: "flex",
-          flexDirection: "column" as const,
-          alignItems: "center" as const,
+          flexDirection: "column",
+          alignItems: "center",
           overflow: "hidden"
         }}>
-          <div style={{ height: blockMargin }} />
+          <div style={{ height: 20 }} />
           <div style={{
             width: "100%",
             flex: 1,
             minHeight: 0,
             overflowY: "auto",
             display: "flex",
-            flexDirection: "column" as const,
-            justifyContent: "flex-start" as const
+            flexDirection: "column",
+            justifyContent: "flex-start"
           }}>
             {messages.slice(1).map((msg, idx) => (
               <div key={idx} style={{
                 width: "100%",
                 display: "flex",
-                justifyContent: msg.role === "assistant" ? "flex-start" as const : "flex-end" as const,
+                justifyContent: msg.role === "assistant" ? "flex-start" : "flex-end",
                 marginBottom: 12
               }}>
                 {msg.role === "assistant" ? (
-                  <div style={assistantBubbleStyle()}>
+                  <div style={{
+                    background: "#fff",
+                    color: NORA_COLOR,
+                    borderRadius: borderRadius,
+                    padding: "16px 32px",
+                    fontSize: 16,
+                    lineHeight: 1.7,
+                    border: "none",
+                    width: "calc(100% - 40px)",
+                    marginLeft: 20,
+                    marginRight: 20,
+                    wordBreak: "break-word",
+                    alignSelf: "flex-start",
+                    boxShadow: "none",
+                    textAlign: "left",
+                    transition: "background 0.4s, color 0.4s"
+                  }}>
                     <ReactMarkdown>{msg.text}</ReactMarkdown>
                   </div>
                 ) : (
-                  <div style={userBubbleStyle()}>
+                  <div style={{
+                    background: GRADIENT,
+                    color: NORA_COLOR,
+                    borderRadius: borderRadius,
+                    padding: "14px 32px",
+                    fontSize: 16,
+                    lineHeight: 1.7,
+                    border: "none",
+                    maxWidth: "65%",
+                    minWidth: 54,
+                    marginLeft: 20,
+                    marginRight: 20,
+                    wordBreak: "break-word",
+                    alignSelf: "flex-end",
+                    boxShadow: "0 2px 14px 0 rgba(155,175,205,0.07)",
+                    textAlign: "right",
+                    transition: "background 0.4s, color 0.4s"
+                  }}>
                     {msg.text}
                   </div>
                 )}
@@ -511,35 +465,51 @@ const Chat: React.FC = () => {
               <div style={{
                 width: "100%",
                 display: "flex",
-                justifyContent: "flex-start" as const,
+                justifyContent: "flex-start",
                 marginBottom: 12
               }}>
-                <div style={assistantBubbleStyle()}>
+                <div style={{
+                  background: "#fff",
+                  color: NORA_COLOR,
+                  borderRadius: borderRadius,
+                  padding: "16px 32px",
+                  fontSize: 16,
+                  lineHeight: 1.7,
+                  border: "none",
+                  width: "calc(100% - 40px)",
+                  marginLeft: 20,
+                  marginRight: 20,
+                  wordBreak: "break-word",
+                  alignSelf: "flex-start",
+                  boxShadow: "none",
+                  textAlign: "left",
+                  transition: "background 0.4s, color 0.4s"
+                }}>
                   <ReactMarkdown>{streamedBotText}</ReactMarkdown>
                 </div>
               </div>
             }
             <div ref={messagesEndRef} />
-            <div style={{ height: BTN_SIZE + 48 }} />
+            <div style={{ height: 80 }} />
           </div>
         </div>
       )}
 
-      <div style={{ height: blockMargin }} />
+      {/* Фиксированное поле ввода */}
       <form
         onSubmit={handleSubmit}
         style={{
-          position: showFixedInput ? "fixed" as const : "static" as const,
+          position: showFixedInput ? "fixed" : "static",
           left: showFixedInput ? "50%" : "auto",
-          bottom: showFixedInput ? blockMargin : "auto",
+          bottom: showFixedInput ? 20 : "auto",
           transform: showFixedInput ? "translateX(-50%)" : "none",
-          width: `calc(100% - 40px)`,
+          width: "calc(100% - 40px)",
           maxWidth,
-          margin: showFixedInput ? 0 : `0 auto`,
+          margin: showFixedInput ? 0 : "0 auto",
           zIndex: showFixedInput ? 2600 : "auto",
           display: "flex",
-          alignItems: "center" as const,
-          background: "none",
+          alignItems: "center",
+          background: "#f8fdff",
           boxSizing: "border-box",
           padding: 0
         }}
@@ -548,54 +518,48 @@ const Chat: React.FC = () => {
           type="text"
           style={{
             flex: 1,
-            border: "none",
+            border: "1px solid #e5e8ed",
             borderRadius: borderRadius,
-            height: BTN_SIZE,
-            padding: `0 8px 0 16px`,
-            fontSize: 21,
-            background: theme.inputBg,
-            color: theme.inputText,
+            height: 48,
+            padding: "0 18px",
+            fontSize: 16,
+            background: "#fff",
+            color: NORA_COLOR,
             outline: "none",
-            marginRight: 0,
-            transition: "background 0.4s, color 0.4s"
+            marginRight: 8
           }}
           value={userInput}
-          onChange={(e) => setUserInput(e.target.value)}
+          onChange={e => setUserInput(e.target.value)}
           placeholder="Введите ваш вопрос"
           disabled={inputDisabled}
-          className="nora-input"
         />
         <button
           type="submit"
           style={{
-            background: "#fff",
-            color: "#2575fc",
+            width: 48,
+            height: 48,
+            background: GRADIENT,
+            color: NORA_COLOR,
             border: "none",
             borderRadius: borderRadius,
-            width: SEND_BTN_SIZE,
-            height: BTN_SIZE,
-            marginLeft: 16,
-            display: "flex",
-            justifyContent: "center" as const,
-            alignItems: "center" as const,
+            fontWeight: 700,
+            fontSize: 17,
+            marginLeft: 8,
             cursor: inputDisabled ? "not-allowed" : "pointer",
             opacity: inputDisabled ? 0.7 : 1,
-            boxShadow: "none",
-            transition: "background 0.4s, color 0.4s"
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            boxShadow: "0 2px 14px 0 rgba(155,175,205,0.12)"
           }}
           disabled={inputDisabled}
         >
-          <img src={ICONS.arrow} alt="Send" style={iconImgSend} />
+          <span style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+            {ICONS.arrow}
+          </span>
         </button>
-        <style>{`
-          .nora-input::placeholder {
-            color: ${theme.placeholder};
-            opacity: 1;
-            font-size: 21px;
-          }
-        `}</style>
       </form>
-      <div style={{ height: blockMargin }} />
+      <div style={{ height: 20 }} />
     </div>
   );
 };
