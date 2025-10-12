@@ -42,17 +42,12 @@ const topics = [
   }
 ];
 
-// Функция: первое предложение с эмодзи и пунктуацией до \n
-function getFirstSentence(text: string) {
-  // Захватывает до первого переноса строки, включая пунктуацию и эмодзи
-  const match = text.match(/^([^\n]+?[.!?][^\n]*)(?:\n|$)/);
-  return match ? match[1].replace(/[\n\r]+/g, " ").trim() : "";
-}
-
+// Функция: возвращает ответ "абзацами" — без html-тегов и без форматирования
 function formatBotText(text: string) {
   if (!text) return "";
-  // Первое предложение с эмодзи и пунктуацией
-  let firstSentence = getFirstSentence(text);
+  // Первое предложение до знака препинания и любого переноса строки
+  const firstSentenceMatch = text.match(/^([^\n]+?[.!?][^\n]*)(?:\n|$)/);
+  let firstSentence = firstSentenceMatch ? firstSentenceMatch[1].replace(/[\n\r]+/g, " ").trim() : "";
   const restText = firstSentence && text.length > firstSentence.length
     ? text.slice(firstSentence.length).trim()
     : text.trim();
@@ -61,11 +56,12 @@ function formatBotText(text: string) {
   let description = lines.slice(0, -1).join("\n").trim();
   let question = lines.length > 1 ? lines[lines.length - 1].trim() : lines[0] || "";
 
-  let html = "";
-  if (firstSentence) html += `<div style="font-weight:700; margin-bottom:10px;">${firstSentence}</div>`;
-  if (description) html += `<div style="margin-bottom:10px;">${description}</div>`;
-  if (question && question !== description) html += `<div>${question}</div>`;
-  return html;
+  // Просто склеиваем абзацы
+  let output = "";
+  if (firstSentence) output += firstSentence + "\n\n";
+  if (description) output += description + "\n\n";
+  if (question && question !== description) output += question;
+  return output.trim();
 }
 
 const Chat: React.FC = () => {
@@ -186,7 +182,8 @@ const Chat: React.FC = () => {
       flexDirection: "column", alignItems: "center", boxSizing: "border-box"
     }}>
       <div style={{ height: 20 }} />
-      {/* Панель всегда */}
+
+      {/* ФИКСИРОВАННАЯ ПАНЕЛЬ */}
       <div style={{
         width: "calc(100% - 40px)",
         maxWidth,
@@ -202,7 +199,12 @@ const Chat: React.FC = () => {
         paddingTop: 5,
         paddingBottom: 5,
         justifyContent: "flex-start",
-        boxSizing: "border-box"
+        boxSizing: "border-box",
+        position: "fixed",           // <-- панель всегда наверху!
+        top: 0,
+        left: "50%",
+        transform: `translateX(-50%)`,
+        zIndex: 100,
       }}>
         <div style={{
           marginRight: 10,
@@ -255,6 +257,7 @@ const Chat: React.FC = () => {
       </div>
 
       {/* --- Welcome & Topics --- */}
+      <div style={{ height: panelHeight + 20 }} /> {/* Для смещения страницы из-за фиксированной панели */}
       {showWelcome ? (
         <>
         <div style={{
@@ -385,12 +388,12 @@ const Chat: React.FC = () => {
                   margin: 0,
                   whiteSpace: "pre-line",
                 }}
-                dangerouslySetInnerHTML={{
-                  __html: msg.sender === "bot"
-                    ? formatBotText(msg.text)
-                    : msg.text
-                }}
-              />
+              >
+                {msg.sender === "bot"
+                  ? formatBotText(msg.text)
+                  : msg.text
+                }
+              </span>
             </div>
           ))}
           <div ref={historyEndRef} />
