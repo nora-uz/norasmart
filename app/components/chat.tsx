@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 const NORA_COLOR = "#2e2e2e";
 const ICON_SIZE = 23;
@@ -42,22 +42,24 @@ const topics = [
   }
 ];
 
-// Функция форматирования ответа бота с жирным первым предложением
+// Функция для правильного форматирования ответа
 function formatBotText(text: string) {
   if (!text) return "";
+  // Получить первое предложение без входящих переносов строк
   const firstSentenceMatch = text.match(/^([^.!?]+[.!?])/);
-  const firstSentence = firstSentenceMatch ? firstSentenceMatch[1].trim() : "";
-  const restText = firstSentence ? text.slice(firstSentence.length).trim() : text;
+  let firstSentence = firstSentenceMatch ? firstSentenceMatch[1].replace(/[\n\r]+/g, " ").trim() : "";
+  const restText = firstSentenceMatch && text.length > firstSentence.length ? text.slice(firstSentence.length).trim() : text.trim();
+
+  // Следующие части разбиваем по строкам, но обрабатываем как абзацы
   const lines = restText.split('\n').filter(Boolean);
-
   let description = lines.slice(0, -1).join("\n").trim();
-  let question = lines.length > 1 ? lines[lines.length - 1].trim() : "";
+  let question = lines.length > 1 ? lines[lines.length - 1].trim() : lines[0] || "";
 
-  let result = "";
-  if (firstSentence) result += `<span style="font-weight:700">${firstSentence}</span>\n\n`;
-  if (description) result += `${description}\n\n`;
-  if (question) result += `${question}`;
-  return result.trim();
+  let html = "";
+  if (firstSentence) html += `<div style="font-weight:700; margin-bottom:10px;">${firstSentence}</div>`;
+  if (description) html += `<div style="margin-bottom:10px;">${description}</div>`;
+  if (question) html += `<div>${question}</div>`;
+  return html;
 }
 
 const Chat: React.FC = () => {
@@ -69,6 +71,8 @@ const Chat: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [threadId, setThreadId] = useState<string | null>(null);
 
+  const historyEndRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     document.body.style.overflow = "hidden";
     return () => { document.body.style.overflow = "auto"; };
@@ -77,6 +81,11 @@ const Chat: React.FC = () => {
     const timer = setTimeout(() => setPreloading(false), 1000);
     return () => clearTimeout(timer);
   }, []);
+
+  // Прокрутка истории вниз при добавлении нового сообщения
+  useEffect(() => {
+    historyEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [chatHistory, showTopics, showWelcome]);
 
   const handleShare = () => {
     if (navigator.share) {
@@ -332,7 +341,6 @@ const Chat: React.FC = () => {
             ))}
           </div>
         )}
-
         {/* История сообщений */}
         <div style={{
           width: "100%",
@@ -379,6 +387,7 @@ const Chat: React.FC = () => {
               />
             </div>
           ))}
+          <div ref={historyEndRef} />
         </div>
         {/* Поле ввода фиксировано внизу */}
         <div style={{
