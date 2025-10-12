@@ -43,18 +43,24 @@ const topics = [
   }
 ];
 
-// Форматирование ответа бота с жирным первым предложением
+// Форматирование ответа бота: жирное первое предложение, никаких курсивов/лишних звезд
 function formatBotText(text: string) {
   if (!text) return "";
-  const firstSentenceMatch = text.match(/^([^.!?]+[.!?])/);
+  // Удаляем _ и standalone *
+  let cleaned = text.replace(/_/g, "").replace(/(\*){1}(?!\*)/g, "");
+
+  // Находим первое предложение по точке, вопросу или восклицательному знаку
+  const firstSentenceMatch = cleaned.match(/^([^.!?]+[.!?])/);
   const firstSentence = firstSentenceMatch ? firstSentenceMatch[1].trim() : "";
-  const restText = firstSentence ? text.slice(firstSentence.length).trim() : text;
-  // Сохраняем жирность для markdown: используем ** ... ** для первого
+  const restText = firstSentence ? cleaned.slice(firstSentence.length).trim() : cleaned.trim();
+
   let result = "";
   if (firstSentence) result += `**${firstSentence}** `;
   if (restText) result += restText;
-  // Запрещаем использовать * вне форматирования
-  return result.replace(/(?!\*\*)(\*)/g, "").trim();
+
+  // Очищаем ошибочный markdown внутри жирного:
+  result = result.replace(/\*\*(.*?)\*\*[*]+/g, "**$1**");
+  return result.trim();
 }
 
 const Chat: React.FC = () => {
@@ -78,7 +84,6 @@ const Chat: React.FC = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  // Скроллинг вниз при новом сообщении или botProgress
   useEffect(() => {
     if (messagesEndRef.current) {
       messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
@@ -97,7 +102,6 @@ const Chat: React.FC = () => {
     }
   };
 
-  // Ассинхронная отправка сообщения + символьный вывод ответа
   const sendMessageToGPT = async (text: string) => {
     setLoading(true);
     setChatHistory(prev => [...prev, { text, sender: "user" }]);
@@ -120,7 +124,6 @@ const Chat: React.FC = () => {
           : "Извините, нет ответа от ассистента.";
       }
 
-      // Символьный вывод:
       let i = 0;
       setBotProgress(""); // очищаем предыдущий прогресс
       const interval = setInterval(() => {
@@ -132,7 +135,7 @@ const Chat: React.FC = () => {
           setBotProgress("");
           setLoading(false);
         }
-      }, 18); // Скорость печати (18мс — ≈55 символов в секунду)
+      }, 18);
     } catch (error) {
       setChatHistory(prev => [...prev, { text: "Ошибка: не удалось получить ответ.", sender: "bot" }]);
       setLoading(false);
@@ -328,7 +331,7 @@ const Chat: React.FC = () => {
             display: "flex",
             flexDirection: "column",
             gap: 20,
-            margin: "20px auto 0 auto",
+            margin: "30px auto 0 auto", // <-- ОТСТУП ВЕРХНИЙ для тем!
           }}>
             {topics.map((topic, idx) => (
               <div key={idx}
@@ -360,7 +363,7 @@ const Chat: React.FC = () => {
           maxWidth,
           padding: "0 20px",
           margin: "0 auto",
-          marginTop: showTopics ? 20 : 32,
+          marginTop: showTopics ? 0 : 30, // Отступ для первого сообщения при отсутствии тем
           flex: 1,
           overflowY: "auto"
         }}>
