@@ -1,6 +1,5 @@
 "use client";
-import React, { useState, useEffect, useRef } from "react";
-import ReactMarkdown from "react-markdown"; // Можно удалить если не используете markdown
+import React, { useState, useEffect } from "react";
 
 const NORA_COLOR = "#2e2e2e";
 const ICON_SIZE = 23;
@@ -43,7 +42,7 @@ const topics = [
   }
 ];
 
-// Новый формат для ответа бота, без markdown, с отступами
+// Функция форматирования ответа бота с жирным первым предложением
 function formatBotText(text: string) {
   if (!text) return "";
   const firstSentenceMatch = text.match(/^([^.!?]+[.!?])/);
@@ -55,9 +54,9 @@ function formatBotText(text: string) {
   let question = lines.length > 1 ? lines[lines.length - 1].trim() : "";
 
   let result = "";
-  if (firstSentence) result += `${firstSentence}\n\n`;    // Предложение
-  if (description) result += `${description}\n\n`;        // Описание
-  if (question) result += `${question}`;                // Вопрос или решение
+  if (firstSentence) result += `<span style="font-weight:700">${firstSentence}</span>\n\n`;
+  if (description) result += `${description}\n\n`;
+  if (question) result += `${question}`;
   return result.trim();
 }
 
@@ -70,10 +69,6 @@ const Chat: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [threadId, setThreadId] = useState<string | null>(null);
 
-  // Для эффекта "появляющегося текста как в GPT"
-  const [displayedText, setDisplayedText] = useState("");
-  const typingInterval = useRef<NodeJS.Timeout | null>(null);
-
   useEffect(() => {
     document.body.style.overflow = "hidden";
     return () => { document.body.style.overflow = "auto"; };
@@ -82,31 +77,6 @@ const Chat: React.FC = () => {
     const timer = setTimeout(() => setPreloading(false), 1000);
     return () => clearTimeout(timer);
   }, []);
-
-  // Эффект появления ответа бота "по буквам"
-  useEffect(() => {
-    // Проверяем последнее сообщение: если это бот и только что добавили, "печатаем" его по буквам
-    if (
-      chatHistory.length > 0 &&
-      chatHistory[chatHistory.length - 1].sender === "bot"
-    ) {
-      const botMsg = formatBotText(chatHistory[chatHistory.length - 1].text);
-      setDisplayedText(""); // сбрасываем
-      if (typingInterval.current) clearInterval(typingInterval.current);
-      let i = 0;
-      typingInterval.current = setInterval(() => {
-        setDisplayedText(botMsg.slice(0, i));
-        i++;
-        if (i > botMsg.length) {
-          clearInterval(typingInterval.current!);
-          typingInterval.current = null;
-        }
-      }, 16);
-      return () => {
-        if (typingInterval.current) clearInterval(typingInterval.current);
-      }
-    }
-  }, [chatHistory]);
 
   const handleShare = () => {
     if (navigator.share) {
@@ -373,46 +343,42 @@ const Chat: React.FC = () => {
           flex: 1,
           overflowY: "auto"
         }}>
-          {chatHistory.map((msg, idx) => {
-            // Если последнее сообщение от бота — показываем "печатание"
-            const isLastBotMsg = msg.sender === "bot" && idx === chatHistory.length - 1;
-            return (
-              <div
-                key={idx}
+          {chatHistory.map((msg, idx) => (
+            <div
+              key={idx}
+              style={{
+                display: "flex",
+                justifyContent: msg.sender === "user" ? "flex-end" : "flex-start",
+                width: "100%",
+                marginBottom: 20,
+              }}
+            >
+              <span
                 style={{
-                  display: "flex",
-                  justifyContent: msg.sender === "user" ? "flex-end" : "flex-start",
-                  width: "100%",
-                  marginBottom: 20,
+                  background: msg.sender === "user" ? GRADIENT : "transparent",
+                  color: NORA_COLOR,
+                  borderRadius: msg.sender === "user" ? 16 : 0,
+                  padding: "18px 28px",
+                  lineHeight: 1.7,
+                  fontSize: 17,
+                  minWidth: 0,
+                  boxShadow: msg.sender === "user" ? "0 2px 14px 0 rgba(155,175,205,0.07)" : "none",
+                  maxWidth: msg.sender === "user" ? "70%" : "100%",
+                  marginRight: msg.sender === "user" ? "0" : "auto",
+                  marginLeft: msg.sender === "user" ? "auto" : "0",
+                  wordBreak: "break-word",
+                  fontWeight: 400,
+                  margin: 0,
+                  whiteSpace: "pre-line",
                 }}
-              >
-                <span
-                  style={{
-                    background: msg.sender === "user" ? GRADIENT : "transparent",
-                    color: NORA_COLOR,
-                    borderRadius: msg.sender === "user" ? 16 : 0,
-                    padding: "18px 28px",
-                    lineHeight: 1.7,
-                    fontSize: 17,
-                    minWidth: 0,
-                    boxShadow: msg.sender === "user" ? "0 2px 14px 0 rgba(155,175,205,0.07)" : "none",
-                    maxWidth: msg.sender === "user" ? "70%" : "100%",
-                    marginRight: msg.sender === "user" ? "0" : "auto",
-                    marginLeft: msg.sender === "user" ? "auto" : "0",
-                    wordBreak: "break-word",
-                    fontWeight: 400,
-                    margin: 0,
-                    whiteSpace: "pre-line",
-                  }}
-                >
-                  {msg.sender === "bot"
-                    ? (isLastBotMsg ? displayedText : formatBotText(msg.text))
+                dangerouslySetInnerHTML={{
+                  __html: msg.sender === "bot"
+                    ? formatBotText(msg.text)
                     : msg.text
-                  }
-                </span>
-              </div>
-            );
-          })}
+                }}
+              />
+            </div>
+          ))}
         </div>
         {/* Поле ввода фиксировано внизу */}
         <div style={{
