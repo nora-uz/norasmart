@@ -47,10 +47,9 @@ const topics = [
   }
 ];
 
-// Типизация сообщений для правильной работы
+// Типизация сообщений
 type Message = { text: string; sender: "user" | "bot" };
 
-// Жирное первое предложение, без курсивов
 function formatBotText(text: string) {
   if (!text) return "";
   let cleaned = text.replace(/_/g, "").replace(/(\*){1}(?!\*)/g, "");
@@ -102,9 +101,10 @@ const Chat: React.FC = () => {
     }
   };
 
-  // ВСЯ история передается в API
+  // Передавай ВСЮ историю в API!
   const sendMessageToGPT = async (text: string) => {
     setLoading(true);
+    // Массив истории + твое новое сообщение
     const newHistory: Message[] = [...chatHistory, { text, sender: "user" }];
     setChatHistory(newHistory);
     setBotProgress("");
@@ -112,6 +112,7 @@ const Chat: React.FC = () => {
       const res = await fetch("/api/gpt", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        // Отправляем массив истории!
         body: JSON.stringify({ messages: newHistory, thread_id: threadId }),
       });
       const data = await res.json();
@@ -191,7 +192,7 @@ const Chat: React.FC = () => {
     );
   }
 
-  // Главный контейнер с корректным paddingTop
+  // paddingTop гарантирует безопасность сообщений — ничего не появится под панелью!
   return (
     <div
       style={{
@@ -207,7 +208,7 @@ const Chat: React.FC = () => {
         paddingTop: panelHeight + PANEL_TOP + FIRST_MSG_OFFSET + ADDITIONAL_PANEL_OFFSET,
       }}
     >
-      {/* Фиксированная панель */}
+      {/* Панель/меню */}
       <div style={{
         width: "calc(100% - 40px)",
         maxWidth,
