@@ -4,8 +4,9 @@ import ReactMarkdown from "react-markdown";
 
 const NORA_COLOR = "#2e2e2e";
 const ICON_SIZE = 23;
-const PANEL_TOP = 20;       // верхний внешний отступ для панели
-const FIRST_MSG_OFFSET = 30; // отступ между панелью и первым сообщением
+const PANEL_TOP = 0; // ОТСТУП панели сверху — теперь 0
+const FIRST_MSG_OFFSET = 30; // Всегда минимум 30px от панели до сообщения
+const BANNER_BOTTOM_OFFSET = 20; // Отступ после фото до заголовка
 const ICONS = {
   telegram: "https://cdn-icons-png.flaticon.com/512/1946/1946547.png",
   trash: "https://cdn-icons-png.flaticon.com/512/1345/1345823.png",
@@ -184,7 +185,7 @@ const Chat: React.FC = () => {
     );
   }
 
-  // --- Fixed панель ---
+  // Основной контейнер с выравниванием чата ниже панели и с нужным отступом
   return (
     <div
       style={{
@@ -200,7 +201,7 @@ const Chat: React.FC = () => {
         paddingTop: panelHeight + PANEL_TOP + FIRST_MSG_OFFSET
       }}
     >
-      {/* Фиксируем меню! */}
+      {/* Фиксированная панель */}
       <div style={{
         width: "calc(100% - 40px)",
         maxWidth,
@@ -276,9 +277,10 @@ const Chat: React.FC = () => {
       {/* --- Welcome & Topics --- */}
       {showWelcome ? (
         <>
+        {/* Баннер сразу под панелью, НЕТ отступа сверху */}
         <div style={{
           width: "calc(100% - 40px)", maxWidth, borderRadius: 26,
-          overflow: "hidden", margin: "40px auto 0 auto",
+          overflow: "hidden", margin: "0 auto 0 auto", // убран верхний маргин!
           display: "flex", justifyContent: "center", alignItems: "center"
         }}>
           <img src={BANNER} alt="Nora AI баннер"
@@ -288,7 +290,7 @@ const Chat: React.FC = () => {
             }}
           />
         </div>
-        <div style={{ height: 40 }} />
+        <div style={{ height: BANNER_BOTTOM_OFFSET }} /> {/* 20px отступ под фото */}
         <div style={{
           width: "calc(100% - 40px)", maxWidth, textAlign: "center"
         }}>
@@ -371,7 +373,7 @@ const Chat: React.FC = () => {
           maxWidth,
           padding: "0 20px",
           margin: "0 auto",
-          marginTop: showTopics ? 0 : 0, // paddingTop уже большой в основном контейнере!
+          marginTop: 0, // paddingTop у всего контейнера уже большой!
           flex: 1,
           overflowY: "auto"
         }}>
