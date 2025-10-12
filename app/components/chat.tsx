@@ -1,6 +1,6 @@
 "use client";
-import React, { useState, useEffect } from "react";
-import ReactMarkdown from "react-markdown";
+import React, { useState, useEffect, useRef } from "react";
+import ReactMarkdown from "react-markdown"; // Можно удалить если не используете markdown
 
 const NORA_COLOR = "#2e2e2e";
 const ICON_SIZE = 23;
@@ -43,21 +43,21 @@ const topics = [
   }
 ];
 
-// Markdown форматирование ответа бота
+// Новый формат для ответа бота, без markdown, с отступами
 function formatBotText(text: string) {
   if (!text) return "";
-  // Считаем первое предложение до точки (или !/?)
   const firstSentenceMatch = text.match(/^([^.!?]+[.!?])/);
   const firstSentence = firstSentenceMatch ? firstSentenceMatch[1].trim() : "";
   const restText = firstSentence ? text.slice(firstSentence.length).trim() : text;
   const lines = restText.split('\n').filter(Boolean);
+
   let description = lines.slice(0, -1).join("\n").trim();
   let question = lines.length > 1 ? lines[lines.length - 1].trim() : "";
 
   let result = "";
-  if (firstSentence) result += `**${firstSentence}**\n\n`;
-  if (description) result += `${description}\n\n`;
-  if (question) result += `${question}`;
+  if (firstSentence) result += `${firstSentence}\n\n`;    // Предложение
+  if (description) result += `${description}\n\n`;        // Описание
+  if (question) result += `${question}`;                // Вопрос или решение
   return result.trim();
 }
 
@@ -69,7 +69,10 @@ const Chat: React.FC = () => {
   const [chatHistory, setChatHistory] = useState<{text: string, sender: "user"|"bot"}[]>([]);
   const [loading, setLoading] = useState(false);
   const [threadId, setThreadId] = useState<string | null>(null);
-  const [isTyping, setIsTyping] = useState(false);
+
+  // Для эффекта "появляющегося текста как в GPT"
+  const [displayedText, setDisplayedText] = useState("");
+  const typingInterval = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
@@ -79,6 +82,31 @@ const Chat: React.FC = () => {
     const timer = setTimeout(() => setPreloading(false), 1000);
     return () => clearTimeout(timer);
   }, []);
+
+  // Эффект появления ответа бота "по буквам"
+  useEffect(() => {
+    // Проверяем последнее сообщение: если это бот и только что добавили, "печатаем" его по буквам
+    if (
+      chatHistory.length > 0 &&
+      chatHistory[chatHistory.length - 1].sender === "bot"
+    ) {
+      const botMsg = formatBotText(chatHistory[chatHistory.length - 1].text);
+      setDisplayedText(""); // сбрасываем
+      if (typingInterval.current) clearInterval(typingInterval.current);
+      let i = 0;
+      typingInterval.current = setInterval(() => {
+        setDisplayedText(botMsg.slice(0, i));
+        i++;
+        if (i > botMsg.length) {
+          clearInterval(typingInterval.current!);
+          typingInterval.current = null;
+        }
+      }, 16);
+      return () => {
+        if (typingInterval.current) clearInterval(typingInterval.current);
+      }
+    }
+  }, [chatHistory]);
 
   const handleShare = () => {
     if (navigator.share) {
@@ -92,10 +120,8 @@ const Chat: React.FC = () => {
     }
   };
 
-  // Ассинхронная отправка сообщения - с threadId и индикатором typing
   const sendMessageToGPT = async (text: string) => {
     setLoading(true);
-    setIsTyping(true);
     setChatHistory(prev => [...prev, { text, sender: "user" }]);
     try {
       const res = await fetch("/api/gpt", {
@@ -108,10 +134,10 @@ const Chat: React.FC = () => {
 
       let botReply = data.reply;
       if (res.status !== 200 || !botReply) {
-        botReply = data.error 
+        botReply = data.error
           ? (typeof data.error === 'string'
-              ? `Ошибка сервера: ${data.error}`
-              : `Ассистент не ответил (ошибка сервера)`)
+            ? `Ошибка сервера: ${data.error}`
+            : `Ассистент не ответил (ошибка сервера)`)
           : "Извините, нет ответа от ассистента.";
       }
       setChatHistory(prev => [...prev, { text: botReply, sender: "bot" }]);
@@ -119,7 +145,6 @@ const Chat: React.FC = () => {
       setChatHistory(prev => [...prev, { text: "Ошибка: не удалось получить ответ.", sender: "bot" }]);
     } finally {
       setLoading(false);
-      setIsTyping(false);
     }
   };
 
@@ -129,6 +154,7 @@ const Chat: React.FC = () => {
       setMessage("");
     }
   };
+
   const handleTopicClick = (topic: typeof topics[0]) => {
     setShowTopics(false);
     sendMessageToGPT(`Хочу обсудить ${topic.title.toLowerCase()}`);
@@ -347,62 +373,46 @@ const Chat: React.FC = () => {
           flex: 1,
           overflowY: "auto"
         }}>
-          {chatHistory.map((msg, idx) => (
-            <div
-              key={idx}
-              style={{
-                display: "flex",
-                justifyContent: msg.sender === "user" ? "flex-end" : "flex-start",
-                width: "100%",
-                marginBottom: 20,
-              }}
-            >
-              <span
+          {chatHistory.map((msg, idx) => {
+            // Если последнее сообщение от бота — показываем "печатание"
+            const isLastBotMsg = msg.sender === "bot" && idx === chatHistory.length - 1;
+            return (
+              <div
+                key={idx}
                 style={{
-                  background: msg.sender === "user" ? GRADIENT : "transparent",
-                  color: NORA_COLOR,
-                  borderRadius: msg.sender === "user" ? 16 : 0,
-                  padding: "18px 28px",
-                  lineHeight: 1.7,
-                  fontSize: 17,
-                  minWidth: 0,
-                  boxShadow: msg.sender === "user" ? "0 2px 14px 0 rgba(155,175,205,0.07)" : "none",
-                  maxWidth: msg.sender === "user" ? "70%" : "100%",
-                  marginRight: msg.sender === "user" ? "0" : "auto",
-                  marginLeft: msg.sender === "user" ? "auto" : "0",
-                  wordBreak: "break-word",
-                  fontWeight: msg.sender === "user" ? 400 : 400,
-                  margin: 0,
+                  display: "flex",
+                  justifyContent: msg.sender === "user" ? "flex-end" : "flex-start",
+                  width: "100%",
+                  marginBottom: 20,
                 }}
               >
-                {msg.sender === "bot"
-                  ? <ReactMarkdown>{formatBotText(msg.text)}</ReactMarkdown>
-                  : msg.text
-                }
-              </span>
-            </div>
-          ))}
-          {isTyping && (
-            <div style={{ textAlign: "left", marginBottom: 20 }}>
-              <span style={{
-                fontWeight: 400,
-                fontSize: 17,
-                color: "#bfbfbf",
-                letterSpacing: "0.12em",
-                fontStyle: "italic"
-              }}>
-                Ассистент печатает
-                <span style={{ animation: "dots 1.5s infinite linear" }}>...</span>
-              </span>
-              <style>{`
-                @keyframes dots {
-                  0% { opacity: 0.3;}
-                  50% { opacity: 1;}
-                  100% { opacity: 0.3;}
-                }
-              `}</style>
-            </div>
-          )}
+                <span
+                  style={{
+                    background: msg.sender === "user" ? GRADIENT : "transparent",
+                    color: NORA_COLOR,
+                    borderRadius: msg.sender === "user" ? 16 : 0,
+                    padding: "18px 28px",
+                    lineHeight: 1.7,
+                    fontSize: 17,
+                    minWidth: 0,
+                    boxShadow: msg.sender === "user" ? "0 2px 14px 0 rgba(155,175,205,0.07)" : "none",
+                    maxWidth: msg.sender === "user" ? "70%" : "100%",
+                    marginRight: msg.sender === "user" ? "0" : "auto",
+                    marginLeft: msg.sender === "user" ? "auto" : "0",
+                    wordBreak: "break-word",
+                    fontWeight: 400,
+                    margin: 0,
+                    whiteSpace: "pre-line",
+                  }}
+                >
+                  {msg.sender === "bot"
+                    ? (isLastBotMsg ? displayedText : formatBotText(msg.text))
+                    : msg.text
+                  }
+                </span>
+              </div>
+            );
+          })}
         </div>
         {/* Поле ввода фиксировано внизу */}
         <div style={{
