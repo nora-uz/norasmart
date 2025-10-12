@@ -7,7 +7,7 @@ const ICON_SIZE = 23;
 const PANEL_TOP = 20;
 const FIRST_MSG_OFFSET = 30;
 const ADDITIONAL_PANEL_OFFSET = 10;
-const BANNER_BOTTOM_OFFSET = 60;
+const BANNER_BOTTOM_OFFSET = 50; // между фото и заголовком теперь 50px!
 const ICONS = {
   telegram: "https://cdn-icons-png.flaticon.com/512/1946/1946547.png",
   trash: "https://cdn-icons-png.flaticon.com/512/1345/1345823.png",
@@ -24,6 +24,7 @@ const borderRadius = 22;
 const panelHeight = 62;
 const maxWidth = 560;
 const GRADIENT = "linear-gradient(90deg, #eff5fe 0%, #e5e8ed 100%)";
+
 const topics = [
   {
     title: "Постоянная усталость и сонливость",
@@ -47,21 +48,27 @@ const topics = [
   }
 ];
 
-// Типизация сообщений
-type Message = { text: string; sender: "user" | "bot" };
+// Запрет на любые звездочки
+function filterAsterisks(str: string) {
+  return str.replace(/\*/g, "");
+}
 
+// Форматирование ответа без звездочек
 function formatBotText(text: string) {
   if (!text) return "";
-  let cleaned = text.replace(/_/g, "").replace(/(\*){1}(?!\*)/g, "");
+  let cleaned = filterAsterisks(text).replace(/_/g, "");
   const firstSentenceMatch = cleaned.match(/^([^.!?]+[.!?])/);
   const firstSentence = firstSentenceMatch ? firstSentenceMatch[1].trim() : "";
   const restText = firstSentence ? cleaned.slice(firstSentence.length).trim() : cleaned.trim();
   let result = "";
   if (firstSentence) result += `**${firstSentence}** `;
   if (restText) result += restText;
-  result = result.replace(/\*\*(.*?)\*\*[*]+/g, "**$1**");
+  result = result.replace(/\*\*(.*?)\*\*[*]+/g, "$1"); // на всякий случай
   return result.trim();
 }
+
+// Типизация сообщений для правильной работы
+type Message = { text: string; sender: "user" | "bot" };
 
 const Chat: React.FC = () => {
   const [showWelcome, setShowWelcome] = useState(true);
@@ -101,18 +108,15 @@ const Chat: React.FC = () => {
     }
   };
 
-  // Передавай ВСЮ историю в API!
   const sendMessageToGPT = async (text: string) => {
     setLoading(true);
-    // Массив истории + твое новое сообщение
-    const newHistory: Message[] = [...chatHistory, { text, sender: "user" }];
+    const newHistory: Message[] = [...chatHistory, { text: filterAsterisks(text), sender: "user" }];
     setChatHistory(newHistory);
     setBotProgress("");
     try {
       const res = await fetch("/api/gpt", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        // Отправляем массив истории!
         body: JSON.stringify({ messages: newHistory, thread_id: threadId }),
       });
       const data = await res.json();
@@ -129,6 +133,7 @@ const Chat: React.FC = () => {
 
       let i = 0;
       setBotProgress("");
+      botReply = filterAsterisks(botReply);
       const interval = setInterval(() => {
         setBotProgress(botReply.slice(0, i));
         i++;
@@ -192,7 +197,6 @@ const Chat: React.FC = () => {
     );
   }
 
-  // paddingTop гарантирует безопасность сообщений — ничего не появится под панелью!
   return (
     <div
       style={{
@@ -208,7 +212,7 @@ const Chat: React.FC = () => {
         paddingTop: panelHeight + PANEL_TOP + FIRST_MSG_OFFSET + ADDITIONAL_PANEL_OFFSET,
       }}
     >
-      {/* Панель/меню */}
+      {/* Фиксированная панель */}
       <div style={{
         width: "calc(100% - 40px)",
         maxWidth,
@@ -284,10 +288,10 @@ const Chat: React.FC = () => {
       {/* --- Welcome & Topics --- */}
       {showWelcome ? (
         <>
-        {/* Баннер сразу под панелью */}
+        {/* Теперь marginTop: 10px между панелью и фото */}
         <div style={{
           width: "calc(100% - 40px)", maxWidth, borderRadius: 26,
-          overflow: "hidden", margin: "0 auto 0 auto",
+          overflow: "hidden", margin: "10px auto 0 auto",
           display: "flex", justifyContent: "center", alignItems: "center"
         }}>
           <img src={BANNER} alt="Nora AI баннер"
@@ -297,7 +301,7 @@ const Chat: React.FC = () => {
             }}
           />
         </div>
-        <div style={{ height: BANNER_BOTTOM_OFFSET }} />
+        <div style={{ height: BANNER_BOTTOM_OFFSET }} /> {/* 50px под фото до заголовка */}
         <div style={{
           width: "calc(100% - 40px)", maxWidth, textAlign: "center"
         }}>
@@ -415,7 +419,7 @@ const Chat: React.FC = () => {
               >
                 {msg.sender === "bot"
                   ? <ReactMarkdown>{formatBotText(msg.text)}</ReactMarkdown>
-                  : msg.text
+                  : filterAsterisks(msg.text)
                 }
               </span>
             </div>
@@ -467,7 +471,7 @@ const Chat: React.FC = () => {
           <input
             type="text"
             value={message}
-            onChange={e => setMessage(e.target.value)}
+            onChange={e => setMessage(filterAsterisks(e.target.value))}
             placeholder="Введите сообщение..."
             style={{
               flex: 1,
