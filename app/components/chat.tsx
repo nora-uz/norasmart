@@ -58,6 +58,7 @@ const Chat: React.FC = () => {
   const [chatHistory, setChatHistory] = useState<{text: string, sender: "user"|"bot"}[]>([]);
   const [loading, setLoading] = useState(false);
   const [threadId, setThreadId] = useState<string | null>(null);
+  const [botProgress, setBotProgress] = useState(""); // для печати ответа
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
@@ -80,10 +81,11 @@ const Chat: React.FC = () => {
     }
   };
 
-  // Ассинхронная отправка сообщения (убран индикатор isTyping)
+  // Ассинхронная отправка сообщения + символьный вывод ответа
   const sendMessageToGPT = async (text: string) => {
     setLoading(true);
     setChatHistory(prev => [...prev, { text, sender: "user" }]);
+    setBotProgress("");
     try {
       const res = await fetch("/api/gpt", {
         method: "POST",
@@ -101,16 +103,29 @@ const Chat: React.FC = () => {
               : `Ассистент не ответил (ошибка сервера)`)
           : "Извините, нет ответа от ассистента.";
       }
-      setChatHistory(prev => [...prev, { text: botReply, sender: "bot" }]);
+
+      // Символьный вывод:
+      let i = 0;
+      setBotProgress(""); // очищаем предыдущий прогресс
+      const interval = setInterval(() => {
+        setBotProgress(botReply.slice(0, i));
+        i++;
+        if (i > botReply.length) {
+          clearInterval(interval);
+          setChatHistory(prev => [...prev, { text: botReply, sender: "bot" }]);
+          setBotProgress("");
+          setLoading(false);
+        }
+      }, 18); // Скорость печати (18мс — ≈55 символов в секунду)
     } catch (error) {
       setChatHistory(prev => [...prev, { text: "Ошибка: не удалось получить ответ.", sender: "bot" }]);
-    } finally {
       setLoading(false);
+      setBotProgress("");
     }
   };
 
   const handleSendMessage = () => {
-    if (message.trim() && !loading) {
+    if (message.trim() && !loading && !botProgress) {
       sendMessageToGPT(message.trim());
       setMessage("");
     }
@@ -223,6 +238,7 @@ const Chat: React.FC = () => {
             setThreadId(null);
             setShowWelcome(true);
             setShowTopics(true);
+            setBotProgress("");
           }}>
             <img src={ICONS.trash} alt="Trash"
               style={{ width: ICON_SIZE, height: ICON_SIZE, filter: filterNora }} />
@@ -322,7 +338,7 @@ const Chat: React.FC = () => {
           </div>
         )}
 
-        {/* История сообщений */}
+        {/* История сообщений + botProgress по буквам */}
         <div style={{
           width: "100%",
           maxWidth,
@@ -367,7 +383,32 @@ const Chat: React.FC = () => {
               </span>
             </div>
           ))}
-          {/* Блок "Ассистент печатает" удалён */}
+          {botProgress && (
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "flex-start",
+                width: "100%",
+                marginBottom: 20,
+              }}
+            >
+              <span
+                style={{
+                  color: NORA_COLOR,
+                  padding: "18px 28px",
+                  lineHeight: 1.7,
+                  fontSize: 17,
+                  minWidth: 0,
+                  maxWidth: "100%",
+                  wordBreak: "break-word",
+                  fontWeight: 400,
+                  margin: 0
+                }}
+              >
+                <ReactMarkdown>{formatBotText(botProgress)}</ReactMarkdown>
+              </span>
+            </div>
+          )}
         </div>
         {/* Поле ввода фиксировано внизу */}
         <div style={{
@@ -402,7 +443,7 @@ const Chat: React.FC = () => {
               marginRight: 8
             }}
             onKeyDown={e => { if (e.key === 'Enter') handleSendMessage(); }}
-            disabled={loading}
+            disabled={loading || !!botProgress}
           />
           <button
             style={{
@@ -414,14 +455,14 @@ const Chat: React.FC = () => {
               borderRadius: borderRadius,
               fontWeight: 700,
               fontSize: "17px",
-              cursor: loading ? "not-allowed" : "pointer",
+              cursor: (loading || !!botProgress) ? "not-allowed" : "pointer",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
               boxShadow: "0 2px 14px 0 rgba(155,175,205,0.12)"
             }}
             onClick={handleSendMessage}
-            disabled={loading}
+            disabled={loading || !!botProgress}
           >
             <span style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
               {ICONS.arrowRight}
