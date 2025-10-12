@@ -14,7 +14,7 @@ const ICONS = {
   ),
 };
 const filterNora = "invert(13%) sepia(4%) saturate(271%) hue-rotate(175deg) brightness(92%) contrast(93%)";
-const BANNER = "/banner.webp"; // Ваш путь к баннеру!
+const BANNER = "/banner.webp";
 const borderRadius = 22;
 const panelHeight = 62;
 const maxWidth = 560;
@@ -152,13 +152,13 @@ const Chat: React.FC = () => {
         color: NORA_COLOR,
         margin: "0px auto 0 auto",
         display: "flex",
-        alignItems: "center",
+        alignItems: "center" as const,
         borderRadius: borderRadius,
         paddingLeft: 20,
         paddingRight: 12,
         paddingTop: 5,
         paddingBottom: 5,
-        justifyContent: "flex-start",
+        justifyContent: "flex-start" as const,
         boxSizing: "border-box"
       }}>
         <div style={{
@@ -166,7 +166,7 @@ const Chat: React.FC = () => {
           color: NORA_COLOR,
           display: "flex",
           flexDirection: "column" as const,
-          justifyContent: "center",
+          justifyContent: "center" as const,
           minWidth: 0
         }}>
           <span style={{
@@ -178,11 +178,11 @@ const Chat: React.FC = () => {
             lineHeight: 1.04, whiteSpace: "nowrap"
           }}>Ассистент для будущих мам</span>
         </div>
-        <div style={{ display: "flex", alignItems: "center", gap: 8, marginLeft: "auto" }}>
+        <div style={{ display: "flex", alignItems: "center" as const, gap: 8, marginLeft: "auto" }}>
           <button style={{
             background: "transparent", border: "none", cursor: "pointer",
             width: 38, height: 38, borderRadius: 19,
-            display: "flex", alignItems: "center", justifyContent: "center"
+            display: "flex", alignItems: "center" as const, justifyContent: "center" as const
           }} onClick={() => window.open("https://t.me/", "_blank")}>
             <img src={ICONS.telegram} alt="Telegram"
               style={{ width: ICON_SIZE, height: ICON_SIZE, filter: filterNora }} />
@@ -190,7 +190,7 @@ const Chat: React.FC = () => {
           <button style={{
             background: "transparent", border: "none", cursor: "pointer",
             width: 38, height: 38, borderRadius: 19,
-            display: "flex", alignItems: "center", justifyContent: "center"
+            display: "flex", alignItems: "center" as const, justifyContent: "center" as const
           }} onClick={clearChat}>
             <img src={ICONS.trash} alt="Trash"
               style={{ width: ICON_SIZE, height: ICON_SIZE, filter: filterNora }} />
@@ -206,8 +206,8 @@ const Chat: React.FC = () => {
           overflow: "hidden",
           background: "#f8fdff",
           display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
+          justifyContent: "center" as const,
+          alignItems: "center" as const,
           position: "relative"
         }}
       >
@@ -246,7 +246,7 @@ const Chat: React.FC = () => {
               marginBottom: 20,
               color: NORA_COLOR,
               letterSpacing: "0.03em",
-              textAlign: "left"
+              textAlign: "left" as const
             }}>
               Выберите срок беременности:
             </div>
@@ -297,7 +297,7 @@ const Chat: React.FC = () => {
               marginBottom: 20,
               color: NORA_COLOR,
               letterSpacing: "0.03em",
-              textAlign: "left"
+              textAlign: "left" as const
             }}>
               Выберите тему для обсуждения:
             </div>
@@ -313,7 +313,7 @@ const Chat: React.FC = () => {
                   background: isSelected ? "#eff5fe" : GRADIENT,
                   color: isSelected ? NORA_COLOR : NORA_COLOR,
                   opacity: disabled ? 0.45 : 1,
-                  textAlign: "left",
+                  textAlign: "left" as const,
                   padding: "17px 18px 13px 18px",
                   display: "flex",
                   flexDirection: "column" as const,
@@ -374,7 +374,7 @@ const Chat: React.FC = () => {
               lineHeight: 1.7,
               border: "none",
               boxShadow: "none",
-              textAlign: "left",
+              textAlign: "left" as const,
               marginBottom: 20
             }}>
               {messages[0]?.text}
@@ -409,7 +409,7 @@ const Chat: React.FC = () => {
               <div key={idx} style={{
                 width: "100%",
                 display: "flex",
-                justifyContent: msg.role === "assistant" ? "flex-start" : "flex-end",
+                justifyContent: msg.role === "assistant" ? "flex-start" as const : "flex-end" as const,
                 marginBottom: 12
               }}>
                 {msg.role === "assistant" ? (
@@ -427,7 +427,7 @@ const Chat: React.FC = () => {
                     wordBreak: "break-word",
                     alignSelf: "flex-start" as const,
                     boxShadow: "none",
-                    textAlign: "left",
+                    textAlign: "left" as const,
                     transition: "background 0.4s, color 0.4s"
                   }}>
                     <ReactMarkdown>{msg.text}</ReactMarkdown>
@@ -448,7 +448,7 @@ const Chat: React.FC = () => {
                     wordBreak: "break-word",
                     alignSelf: "flex-end" as const,
                     boxShadow: "0 2px 14px 0 rgba(155,175,205,0.07)",
-                    textAlign: "right",
+                    textAlign: "right" as const,
                     transition: "background 0.4s, color 0.4s"
                   }}>
                     {msg.text}
@@ -460,7 +460,7 @@ const Chat: React.FC = () => {
               <div style={{
                 width: "100%",
                 display: "flex",
-                justifyContent: "flex-start",
+                justifyContent: "flex-start" as const,
                 marginBottom: 12
               }}>
                 <div style={{
@@ -477,7 +477,7 @@ const Chat: React.FC = () => {
                   wordBreak: "break-word",
                   alignSelf: "flex-start" as const,
                   boxShadow: "none",
-                  textAlign: "left",
+                  textAlign: "left" as const,
                   transition: "background 0.4s, color 0.4s"
                 }}>
                   <ReactMarkdown>{streamedBotText}</ReactMarkdown>
