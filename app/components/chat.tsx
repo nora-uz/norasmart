@@ -43,22 +43,11 @@ const topics = [
   }
 ];
 
-// Markdown форматирование ответа бота
+// Форматирование ответа бота без *
 function formatBotText(text: string) {
   if (!text) return "";
-  // Считаем первое предложение до точки (или !/?)
-  const firstSentenceMatch = text.match(/^([^.!?]+[.!?])/);
-  const firstSentence = firstSentenceMatch ? firstSentenceMatch[1].trim() : "";
-  const restText = firstSentence ? text.slice(firstSentence.length).trim() : text;
-  const lines = restText.split('\n').filter(Boolean);
-  let description = lines.slice(0, -1).join("\n").trim();
-  let question = lines.length > 1 ? lines[lines.length - 1].trim() : "";
-
-  let result = "";
-  if (firstSentence) result += `**${firstSentence}**\n\n`;
-  if (description) result += `${description}\n\n`;
-  if (question) result += `${question}`;
-  return result.trim();
+  // Запрещаем символ * полностью
+  return text.replace(/\*/g, "").trim();
 }
 
 const Chat: React.FC = () => {
@@ -69,7 +58,6 @@ const Chat: React.FC = () => {
   const [chatHistory, setChatHistory] = useState<{text: string, sender: "user"|"bot"}[]>([]);
   const [loading, setLoading] = useState(false);
   const [threadId, setThreadId] = useState<string | null>(null);
-  const [isTyping, setIsTyping] = useState(false);
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
@@ -92,10 +80,9 @@ const Chat: React.FC = () => {
     }
   };
 
-  // Ассинхронная отправка сообщения - с threadId и индикатором typing
+  // Ассинхронная отправка сообщения (убран индикатор isTyping)
   const sendMessageToGPT = async (text: string) => {
     setLoading(true);
-    setIsTyping(true);
     setChatHistory(prev => [...prev, { text, sender: "user" }]);
     try {
       const res = await fetch("/api/gpt", {
@@ -119,7 +106,6 @@ const Chat: React.FC = () => {
       setChatHistory(prev => [...prev, { text: "Ошибка: не удалось получить ответ.", sender: "bot" }]);
     } finally {
       setLoading(false);
-      setIsTyping(false);
     }
   };
 
@@ -257,7 +243,6 @@ const Chat: React.FC = () => {
               width: "100%", height: "auto", display: "block",
               objectFit: "contain", objectPosition: "center"
             }}
-            loading="lazy" fetchPriority="high"
           />
         </div>
         <div style={{ height: 40 }} />
@@ -382,27 +367,7 @@ const Chat: React.FC = () => {
               </span>
             </div>
           ))}
-          {isTyping && (
-            <div style={{ textAlign: "left", marginBottom: 20 }}>
-              <span style={{
-                fontWeight: 400,
-                fontSize: 17,
-                color: "#bfbfbf",
-                letterSpacing: "0.12em",
-                fontStyle: "italic"
-              }}>
-                Ассистент печатает
-                <span style={{ animation: "dots 1.5s infinite linear" }}>...</span>
-              </span>
-              <style>{`
-                @keyframes dots {
-                  0% { opacity: 0.3;}
-                  50% { opacity: 1;}
-                  100% { opacity: 0.3;}
-                }
-              `}</style>
-            </div>
-          )}
+          {/* Блок "Ассистент печатает" удалён */}
         </div>
         {/* Поле ввода фиксировано внизу */}
         <div style={{
