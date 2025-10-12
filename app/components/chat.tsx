@@ -1,12 +1,11 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState } from "react";
 
-// Ссылка на фотографию ребенка — такая же манера, как у тебя:
-const BABY_IMG =
-  "https://user-gen-media-assets.s3.amazonaws.com/seedream_images/4c36a715-f500-4186-8955-631a09fac0ed.png";
+// Используем актуальную фотографию малыша
+const BABY_IMG = "/1000004249-removebg-preview-1.jpg";
 
-// Описания развития по месяцам
+// Описания по месяцам
 const BABY_DESCRIPTIONS = [
   "Сейчас малыш похож на маленькое зернышко, но с каждым днём быстро развивается.",
   "Малыш активно растёт, формируются основные органы.",
@@ -19,184 +18,182 @@ const BABY_DESCRIPTIONS = [
   "Готовится к рождению, занимает конечное положение."
 ];
 
+// Темы для 3-го этапа
 const THEMES = [
-  { title: "Здоровье", icon: "❤️", desc: "О здоровье мамы и малыша" },
-  { title: "Питание", icon: "🥗", desc: "Рекомендации по питанию" },
-  { title: "Депрессия", icon: "🙂", desc: "Эмоциональное состояние" },
-  { title: "Усталость", icon: "😞", desc: "Проблемы с усталостью" }
+  { title: "Здоровье", icon: "💉" },
+  { title: "Питание", icon: "🍎" },
+  { title: "Депрессия", icon: "😊" },
+  { title: "Усталость", icon: "😴" }
 ];
 
 const weights = [46, 47, 48];
 const heights = [154, 155, 156];
 
-const NoraOnboarding: React.FC = () => {
+export default function NoraDesign() {
   const [step, setStep] = useState(0);
 
-  // Анкета
+  // Данные анкеты
   const [month, setMonth] = useState<number>(5);
   const [weight, setWeight] = useState<number>(47);
   const [height, setHeight] = useState<number>(155);
 
   // Для чата
   const [userMsg, setUserMsg] = useState("");
-  const [selectedTheme, setSelectedTheme] = useState<string | null>(null);
+  const [selectedTheme, setSelectedTheme] = useState<string | null>("");
 
-  // ----- Первый экран -----
+  // ----------- ЭКРАН 1: Nora рассказывает о себе ---------------
   if (step === 0) {
     return (
-      <div style={pageStyle}>
-        <img
-          src={BABY_IMG}
-          alt="Ребёнок"
-          style={{ ...imgStyle, objectFit: "contain" as const }}
-        />
-        <h2 style={{ fontWeight: 700, textAlign: "center", marginTop: 40 }}>
-          Добро пожаловать в Nora AI
-        </h2>
-        <p style={{ textAlign: "center", fontSize: 20, margin: "20px 0" }}>
-          Я помогаю будущим мамам на каждом этапе беременности: отвечаю на вопросы, напоминаю о важных делах,
-          слежу за самочувствием и даю полезные советы, основанные на медицине и заботе.
-        </p>
-        <button style={btnStyle} onClick={() => setStep(1)}>Начать пользоваться</button>
+      <div style={rootStyle}>
+        {/* Центральная картинка и плашка самое главное */}
+        <div style={{ position: "relative", width: "100%", display: "flex", justifyContent: "center" }}>
+          <img
+            src={BABY_IMG}
+            alt="Ребенок"
+            style={{ width: 300, height: 300, objectFit: "contain", display: "block", marginTop: 40 }}
+          />
+          {/* Плашка с описанием сверху */}
+          <div style={{
+            position: "absolute", top: 16, left: "50%", transform: "translateX(-50%)",
+            background: "#F3A3A3", color: "#fff", borderRadius: 27, padding: "24px 30px",
+            fontSize: 24, fontWeight: 500, boxSizing: "border-box", textAlign: "center", maxWidth: 390
+          }}>
+            {BABY_DESCRIPTIONS[month - 1]}
+          </div>
+          {/* Плашка с месяцем справа внизу */}
+          <div style={{
+            position: "absolute", right: 10, bottom: 40,
+            background: "#F3A3A3", color: "#fff", padding: "12px 28px",
+            borderRadius: 25, fontSize: 22, fontWeight: 700, minWidth: 130, textAlign: "center"
+          }}>
+            Ваш срок<br /> беременности <span style={{ fontSize: 34 }}>{month}</span>
+          </div>
+        </div>
+        {/* Кнопка "далее" */}
+        <div style={{ textAlign: "center", marginTop: 330 }}>
+          <button
+            style={mainBtn}
+            onClick={() => setStep(1)}
+          >Далее</button>
+        </div>
       </div>
     );
   }
 
-  // ----- Второй экран -----
+  // ----------- ЭКРАН 2: Анкета — срок, вес, рост ---------------
   if (step === 1) {
     return (
-      <div style={pageStyle}>
-        <img
-          src={BABY_IMG}
-          alt="Ребёнок"
-          style={{ ...imgStyle, objectFit: "contain" as const }}
-        />
-        <h2 style={{ fontWeight: 700, textAlign: "center", marginTop: 40 }}>
+      <div style={rootStyle}>
+        <div style={{ width: "100%", display: "flex", flexDirection: "column", alignItems: "center", marginTop: 40 }}>
+          <img src={BABY_IMG} alt="Ребенок" style={{ width: 300, height: 300, objectFit: "contain", display: "block" }} />
+        </div>
+        <div style={{ textAlign: "center", fontWeight: 700, fontSize: 28, margin: "44px 0 28px 0" }}>
           Заполните, для точных ответов.
-        </h2>
+        </div>
         <div style={{
-          display: "flex", gap: 12, margin: "20px 0", justifyContent: "center", flexWrap: "wrap"
+          display: "flex", gap: 34, justifyContent: "center", marginBottom: 38, flexWrap: "wrap"
         }}>
-          {/* Месяцы */}
-          <div style={cardStyle}>
-            <div>Срок беременности:</div>
-            <div style={{ display: "flex", gap: 6, marginTop: 12 }}>
+          {/* Месяц беременности */}
+          <div style={bigCard}>
+            <div style={{ fontSize: 19, marginBottom: 9 }}>Срок беременности:</div>
+            <div style={{ display: "flex", gap: 8, justifyContent: "center" }}>
               {[4, 5, 6].map(m => (
                 <div
                   key={m}
                   style={{
-                    ...selectStyle,
-                    background: month === m ? "#F2A5A5" : "#fff",
+                    ...choiceBtn,
+                    background: month === m ? "#F3A3A3" : "#fff",
                     color: month === m ? "#fff" : "#222"
                   }}
                   onClick={() => setMonth(m)}
-                >
-                  {m}
-                </div>
+                >{m}</div>
               ))}
             </div>
           </div>
           {/* Вес */}
-          <div style={cardStyle}>
-            <div>Укажите ваш вес:</div>
-            <div style={{ display: "flex", gap: 6, marginTop: 12 }}>
+          <div style={bigCard}>
+            <div style={{ fontSize: 19, marginBottom: 9 }}>Укажите ваш вес:</div>
+            <div style={{ display: "flex", gap: 8, justifyContent: "center" }}>
               {weights.map(w => (
                 <div
                   key={w}
                   style={{
-                    ...selectStyle,
-                    background: weight === w ? "#F2F4F7" : "#fff",
+                    ...choiceBtn,
+                    background: weight === w ? "#F7F8F8" : "#fff",
                     color: "#222"
                   }}
                   onClick={() => setWeight(w)}
-                >
-                  {w}
-                </div>
+                >{w}</div>
               ))}
             </div>
           </div>
           {/* Рост */}
-          <div style={cardStyle}>
-            <div>Укажите ваш рост:</div>
-            <div style={{ display: "flex", gap: 6, marginTop: 12 }}>
+          <div style={bigCard}>
+            <div style={{ fontSize: 19, marginBottom: 9 }}>Укажите ваш рост:</div>
+            <div style={{ display: "flex", gap: 8, justifyContent: "center" }}>
               {heights.map(h => (
                 <div
                   key={h}
                   style={{
-                    ...selectStyle,
-                    background: height === h ? "#F2F4F7" : "#fff",
+                    ...choiceBtn,
+                    background: height === h ? "#F7F8F8" : "#fff",
                     color: "#222"
                   }}
                   onClick={() => setHeight(h)}
-                >
-                  {h}
-                </div>
+                >{h}</div>
               ))}
             </div>
           </div>
         </div>
-        <button style={btnStyle} onClick={() => setStep(2)}>Далее</button>
-        <button
-          style={{ ...btnStyle, background: "#ECECEC", color: "#333", marginTop: 8 }}
-          onClick={() => setStep(0)}
-        >
-          На главную страницу
-        </button>
+        <div style={{ textAlign: "center", marginTop: 34 }}>
+          <button style={mainBtn} onClick={() => setStep(2)}>Далее</button>
+        </div>
+        <div style={{ textAlign: "center", marginTop: 12 }}>
+          <button
+            style={{ ...mainBtn, background: "#ECECEC", color: "#333" }}
+            onClick={() => setStep(0)}
+          >На главную страницу</button>
+        </div>
       </div>
     );
   }
 
-  // ----- Третий экран -----
+  // ----------- ЭКРАН 3: Чат, темы, поле ввода ---------------
   if (step === 2) {
     return (
-      <div style={pageStyle}>
-        <div style={{ position: "relative", textAlign: "center", marginBottom: 16 }}>
+      <div style={rootStyle}>
+        <div style={{ position: "relative", width: "100%", display: "flex", justifyContent: "center", height: 320, marginBottom: 14 }}>
           <img
             src={BABY_IMG}
-            alt="Ребёнок"
-            style={{ ...imgStyle, objectFit: "contain" as const }}
+            alt="Ребенок"
+            style={{ width: 300, height: 300, objectFit: "contain", display: "block", marginTop: 40 }}
           />
+          {/* Плашка с кратким описанием сверху */}
           <div style={{
-            position: "absolute",
-            left: "50%",
-            top: "22%", transform: "translate(-50%, 0)",
-            background: "#F2A5A5",
-            padding: "18px 28px",
-            borderRadius: 25,
-            fontSize: 20,
-            color: "#fff",
-            fontWeight: 500,
-            width: 320,
-            maxWidth: "calc(100vw - 40px)",
-            boxSizing: "border-box"
+            position: "absolute", top: 16, left: "50%", transform: "translateX(-50%)",
+            background: "#F3A3A3", color: "#fff", borderRadius: 27, padding: "24px 30px",
+            fontSize: 22, fontWeight: 500, boxSizing: "border-box", textAlign: "center", maxWidth: 370
           }}>
             {BABY_DESCRIPTIONS[month - 1]}
           </div>
+          {/* Плашка со сроком беременности справа */}
           <div style={{
-            position: "absolute",
-            right: "10%",
-            top: "58%",
-            background: "#F2A5A5",
-            color: "#fff",
-            padding: "10px 20px",
-            borderRadius: 20,
-            fontSize: 22,
-            fontWeight: 700
+            position: "absolute", right: 10, bottom: 60,
+            background: "#F3A3A3", color: "#fff", padding: "12px 28px",
+            borderRadius: 25, fontSize: 22, fontWeight: 700, minWidth: 120, textAlign: "center"
           }}>
-            Ваш срок <br /> беременности <span style={{ fontSize: 32 }}>{month}</span>
+            Ваш срок<br /> беременности <span style={{ fontSize: 32 }}>{month}</span>
           </div>
         </div>
-        <h2 style={{ textAlign: "center", fontWeight: 700, marginBottom: 30 }}>
-          Что хотите обсудить сегодня?
-        </h2>
-        {/* Темы обсуждения */}
+        {/* Вопрос: Что хотите обсудить? */}
         <div style={{
-          display: "flex",
-          flexWrap: "wrap",
-          gap: 18,
-          justifyContent: "center",
-          maxWidth: 700,
-          margin: "0 auto 24px"
+          textAlign: "center", fontWeight: 700, fontSize: 26, margin: "34px 0 38px 0"
+        }}>
+          Что хотите обсудить сегодня?
+        </div>
+        {/* Блок тем – карточки четыре в две строки */}
+        <div style={{
+          display: "flex", flexWrap: "wrap", gap: 22, justifyContent: "center", marginBottom: 30
         }}>
           {THEMES.map((t, idx) => (
             <div
@@ -204,38 +201,36 @@ const NoraOnboarding: React.FC = () => {
               style={{
                 background: "#F7F8FA",
                 borderRadius: 19,
-                boxShadow: selectedTheme === t.title ? "0 0 0 2px #F2A5A5 inset" : "none",
-                padding: "22px 28px",
-                width: 240,
-                cursor: "pointer"
+                boxShadow: selectedTheme === t.title ? "0 0 0 2px #F3A3A3 inset" : "none",
+                padding: "24px 20px",
+                minWidth: 180,
+                maxWidth: 240,
+                cursor: "pointer",
+                fontWeight: 700,
+                fontSize: 22,
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center"
               }}
               onClick={() => setSelectedTheme(t.title)}
             >
-              <div style={{ fontWeight: 700, fontSize: 21, marginBottom: 7 }}>
-                {t.title} <span style={{ marginLeft: 12, fontSize: 22 }}>{t.icon}</span>
-              </div>
-              <div style={{ color: "#444" }}>{BABY_DESCRIPTIONS[month - 1]}</div>
+              <span style={{ fontSize: 28, marginBottom: 8 }}>{t.icon}</span>
+              <span>{t.title}</span>
+              <span style={{ fontWeight: 400, fontSize: 15, marginTop: 5, textAlign: "center", color: "#666" }}>
+                {BABY_DESCRIPTIONS[month - 1]}
+              </span>
             </div>
           ))}
         </div>
-        {/* Поле ввода вопроса */}
+        {/* Поле для ввода вопроса */}
         <div style={{
-          display: "flex",
-          alignItems: "center",
-          maxWidth: 600,
-          margin: "0 auto",
-          gap: 12,
-          borderRadius: 22,
-          background: "#F7F8FA",
-          padding: "10px 28px"
+          display: "flex", alignItems: "center", maxWidth: 540, margin: "0 auto",
+          padding: "14px 26px", background: "#F7F7FA", borderRadius: 23
         }}>
           <input
             style={{
-              flex: 1,
-              border: "none",
-              fontSize: 26,
-              background: "transparent",
-              color: "#222"
+              flex: 1, border: "none", fontSize: 26,
+              background: "transparent", color: "#222", outline: "none"
             }}
             placeholder="Введите вопрос..."
             value={userMsg}
@@ -243,71 +238,65 @@ const NoraOnboarding: React.FC = () => {
           />
           <button
             style={{
-              border: "none",
-              background: "none",
-              color: "#F2A5A5",
-              fontSize: 36,
-              cursor: "pointer"
+              border: "none", background: "none", color: "#F3A3A3",
+              fontSize: 38, cursor: "pointer", marginLeft: 12
             }}
-          >✈️</button>
+          >
+            {/* Стилизуем в виде "отправить" — paper plane */}
+            <span>✈️</span>
+          </button>
         </div>
       </div>
     );
   }
 
   return null;
-};
+}
 
-// ---- Стили ----
-const pageStyle = {
-  background: "#F8FBFC",
+// ------- Стили максимально близкие к макету -------
+const rootStyle = {
+  background: "#F9FAFC",
   minHeight: "100vh",
   width: "100vw",
-  padding: "32px 0",
   position: "relative"
 } as React.CSSProperties;
 
-const imgStyle = {
-  width: 230,
-  height: 230,
-  display: "block",
-  margin: "0 auto"
-};
-
-const btnStyle = {
-  background: "linear-gradient(90deg,#F2A5A5,#F2A5A5)",
+const mainBtn = {
+  background: "linear-gradient(90deg,#F3A3A3,#F3A3A3)",
   color: "#fff",
-  borderRadius: 19,
-  height: 58,
+  borderRadius: 23,
+  height: 56,
   fontWeight: 600,
   fontSize: 22,
   border: "none",
-  margin: "30px auto",
+  margin: "auto",
   display: "block",
   width: 340,
   cursor: "pointer"
 };
 
-const cardStyle = {
+const bigCard = {
   background: "#F7F8FA",
-  borderRadius: 17,
-  padding: "12px 24px",
-  minWidth: 110,
+  borderRadius: 19,
+  padding: "18px 24px",
+  minWidth: 140,
   fontSize: 19,
   color: "#222",
   textAlign: "center",
-  marginRight: 8
+  marginRight: 10,
+  marginBottom: 12,
+  boxShadow: "none"
 } as React.CSSProperties;
 
-const selectStyle = {
-  borderRadius: 13,
-  padding: "8px 0",
+const choiceBtn = {
+  borderRadius: 11,
+  padding: "10px 0",
   fontWeight: 700,
-  fontSize: 32,
-  minWidth: 50,
+  fontSize: 36,
+  minWidth: 54,
   textAlign: "center",
-  margin: "0 2px",
-  cursor: "pointer"
+  margin: "0 4px",
+  cursor: "pointer",
+  transition: "background 0.18s, color 0.18s"
 } as React.CSSProperties;
 
-export default NoraOnboarding;
