@@ -325,7 +325,7 @@ const Chat: React.FC = () => {
             display: "flex",
             flexDirection: "column",
             gap: 20,
-            margin: "30px auto 0 auto", // <-- ОТСТУП ВЕРХНИЙ
+            margin: "30px auto 0 auto",
           }}>
             {topics.map((topic, idx) => (
               <div key={idx}
@@ -357,7 +357,7 @@ const Chat: React.FC = () => {
           maxWidth,
           padding: "0 20px",
           margin: "0 auto",
-          marginTop: showTopics ? 0 : 30, // <-- ОТСТУП ВЕРХНИЙ ТОЛЬКО ЕСЛИ showTopics = false !!!
+          marginTop: showTopics ? 0 : 30,
           flex: 1,
           overflowY: "auto"
         }}>
@@ -368,7 +368,7 @@ const Chat: React.FC = () => {
                 display: "flex",
                 justifyContent: msg.sender === "user" ? "flex-end" : "flex-start",
                 width: "100%",
-                marginTop: 30,
+                marginTop: idx === 0 ? 0 : 30, // Только между НЕ первым сообщением!
                 marginBottom: 30,
               }}
             >
@@ -403,7 +403,7 @@ const Chat: React.FC = () => {
                 display: "flex",
                 justifyContent: "flex-start",
                 width: "100%",
-                marginTop: 30,
+                marginTop: chatHistory.length === 0 ? 0 : 30, // Только между не первым!
                 marginBottom: 30,
               }}
             >
