@@ -42,15 +42,21 @@ const topics = [
   }
 ];
 
-// Функция для правильного форматирования ответа
+// Функция: первое предложение с эмодзи и пунктуацией до \n
+function getFirstSentence(text: string) {
+  // Захватывает до первого переноса строки, включая пунктуацию и эмодзи
+  const match = text.match(/^([^\n]+?[.!?][^\n]*)(?:\n|$)/);
+  return match ? match[1].replace(/[\n\r]+/g, " ").trim() : "";
+}
+
 function formatBotText(text: string) {
   if (!text) return "";
-  // Получить первое предложение без входящих переносов строк
-  const firstSentenceMatch = text.match(/^([^.!?]+[.!?])/);
-  let firstSentence = firstSentenceMatch ? firstSentenceMatch[1].replace(/[\n\r]+/g, " ").trim() : "";
-  const restText = firstSentenceMatch && text.length > firstSentence.length ? text.slice(firstSentence.length).trim() : text.trim();
+  // Первое предложение с эмодзи и пунктуацией
+  let firstSentence = getFirstSentence(text);
+  const restText = firstSentence && text.length > firstSentence.length
+    ? text.slice(firstSentence.length).trim()
+    : text.trim();
 
-  // Следующие части разбиваем по строкам, но обрабатываем как абзацы
   const lines = restText.split('\n').filter(Boolean);
   let description = lines.slice(0, -1).join("\n").trim();
   let question = lines.length > 1 ? lines[lines.length - 1].trim() : lines[0] || "";
@@ -58,7 +64,7 @@ function formatBotText(text: string) {
   let html = "";
   if (firstSentence) html += `<div style="font-weight:700; margin-bottom:10px;">${firstSentence}</div>`;
   if (description) html += `<div style="margin-bottom:10px;">${description}</div>`;
-  if (question) html += `<div>${question}</div>`;
+  if (question && question !== description) html += `<div>${question}</div>`;
   return html;
 }
 
@@ -82,7 +88,6 @@ const Chat: React.FC = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  // Прокрутка истории вниз при добавлении нового сообщения
   useEffect(() => {
     historyEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [chatHistory, showTopics, showWelcome]);
@@ -349,7 +354,8 @@ const Chat: React.FC = () => {
           margin: "0 auto",
           marginTop: showTopics ? 20 : 32,
           flex: 1,
-          overflowY: "auto"
+          overflowY: "auto",
+          paddingBottom: 80 // увеличенный отступ снизу, чтобы поле ввода не перекрывало последние сообщения
         }}>
           {chatHistory.map((msg, idx) => (
             <div
