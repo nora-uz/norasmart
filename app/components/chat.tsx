@@ -4,6 +4,8 @@ import ReactMarkdown from "react-markdown";
 
 const NORA_COLOR = "#2e2e2e";
 const ICON_SIZE = 23;
+const PANEL_TOP = 20;       // верхний внешний отступ для панели
+const FIRST_MSG_OFFSET = 30; // отступ между панелью и первым сообщением
 const ICONS = {
   telegram: "https://cdn-icons-png.flaticon.com/512/1946/1946547.png",
   trash: "https://cdn-icons-png.flaticon.com/512/1345/1345823.png",
@@ -195,7 +197,7 @@ const Chat: React.FC = () => {
         flexDirection: "column",
         alignItems: "center",
         boxSizing: "border-box",
-        paddingTop: panelHeight + 20 // отступ для фиксированной панели
+        paddingTop: panelHeight + PANEL_TOP + FIRST_MSG_OFFSET
       }}
     >
       {/* Фиксируем меню! */}
@@ -206,7 +208,7 @@ const Chat: React.FC = () => {
         background: GRADIENT,
         color: NORA_COLOR,
         position: "fixed",
-        top: 0,
+        top: PANEL_TOP,
         left: "50%",
         transform: "translateX(-50%)",
         display: "flex",
@@ -369,7 +371,7 @@ const Chat: React.FC = () => {
           maxWidth,
           padding: "0 20px",
           margin: "0 auto",
-          marginTop: showTopics ? 0 : 30,
+          marginTop: showTopics ? 0 : 0, // paddingTop уже большой в основном контейнере!
           flex: 1,
           overflowY: "auto"
         }}>
