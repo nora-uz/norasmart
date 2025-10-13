@@ -198,19 +198,17 @@ const Chat: React.FC = () => {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        boxSizing: "border-box",
-        paddingTop: panelHeight + 20 + 30 + 10, // панель и небольшой запас
+        boxSizing: "border-box"
       }}
     >
-      {/* Панель меню: теперь не фиксированная */}
+      {/* НЕ фиксированная панель, всегда сверху, отступ 20px */}
       <div style={{
         width: "calc(100% - 40px)",
         maxWidth,
         minHeight: panelHeight,
         background: GRADIENT,
         color: NORA_COLOR,
-        // position: "static", // теперь по умолчанию static!
-        margin: "0 auto",
+        margin: "20px auto 0 auto", // Сверху 20px
         display: "flex",
         alignItems: "center",
         borderRadius: borderRadius,
@@ -326,7 +324,7 @@ const Chat: React.FC = () => {
         <div
           style={{
             width: "100%",
-            marginTop: 180, // ниже центра
+            marginTop: 20,
             marginBottom: 0,
             display: "flex",
             justifyContent: "center"
@@ -370,7 +368,7 @@ const Chat: React.FC = () => {
         marginTop: 0,
         flex: 1,
         overflowY: "auto",
-        paddingBottom: INPUT_BAR_HEIGHT + 20 // Чтобы чат не заходил под инпут–бар
+        paddingBottom: INPUT_BAR_HEIGHT + 20 // чтобы чат не попал под поле
       }}>
         {chatHistory.map((msg, idx) => (
           <div
@@ -471,7 +469,7 @@ const Chat: React.FC = () => {
           margin: "0 auto",
           boxSizing: "border-box",
           maxWidth: maxWidth,
-          height: 68,
+          height: INPUT_BAR_HEIGHT,
           position: "fixed",
           left: 0,
           bottom: 0,
