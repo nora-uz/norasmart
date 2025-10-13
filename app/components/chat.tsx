@@ -308,8 +308,7 @@ const Chat: React.FC = () => {
               src={BANNER}
               alt="Nora AI баннер"
               style={{
-                width: "100%",
-                maxWidth: "100%",
+                width: "80%",           // уменьшено на 20%
                 height: "auto",
                 display: "block",
                 objectFit: "contain",
@@ -439,8 +438,8 @@ const Chat: React.FC = () => {
               display: "flex",
               width: "100%",
               justifyContent: "flex-start",
-              margin: "20px",
-              maxWidth: 450
+              maxWidth: 450,
+              margin: "20px"       // важный момент: одинаковый отступ как и у обычных сообщений
             }}
           >
             <span
