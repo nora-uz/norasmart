@@ -53,6 +53,7 @@ const Chat: React.FC = () => {
   const [botProgress, setBotProgress] = useState("");
   const [showHowTo, setShowHowTo] = useState(true);
   const [isMobile, setIsMobile] = useState(true);
+  const [focused, setFocused] = useState(false);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -466,6 +467,7 @@ const Chat: React.FC = () => {
         <div ref={messagesEndRef} />
       </div>
 
+      {/* Фиксированный input-bar на 25px выше низа с градиентной рамкой при фокусе */}
       {!showWelcome && (
         <>
           <div style={{
@@ -476,9 +478,9 @@ const Chat: React.FC = () => {
             boxSizing: "border-box",
             maxWidth: maxWidth,
             height: INPUT_BAR_HEIGHT,
-            position: "fixed",      // Фиксировано!
+            position: "fixed",
             left: 0,
-            bottom: 30,             // 30 пикселей от нижней границы
+            bottom: 25, // 25 пикселей от нижней границы
             background: "transparent",
             borderRadius: borderRadius,
             zIndex: 20,
@@ -487,6 +489,8 @@ const Chat: React.FC = () => {
             <input
               type="text"
               value={message}
+              onFocus={() => setFocused(true)}
+              onBlur={() => setFocused(false)}
               onChange={e => setMessage(filterAsterisks(e.target.value))}
               placeholder="Введите сообщение..."
               style={{
@@ -494,12 +498,16 @@ const Chat: React.FC = () => {
                 height: 48,
                 fontSize: "16px",
                 borderRadius: borderRadius,
-                border: "1px solid #e5e8ed",
+                borderWidth: focused ? 2 : 1,
+                borderStyle: "solid",
+                borderColor: focused ? "transparent" : "#e5e8ed",
+                borderImage: focused ? GRADIENT + " 1" : undefined,
                 padding: "0 18px",
                 background: "#fff",
                 color: NORA_COLOR,
                 boxSizing: "border-box",
-                marginRight: 8
+                marginRight: 8,
+                transition: "border 0.22s"
               }}
               onKeyDown={e => { if (e.key === 'Enter') handleSendMessage(); }}
               disabled={loading || !!botProgress}
