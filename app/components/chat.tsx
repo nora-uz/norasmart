@@ -68,6 +68,8 @@ function formatBotText(text: string) {
 
 type Message = { text: string; sender: "user" | "bot" };
 
+const THREAD_KEY = "nora_thread_id";
+
 const Chat: React.FC = () => {
   const [showWelcome, setShowWelcome] = useState(true);
   const [preloading, setPreloading] = useState(true);
@@ -79,6 +81,11 @@ const Chat: React.FC = () => {
   const [botProgress, setBotProgress] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
+  // ВОССТАНАВЛИВАЕМ thread_id ИЗ localStorage
+  useEffect(() => {
+    const saved = window.localStorage.getItem(THREAD_KEY);
+    if (saved) setThreadId(saved);
+  }, []);
   useEffect(() => {
     document.body.style.overflow = "hidden";
     return () => { document.body.style.overflow = "auto"; };
@@ -118,7 +125,10 @@ const Chat: React.FC = () => {
         body: JSON.stringify({ messages: newHistory, thread_id: threadId }),
       });
       const data = await res.json();
-      if (data.thread_id) setThreadId(data.thread_id);
+      if (data.thread_id) {
+        setThreadId(data.thread_id);
+        window.localStorage.setItem(THREAD_KEY, data.thread_id); // сохраняем!
+      }
 
       let botReply = data.reply;
       if (res.status !== 200 || !botReply) {
@@ -155,10 +165,20 @@ const Chat: React.FC = () => {
       setMessage("");
     }
   };
+
   const handleTopicClick = (topic: typeof topics[0]) => {
     setShowTopics(false);
     sendMessageToGPT(`Хочу обсудить ${topic.title.toLowerCase()}`);
     setMessage("");
+  };
+
+  const clearChatAll = () => {
+    setChatHistory([]);
+    setThreadId(null);
+    window.localStorage.removeItem(THREAD_KEY);
+    setShowWelcome(true);
+    setShowTopics(true);
+    setBotProgress("");
   };
 
   if (preloading) {
@@ -270,13 +290,7 @@ const Chat: React.FC = () => {
             background: "transparent", border: "none", cursor: "pointer",
             width: 38, height: 38, borderRadius: 19,
             display: "flex", alignItems: "center", justifyContent: "center"
-          }} onClick={() => {
-            setChatHistory([]);
-            setThreadId(null);
-            setShowWelcome(true);
-            setShowTopics(true);
-            setBotProgress("");
-          }}>
+          }} onClick={clearChatAll}>
             <img src={ICONS.trash} alt="Trash"
               style={{ width: ICON_SIZE, height: ICON_SIZE, filter: filterNora }} />
           </button>
