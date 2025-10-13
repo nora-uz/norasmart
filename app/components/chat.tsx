@@ -9,11 +9,11 @@ const borderRadius = 22;
 const panelHeight = 62;
 const maxWidth = 560;
 const GRADIENT = "linear-gradient(90deg, #eff5fe 0%, #e5e8ed 100%)";
-const INPUT_BAR_HEIGHT = 68; // Высота поля c запасом
+const INPUT_BAR_HEIGHT = 68;
 
 const ICONS = {
   telegram: "https://cdn-icons-png.flaticon.com/512/1946/1946547.png",
-  trash: "https://cdn-icons-png.flaticon.com/512/1900/19006871.png", // обновлённая иконка
+  trash: "https://cdn-icons-png.flaticon.com/512/1900/19006871.png", // новая иконка мусора
   share: "https://cdn-icons-png.flaticon.com/512/535/535285.png",
   arrowRight: (
     <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
@@ -260,7 +260,7 @@ const Chat: React.FC = () => {
           </button>
         </div>
       </div>
-      <div style={{ height: 50 }} />
+      <div style={{ height: 90 }} /> {/* увеличенный отступ */}
 
       {showWelcome && (
         <>
@@ -320,42 +320,39 @@ const Chat: React.FC = () => {
       )}
 
       {!showWelcome && showHowTo && (
-        <>
-          <div style={{ height: 50 }} />
-          <div style={{
-            width: "100%",
-            display: "flex",
-            justifyContent: "center"
-          }}>
-            <div
-              style={{
-                borderRadius: borderRadius,
-                padding: "25px 20px 22px 20px",
-                maxWidth: 520,
-                width: "100%",
-                textAlign: "center"
-              }}>
-              <div style={{
-                fontWeight: 700,
-                fontSize: "21px",
-                color: NORA_COLOR,
-                marginBottom: 10,
-              }}>
-                Как пользоваться Nora?
-              </div>
-              <div style={{
-                fontWeight: 400,
-                fontSize: "15px",
-                color: NORA_COLOR,
-                lineHeight: 1.7,
-                margin: "0 auto",
-                maxWidth: 490,
-              }}>
-                Можно спрашивать все, что связано с беременностью, здоровьем, самочувствием, питанием, анализами, подготовкой к родам, эмоциональным состоянием и любые другие волнующие вопросы.
-              </div>
+        <div style={{
+          width: "100%",
+          display: "flex",
+          justifyContent: "center"
+        }}>
+          <div
+            style={{
+              borderRadius: borderRadius,
+              padding: "25px 20px 22px 20px",
+              maxWidth: 520,
+              width: "100%",
+              textAlign: "center"
+            }}>
+            <div style={{
+              fontWeight: 700,
+              fontSize: "21px",
+              color: NORA_COLOR,
+              marginBottom: 10,
+            }}>
+              Как пользоваться Nora?
+            </div>
+            <div style={{
+              fontWeight: 400,
+              fontSize: "15px",
+              color: NORA_COLOR,
+              lineHeight: 1.7,
+              margin: "0 auto",
+              maxWidth: 490,
+            }}>
+              Можно спрашивать все, что связано с беременностью, здоровьем, самочувствием, питанием, анализами, подготовкой к родам, эмоциональным состоянием и любые другие волнующие вопросы.
             </div>
           </div>
-        </>
+        </div>
       )}
 
       <div style={{
