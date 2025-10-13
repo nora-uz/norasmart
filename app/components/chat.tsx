@@ -49,12 +49,10 @@ const topics = [
   }
 ];
 
-// Запрет всех *
 function filterAsterisks(str: string) {
   return str.replace(/\*/g, "");
 }
 
-// Корректное форматирование вывода бота без *
 function formatBotText(text: string) {
   if (!text) return "";
   let cleaned = filterAsterisks(text).replace(/_/g, "");
@@ -108,7 +106,7 @@ const Chat: React.FC = () => {
     }
   };
 
-  // Передача всей истории, thread_id сохраняется
+  // ОТПРАВКА СО ВСЕЙ ИСТОРИЕЙ и всегда слежение за thread_id
   const sendMessageToGPT = async (text: string) => {
     setLoading(true);
     const newHistory: Message[] = [...chatHistory, { text: filterAsterisks(text), sender: "user" }];
@@ -118,10 +116,10 @@ const Chat: React.FC = () => {
       const res = await fetch("/api/gpt", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages: newHistory, thread_id: threadId }),
+        body: JSON.stringify({ messages: newHistory, thread_id: threadId }), // всегда передаем текущий thread_id!
       });
       const data = await res.json();
-      if (data.thread_id) setThreadId(data.thread_id);
+      if (data.thread_id) setThreadId(data.thread_id); // присваиваем всегда
 
       let botReply = data.reply;
       if (res.status !== 200 || !botReply) {
@@ -244,11 +242,11 @@ const Chat: React.FC = () => {
           minWidth: 0
         }}>
           <span style={{
-            fontWeight: 800, fontSize: "19px", lineHeight: 1.06, // увеличено!
+            fontWeight: 800, fontSize: "19px", lineHeight: 1.06,
             whiteSpace: "nowrap", marginBottom: 7
           }}>Nora AI</span>
           <span style={{
-            fontWeight: 400, fontSize: "13px", color: "#565656", // увеличено!
+            fontWeight: 400, fontSize: "13px", color: "#565656",
             lineHeight: 1.04, whiteSpace: "nowrap"
           }}>Ассистент для будущих мам</span>
         </div>
@@ -288,7 +286,6 @@ const Chat: React.FC = () => {
 
       {showWelcome ? (
         <>
-        {/* Баннер: marginTop 10px между панелью и фото */}
         <div style={{
           width: "calc(100% - 40px)", maxWidth, borderRadius: 26,
           overflow: "hidden", margin: "10px auto 0 auto",
@@ -392,28 +389,30 @@ const Chat: React.FC = () => {
               key={idx}
               style={{
                 display: "flex",
-                justifyContent: msg.sender === "user" ? "flex-end" : "flex-start",
                 width: "100%",
                 marginTop: idx === 0 ? 0 : 30,
                 marginBottom: 30,
+                paddingLeft: 20,
+                paddingRight: 20,
+                justifyContent: "flex-start"
               }}
             >
               <span
                 style={{
-                  background: msg.sender === "user" ? GRADIENT : "transparent",
+                  background: GRADIENT,
                   color: NORA_COLOR,
-                  borderRadius: msg.sender === "user" ? 16 : 0,
-                  padding: msg.sender === "user" ? "18px 28px" : "0px",
+                  borderRadius: 16,
+                  padding: "18px 20px",
                   lineHeight: 1.7,
                   fontSize: 17,
                   minWidth: 0,
-                  boxShadow: msg.sender === "user" ? "0 2px 14px 0 rgba(155,175,205,0.07)" : "none",
-                  maxWidth: msg.sender === "user" ? "70%" : "100%",
-                  marginRight: msg.sender === "user" ? "0" : "auto",
-                  marginLeft: msg.sender === "user" ? "auto" : "0",
+                  boxShadow: "0 2px 14px 0 rgba(155,175,205,0.07)",
+                  maxWidth: "100%",
+                  margin: 0,
                   wordBreak: "break-word",
                   fontWeight: 400,
-                  margin: 0,
+                  width: "100%",
+                  display: "block"
                 }}
               >
                 {msg.sender === "bot"
@@ -427,23 +426,30 @@ const Chat: React.FC = () => {
             <div
               style={{
                 display: "flex",
-                justifyContent: "flex-start",
                 width: "100%",
                 marginTop: chatHistory.length === 0 ? 0 : 30,
                 marginBottom: 30,
+                paddingLeft: 20,
+                paddingRight: 20,
+                justifyContent: "flex-start"
               }}
             >
               <span
                 style={{
+                  background: GRADIENT,
                   color: NORA_COLOR,
-                  padding: "0px",
+                  borderRadius: 16,
+                  padding: "18px 20px",
                   lineHeight: 1.7,
                   fontSize: 17,
                   minWidth: 0,
+                  boxShadow: "0 2px 14px 0 rgba(155,175,205,0.07)",
                   maxWidth: "100%",
+                  margin: 0,
                   wordBreak: "break-word",
                   fontWeight: 400,
-                  margin: 0
+                  width: "100%",
+                  display: "block"
                 }}
               >
                 <ReactMarkdown>{formatBotText(botProgress)}</ReactMarkdown>
