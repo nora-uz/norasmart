@@ -81,7 +81,6 @@ const Chat: React.FC = () => {
   const [botProgress, setBotProgress] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // ВОССТАНАВЛИВАЕМ thread_id ИЗ localStorage
   useEffect(() => {
     const saved = window.localStorage.getItem(THREAD_KEY);
     if (saved) setThreadId(saved);
@@ -127,7 +126,7 @@ const Chat: React.FC = () => {
       const data = await res.json();
       if (data.thread_id) {
         setThreadId(data.thread_id);
-        window.localStorage.setItem(THREAD_KEY, data.thread_id); // сохраняем!
+        window.localStorage.setItem(THREAD_KEY, data.thread_id);
       }
 
       let botReply = data.reply;
