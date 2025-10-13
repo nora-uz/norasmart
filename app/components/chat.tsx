@@ -55,6 +55,8 @@ const Chat: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [threadId, setThreadId] = useState<string | null>(null);
   const [botProgress, setBotProgress] = useState("");
+  const [showHowTo, setShowHowTo] = useState(true);
+
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -74,6 +76,13 @@ const Chat: React.FC = () => {
       messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
     }
   }, [chatHistory, botProgress]);
+
+  // Скрывать блок инструкции после отправки первого сообщения
+  useEffect(() => {
+    if (chatHistory.length > 0) {
+      setShowHowTo(false);
+    }
+  }, [chatHistory]);
 
   const handleShare = () => {
     if (navigator.share) {
@@ -145,6 +154,7 @@ const Chat: React.FC = () => {
     setThreadId(null);
     window.localStorage.removeItem(THREAD_KEY);
     setShowWelcome(true);
+    setShowHowTo(true);
     setBotProgress("");
   };
 
@@ -319,30 +329,27 @@ const Chat: React.FC = () => {
           </span>
         </button>
         </>
-      ) : chatHistory.length === 0 && (
-        <div style={{
-          width: "100%",
-          maxWidth,
-          margin: "0 auto"
-        }}>
+      ) : (showHowTo && (
+        <div
+          style={{
+            width: "100%",
+            maxWidth,
+            margin: "0 auto"
+          }}>
           <div
             style={{
               background: GRADIENT,
               borderRadius: borderRadius,
               padding: "25px 20px 22px 20px",
-              marginTop: 24,
-              marginBottom: 0,
+              margin: "24px 20px 0 20px",
               maxWidth: 520,
-              marginLeft: "auto",
-              marginRight: "auto",
               textAlign: "center"
-            }}
-          >
+            }}>
             <div style={{
               fontWeight: 700,
               fontSize: "21px",
               color: NORA_COLOR,
-              marginBottom: 10
+              marginBottom: 10,
             }}>
               Как пользоваться Nora?
             </div>
@@ -358,7 +365,7 @@ const Chat: React.FC = () => {
             </div>
           </div>
         </div>
-      )}
+      ))}
 
       {/* Чат с историей после первого сообщения */}
       {chatHistory.length > 0 && (
@@ -465,7 +472,7 @@ const Chat: React.FC = () => {
         </div>
       )}
 
-      {/* Поле для отправки — ВСЕГДА внизу с отступом */}
+      {/* Поле для ввода — всегда внизу после welcome */}
       {!showWelcome && (
         <div style={{
           width: "100%",
