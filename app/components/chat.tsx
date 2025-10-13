@@ -8,6 +8,12 @@ const PANEL_TOP = 20;
 const FIRST_MSG_OFFSET = 30;
 const ADDITIONAL_PANEL_OFFSET = 10;
 const BANNER_BOTTOM_OFFSET = 50;
+const borderRadius = 22;
+const panelHeight = 62;
+const maxWidth = 560;
+const GRADIENT = "linear-gradient(90deg, #eff5fe 0%, #e5e8ed 100%)";
+const THREAD_KEY = "nora_thread_id";
+const USER_KEY = "nora_user_id";
 
 const ICONS = {
   telegram: "https://cdn-icons-png.flaticon.com/512/1946/1946547.png",
@@ -19,12 +25,9 @@ const ICONS = {
     </svg>
   ),
 };
+
 const filterNora = "invert(13%) sepia(4%) saturate(271%) hue-rotate(175deg) brightness(92%) contrast(93%)";
 const BANNER = "/banner.webp";
-const borderRadius = 22;
-const panelHeight = 62;
-const maxWidth = 560;
-const GRADIENT = "linear-gradient(90deg, #eff5fe 0%, #e5e8ed 100%)";
 
 const topics = [
   {
@@ -68,9 +71,6 @@ function formatBotText(text: string) {
 
 type Message = { text: string; sender: "user" | "bot" };
 
-const THREAD_KEY = "nora_thread_id";
-const USER_KEY = "nora_user_id";
-
 const Chat: React.FC = () => {
   const [showWelcome, setShowWelcome] = useState(true);
   const [preloading, setPreloading] = useState(true);
@@ -83,7 +83,7 @@ const Chat: React.FC = () => {
   const [botProgress, setBotProgress] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // ВОССТАНАВЛИВАЕМ thread_id И user_id ИЗ localStorage
+  // ВОССТАНАВЛИВАЕМ thread_id и user_id из localStorage
   useEffect(() => {
     const savedThread = window.localStorage.getItem(THREAD_KEY);
     if (savedThread) setThreadId(savedThread);
@@ -95,6 +95,7 @@ const Chat: React.FC = () => {
     }
     setUserId(savedUser);
   }, []);
+
   useEffect(() => {
     document.body.style.overflow = "hidden";
     return () => { document.body.style.overflow = "auto"; };
@@ -228,10 +229,25 @@ const Chat: React.FC = () => {
   }
 
   return (
-    // ... ОСТАЛЬНОЕ остается БЕЗ ИЗМЕНЕНИЙ (верстка, рендеринг чата)
-    // Просто используй этот Chat вместо старого в экспорт/default
-    // и не забудь обязательно вызвать setUserId один раз при загрузке
-    // весь UI и старшая логика такие же как у тебя сейчас
+    <div
+      style={{
+        background: "#f8fdff",
+        width: "100vw",
+        height: "100vh",
+        overflow: "hidden",
+        position: "relative",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        boxSizing: "border-box",
+        paddingTop: panelHeight + PANEL_TOP + FIRST_MSG_OFFSET + ADDITIONAL_PANEL_OFFSET,
+      }}
+    >
+      {/* Панель и остальной JSX полностью как у тебя */}
+      {/* ... Весь UI/JSX код твоей текущей компоненты ... */}
+
+      {/* Просто убедись: код выше теперь внутри твоей функции Chat */}
+    </div>
   );
 };
 
