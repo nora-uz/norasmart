@@ -13,7 +13,7 @@ const INPUT_BAR_HEIGHT = 68;
 
 const ICONS = {
   telegram: "https://cdn-icons-png.flaticon.com/512/1946/1946547.png",
-  trash: "https://cdn-icons-png.flaticon.com/512/1900/19006871.png",
+  trash: "https://cdn-icons-png.flaticon.com/512/1345/1345823.png", // Старая иконка!
   share: "https://cdn-icons-png.flaticon.com/512/535/535285.png",
   arrowRight: (
     <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
@@ -261,7 +261,7 @@ const Chat: React.FC = () => {
       </div>
       <div style={{ height: 40 }} />
 
-      {/* Приветствие или инструкция всегда по центру под меню/баннером */}
+      {/* Приветствие или инструкция, фото и описание */}
       {showWelcome ? (
         <>
           <div
@@ -281,6 +281,7 @@ const Chat: React.FC = () => {
               objectFit: "contain", objectPosition: "center"
             }} />
           </div>
+          <div style={{ height: 50 }} />
           <div style={{
             width: "calc(100% - 40px)", maxWidth, textAlign: "center", margin: "0 auto"
           }}>
@@ -326,7 +327,7 @@ const Chat: React.FC = () => {
           width: "calc(100% - 40px)",
           maxWidth,
           textAlign: "center",
-          margin: "0 auto"
+          margin: "90px auto 0 auto" // Отступ сверху 90px, по центру
         }}>
           <div style={{
             fontWeight: 700,
@@ -347,7 +348,7 @@ const Chat: React.FC = () => {
             color: NORA_COLOR,
             display: "inline-block"
           }}>
-            Можно спрашивать все, что связано с беременностью, здоровьем, самочувствием, питанием, анализами, подготовкой к родам, эмоциональным состоянием и любые другие волнующие вопросы.
+            Можно спрашивать все, что связано с беременностью, здоровьем, самочувствием, питанием, анализами, подготовкой к родам, эмоциональным состоянием и любые другие темы.
           </div>
           <div style={{ height: 40 }} />
         </div>
