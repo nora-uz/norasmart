@@ -106,7 +106,6 @@ const Chat: React.FC = () => {
     }
   };
 
-  // ОТПРАВКА СО ВСЕЙ ИСТОРИЕЙ и всегда слежение за thread_id
   const sendMessageToGPT = async (text: string) => {
     setLoading(true);
     const newHistory: Message[] = [...chatHistory, { text: filterAsterisks(text), sender: "user" }];
@@ -116,10 +115,10 @@ const Chat: React.FC = () => {
       const res = await fetch("/api/gpt", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages: newHistory, thread_id: threadId }), // всегда передаем текущий thread_id!
+        body: JSON.stringify({ messages: newHistory, thread_id: threadId }),
       });
       const data = await res.json();
-      if (data.thread_id) setThreadId(data.thread_id); // присваиваем всегда
+      if (data.thread_id) setThreadId(data.thread_id);
 
       let botReply = data.reply;
       if (res.status !== 200 || !botReply) {
@@ -397,29 +396,48 @@ const Chat: React.FC = () => {
                 justifyContent: "flex-start"
               }}
             >
-              <span
-                style={{
-                  background: GRADIENT,
-                  color: NORA_COLOR,
-                  borderRadius: 16,
-                  padding: "18px 20px",
-                  lineHeight: 1.7,
-                  fontSize: 17,
-                  minWidth: 0,
-                  boxShadow: "0 2px 14px 0 rgba(155,175,205,0.07)",
-                  maxWidth: "100%",
-                  margin: 0,
-                  wordBreak: "break-word",
-                  fontWeight: 400,
-                  width: "100%",
-                  display: "block"
-                }}
-              >
-                {msg.sender === "bot"
-                  ? <ReactMarkdown>{formatBotText(msg.text)}</ReactMarkdown>
-                  : filterAsterisks(msg.text)
-                }
-              </span>
+              {msg.sender === "user" ? (
+                <span
+                  style={{
+                    background: GRADIENT,
+                    color: NORA_COLOR,
+                    borderRadius: 16,
+                    padding: "18px 20px",
+                    lineHeight: 1.7,
+                    fontSize: 17,
+                    minWidth: 0,
+                    boxShadow: "0 2px 14px 0 rgba(155,175,205,0.07)",
+                    maxWidth: "100%",
+                    margin: 0,
+                    wordBreak: "break-word",
+                    fontWeight: 400,
+                    width: "100%",
+                    display: "block"
+                  }}
+                >
+                  {filterAsterisks(msg.text)}
+                </span>
+              ) : (
+                <span
+                  style={{
+                    color: NORA_COLOR,
+                    background: "transparent",
+                    borderRadius: 0,
+                    padding: 0,
+                    lineHeight: 1.7,
+                    fontSize: 17,
+                    minWidth: 0,
+                    maxWidth: "100%",
+                    margin: 0,
+                    wordBreak: "break-word",
+                    fontWeight: 400,
+                    width: "100%",
+                    display: "block"
+                  }}
+                >
+                  <ReactMarkdown>{formatBotText(msg.text)}</ReactMarkdown>
+                </span>
+              )}
             </div>
           ))}
           {botProgress && (
@@ -436,14 +454,13 @@ const Chat: React.FC = () => {
             >
               <span
                 style={{
-                  background: GRADIENT,
                   color: NORA_COLOR,
-                  borderRadius: 16,
-                  padding: "18px 20px",
+                  background: "transparent",
+                  borderRadius: 0,
+                  padding: 0,
                   lineHeight: 1.7,
                   fontSize: 17,
                   minWidth: 0,
-                  boxShadow: "0 2px 14px 0 rgba(155,175,205,0.07)",
                   maxWidth: "100%",
                   margin: 0,
                   wordBreak: "break-word",
