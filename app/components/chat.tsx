@@ -9,11 +9,12 @@ const borderRadius = 22;
 const panelHeight = 62;
 const maxWidth = 560;
 const GRADIENT = "linear-gradient(90deg, #eff5fe 0%, #e5e8ed 100%)";
+const REVERSED_GRADIENT = "linear-gradient(90deg, #e5e8ed 0%, #eff5fe 100%)";
 const INPUT_BAR_HEIGHT = 68;
 
 const ICONS = {
   telegram: "https://cdn-icons-png.flaticon.com/512/1946/1946547.png",
-  trash: "https://cdn-icons-png.flaticon.com/512/1345/1345823.png", // Старая иконка
+  trash: "https://cdn-icons-png.flaticon.com/512/1345/1345823.png",
   share: "https://cdn-icons-png.flaticon.com/512/535/535285.png",
   arrowRight: (
     <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
@@ -156,8 +157,10 @@ const Chat: React.FC = () => {
         height: "100vh",
         minHeight: "100vh",
         display: "flex",
+        flexDirection: "column",
         alignItems: "center",
-        justifyContent: "center",
+        justifyContent: "flex-start",
+        paddingTop: "80px", // Nora AI выше
         position: "fixed",
         top: 0,
         left: 0,
@@ -196,7 +199,7 @@ const Chat: React.FC = () => {
         boxSizing: "border-box"
       }}
     >
-      {/* Панель меню (только градиент или прозрачная) */}
+      {/* Панель меню — без белого фона */}
       <div style={{
         width: "calc(100% - 40px)",
         maxWidth,
@@ -452,21 +455,20 @@ const Chat: React.FC = () => {
         <div ref={messagesEndRef} />
       </div>
 
-      {/* Область ввода — всегда видна и с фоном */}
+      {/* Область ввода — градиент, отступы, всегда видна! */}
       {!showWelcome && (
         <div style={{
-          width: "100%",
-          padding: "0 20px",
+          width: "calc(100% - 40px)",
+          margin: "0 20px",
           display: "flex",
           alignItems: "center",
-          margin: "0 auto",
           boxSizing: "border-box",
           maxWidth: maxWidth,
           height: INPUT_BAR_HEIGHT,
           position: "fixed",
           left: 0,
           bottom: 0,
-          background: "#e6ecf5", // заметный фон для всего input-бара
+          background: REVERSED_GRADIENT,
           borderRadius: borderRadius,
           zIndex: 20,
           boxShadow: "0 2px 12px 0 rgba(150,170,210,0.09)"
