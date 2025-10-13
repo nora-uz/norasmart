@@ -291,7 +291,7 @@ const Chat: React.FC = () => {
           </button>
         </div>
       </div>
-      <div style={{ height: 40 }} />  {/* ОТСТУП вернули как было! */}
+      <div style={{ height: 40 }} />
 
       {showWelcome ? (
         <>
@@ -316,7 +316,7 @@ const Chat: React.FC = () => {
               }}
             />
           </div>
-          <div style={{ height: 50 }} />  {/* как было! */}
+          <div style={{ height: 50 }} />
           <div style={{
             width: "calc(100% - 40px)", maxWidth, textAlign: "center", margin: "0 auto"
           }}>
@@ -329,7 +329,7 @@ const Chat: React.FC = () => {
             }}>
               Я помогаю будущим мамам на каждом этапе беременности: отвечаю на вопросы, напоминаю о важных делах, слежу за самочувствием и даю советы, основанные на медицине Великобритании NHS.
             </div>
-            <div style={{ height: 40 }} />  {/* ОТСТУП вернули! */}
+            <div style={{ height: 40 }} />
           </div>
           <button
             style={{
@@ -365,7 +365,173 @@ const Chat: React.FC = () => {
         </div>
       ))}
 
-      {/* ...остальной код чата без изменений... */}
+      <div style={{
+        width: "100%",
+        maxWidth,
+        padding: "0 0px",
+        margin: "0 auto",
+        marginTop: 0,
+        flex: 1,
+        overflowY: "auto",
+        paddingBottom: INPUT_BAR_HEIGHT + 20
+      }}>
+        {chatHistory.map((msg, idx) => (
+          <div
+            key={idx}
+            style={{
+              display: "flex",
+              width: "100%",
+              justifyContent: msg.sender === "user" ? "flex-end" : "flex-start"
+            }}
+          >
+            <div
+              style={{
+                margin: "20px",
+                maxWidth: 450,
+                alignSelf: msg.sender === "user" ? "flex-end" : "flex-start"
+              }}
+            >
+              {msg.sender === "user" ? (
+                <span
+                  style={{
+                    background: GRADIENT,
+                    color: NORA_COLOR,
+                    borderRadius: 16,
+                    padding: "18px 20px",
+                    lineHeight: 1.7,
+                    fontSize: 17,
+                    minWidth: 0,
+                    boxShadow: "0 2px 14px 0 rgba(155,175,205,0.07)",
+                    maxWidth: "100%",
+                    display: "inline-block",
+                    fontWeight: 400,
+                    wordBreak: "break-word"
+                  }}
+                >
+                  {filterAsterisks(msg.text)}
+                </span>
+              ) : (
+                <span
+                  style={{
+                    color: NORA_COLOR,
+                    background: "transparent",
+                    borderRadius: 0,
+                    padding: 0,
+                    lineHeight: 1.7,
+                    fontSize: 17,
+                    minWidth: 0,
+                    maxWidth: "100%",
+                    display: "inline-block",
+                    fontWeight: 400,
+                    wordBreak: "break-word"
+                  }}
+                >
+                  <ReactMarkdown>{formatBotText(msg.text)}</ReactMarkdown>
+                </span>
+              )}
+            </div>
+          </div>
+        ))}
+        {botProgress && (
+          <div
+            style={{
+              width: "100%",
+              display: "flex",
+              justifyContent: "flex-start",
+              marginTop: "20px",
+              marginBottom: "20px",
+              paddingLeft: 20,
+              paddingRight: 20,
+              boxSizing: "border-box"
+            }}
+          >
+            <div
+              style={{
+                maxWidth: 450,
+                width: "100%",
+                color: NORA_COLOR,
+                fontSize: 17,
+                fontWeight: 400,
+                background: "transparent",
+                borderRadius: 0,
+                padding: 0,
+                lineHeight: 1.7,
+                wordBreak: "break-word"
+              }}
+            >
+              <ReactMarkdown>{formatBotText(botProgress)}</ReactMarkdown>
+            </div>
+          </div>
+        )}
+        <div ref={messagesEndRef} />
+      </div>
+
+      {/* Поле для сообщений — фиксированное и всегда присутствует при активном чате */}
+      {!showWelcome && (
+        <>
+          <div style={{
+            width: "calc(100% - 40px)",
+            margin: "0 20px",
+            display: "flex",
+            alignItems: "center",
+            boxSizing: "border-box",
+            maxWidth: maxWidth,
+            height: INPUT_BAR_HEIGHT,
+            position: "fixed",
+            left: 0,
+            bottom: 0,
+            background: "transparent",
+            borderRadius: borderRadius,
+            zIndex: 20,
+            boxShadow: "none"
+          }}>
+            <input
+              type="text"
+              value={message}
+              onChange={e => setMessage(filterAsterisks(e.target.value))}
+              placeholder="Введите сообщение..."
+              style={{
+                flex: 1,
+                height: 48,
+                fontSize: "16px",
+                borderRadius: borderRadius,
+                border: "1px solid #e5e8ed",
+                padding: "0 18px",
+                background: "transparent",
+                color: NORA_COLOR,
+                boxSizing: "border-box",
+                marginRight: 8
+              }}
+              onKeyDown={e => { if (e.key === 'Enter') handleSendMessage(); }}
+              disabled={loading || !!botProgress}
+            />
+            <button
+              style={{
+                width: 48,
+                height: 48,
+                background: GRADIENT,
+                color: NORA_COLOR,
+                border: "none",
+                borderRadius: borderRadius,
+                fontWeight: 700,
+                fontSize: "17px",
+                cursor: (loading || !!botProgress) ? "not-allowed" : "pointer",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                boxShadow: "0 2px 14px 0 rgba(155,175,205,0.12)"
+              }}
+              onClick={handleSendMessage}
+              disabled={loading || !!botProgress}
+            >
+              <span style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+                {ICONS.arrowRight}
+              </span>
+            </button>
+          </div>
+          <div style={{ height: 20 }} />
+        </>
+      )}
     </div>
   );
 };
