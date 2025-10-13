@@ -13,11 +13,12 @@ const INPUT_BAR_HEIGHT = 68;
 
 const ICONS = {
   telegram: "https://cdn-icons-png.flaticon.com/512/1946/1946547.png",
-  trash: "https://cdn-icons-png.flaticon.com/512/1900/19006871.png", // новая иконка мусора
+  trash: "https://cdn-icons-png.flaticon.com/512/1900/19006871.png",
   share: "https://cdn-icons-png.flaticon.com/512/535/535285.png",
   arrowRight: (
     <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-      <path d="M6 11H16M16 11L12 7M16 11L12 15" stroke={NORA_COLOR} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+      <path d="M6 11H16M16 11L12 7M16 11L12 15"
+        stroke={NORA_COLOR} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
     </svg>
   ),
 };
@@ -26,7 +27,6 @@ const filterNora = "invert(13%) sepia(4%) saturate(271%) hue-rotate(175deg) brig
 function filterAsterisks(str: string) {
   return str.replace(/\*/g, "");
 }
-
 function formatBotText(text: string) {
   if (!text) return "";
   let cleaned = filterAsterisks(text).replace(/_/g, "");
@@ -41,7 +41,6 @@ function formatBotText(text: string) {
 }
 
 type Message = { text: string; sender: "user" | "bot" };
-
 const THREAD_KEY = "nora_thread_id";
 
 const Chat: React.FC = () => {
@@ -260,25 +259,30 @@ const Chat: React.FC = () => {
           </button>
         </div>
       </div>
-      <div style={{ height: 90 }} /> {/* увеличенный отступ */}
+      <div style={{ height: 40 }} />
 
-      {showWelcome && (
+      {/* Приветствие или инструкция всегда по центру под меню/баннером */}
+      {showWelcome ? (
         <>
-          <div style={{
-            width: "calc(100% - 40px)", maxWidth, borderRadius: 26,
-            overflow: "hidden", margin: "10px auto 0 auto",
-            display: "flex", justifyContent: "center", alignItems: "center"
-          }}>
-            <img src={BANNER} alt="Nora AI баннер"
-              style={{
-                width: "100%", height: "auto", display: "block",
-                objectFit: "contain", objectPosition: "center"
-              }}
-            />
+          <div
+            style={{
+              width: "calc(100% - 40px)",
+              maxWidth,
+              borderRadius: 26,
+              overflow: "hidden",
+              margin: "10px auto 0 auto",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center"
+            }}
+          >
+            <img src={BANNER} alt="Nora AI баннер" style={{
+              width: "100%", height: "auto", display: "block",
+              objectFit: "contain", objectPosition: "center"
+            }} />
           </div>
-          <div style={{ height: 50 }} />
           <div style={{
-            width: "calc(100% - 40px)", maxWidth, textAlign: "center"
+            width: "calc(100% - 40px)", maxWidth, textAlign: "center", margin: "0 auto"
           }}>
             <div style={{
               fontWeight: 700, fontSize: "22px", color: NORA_COLOR, marginBottom: 14
@@ -317,43 +321,37 @@ const Chat: React.FC = () => {
             </span>
           </button>
         </>
-      )}
-
-      {!showWelcome && showHowTo && (
+      ) : (showHowTo && (
         <div style={{
-          width: "100%",
-          display: "flex",
-          justifyContent: "center"
+          width: "calc(100% - 40px)",
+          maxWidth,
+          textAlign: "center",
+          margin: "0 auto"
         }}>
-          <div
-            style={{
-              borderRadius: borderRadius,
-              padding: "25px 20px 22px 20px",
-              maxWidth: 520,
-              width: "100%",
-              textAlign: "center"
-            }}>
-            <div style={{
-              fontWeight: 700,
-              fontSize: "21px",
-              color: NORA_COLOR,
-              marginBottom: 10,
-            }}>
-              Как пользоваться Nora?
-            </div>
-            <div style={{
-              fontWeight: 400,
-              fontSize: "15px",
-              color: NORA_COLOR,
-              lineHeight: 1.7,
-              margin: "0 auto",
-              maxWidth: 490,
-            }}>
-              Можно спрашивать все, что связано с беременностью, здоровьем, самочувствием, питанием, анализами, подготовкой к родам, эмоциональным состоянием и любые другие волнующие вопросы.
-            </div>
+          <div style={{
+            fontWeight: 700,
+            fontSize: "21px",
+            color: NORA_COLOR,
+            marginBottom: 10,
+            marginTop: 12
+          }}>
+            Как пользоваться Nora?
           </div>
+          <div style={{
+            fontWeight: 400,
+            fontSize: "15px",
+            margin: "0 auto",
+            maxWidth: 400,
+            padding: "0 20px",
+            lineHeight: 1.75,
+            color: NORA_COLOR,
+            display: "inline-block"
+          }}>
+            Можно спрашивать все, что связано с беременностью, здоровьем, самочувствием, питанием, анализами, подготовкой к родам, эмоциональным состоянием и любые другие волнующие вопросы.
+          </div>
+          <div style={{ height: 40 }} />
         </div>
-      )}
+      ))}
 
       <div style={{
         width: "100%",
