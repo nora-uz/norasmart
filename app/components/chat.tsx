@@ -476,6 +476,9 @@ const Chat: React.FC = () => {
             boxSizing: "border-box",
             maxWidth: maxWidth,
             height: INPUT_BAR_HEIGHT,
+            position: "fixed",      // Фиксировано!
+            left: 0,
+            bottom: 30,             // 30 пикселей от нижней границы
             background: "transparent",
             borderRadius: borderRadius,
             zIndex: 20,
@@ -493,7 +496,7 @@ const Chat: React.FC = () => {
                 borderRadius: borderRadius,
                 border: "1px solid #e5e8ed",
                 padding: "0 18px",
-                background: "#fff", // Белый фон!
+                background: "#fff",
                 color: NORA_COLOR,
                 boxSizing: "border-box",
                 marginRight: 8
