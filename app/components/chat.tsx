@@ -466,7 +466,6 @@ const Chat: React.FC = () => {
         <div ref={messagesEndRef} />
       </div>
 
-      {/* Поле для сообщений — фиксированное и всегда присутствует при активном чате */}
       {!showWelcome && (
         <>
           <div style={{
@@ -477,9 +476,6 @@ const Chat: React.FC = () => {
             boxSizing: "border-box",
             maxWidth: maxWidth,
             height: INPUT_BAR_HEIGHT,
-            position: "fixed",
-            left: 0,
-            bottom: 0,
             background: "transparent",
             borderRadius: borderRadius,
             zIndex: 20,
@@ -497,7 +493,7 @@ const Chat: React.FC = () => {
                 borderRadius: borderRadius,
                 border: "1px solid #e5e8ed",
                 padding: "0 18px",
-                background: "transparent",
+                background: "#fff", // Белый фон!
                 color: NORA_COLOR,
                 boxSizing: "border-box",
                 marginRight: 8
