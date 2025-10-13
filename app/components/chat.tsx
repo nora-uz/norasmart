@@ -243,7 +243,7 @@ const Chat: React.FC = () => {
         width: "calc(100% - 40px)",
         maxWidth,
         minHeight: panelHeight,
-        background: GRADIENT,
+        background: GRADIENT, // только градиент!
         color: NORA_COLOR,
         margin: "20px auto 0 auto",
         display: "flex", alignItems: "center",
@@ -308,7 +308,7 @@ const Chat: React.FC = () => {
               src={BANNER}
               alt="Nora AI баннер"
               style={{
-                width: "80%",           // уменьшено на 20%
+                width: "80%",
                 height: "auto",
                 display: "block",
                 objectFit: "contain",
@@ -317,6 +317,7 @@ const Chat: React.FC = () => {
             />
           </div>
           <div style={{ height: 50 }} />
+          <div style={{ height: 20 }} /> {/* Доп. отступ после фото */}
           <div style={{
             width: "calc(100% - 40px)", maxWidth, textAlign: "center", margin: "0 auto"
           }}>
@@ -330,6 +331,7 @@ const Chat: React.FC = () => {
               Я помогаю будущим мамам на каждом этапе беременности: отвечаю на вопросы, напоминаю о важных делах, слежу за самочувствием и даю советы, основанные на медицине Великобритании NHS.
             </div>
             <div style={{ height: 40 }} />
+            <div style={{ height: 20 }} /> {/* Доп. отступ после описания */}
           </div>
           <button
             style={{
@@ -435,30 +437,32 @@ const Chat: React.FC = () => {
         {botProgress && (
           <div
             style={{
-              display: "flex",
               width: "100%",
+              display: "flex",
               justifyContent: "flex-start",
-              maxWidth: 450,
-              margin: "20px"       // важный момент: одинаковый отступ как и у обычных сообщений
+              marginTop: "20px",
+              marginBottom: "20px",
+              paddingLeft: 20,
+              paddingRight: 20,
+              boxSizing: "border-box"
             }}
           >
-            <span
+            <div
               style={{
+                maxWidth: 450,
+                width: "100%",
                 color: NORA_COLOR,
+                fontSize: 17,
+                fontWeight: 400,
                 background: "transparent",
                 borderRadius: 0,
                 padding: 0,
                 lineHeight: 1.7,
-                fontSize: 17,
-                minWidth: 0,
-                maxWidth: "100%",
-                display: "inline-block",
-                fontWeight: 400,
                 wordBreak: "break-word"
               }}
             >
               <ReactMarkdown>{formatBotText(botProgress)}</ReactMarkdown>
-            </span>
+            </div>
           </div>
         )}
         <div ref={messagesEndRef} />
