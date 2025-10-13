@@ -56,7 +56,6 @@ const Chat: React.FC = () => {
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // Проверка ширины экрана при монтировании
   useEffect(() => {
     function checkScreen() {
       if (typeof window !== "undefined") {
@@ -240,7 +239,6 @@ const Chat: React.FC = () => {
         boxSizing: "border-box"
       }}
     >
-      {/* Панель меню */}
       <div style={{
         width: "calc(100% - 40px)",
         maxWidth,
@@ -295,16 +293,26 @@ const Chat: React.FC = () => {
       </div>
       <div style={{ height: 40 }} />
 
-      {/* Welcome или инструкция + фото и описание */}
       {showWelcome ? (
         <>
           <div style={{
-            width: "calc(100% - 40px)", maxWidth, borderRadius: 26, overflow: "hidden",
-            margin: "10px auto 0 auto", display: "flex", justifyContent: "center", alignItems: "center"
+            width: "calc(100% - 40px)",
+            maxWidth,
+            borderRadius: 26,
+            overflow: "hidden",
+            margin: "10px auto 0 auto",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center"
           }}>
-            <img src={BANNER} alt="Nora AI баннер" style={{
-              width: "100%", height: "auto", display: "block", objectFit: "contain", objectPosition: "center"
-            }} />
+            <img src={BANNER} alt="Nora AI баннер"
+              style={{
+                width: "100%",
+                height: "auto",
+                display: "block",
+                objectFit: "contain", // фото гарантированно не обрезано!
+                objectPosition: "center"
+              }} />
           </div>
           <div style={{ height: 50 }} />
           <div style={{
@@ -466,7 +474,7 @@ const Chat: React.FC = () => {
           position: "fixed",
           left: 0,
           bottom: 0,
-          background: "transparent", // Без фонового цвета
+          background: "transparent",
           borderRadius: borderRadius,
           zIndex: 20,
           boxShadow: "none"
