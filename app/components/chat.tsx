@@ -9,7 +9,6 @@ const borderRadius = 22;
 const panelHeight = 62;
 const maxWidth = 560;
 const GRADIENT = "linear-gradient(90deg, #eff5fe 0%, #e5e8ed 100%)";
-const REVERSED_GRADIENT = "linear-gradient(90deg, #e5e8ed 0%, #eff5fe 100%)";
 const INPUT_BAR_HEIGHT = 68;
 
 const ICONS = {
@@ -53,8 +52,21 @@ const Chat: React.FC = () => {
   const [threadId, setThreadId] = useState<string | null>(null);
   const [botProgress, setBotProgress] = useState("");
   const [showHowTo, setShowHowTo] = useState(true);
+  const [isMobile, setIsMobile] = useState(true);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // Проверка ширины экрана при монтировании
+  useEffect(() => {
+    function checkScreen() {
+      if (typeof window !== "undefined") {
+        setIsMobile(window.innerWidth <= 640);
+      }
+    }
+    checkScreen();
+    window.addEventListener("resize", checkScreen);
+    return () => window.removeEventListener("resize", checkScreen);
+  }, []);
 
   useEffect(() => {
     const saved = window.localStorage.getItem(THREAD_KEY);
@@ -149,6 +161,36 @@ const Chat: React.FC = () => {
     setBotProgress("");
   };
 
+  if (!isMobile) {
+    return (
+      <div style={{
+        width: "100vw",
+        height: "100vh",
+        background: "#f8fdff",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        position: "fixed",
+        left: 0,
+        top: 0,
+        zIndex: 10000
+      }}>
+        <div style={{
+          fontWeight: 700,
+          fontSize: "21px",
+          textAlign: "center",
+          color: NORA_COLOR,
+          background: "#fff",
+          borderRadius: 24,
+          padding: "35px 28px",
+          boxShadow: "0 6px 36px 0 rgba(155, 175, 205, 0.12)"
+        }}>
+          Nora AI — доступна только <br/> на мобильных устройствах
+        </div>
+      </div>
+    );
+  }
+
   if (preloading) {
     return (
       <div style={{
@@ -159,8 +201,7 @@ const Chat: React.FC = () => {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        justifyContent: "flex-start",
-        paddingTop: "80px", // Nora AI выше
+        justifyContent: "center",
         position: "fixed",
         top: 0,
         left: 0,
@@ -199,7 +240,7 @@ const Chat: React.FC = () => {
         boxSizing: "border-box"
       }}
     >
-      {/* Панель меню — без белого фона */}
+      {/* Панель меню */}
       <div style={{
         width: "calc(100% - 40px)",
         maxWidth,
@@ -207,33 +248,22 @@ const Chat: React.FC = () => {
         background: GRADIENT,
         color: NORA_COLOR,
         margin: "20px auto 0 auto",
-        display: "flex",
-        alignItems: "center",
+        display: "flex", alignItems: "center",
         borderRadius: borderRadius,
-        paddingLeft: 20,
-        paddingRight: 12,
-        paddingTop: 5,
-        paddingBottom: 5,
-        justifyContent: "flex-start",
-        boxSizing: "border-box",
-        zIndex: 1,
-        boxShadow: "none"
+        paddingLeft: 20, paddingRight: 12, paddingTop: 5, paddingBottom: 5,
+        justifyContent: "flex-start", boxSizing: "border-box", zIndex: 1, boxShadow: "none"
       }}>
         <div style={{
-          marginRight: 10,
-          color: NORA_COLOR,
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          minWidth: 0
+          marginRight: 10, color: NORA_COLOR,
+          display: "flex", flexDirection: "column", justifyContent: "center", minWidth: 0
         }}>
           <span style={{
             fontWeight: 800, fontSize: "19px", lineHeight: 1.06,
             whiteSpace: "nowrap", marginBottom: 7
           }}>Nora AI</span>
           <span style={{
-            fontWeight: 400, fontSize: "13px", color: "#565656",
-            lineHeight: 1.04, whiteSpace: "nowrap"
+            fontWeight: 400, fontSize: "13px",
+            color: "#565656", lineHeight: 1.04, whiteSpace: "nowrap"
           }}>Ассистент для будущих мам</span>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 8, marginLeft: "auto" }}>
@@ -269,18 +299,11 @@ const Chat: React.FC = () => {
       {showWelcome ? (
         <>
           <div style={{
-            width: "calc(100% - 40px)",
-            maxWidth,
-            borderRadius: 26,
-            overflow: "hidden",
-            margin: "10px auto 0 auto",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center"
+            width: "calc(100% - 40px)", maxWidth, borderRadius: 26, overflow: "hidden",
+            margin: "10px auto 0 auto", display: "flex", justifyContent: "center", alignItems: "center"
           }}>
             <img src={BANNER} alt="Nora AI баннер" style={{
-              width: "100%", height: "auto", display: "block",
-              objectFit: "contain", objectPosition: "center"
+              width: "100%", height: "auto", display: "block", objectFit: "contain", objectPosition: "center"
             }} />
           </div>
           <div style={{ height: 50 }} />
@@ -291,9 +314,8 @@ const Chat: React.FC = () => {
               fontWeight: 700, fontSize: "22px", color: NORA_COLOR, marginBottom: 14
             }}>Добро пожаловать, Я Nora</div>
             <div style={{
-              fontWeight: 400, fontSize: "15px", margin: "0 auto 0 auto",
-              maxWidth: 400, padding: "0 20px", lineHeight: 1.75,
-              color: NORA_COLOR, display: "inline-block"
+              fontWeight: 400, fontSize: "15px", margin: "0 auto 0 auto", maxWidth: 400,
+              padding: "0 20px", lineHeight: 1.75, color: NORA_COLOR, display: "inline-block"
             }}>
               Я помогаю будущим мамам на каждом этапе беременности: отвечаю на вопросы, напоминаю о важных делах, слежу за самочувствием и даю советы, основанные на медицине Великобритании NHS.
             </div>
@@ -301,20 +323,10 @@ const Chat: React.FC = () => {
           </div>
           <button
             style={{
-              width: "100%",
-              maxWidth: 290,
-              background: GRADIENT,
-              color: NORA_COLOR,
-              border: "none",
-              borderRadius: borderRadius,
-              fontWeight: 700,
-              fontSize: "17px",
-              padding: "15px 0",
-              margin: "0 20px",
-              cursor: "pointer",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center"
+              width: "100%", maxWidth: 290, background: GRADIENT, color: NORA_COLOR,
+              border: "none", borderRadius: borderRadius, fontWeight: 700, fontSize: "17px",
+              padding: "15px 0", margin: "0 20px", cursor: "pointer",
+              display: "flex", alignItems: "center", justifyContent: "center"
             }}
             onClick={() => setShowWelcome(false)}
           >
@@ -326,29 +338,16 @@ const Chat: React.FC = () => {
         </>
       ) : (showHowTo && (
         <div style={{
-          width: "calc(100% - 40px)",
-          maxWidth,
-          textAlign: "center",
-          margin: "90px auto 0 auto"
+          width: "calc(100% - 40px)", maxWidth, textAlign: "center", margin: "90px auto 0 auto"
         }}>
           <div style={{
-            fontWeight: 700,
-            fontSize: "21px",
-            color: NORA_COLOR,
-            marginBottom: 10,
-            marginTop: 12
+            fontWeight: 700, fontSize: "21px", color: NORA_COLOR, marginBottom: 10, marginTop: 12
           }}>
             Как пользоваться Nora?
           </div>
           <div style={{
-            fontWeight: 400,
-            fontSize: "15px",
-            margin: "0 auto",
-            maxWidth: 400,
-            padding: "0 20px",
-            lineHeight: 1.75,
-            color: NORA_COLOR,
-            display: "inline-block"
+            fontWeight: 400, fontSize: "15px", margin: "0 auto", maxWidth: 400,
+            padding: "0 20px", lineHeight: 1.75, color: NORA_COLOR, display: "inline-block"
           }}>
             Можно спрашивать все, что связано с беременностью, здоровьем, самочувствием, питанием, анализами, подготовкой к родам, эмоциональным состоянием и любые другие темы.
           </div>
@@ -455,7 +454,6 @@ const Chat: React.FC = () => {
         <div ref={messagesEndRef} />
       </div>
 
-      {/* Область ввода — градиент, отступы, всегда видна! */}
       {!showWelcome && (
         <div style={{
           width: "calc(100% - 40px)",
@@ -468,10 +466,10 @@ const Chat: React.FC = () => {
           position: "fixed",
           left: 0,
           bottom: 0,
-          background: REVERSED_GRADIENT,
+          background: "transparent", // Без фонового цвета
           borderRadius: borderRadius,
           zIndex: 20,
-          boxShadow: "0 2px 12px 0 rgba(150,170,210,0.09)"
+          boxShadow: "none"
         }}>
           <input
             type="text"
@@ -485,7 +483,7 @@ const Chat: React.FC = () => {
               borderRadius: borderRadius,
               border: "1px solid #e5e8ed",
               padding: "0 18px",
-              background: "#fff",
+              background: "transparent",
               color: NORA_COLOR,
               boxSizing: "border-box",
               marginRight: 8
