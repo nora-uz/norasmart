@@ -323,7 +323,7 @@ const Chat: React.FC = () => {
           }}>
             <div style={{
               fontWeight: 700, fontSize: "22px", color: NORA_COLOR, marginBottom: 14
-            }}>Добро пожаловать, Я Nora</div>
+            }}>Ждёте малыша?, Я помогу!</div>
             <div style={{
               fontWeight: 400, fontSize: "15px", margin: "0 auto 0 auto", maxWidth: 400,
               padding: "0 20px", lineHeight: 1.75, color: NORA_COLOR, display: "inline-block"
