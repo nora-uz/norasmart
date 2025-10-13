@@ -77,7 +77,6 @@ const Chat: React.FC = () => {
     }
   }, [chatHistory, botProgress]);
 
-  // Скрывать блок инструкции после отправки первого сообщения
   useEffect(() => {
     if (chatHistory.length > 0) {
       setShowHowTo(false);
@@ -205,8 +204,7 @@ const Chat: React.FC = () => {
         alignItems: "center",
         boxSizing: "border-box",
         paddingTop: panelHeight + PANEL_TOP + FIRST_MSG_OFFSET + ADDITIONAL_PANEL_OFFSET,
-      }}
-    >
+      }}>
       {/* Фиксированная панель */}
       <div style={{
         width: "calc(100% - 40px)",
@@ -333,16 +331,18 @@ const Chat: React.FC = () => {
         <div
           style={{
             width: "100%",
-            maxWidth,
-            margin: "0 auto"
+            marginTop: 120, // опустить ниже панели
+            marginBottom: 0,
+            display: "flex",
+            justifyContent: "center"
           }}>
           <div
             style={{
               background: GRADIENT,
               borderRadius: borderRadius,
               padding: "25px 20px 22px 20px",
-              margin: "24px 20px 0 20px",
               maxWidth: 520,
+              width: "100%",
               textAlign: "center"
             }}>
             <div style={{
@@ -372,7 +372,7 @@ const Chat: React.FC = () => {
         <div style={{
           width: "100%",
           maxWidth,
-          padding: "0 20px",
+          padding: "0 0px",
           margin: "0 auto",
           marginTop: 0,
           flex: 1,
@@ -384,55 +384,55 @@ const Chat: React.FC = () => {
               style={{
                 display: "flex",
                 width: "100%",
-                marginTop: idx === 0 ? 0 : 30,
-                marginBottom: 30,
-                paddingLeft: 20,
-                paddingRight: 20,
-                justifyContent: "flex-start"
+                justifyContent: msg.sender === "user" ? "flex-end" : "flex-start"
               }}
             >
-              {msg.sender === "user" ? (
-                <span
-                  style={{
-                    background: GRADIENT,
-                    color: NORA_COLOR,
-                    borderRadius: 16,
-                    padding: "18px 20px",
-                    lineHeight: 1.7,
-                    fontSize: 17,
-                    minWidth: 0,
-                    boxShadow: "0 2px 14px 0 rgba(155,175,205,0.07)",
-                    maxWidth: "100%",
-                    margin: 0,
-                    wordBreak: "break-word",
-                    fontWeight: 400,
-                    width: "100%",
-                    display: "block"
-                  }}
-                >
-                  {filterAsterisks(msg.text)}
-                </span>
-              ) : (
-                <span
-                  style={{
-                    color: NORA_COLOR,
-                    background: "transparent",
-                    borderRadius: 0,
-                    padding: 0,
-                    lineHeight: 1.7,
-                    fontSize: 17,
-                    minWidth: 0,
-                    maxWidth: "100%",
-                    margin: 0,
-                    wordBreak: "break-word",
-                    fontWeight: 400,
-                    width: "100%",
-                    display: "block"
-                  }}
-                >
-                  <ReactMarkdown>{formatBotText(msg.text)}</ReactMarkdown>
-                </span>
-              )}
+              <div
+                style={{
+                  margin: "20px",
+                  maxWidth: 450,
+                  alignSelf: msg.sender === "user" ? "flex-end" : "flex-start"
+                }}
+              >
+                {msg.sender === "user" ? (
+                  <span
+                    style={{
+                      background: GRADIENT,
+                      color: NORA_COLOR,
+                      borderRadius: 16,
+                      padding: "18px 20px",
+                      lineHeight: 1.7,
+                      fontSize: 17,
+                      minWidth: 0,
+                      boxShadow: "0 2px 14px 0 rgba(155,175,205,0.07)",
+                      maxWidth: "100%",
+                      display: "inline-block",
+                      fontWeight: 400,
+                      wordBreak: "break-word"
+                    }}
+                  >
+                    {filterAsterisks(msg.text)}
+                  </span>
+                ) : (
+                  <span
+                    style={{
+                      color: NORA_COLOR,
+                      background: "transparent",
+                      borderRadius: 0,
+                      padding: 0,
+                      lineHeight: 1.7,
+                      fontSize: 17,
+                      minWidth: 0,
+                      maxWidth: "100%",
+                      display: "inline-block",
+                      fontWeight: 400,
+                      wordBreak: "break-word"
+                    }}
+                  >
+                    <ReactMarkdown>{formatBotText(msg.text)}</ReactMarkdown>
+                  </span>
+                )}
+              </div>
             </div>
           ))}
           {botProgress && (
@@ -440,11 +440,8 @@ const Chat: React.FC = () => {
               style={{
                 display: "flex",
                 width: "100%",
-                marginTop: chatHistory.length === 0 ? 0 : 30,
-                marginBottom: 30,
-                paddingLeft: 20,
-                paddingRight: 20,
-                justifyContent: "flex-start"
+                margin: "20px",
+                maxWidth: 450
               }}
             >
               <span
@@ -457,11 +454,9 @@ const Chat: React.FC = () => {
                   fontSize: 17,
                   minWidth: 0,
                   maxWidth: "100%",
-                  margin: 0,
-                  wordBreak: "break-word",
+                  display: "inline-block",
                   fontWeight: 400,
-                  width: "100%",
-                  display: "block"
+                  wordBreak: "break-word"
                 }}
               >
                 <ReactMarkdown>{formatBotText(botProgress)}</ReactMarkdown>
