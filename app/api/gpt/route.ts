@@ -1,9 +1,16 @@
 import { NextResponse } from "next/server";
+import { Redis } from "@upstash/redis";
+
+// Создаём клиент Upstash Redis
+const redis = new Redis({
+  url: process.env.UPSTASH_REDIS_REST_URL!,
+  token: process.env.UPSTASH_REDIS_REST_TOKEN!,
+});
 
 export async function POST(req: Request) {
   try {
-    // Получаем сообщение (messages не обязательно нужны — Assistant API сам хранит историю)
-    const { messages, thread_id } = await req.json();
+    // Получаем данные от фронта
+    const { messages, thread_id, user_id } = await req.json();
     const currentMessage = messages && messages.length
       ? messages[messages.length - 1].text
       : null;
@@ -24,8 +31,14 @@ export async function POST(req: Request) {
       "OpenAI-Beta": "assistants=v2",
     };
 
-    // Если thread_id нет — создаём новый thread
+    // --- ХРАНЕНИЕ thread_id в базе по user_id ---
+    // Получаем thread_id из базы, если его нет во входных данных
     let usedThreadId = thread_id;
+    if (!usedThreadId && user_id) {
+      usedThreadId = await redis.get<string>(`thread:${user_id}`);
+    }
+
+    // Если thread_id всё равно нет — создаём новый и сохраняем в Upstash
     if (!usedThreadId) {
       const threadRes = await fetch("https://api.openai.com/v1/threads", {
         method: "POST",
@@ -37,10 +50,14 @@ export async function POST(req: Request) {
         throw new Error("Could not create thread " + JSON.stringify(threadData));
       }
       usedThreadId = threadData.id;
+      // Сохраняем для текущего пользователя
+      if (user_id) {
+        await redis.set(`thread:${user_id}`, usedThreadId);
+      }
     }
 
     // Отправляем сообщение пользователя в thread
-    const messageRes = await fetch(
+    await fetch(
       `https://api.openai.com/v1/threads/${usedThreadId}/messages`,
       {
         method: "POST",
@@ -48,7 +65,6 @@ export async function POST(req: Request) {
         body: JSON.stringify({ role: "user", content: currentMessage }),
       }
     );
-    const messageStatus = await messageRes.json();
 
     // Запускаем ассистента
     const runRes = await fetch(
@@ -72,7 +88,6 @@ export async function POST(req: Request) {
       );
       const status = await statusRes.json();
       if (status.status === "completed") {
-        // Получаем все сообщения и берем последний ответ ассистента
         const messagesRes = await fetch(
           `https://api.openai.com/v1/threads/${usedThreadId}/messages`,
           { method: "GET", headers: commonHeaders }
@@ -90,7 +105,12 @@ export async function POST(req: Request) {
       }
     }
 
-    // Возвращаем ответ и текущий thread_id (он сохраняется на фронте)
+    // На всякий случай повторно сохраняем thread_id для юзера
+    if (user_id) {
+      await redis.set(`thread:${user_id}`, usedThreadId);
+    }
+
+    // Возвращаем ответ и thread_id
     return NextResponse.json({ reply, thread_id: usedThreadId });
   } catch (err) {
     console.error("ERROR IN GPT ROUTE", err);
