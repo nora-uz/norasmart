@@ -13,7 +13,7 @@ const INPUT_BAR_HEIGHT = 68; // Высота поля c запасом
 
 const ICONS = {
   telegram: "https://cdn-icons-png.flaticon.com/512/1946/1946547.png",
-  trash: "https://cdn-icons-png.flaticon.com/512/1900/19006850.png", // новая иконка!
+  trash: "https://cdn-icons-png.flaticon.com/512/1900/19006871.png", // обновлённая иконка
   share: "https://cdn-icons-png.flaticon.com/512/535/535285.png",
   arrowRight: (
     <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
