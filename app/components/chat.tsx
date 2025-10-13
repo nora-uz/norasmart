@@ -243,7 +243,7 @@ const Chat: React.FC = () => {
         width: "calc(100% - 40px)",
         maxWidth,
         minHeight: panelHeight,
-        background: GRADIENT, // только градиент!
+        background: GRADIENT,
         color: NORA_COLOR,
         margin: "20px auto 0 auto",
         display: "flex", alignItems: "center",
@@ -291,7 +291,7 @@ const Chat: React.FC = () => {
           </button>
         </div>
       </div>
-      <div style={{ height: 40 }} />
+      <div style={{ height: 13 }} />  {/* Новый отступ после панели */}
 
       {showWelcome ? (
         <>
@@ -317,7 +317,7 @@ const Chat: React.FC = () => {
             />
           </div>
           <div style={{ height: 50 }} />
-          <div style={{ height: 20 }} /> {/* Доп. отступ после фото */}
+          <div style={{ height: 20 }} />
           <div style={{
             width: "calc(100% - 40px)", maxWidth, textAlign: "center", margin: "0 auto"
           }}>
@@ -330,8 +330,7 @@ const Chat: React.FC = () => {
             }}>
               Я помогаю будущим мамам на каждом этапе беременности: отвечаю на вопросы, напоминаю о важных делах, слежу за самочувствием и даю советы, основанные на медицине Великобритании NHS.
             </div>
-            <div style={{ height: 40 }} />
-            <div style={{ height: 20 }} /> {/* Доп. отступ после описания */}
+            {/* лишний отступ между описанием и кнопкой удалён! */}
           </div>
           <button
             style={{
@@ -530,7 +529,7 @@ const Chat: React.FC = () => {
               </span>
             </button>
           </div>
-          <div style={{ height: 20 }} /> {/* добавлен отступ под полем сообщений */}
+          <div style={{ height: 20 }} />
         </>
       )}
     </div>
