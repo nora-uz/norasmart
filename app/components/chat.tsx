@@ -26,10 +26,6 @@ const panelHeight = 62;
 const maxWidth = 560;
 const GRADIENT = "linear-gradient(90deg, #eff5fe 0%, #e5e8ed 100%)";
 
-// --------- Убираем темы -----------
-
-// ...
-
 function filterAsterisks(str: string) {
   return str.replace(/\*/g, "");
 }
@@ -55,8 +51,6 @@ const Chat: React.FC = () => {
   const [showWelcome, setShowWelcome] = useState(true);
   const [preloading, setPreloading] = useState(true);
   const [message, setMessage] = useState("");
-  // Скрываем темы
-  // const [showTopics, setShowTopics] = useState(true);
   const [chatHistory, setChatHistory] = useState<Message[]>([]);
   const [loading, setLoading] = useState(false);
   const [threadId, setThreadId] = useState<string | null>(null);
@@ -75,7 +69,6 @@ const Chat: React.FC = () => {
     const timer = setTimeout(() => setPreloading(false), 1000);
     return () => clearTimeout(timer);
   }, []);
-
   useEffect(() => {
     if (messagesEndRef.current) {
       messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
@@ -147,20 +140,11 @@ const Chat: React.FC = () => {
     }
   };
 
-  // Темы больше не нужны
-  // const handleTopicClick = (topic: typeof topics[0]) => {
-  //   setShowTopics(false);
-  //   sendMessageToGPT(`Хочу обсудить ${topic.title.toLowerCase()}`);
-  //   setMessage("");
-  // };
-
   const clearChatAll = () => {
     setChatHistory([]);
     setThreadId(null);
     window.localStorage.removeItem(THREAD_KEY);
     setShowWelcome(true);
-    // Темы больше не нужны
-    // setShowTopics(true);
     setBotProgress("");
   };
 
@@ -336,198 +320,253 @@ const Chat: React.FC = () => {
         </button>
         </>
       ) : chatHistory.length === 0 ? (
-        // Первая инструкция после welcome
-        <div style={{ width: "calc(100% - 40px)", maxWidth, textAlign: "center", margin: "0 auto" }}>
-          <div
-            style={{
-              fontWeight: 700,
-              fontSize: "21px",
-              color: NORA_COLOR,
-              marginBottom: 18,
-              marginTop: 12,
-            }}
-          >
-            Как пользоваться
+        <div style={{
+          width: "100%",
+          maxWidth,
+          margin: "0 auto"
+        }}>
+          <div style={{
+            fontWeight: 700,
+            fontSize: "21px",
+            color: NORA_COLOR,
+            textAlign: "center",
+            marginBottom: 18,
+            marginTop: 12,
+          }}>
+            Как пользоваться Nora?
           </div>
-          <div
-            style={{
-              fontWeight: 400,
-              fontSize: "16px",
-              margin: "0 auto 28px auto",
-              maxWidth: 430,
-              padding: "0 13px",
-              lineHeight: 1.7,
-              color: NORA_COLOR,
-              display: "inline-block"
-            }}
-          >
-            Просто введите свой вопрос или тему в поле ниже и нажмите Enter или кнопку отправки.<br /><br />
-            Можно спрашивать всё, что связано с беременностью, здоровьем, самочувствием, питанием, анализами, подготовкой к родам и любые другие волнующие вопросы.
+          <div style={{
+            fontWeight: 400,
+            fontSize: "16px",
+            margin: "0 auto",
+            maxWidth: 470,
+            padding: "0 13px",
+            lineHeight: 1.7,
+            color: NORA_COLOR,
+            textAlign: "center",
+            display: "block",
+            marginBottom: 30
+          }}>
+            Просто введите свой вопрос или тему в поле ниже и отправьте.<br /><br />
+            Можно спрашивать все, что связано с беременностью, здоровьем, самочувствием, питанием, анализами, подготовкой к родам, эмоциональным состоянием и любые другие волнующие вопросы.
           </div>
-          {/* Поле отправки сообщения (уже будет видно, так как нет чата) */}
+          <div style={{
+            width: "100%",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center"
+          }}>
+            <input
+              type="text"
+              value={message}
+              onChange={e => setMessage(filterAsterisks(e.target.value))}
+              placeholder="Введите сообщение..."
+              style={{
+                flex: 1,
+                height: 48,
+                fontSize: "16px",
+                borderRadius: borderRadius,
+                border: "1px solid #e5e8ed",
+                padding: "0 18px",
+                background: "transparent",
+                color: NORA_COLOR,
+                boxSizing: "border-box",
+                marginRight: 8
+              }}
+              onKeyDown={e => { if (e.key === 'Enter') handleSendMessage(); }}
+              disabled={loading || !!botProgress}
+            />
+            <button
+              style={{
+                width: 48,
+                height: 48,
+                background: GRADIENT,
+                color: NORA_COLOR,
+                border: "none",
+                borderRadius: borderRadius,
+                fontWeight: 700,
+                fontSize: "17px",
+                cursor: (loading || !!botProgress) ? "not-allowed" : "pointer",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                boxShadow: "0 2px 14px 0 rgba(155,175,205,0.12)"
+              }}
+              onClick={handleSendMessage}
+              disabled={loading || !!botProgress}
+            >
+              <span style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+                {ICONS.arrowRight}
+              </span>
+            </button>
+          </div>
         </div>
       ) : null}
 
-      {/* Основной чат — всегда ниже (только история и поле ввода) */}
-      <div style={{
-        width: "100%",
-        maxWidth,
-        padding: "0 20px",
-        margin: "0 auto",
-        marginTop: 0,
-        flex: 1,
-        overflowY: "auto"
-      }}>
-        {chatHistory.map((msg, idx) => (
-          <div
-            key={idx}
-            style={{
-              display: "flex",
-              width: "100%",
-              marginTop: idx === 0 ? 0 : 30,
-              marginBottom: 30,
-              paddingLeft: 20,
-              paddingRight: 20,
-              justifyContent: "flex-start"
-            }}
-          >
-            {msg.sender === "user" ? (
-              <span
-                style={{
-                  background: GRADIENT,
-                  color: NORA_COLOR,
-                  borderRadius: 16,
-                  padding: "18px 20px",
-                  lineHeight: 1.7,
-                  fontSize: 17,
-                  minWidth: 0,
-                  boxShadow: "0 2px 14px 0 rgba(155,175,205,0.07)",
-                  maxWidth: "100%",
-                  margin: 0,
-                  wordBreak: "break-word",
-                  fontWeight: 400,
-                  width: "100%",
-                  display: "block"
-                }}
-              >
-                {filterAsterisks(msg.text)}
-              </span>
-            ) : (
-              <span
-                style={{
-                  color: NORA_COLOR,
-                  background: "transparent",
-                  borderRadius: 0,
-                  padding: 0,
-                  lineHeight: 1.7,
-                  fontSize: 17,
-                  minWidth: 0,
-                  maxWidth: "100%",
-                  margin: 0,
-                  wordBreak: "break-word",
-                  fontWeight: 400,
-                  width: "100%",
-                  display: "block"
-                }}
-              >
-                <ReactMarkdown>{formatBotText(msg.text)}</ReactMarkdown>
-              </span>
-            )}
-          </div>
-        ))}
-        {botProgress && (
-          <div
-            style={{
-              display: "flex",
-              width: "100%",
-              marginTop: chatHistory.length === 0 ? 0 : 30,
-              marginBottom: 30,
-              paddingLeft: 20,
-              paddingRight: 20,
-              justifyContent: "flex-start"
-            }}
-          >
-            <span
-              style={{
-                color: NORA_COLOR,
-                background: "transparent",
-                borderRadius: 0,
-                padding: 0,
-                lineHeight: 1.7,
-                fontSize: 17,
-                minWidth: 0,
-                maxWidth: "100%",
-                margin: 0,
-                wordBreak: "break-word",
-                fontWeight: 400,
-                width: "100%",
-                display: "block"
-              }}
-            >
-              <ReactMarkdown>{formatBotText(botProgress)}</ReactMarkdown>
-            </span>
-          </div>
-        )}
-        <div ref={messagesEndRef} />
-      </div>
-      <div style={{
-        width: "100%",
-        padding: "0 20px",
-        display: "flex",
-        alignItems: "center",
-        margin: "0 auto",
-        boxSizing: "border-box",
-        maxWidth: maxWidth,
-        position: "fixed",
-        left: 0,
-        bottom: 20,
-        background: "#f8fdff",
-        zIndex: 20
-      }}>
-        <input
-          type="text"
-          value={message}
-          onChange={e => setMessage(filterAsterisks(e.target.value))}
-          placeholder="Введите сообщение..."
-          style={{
+      {/* Чат с историей после первого сообщения */}
+      {chatHistory.length > 0 && (
+        <>
+          <div style={{
+            width: "100%",
+            maxWidth,
+            padding: "0 20px",
+            margin: "0 auto",
+            marginTop: 0,
             flex: 1,
-            height: 48,
-            fontSize: "16px",
-            borderRadius: borderRadius,
-            border: "1px solid #e5e8ed",
-            padding: "0 18px",
-            background: "#fff",
-            color: NORA_COLOR,
-            boxSizing: "border-box",
-            marginRight: 8
-          }}
-          onKeyDown={e => { if (e.key === 'Enter') handleSendMessage(); }}
-          disabled={loading || !!botProgress}
-        />
-        <button
-          style={{
-            width: 48,
-            height: 48,
-            background: GRADIENT,
-            color: NORA_COLOR,
-            border: "none",
-            borderRadius: borderRadius,
-            fontWeight: 700,
-            fontSize: "17px",
-            cursor: (loading || !!botProgress) ? "not-allowed" : "pointer",
+            overflowY: "auto"
+          }}>
+            {chatHistory.map((msg, idx) => (
+              <div
+                key={idx}
+                style={{
+                  display: "flex",
+                  width: "100%",
+                  marginTop: idx === 0 ? 0 : 30,
+                  marginBottom: 30,
+                  paddingLeft: 20,
+                  paddingRight: 20,
+                  justifyContent: "flex-start"
+                }}
+              >
+                {msg.sender === "user" ? (
+                  <span
+                    style={{
+                      background: GRADIENT,
+                      color: NORA_COLOR,
+                      borderRadius: 16,
+                      padding: "18px 20px",
+                      lineHeight: 1.7,
+                      fontSize: 17,
+                      minWidth: 0,
+                      boxShadow: "0 2px 14px 0 rgba(155,175,205,0.07)",
+                      maxWidth: "100%",
+                      margin: 0,
+                      wordBreak: "break-word",
+                      fontWeight: 400,
+                      width: "100%",
+                      display: "block"
+                    }}
+                  >
+                    {filterAsterisks(msg.text)}
+                  </span>
+                ) : (
+                  <span
+                    style={{
+                      color: NORA_COLOR,
+                      background: "transparent",
+                      borderRadius: 0,
+                      padding: 0,
+                      lineHeight: 1.7,
+                      fontSize: 17,
+                      minWidth: 0,
+                      maxWidth: "100%",
+                      margin: 0,
+                      wordBreak: "break-word",
+                      fontWeight: 400,
+                      width: "100%",
+                      display: "block"
+                    }}
+                  >
+                    <ReactMarkdown>{formatBotText(msg.text)}</ReactMarkdown>
+                  </span>
+                )}
+              </div>
+            ))}
+            {botProgress && (
+              <div
+                style={{
+                  display: "flex",
+                  width: "100%",
+                  marginTop: chatHistory.length === 0 ? 0 : 30,
+                  marginBottom: 30,
+                  paddingLeft: 20,
+                  paddingRight: 20,
+                  justifyContent: "flex-start"
+                }}
+              >
+                <span
+                  style={{
+                    color: NORA_COLOR,
+                    background: "transparent",
+                    borderRadius: 0,
+                    padding: 0,
+                    lineHeight: 1.7,
+                    fontSize: 17,
+                    minWidth: 0,
+                    maxWidth: "100%",
+                    margin: 0,
+                    wordBreak: "break-word",
+                    fontWeight: 400,
+                    width: "100%",
+                    display: "block"
+                  }}
+                >
+                  <ReactMarkdown>{formatBotText(botProgress)}</ReactMarkdown>
+                </span>
+              </div>
+            )}
+            <div ref={messagesEndRef} />
+          </div>
+          <div style={{
+            width: "100%",
+            padding: "0 20px",
             display: "flex",
             alignItems: "center",
-            justifyContent: "center",
-            boxShadow: "0 2px 14px 0 rgba(155,175,205,0.12)"
-          }}
-          onClick={handleSendMessage}
-          disabled={loading || !!botProgress}
-        >
-          <span style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
-            {ICONS.arrowRight}
-          </span>
-        </button>
-      </div>
+            margin: "0 auto",
+            boxSizing: "border-box",
+            maxWidth: maxWidth,
+            position: "fixed",
+            left: 0,
+            bottom: 20,
+            background: "#f8fdff",
+            zIndex: 20
+          }}>
+            <input
+              type="text"
+              value={message}
+              onChange={e => setMessage(filterAsterisks(e.target.value))}
+              placeholder="Введите сообщение..."
+              style={{
+                flex: 1,
+                height: 48,
+                fontSize: "16px",
+                borderRadius: borderRadius,
+                border: "1px solid #e5e8ed",
+                padding: "0 18px",
+                background: "transparent",
+                color: NORA_COLOR,
+                boxSizing: "border-box",
+                marginRight: 8
+              }}
+              onKeyDown={e => { if (e.key === 'Enter') handleSendMessage(); }}
+              disabled={loading || !!botProgress}
+            />
+            <button
+              style={{
+                width: 48,
+                height: 48,
+                background: GRADIENT,
+                color: NORA_COLOR,
+                border: "none",
+                borderRadius: borderRadius,
+                fontWeight: 700,
+                fontSize: "17px",
+                cursor: (loading || !!botProgress) ? "not-allowed" : "pointer",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                boxShadow: "0 2px 14px 0 rgba(155,175,205,0.12)"
+              }}
+              onClick={handleSendMessage}
+              disabled={loading || !!botProgress}
+            >
+              <span style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+                {ICONS.arrowRight}
+              </span>
+            </button>
+          </div>
+        </>
+      )}
     </div>
   );
 };
