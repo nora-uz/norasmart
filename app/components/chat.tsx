@@ -49,10 +49,12 @@ const topics = [
   }
 ];
 
+// Запрет всех *
 function filterAsterisks(str: string) {
   return str.replace(/\*/g, "");
 }
 
+// Корректное форматирование вывода бота без *
 function formatBotText(text: string) {
   if (!text) return "";
   let cleaned = filterAsterisks(text).replace(/_/g, "");
@@ -106,7 +108,7 @@ const Chat: React.FC = () => {
     }
   };
 
-  // Передавай всю историю!
+  // Передача всей истории, thread_id сохраняется
   const sendMessageToGPT = async (text: string) => {
     setLoading(true);
     const newHistory: Message[] = [...chatHistory, { text: filterAsterisks(text), sender: "user" }];
@@ -242,11 +244,11 @@ const Chat: React.FC = () => {
           minWidth: 0
         }}>
           <span style={{
-            fontWeight: 800, fontSize: "19px", lineHeight: 1.06, // увеличил!
+            fontWeight: 800, fontSize: "19px", lineHeight: 1.06, // увеличено!
             whiteSpace: "nowrap", marginBottom: 7
           }}>Nora AI</span>
           <span style={{
-            fontWeight: 400, fontSize: "13px", color: "#565656", // увеличил!
+            fontWeight: 400, fontSize: "13px", color: "#565656", // увеличено!
             lineHeight: 1.04, whiteSpace: "nowrap"
           }}>Ассистент для будущих мам</span>
         </div>
@@ -286,7 +288,7 @@ const Chat: React.FC = () => {
 
       {showWelcome ? (
         <>
-        {/* Баннер: marginTop 10px между панелью и фото! */}
+        {/* Баннер: marginTop 10px между панелью и фото */}
         <div style={{
           width: "calc(100% - 40px)", maxWidth, borderRadius: 26,
           overflow: "hidden", margin: "10px auto 0 auto",
