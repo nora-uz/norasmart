@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { Redis } from "@upstash/redis";
 
-// Создаём клиент Upstash Redis
+// Создаём клиент Upstash Redis для хранения thread_id
 const redis = new Redis({
   url: process.env.UPSTASH_REDIS_REST_URL!,
   token: process.env.UPSTASH_REDIS_REST_TOKEN!,
@@ -10,30 +10,38 @@ const redis = new Redis({
 export async function POST(req: Request) {
   try {
     // Получаем данные от фронта
+    // user_id нужен для уникального пользователя (можно временно использовать "testuser" если нет авторизации)
     const { messages, thread_id, user_id } = await req.json();
-    const currentMessage = messages && messages.length
-      ? messages[messages.length - 1].text
-      : null;
+    const currentMessage =
+      messages && messages.length ? messages[messages.length - 1].text : null;
+
     if (!currentMessage) {
-      return NextResponse.json({ reply: "Нет сообщения пользователя", error: true }, { status: 400 });
+      return NextResponse.json(
+        { reply: "Нет сообщения пользователя", error: true },
+        { status: 400 }
+      );
     }
 
     const assistant_id = "asst_O0ENHkHsICvLEjBXleQpyqDx";
     const apiKey = process.env.OPENAI_API_KEY;
     if (!apiKey) {
       console.error("No OPENAI_API_KEY defined!");
-      return NextResponse.json({ reply: "No OpenAI key", error: true }, { status: 500 });
+      return NextResponse.json(
+        { reply: "No OpenAI key", error: true },
+        { status: 500 }
+      );
     }
 
     const commonHeaders = {
-      "Authorization": `Bearer ${apiKey}`,
+      Authorization: `Bearer ${apiKey}`,
       "Content-Type": "application/json",
       "OpenAI-Beta": "assistants=v2",
     };
 
     // --- ХРАНЕНИЕ thread_id в базе по user_id ---
-    // Получаем thread_id из базы, если его нет во входных данных
+    // Получаем thread_id из базы, если нет во входных данных
     let usedThreadId = thread_id;
+
     if (!usedThreadId && user_id) {
       usedThreadId = await redis.get<string>(`thread:${user_id}`);
     }
@@ -47,7 +55,9 @@ export async function POST(req: Request) {
       });
       const threadData = await threadRes.json();
       if (!threadData.id) {
-        throw new Error("Could not create thread " + JSON.stringify(threadData));
+        throw new Error(
+          "Could not create thread " + JSON.stringify(threadData)
+        );
       }
       usedThreadId = threadData.id;
       // Сохраняем для текущего пользователя
@@ -81,7 +91,7 @@ export async function POST(req: Request) {
     // Ждём завершения run
     let reply = "Ассистент не ответил.";
     for (let i = 0; i < 40; i++) {
-      await new Promise(res => setTimeout(res, 1500));
+      await new Promise((res) => setTimeout(res, 1500));
       const statusRes = await fetch(
         `https://api.openai.com/v1/threads/${usedThreadId}/runs/${runId}`,
         { method: "GET", headers: commonHeaders }
@@ -114,6 +124,9 @@ export async function POST(req: Request) {
     return NextResponse.json({ reply, thread_id: usedThreadId });
   } catch (err) {
     console.error("ERROR IN GPT ROUTE", err);
-    return NextResponse.json({ reply: "Ошибка: не удалось получить ответ.", error: String(err) }, { status: 500 });
+    return NextResponse.json(
+      { reply: "Ошибка: не удалось получить ответ.", error: String(err) },
+      { status: 500 }
+    );
   }
 }
