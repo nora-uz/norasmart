@@ -4,10 +4,12 @@ import ReactMarkdown from "react-markdown";
 
 const NORA_COLOR = "#2e2e2e";
 const ICON_SIZE = 23;
-const PANEL_TOP = 20;
-const FIRST_MSG_OFFSET = 30;
-const ADDITIONAL_PANEL_OFFSET = 10;
-const BANNER_BOTTOM_OFFSET = 50;
+const BANNER = "/banner.webp";
+const borderRadius = 22;
+const panelHeight = 62;
+const maxWidth = 560;
+const GRADIENT = "linear-gradient(90deg, #eff5fe 0%, #e5e8ed 100%)";
+const INPUT_BAR_HEIGHT = 68; // Высота поля c запасом
 
 const ICONS = {
   telegram: "https://cdn-icons-png.flaticon.com/512/1946/1946547.png",
@@ -20,11 +22,6 @@ const ICONS = {
   ),
 };
 const filterNora = "invert(13%) sepia(4%) saturate(271%) hue-rotate(175deg) brightness(92%) contrast(93%)";
-const BANNER = "/banner.webp";
-const borderRadius = 22;
-const panelHeight = 62;
-const maxWidth = 560;
-const GRADIENT = "linear-gradient(90deg, #eff5fe 0%, #e5e8ed 100%)";
 
 function filterAsterisks(str: string) {
   return str.replace(/\*/g, "");
@@ -76,7 +73,6 @@ const Chat: React.FC = () => {
       messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
     }
   }, [chatHistory, botProgress]);
-
   useEffect(() => {
     if (chatHistory.length > 0) {
       setShowHowTo(false);
@@ -197,25 +193,24 @@ const Chat: React.FC = () => {
         background: "#f8fdff",
         width: "100vw",
         height: "100vh",
-        overflow: "hidden",
+        overflow: "auto",
         position: "relative",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
         boxSizing: "border-box",
-        paddingTop: panelHeight + PANEL_TOP + FIRST_MSG_OFFSET + ADDITIONAL_PANEL_OFFSET,
-      }}>
-      {/* Фиксированная панель */}
+        paddingTop: panelHeight + 20 + 30 + 10, // панель и небольшой запас
+      }}
+    >
+      {/* Панель меню: теперь не фиксированная */}
       <div style={{
         width: "calc(100% - 40px)",
         maxWidth,
         minHeight: panelHeight,
         background: GRADIENT,
         color: NORA_COLOR,
-        position: "fixed",
-        top: PANEL_TOP,
-        left: "50%",
-        transform: "translateX(-50%)",
+        // position: "static", // теперь по умолчанию static!
+        margin: "0 auto",
         display: "flex",
         alignItems: "center",
         borderRadius: borderRadius,
@@ -225,7 +220,7 @@ const Chat: React.FC = () => {
         paddingBottom: 5,
         justifyContent: "flex-start",
         boxSizing: "border-box",
-        zIndex: 100
+        zIndex: 1
       }}>
         <div style={{
           marginRight: 10,
@@ -286,7 +281,7 @@ const Chat: React.FC = () => {
             }}
           />
         </div>
-        <div style={{ height: BANNER_BOTTOM_OFFSET }} />
+        <div style={{ height: 50 }} />
         <div style={{
           width: "calc(100% - 40px)", maxWidth, textAlign: "center"
         }}>
@@ -331,14 +326,13 @@ const Chat: React.FC = () => {
         <div
           style={{
             width: "100%",
-            marginTop: 120, // опустить ниже панели
+            marginTop: 180, // ниже центра
             marginBottom: 0,
             display: "flex",
             justifyContent: "center"
           }}>
           <div
             style={{
-              background: GRADIENT,
               borderRadius: borderRadius,
               padding: "25px 20px 22px 20px",
               maxWidth: 520,
@@ -368,104 +362,104 @@ const Chat: React.FC = () => {
       ))}
 
       {/* Чат с историей после первого сообщения */}
-      {chatHistory.length > 0 && (
-        <div style={{
-          width: "100%",
-          maxWidth,
-          padding: "0 0px",
-          margin: "0 auto",
-          marginTop: 0,
-          flex: 1,
-          overflowY: "auto"
-        }}>
-          {chatHistory.map((msg, idx) => (
-            <div
-              key={idx}
-              style={{
-                display: "flex",
-                width: "100%",
-                justifyContent: msg.sender === "user" ? "flex-end" : "flex-start"
-              }}
-            >
-              <div
-                style={{
-                  margin: "20px",
-                  maxWidth: 450,
-                  alignSelf: msg.sender === "user" ? "flex-end" : "flex-start"
-                }}
-              >
-                {msg.sender === "user" ? (
-                  <span
-                    style={{
-                      background: GRADIENT,
-                      color: NORA_COLOR,
-                      borderRadius: 16,
-                      padding: "18px 20px",
-                      lineHeight: 1.7,
-                      fontSize: 17,
-                      minWidth: 0,
-                      boxShadow: "0 2px 14px 0 rgba(155,175,205,0.07)",
-                      maxWidth: "100%",
-                      display: "inline-block",
-                      fontWeight: 400,
-                      wordBreak: "break-word"
-                    }}
-                  >
-                    {filterAsterisks(msg.text)}
-                  </span>
-                ) : (
-                  <span
-                    style={{
-                      color: NORA_COLOR,
-                      background: "transparent",
-                      borderRadius: 0,
-                      padding: 0,
-                      lineHeight: 1.7,
-                      fontSize: 17,
-                      minWidth: 0,
-                      maxWidth: "100%",
-                      display: "inline-block",
-                      fontWeight: 400,
-                      wordBreak: "break-word"
-                    }}
-                  >
-                    <ReactMarkdown>{formatBotText(msg.text)}</ReactMarkdown>
-                  </span>
-                )}
-              </div>
-            </div>
-          ))}
-          {botProgress && (
+      <div style={{
+        width: "100%",
+        maxWidth,
+        padding: "0 0px",
+        margin: "0 auto",
+        marginTop: 0,
+        flex: 1,
+        overflowY: "auto",
+        paddingBottom: INPUT_BAR_HEIGHT + 20 // Чтобы чат не заходил под инпут–бар
+      }}>
+        {chatHistory.map((msg, idx) => (
+          <div
+            key={idx}
+            style={{
+              display: "flex",
+              width: "100%",
+              justifyContent: msg.sender === "user" ? "flex-end" : "flex-start"
+            }}
+          >
             <div
               style={{
-                display: "flex",
-                width: "100%",
                 margin: "20px",
-                maxWidth: 450
+                maxWidth: 450,
+                alignSelf: msg.sender === "user" ? "flex-end" : "flex-start"
               }}
             >
-              <span
-                style={{
-                  color: NORA_COLOR,
-                  background: "transparent",
-                  borderRadius: 0,
-                  padding: 0,
-                  lineHeight: 1.7,
-                  fontSize: 17,
-                  minWidth: 0,
-                  maxWidth: "100%",
-                  display: "inline-block",
-                  fontWeight: 400,
-                  wordBreak: "break-word"
-                }}
-              >
-                <ReactMarkdown>{formatBotText(botProgress)}</ReactMarkdown>
-              </span>
+              {msg.sender === "user" ? (
+                <span
+                  style={{
+                    background: GRADIENT,
+                    color: NORA_COLOR,
+                    borderRadius: 16,
+                    padding: "18px 20px",
+                    lineHeight: 1.7,
+                    fontSize: 17,
+                    minWidth: 0,
+                    boxShadow: "0 2px 14px 0 rgba(155,175,205,0.07)",
+                    maxWidth: "100%",
+                    display: "inline-block",
+                    fontWeight: 400,
+                    wordBreak: "break-word"
+                  }}
+                >
+                  {filterAsterisks(msg.text)}
+                </span>
+              ) : (
+                <span
+                  style={{
+                    color: NORA_COLOR,
+                    background: "transparent",
+                    borderRadius: 0,
+                    padding: 0,
+                    lineHeight: 1.7,
+                    fontSize: 17,
+                    minWidth: 0,
+                    maxWidth: "100%",
+                    display: "inline-block",
+                    fontWeight: 400,
+                    wordBreak: "break-word"
+                  }}
+                >
+                  <ReactMarkdown>{formatBotText(msg.text)}</ReactMarkdown>
+                </span>
+              )}
             </div>
-          )}
-          <div ref={messagesEndRef} />
-        </div>
-      )}
+          </div>
+        ))}
+        {botProgress && (
+          <div
+            style={{
+              display: "flex",
+              width: "100%",
+              justifyContent: "flex-start",
+              margin: "20px",
+              maxWidth: 450
+            }}
+          >
+            <span
+              style={{
+                color: NORA_COLOR,
+                background: "transparent",
+                borderRadius: 0,
+                padding: 0,
+                lineHeight: 1.7,
+                fontSize: 17,
+                minWidth: 0,
+                maxWidth: "100%",
+                display: "inline-block",
+                fontWeight: 400,
+                wordBreak: "break-word"
+              }}
+            >
+              <ReactMarkdown>{formatBotText(botProgress)}</ReactMarkdown>
+            </span>
+          </div>
+        )}
+        <div ref={messagesEndRef} />
+      </div>
 
       {/* Поле для ввода — всегда внизу после welcome */}
       {!showWelcome && (
@@ -477,9 +471,10 @@ const Chat: React.FC = () => {
           margin: "0 auto",
           boxSizing: "border-box",
           maxWidth: maxWidth,
+          height: 68,
           position: "fixed",
           left: 0,
-          bottom: 20,
+          bottom: 0,
           background: "none",
           zIndex: 20
         }}>
