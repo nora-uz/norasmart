@@ -13,7 +13,7 @@ const INPUT_BAR_HEIGHT = 68;
 
 const ICONS = {
   telegram: "https://cdn-icons-png.flaticon.com/512/1946/1946547.png",
-  trash: "https://cdn-icons-png.flaticon.com/512/1345/1345823.png", // Старая иконка!
+  trash: "https://cdn-icons-png.flaticon.com/512/1345/1345823.png", // Старая иконка
   share: "https://cdn-icons-png.flaticon.com/512/535/535285.png",
   arrowRight: (
     <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
@@ -196,7 +196,7 @@ const Chat: React.FC = () => {
         boxSizing: "border-box"
       }}
     >
-      {/* Панель меню — всегда сверху, обычная, отступ 20px */}
+      {/* Панель меню (только градиент или прозрачная) */}
       <div style={{
         width: "calc(100% - 40px)",
         maxWidth,
@@ -213,7 +213,8 @@ const Chat: React.FC = () => {
         paddingBottom: 5,
         justifyContent: "flex-start",
         boxSizing: "border-box",
-        zIndex: 1
+        zIndex: 1,
+        boxShadow: "none"
       }}>
         <div style={{
           marginRight: 10,
@@ -261,21 +262,19 @@ const Chat: React.FC = () => {
       </div>
       <div style={{ height: 40 }} />
 
-      {/* Приветствие или инструкция, фото и описание */}
+      {/* Welcome или инструкция + фото и описание */}
       {showWelcome ? (
         <>
-          <div
-            style={{
-              width: "calc(100% - 40px)",
-              maxWidth,
-              borderRadius: 26,
-              overflow: "hidden",
-              margin: "10px auto 0 auto",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center"
-            }}
-          >
+          <div style={{
+            width: "calc(100% - 40px)",
+            maxWidth,
+            borderRadius: 26,
+            overflow: "hidden",
+            margin: "10px auto 0 auto",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center"
+          }}>
             <img src={BANNER} alt="Nora AI баннер" style={{
               width: "100%", height: "auto", display: "block",
               objectFit: "contain", objectPosition: "center"
@@ -327,7 +326,7 @@ const Chat: React.FC = () => {
           width: "calc(100% - 40px)",
           maxWidth,
           textAlign: "center",
-          margin: "90px auto 0 auto" // Отступ сверху 90px, по центру
+          margin: "90px auto 0 auto"
         }}>
           <div style={{
             fontWeight: 700,
@@ -453,6 +452,7 @@ const Chat: React.FC = () => {
         <div ref={messagesEndRef} />
       </div>
 
+      {/* Область ввода — всегда видна и с фоном */}
       {!showWelcome && (
         <div style={{
           width: "100%",
@@ -466,8 +466,10 @@ const Chat: React.FC = () => {
           position: "fixed",
           left: 0,
           bottom: 0,
-          background: "none",
-          zIndex: 20
+          background: "#e6ecf5", // заметный фон для всего input-бара
+          borderRadius: borderRadius,
+          zIndex: 20,
+          boxShadow: "0 2px 12px 0 rgba(150,170,210,0.09)"
         }}>
           <input
             type="text"
@@ -481,7 +483,7 @@ const Chat: React.FC = () => {
               borderRadius: borderRadius,
               border: "1px solid #e5e8ed",
               padding: "0 18px",
-              background: "transparent",
+              background: "#fff",
               color: NORA_COLOR,
               boxSizing: "border-box",
               marginRight: 8
