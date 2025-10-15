@@ -370,10 +370,12 @@ const Chat = () => {
         <div style={{ width: "100%", display: "flex", justifyContent: "center" }}>
           <div style={{ width: "100%", maxWidth }}>
             <div style={{ height: 30 }} />
-            <img src={BANNER} alt="Nora AI баннер" style={{
-              width: "100%", maxWidth: "380px", height: "auto", display: "block",
-              objectFit: "contain", objectPosition: "center"
-            }} />
+            <div style={{ display: "flex", justifyContent: "center" }}>
+              <img src={BANNER} alt="Nora AI баннер" style={{
+                width: "100%", maxWidth: "300px", height: "auto", display: "block",
+                objectFit: "contain", objectPosition: "center"
+              }} />
+            </div>
             <div style={{ height: 30 }} />
             <div style={{ textAlign: "center" }}>
               <div style={{
@@ -405,7 +407,7 @@ const Chat = () => {
                   display: "flex", alignItems: "center", justifyContent: "center" }}>{ICONS.arrowRight}</span>
               </button>
             </div>
-            <div style={{ height: 35 }} /> {/* отступ как у кнопки и у описания */}
+            <div style={{ height: 35 }} />
             <FeedbackBubblesNora visible={showWelcome} />
             <div style={{ height: 24 }} />
           </div>
@@ -488,7 +490,7 @@ const Chat = () => {
             transform: "translateX(-50%)",
             width: "100vw",
             maxWidth,
-            background: "#fff",
+            // background: "#fff", // удалён!
             padding: "10px 20px",
             boxSizing: "border-box",
             display: "flex",
@@ -516,8 +518,8 @@ const Chat = () => {
               onClick={handleSendMessage}
               disabled={loading || !message.trim()}
               style={{
-                background: NORA_COLOR,
-                color: "#fff",
+                background: GRADIENT,
+                color: NORA_COLOR,
                 border: "none",
                 borderRadius: 17,
                 fontWeight: 700,
