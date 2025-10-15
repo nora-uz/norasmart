@@ -3,7 +3,7 @@ import React, { useState, useEffect, useRef } from "react";
 
 // Цвета бренда
 const PRIMARY_PURPLE = "#7f69a4";
-const NORA_COLOR = "#26151b"; // основной тёмный цвет для текста и панели
+const NORA_COLOR = "#26151b";
 const maxWidth = 560;
 const borderRadius = 22;
 const panelHeight = 62;
@@ -13,6 +13,9 @@ const LIGHT_BG = "#e3e8f0";
 const ICON_SIZE = 23;
 const BANNER = "/123.webp";
 
+// Градиент из вашего примера
+const PANEL_GRADIENT = "linear-gradient(90deg, #b192dc 0%, #e5b6c8 100%)";
+
 const ICONS = {
   telegram: "https://cdn-icons-png.flaticon.com/512/1946/1946547.png",
   trash: "https://cdn-icons-png.flaticon.com/512/1345/1345823.png",
@@ -21,7 +24,7 @@ const ICONS = {
     <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
       <path
         d="M6 11H16M16 11L12 7M16 11L12 15"
-        stroke="#fff" // белая стрелка для кнопки отправки
+        stroke="#fff"
         strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -29,7 +32,6 @@ const ICONS = {
     </svg>
   ),
 };
-const filterPanel = "brightness(0) saturate(100%) invert(27%) sepia(20%) saturate(916%) hue-rotate(219deg) brightness(87%) contrast(95%)";
 
 const FEEDBACKS_NORA = [
   { name: "Людмила", text: "С Норой я перестала переживать по пустякам — теперь любые вопросы решаю за пару минут!" },
@@ -215,8 +217,8 @@ const Chat = () => {
         width: "calc(100% - 40px)",
         maxWidth,
         minHeight: panelHeight,
-        background: "transparent",
-        color: NORA_COLOR, // цвет текста тёмный
+        background: PANEL_GRADIENT,
+        color: "#fff",
         margin: "20px auto 0 auto",
         display: "flex", alignItems: "center",
         borderRadius: borderRadius,
@@ -229,11 +231,11 @@ const Chat = () => {
         }}>
           <span style={{
             fontWeight: 800, fontSize: "19px", lineHeight: 1.06,
-            whiteSpace: "nowrap", marginBottom: 7, color: NORA_COLOR
+            whiteSpace: "nowrap", marginBottom: 7, color: "#fff"
           }}>Nora Plus</span>
           <span style={{
             fontWeight: 400, fontSize: "13px",
-            color: NORA_COLOR, lineHeight: 1.04, whiteSpace: "nowrap"
+            color: "#fff", lineHeight: 1.04, whiteSpace: "nowrap"
           }}>Ассистент для будущих мам</span>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 8, marginLeft: "auto" }}>
@@ -243,7 +245,7 @@ const Chat = () => {
             display: "flex", alignItems: "center", justifyContent: "center"
           }} onClick={handleShare}>
             <img src={ICONS.share} alt="Share"
-              style={{ width: ICON_SIZE, height: ICON_SIZE, filter: filterPanel }} />
+              style={{ width: ICON_SIZE, height: ICON_SIZE, filter: "none" }} />
           </button>
           <button style={{
             background: "transparent", border: "none", cursor: "pointer",
@@ -251,7 +253,7 @@ const Chat = () => {
             display: "flex", alignItems: "center", justifyContent: "center"
           }} onClick={() => window.open("https://t.me/norasmart", "_blank")}>
             <img src={ICONS.telegram} alt="Telegram"
-              style={{ width: ICON_SIZE, height: ICON_SIZE, filter: filterPanel }} />
+              style={{ width: ICON_SIZE, height: ICON_SIZE, filter: "none" }} />
           </button>
           <button style={{
             background: "transparent", border: "none", cursor: "pointer",
@@ -259,7 +261,7 @@ const Chat = () => {
             display: "flex", alignItems: "center", justifyContent: "center"
           }} onClick={clearChatAll}>
             <img src={ICONS.trash} alt="Trash"
-              style={{ width: ICON_SIZE, height: ICON_SIZE, filter: filterPanel }} />
+              style={{ width: ICON_SIZE, height: ICON_SIZE, filter: "none" }} />
           </button>
         </div>
       </div>
