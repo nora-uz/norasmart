@@ -1,7 +1,6 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
 
-// --- Настройки цветов и размеров для Норы ---
 const NORA_COLOR = "#2e2e2e";
 const ICON_SIZE = 23;
 const BANNER = "/banner.webp";
@@ -14,7 +13,6 @@ const NORA_BOX_SHADOW = "0 3px 22px 0 rgba(46,46,46,0.12)";
 const NORA_BORDER = "1.2px solid #e5e8ed";
 const FEEDBACK_BUBBLE_RADIUS = 21;
 
-// --- Иконки ---
 const ICONS = {
   telegram: "https://cdn-icons-png.flaticon.com/512/1946/1946547.png",
   trash: "https://cdn-icons-png.flaticon.com/512/1345/1345823.png",
@@ -32,7 +30,6 @@ const ICONS = {
 };
 const filterNora = "invert(13%) sepia(4%) saturate(271%) hue-rotate(175deg) brightness(92%) contrast(93%)";
 
-// --- Реалистичные отзывы ---
 const FEEDBACKS_NORA = [
   { name: "Людмила", text: "С Норой я перестала переживать по пустякам — теперь любые вопросы решаю за пару минут!" },
   { name: "Екатерина", text: "Очень удобно: напомнила про посещение врача, подсказала питание по моему анализу — чувствую себя спокойнее!" },
@@ -44,7 +41,6 @@ const FEEDBACKS_NORA = [
   { name: "Вера", text: "Через Нору познакомилась с другими будущими мамами, вместе обсуждаем вопросы и делимся опытом!" }
 ];
 
-// --- Вспомогательные функции ---
 function filterAsterisks(str) {
   return str.replace(/\*/g, "");
 }
@@ -60,7 +56,6 @@ function splitBotText(text) {
 type Message = { text: string; sender: "user" | "bot" };
 const THREAD_KEY = "nora_thread_id";
 
-// --- Динамический блок отзывов ---
 const FeedbackBubblesNora = ({ visible }) => {
   const MAX_BUBBLES = 5;
   const [list, setList] = useState(FEEDBACKS_NORA.slice(0, MAX_BUBBLES));
@@ -179,7 +174,6 @@ const Chat = () => {
     }
   };
 
-  // --- Отправка сообщения, появление ответа ---
   const sendMessageToGPT = async (text: string) => {
     setLoading(true);
     const newHistory: Message[] = [...chatHistory, { text: filterAsterisks(text), sender: "user" }];
@@ -376,7 +370,7 @@ const Chat = () => {
         <div style={{ width: "100%", display: "flex", justifyContent: "center" }}>
           <div style={{ width: "100%", maxWidth }}>
             <img src={BANNER} alt="Nora AI баннер" style={{
-              width: "100%", maxWidth: "600px", height: "auto", display: "block",
+              width: "100%", maxWidth: "480px", height: "auto", display: "block",
               objectFit: "contain", objectPosition: "center"
             }} />
             <div style={{ height: 30 }} />
@@ -494,7 +488,7 @@ const Chat = () => {
             maxWidth,
             background: "#fff",
             padding: "10px 20px",
-            borderTop: "1.2px solid #e8eaf1",
+            // borderTop: "1.2px solid #e8eaf1", // Закомментировано/удалено!
             boxSizing: "border-box",
             display: "flex",
             alignItems: "center",
@@ -528,10 +522,13 @@ const Chat = () => {
                 fontWeight: 700,
                 fontSize: 16,
                 padding: "12px 22px",
-                cursor: "pointer"
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center"
               }}
             >
-              Отправить
+              {ICONS.arrowRight} {/* ← стрелка вместо текста */}
             </button>
           </div>
         </div>
