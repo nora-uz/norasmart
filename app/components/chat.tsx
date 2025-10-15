@@ -369,8 +369,9 @@ const Chat = () => {
       {showWelcome ? (
         <div style={{ width: "100%", display: "flex", justifyContent: "center" }}>
           <div style={{ width: "100%", maxWidth }}>
+            <div style={{ height: 30 }} />
             <img src={BANNER} alt="Nora AI баннер" style={{
-              width: "100%", maxWidth: "480px", height: "auto", display: "block",
+              width: "100%", maxWidth: "380px", height: "auto", display: "block",
               objectFit: "contain", objectPosition: "center"
             }} />
             <div style={{ height: 30 }} />
@@ -400,10 +401,11 @@ const Chat = () => {
                 alignItems: "center",
                 justifyContent: "center"
               }} onClick={() => setShowWelcome(false)}>
-                Начать пользоваться&nbsp;<span style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>{ICONS.arrowRight}</span>
+                Начать пользоваться&nbsp;<span style={{
+                  display: "flex", alignItems: "center", justifyContent: "center" }}>{ICONS.arrowRight}</span>
               </button>
             </div>
-            <div style={{ height: 24 }} />
+            <div style={{ height: 35 }} /> {/* отступ как у кнопки и у описания */}
             <FeedbackBubblesNora visible={showWelcome} />
             <div style={{ height: 24 }} />
           </div>
@@ -488,7 +490,6 @@ const Chat = () => {
             maxWidth,
             background: "#fff",
             padding: "10px 20px",
-            // borderTop: "1.2px solid #e8eaf1", // Закомментировано/удалено!
             boxSizing: "border-box",
             display: "flex",
             alignItems: "center",
@@ -528,7 +529,7 @@ const Chat = () => {
                 justifyContent: "center"
               }}
             >
-              {ICONS.arrowRight} {/* ← стрелка вместо текста */}
+              {ICONS.arrowRight}
             </button>
           </div>
         </div>
