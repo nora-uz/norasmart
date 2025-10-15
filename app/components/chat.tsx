@@ -44,24 +44,10 @@ const FEEDBACKS_NORA = [
   { name: "Вера", text: "Через Нору познакомилась с другими будущими мамами, вместе обсуждаем вопросы и делимся опытом!" }
 ];
 
+// --- Вспомогательные функции ---
 function filterAsterisks(str) {
   return str.replace(/\*/g, "");
 }
-
-// --- Выделяет первое предложение, но вы можете убрать если не нужно жирное начало --- 
-function formatBotText(text) {
-  if (!text) return "";
-  let cleaned = text.replace(/_/g, "");
-  const firstSentenceMatch = cleaned.match(/^([^.!?]+[.!?])/);
-  const firstSentence = firstSentenceMatch ? firstSentenceMatch[1].trim() : "";
-  const restText = firstSentence ? cleaned.slice(firstSentence.length).trim() : cleaned.trim();
-  let result = "";
-  if (firstSentence) result += `**${firstSentence}** `;
-  if (restText) result += restText;
-  return result.trim();
-}
-
-// Разбивает ответ бота на отдельные абзацы по двум и более переводам строки
 function splitBotText(text) {
   if (!text) return [];
   return text
@@ -89,10 +75,22 @@ const FeedbackBubblesNora = ({ visible }) => {
   }, [visible]);
   if (!visible) return null;
   return (
-    <div style={{ width: "100%", display: "flex", justifyContent: "center", minHeight: 80 }}>
+    <div style={{
+      width: "100%",
+      display: "flex",
+      justifyContent: "center",
+      minHeight: 80,
+      marginTop: 0,
+      marginBottom: 0
+    }}>
       <div style={{
-        display: "flex", flexDirection: "column-reverse", alignItems: "center",
-        gap: "14px", width: "100%", maxWidth: 370
+        display: "flex",
+        flexDirection: "column-reverse",
+        alignItems: "center",
+        gap: "14px",
+        width: "100%",
+        maxWidth: 370,
+        background: "transparent"
       }}>
         {list.map((fb, idx) => (
           <div key={`${fb.name}_${fb.text}_${idx}`}
@@ -105,8 +103,10 @@ const FeedbackBubblesNora = ({ visible }) => {
               maxWidth: 370,
               textAlign: "left",
               border: NORA_BORDER,
-              display: "flex", flexDirection: "column",
-              opacity: 1, animation: idx === list.length - 1 ? "bubbleIn .8s" : undefined
+              display: "flex",
+              flexDirection: "column",
+              opacity: 1,
+              animation: idx === list.length - 1 ? "bubbleIn .8s" : undefined
             }}>
             <span style={{ fontWeight: 700, fontSize: 15, color: NORA_COLOR, marginBottom: 7 }}>{fb.name}</span>
             <span style={{ fontWeight: 400, fontSize: 15, color: "#393939", lineHeight: 1.58 }}>{fb.text}</span>
@@ -146,7 +146,6 @@ const Chat = () => {
     window.addEventListener("resize", checkScreen);
     return () => window.removeEventListener("resize", checkScreen);
   }, []);
-
   useEffect(() => {
     const saved = window.localStorage.getItem(THREAD_KEY);
     if (saved) setThreadId(saved);
@@ -372,20 +371,16 @@ const Chat = () => {
         </div>
       </div>
 
-      {/* Содержимое */}
+      {/* Содержимое welcome-экрана */}
       {showWelcome ? (
-        <>
-          <div style={{ width: "100%", display: "flex", justifyContent: "center" }}>
-            <div style={{ maxWidth, width: "100%", paddingLeft: 20, paddingRight: 20 }}>
-              <img src={BANNER} alt="Nora AI баннер" style={{
-                width: "100%", maxWidth: "600px", height: "auto", display: "block",
-                objectFit: "contain", objectPosition: "center"
-              }} />
-            </div>
-          </div>
-          <div style={{ height: 30 }} />
-          <div style={{ width: "100%", display: "flex", justifyContent: "center" }}>
-            <div style={{ maxWidth, width: "100%", textAlign: "center" }}>
+        <div style={{ width: "100%", display: "flex", justifyContent: "center" }}>
+          <div style={{ width: "100%", maxWidth }}>
+            <img src={BANNER} alt="Nora AI баннер" style={{
+              width: "100%", maxWidth: "600px", height: "auto", display: "block",
+              objectFit: "contain", objectPosition: "center"
+            }} />
+            <div style={{ height: 30 }} />
+            <div style={{ textAlign: "center" }}>
               <div style={{
                 fontWeight: 400, fontSize: "16px", margin: "0 auto", maxWidth: 400,
                 padding: "0 20px", lineHeight: 1.75, color: NORA_COLOR, display: "inline-block"
@@ -393,34 +388,34 @@ const Chat = () => {
                 Nora помогает будущим мамам получать актуальные, персональные рекомендации и спокойствие — теперь не нужно искать ответы по разным сайтам.
               </div>
             </div>
+            <div style={{ height: 35 }} />
+            {/* Кнопка "Начать пользоваться" */}
+            <div style={{ width: "100%", display: "flex", justifyContent: "center" }}>
+              <button style={{
+                background: NORA_COLOR,
+                color: "#fff",
+                border: "none",
+                borderRadius: borderRadius,
+                fontWeight: 700,
+                fontSize: "17px",
+                padding: "15px 0",
+                maxWidth: 290,
+                width: "100%",
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center"
+              }} onClick={() => setShowWelcome(false)}>
+                Начать пользоваться&nbsp;<span style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>{ICONS.arrowRight}</span>
+              </button>
+            </div>
+            <div style={{ height: 24 }} />
+            <FeedbackBubblesNora visible={showWelcome} />
+            <div style={{ height: 24 }} />
           </div>
-          <div style={{ height: 35 }} />
-          {/* Кнопка и блок отзывов */}
-          <div style={{ width: "100%", display: "flex", justifyContent: "center" }}>
-            <button style={{
-              background: NORA_COLOR,
-              color: "#fff",
-              border: "none",
-              borderRadius: borderRadius,
-              fontWeight: 700,
-              fontSize: "17px",
-              padding: "15px 0",
-              maxWidth: 290,
-              width: "100%",
-              cursor: "pointer",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center"
-            }} onClick={() => setShowWelcome(false)}>
-              Начать пользоваться&nbsp;<span style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>{ICONS.arrowRight}</span>
-            </button>
-          </div>
-          <div style={{ height: 24 }} />
-          <FeedbackBubblesNora visible={showWelcome} />
-          <div style={{ height: 24 }} />
-        </>
+        </div>
       ) : (
-        // Чат интерфейс
+        // Чат-интерфейс
         <div style={{
           width: "100%",
           maxWidth,
