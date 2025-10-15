@@ -27,38 +27,34 @@ const ICONS = {
     </svg>
   ),
 };
-
 const filterNora =
   "invert(13%) sepia(4%) saturate(271%) hue-rotate(175deg) brightness(92%) contrast(93%)";
 
-// 🟢 Не трогаем звёздочки для бота, чтобы ReactMarkdown рендерил жирный текст
 function filterAsterisks(str: string, keepStars = false) {
   return keepStars ? str : str.replace(/\*/g, "");
 }
 
-// ✅ Улучшенный формат ответов Норы — три абзаца, с жирным первым предложением
+// 💫 Форматируем текст бота для абзацев
 function formatBotText(text: string) {
   if (!text) return "";
-
   let cleaned = text.replace(/_/g, "").trim();
-  const sentences = cleaned.split(/(?<=[.?!])\s+/).filter(Boolean);
 
-  if (sentences.length === 0) return cleaned;
+  // Разделяем на абзацы
+  const paragraphs = cleaned
+    .split(/\n{2,}/)
+    .map((p) => p.trim())
+    .filter((p) => p.length > 0);
 
-  const first = sentences[0];
-  const middle = sentences.slice(1, -1).join(" ");
-  const last = sentences[sentences.length - 1];
-
-  if (sentences.length <= 2) {
-    return `**${first}**\n\n${sentences.slice(1).join(" ")}`;
+  // Авто-добавление жирного для первой строки
+  if (paragraphs.length > 0 && !paragraphs[0].startsWith("**")) {
+    const firstSentenceMatch = paragraphs[0].match(/^([^.!?]+[.!?])/);
+    const firstSentence = firstSentenceMatch ? firstSentenceMatch[1].trim() : "";
+    if (firstSentence) {
+      paragraphs[0] = `**${firstSentence}** ${paragraphs[0].slice(firstSentence.length).trim()}`;
+    }
   }
 
-  let formatted = "";
-  if (first) formatted += `**${first}**\n\n`;
-  if (middle) formatted += `${middle}\n\n`;
-  if (last) formatted += `${last}`;
-
-  return formatted.trim();
+  return paragraphs.join("\n\n");
 }
 
 type Message = { text: string; sender: "user" | "bot" };
@@ -195,40 +191,7 @@ const Chat: React.FC = () => {
     setBotProgress("");
   };
 
-  if (!isMobile) {
-    return (
-      <div
-        style={{
-          width: "100vw",
-          height: "100vh",
-          background: "#f8fdff",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          position: "fixed",
-          left: 0,
-          top: 0,
-          zIndex: 10000,
-        }}
-      >
-        <div
-          style={{
-            fontWeight: 700,
-            fontSize: "21px",
-            textAlign: "center",
-            color: NORA_COLOR,
-            background: "#fff",
-            borderRadius: 24,
-            padding: "35px 28px",
-            boxShadow: "0 6px 36px 0 rgba(155, 175, 205, 0.12)",
-          }}
-        >
-          Nora AI — доступна только <br /> на мобильных устройствах
-        </div>
-      </div>
-    );
-  }
-
+  // 🩷 Прелоадер
   if (preloading) {
     return (
       <div
@@ -268,6 +231,77 @@ const Chat: React.FC = () => {
     );
   }
 
+  // 💫 Приветственный экран
+  if (showWelcome) {
+    return (
+      <div
+        style={{
+          background: "#f8fdff",
+          width: "100vw",
+          height: "100vh",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          position: "fixed",
+          top: 0,
+          left: 0,
+          zIndex: 10000,
+        }}
+      >
+        <img
+          src={BANNER}
+          alt="Nora Banner"
+          style={{
+            width: 180,
+            borderRadius: 24,
+            marginBottom: 32,
+          }}
+        />
+        <h1
+          style={{
+            color: NORA_COLOR,
+            fontSize: 26,
+            fontWeight: 800,
+            marginBottom: 12,
+          }}
+        >
+          Nora AI 🤰
+        </h1>
+        <p
+          style={{
+            color: "#555",
+            fontSize: 17,
+            lineHeight: 1.5,
+            textAlign: "center",
+            maxWidth: 300,
+            marginBottom: 32,
+          }}
+        >
+          Умный помощник для будущих мам 💗  
+          Готова сопровождать Вас на каждом этапе беременности.
+        </p>
+        <button
+          onClick={() => setShowWelcome(false)}
+          style={{
+            background: GRADIENT,
+            border: "none",
+            borderRadius: 18,
+            padding: "14px 32px",
+            fontSize: 17,
+            fontWeight: 600,
+            color: NORA_COLOR,
+            cursor: "pointer",
+            boxShadow: "0 6px 20px rgba(155, 175, 205, 0.3)",
+          }}
+        >
+          Начать
+        </button>
+      </div>
+    );
+  }
+
+  // 💬 Основной чат
   return (
     <div
       style={{
