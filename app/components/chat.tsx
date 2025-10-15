@@ -13,7 +13,7 @@ const INPUT_BAR_HEIGHT = 68;
 const LIGHT_BG = "#e3e8f0";
 
 const ICON_SIZE = 23;
-const BANNER = "/123.webp";
+const BANNER = "/1234.webp";
 
 // Градиент фирменных цветов
 const PANEL_GRADIENT = `linear-gradient(90deg, ${BRAND_COLOR_1} 0%, ${BRAND_COLOR_2} 100%)`;
