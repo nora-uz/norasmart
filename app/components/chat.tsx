@@ -1,18 +1,16 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
 
-// Цвета бренда
+// Фирменные цвета, как в панели
 const NORA_COLOR = "#26151b";
 const PRIMARY_PURPLE = "#7f69a4";
-const ACCENT_PURPLE = "#a39bce";
-const LIGHT_BG = "#e3e8f0";
 const maxWidth = 560;
 const borderRadius = 22;
 const panelHeight = 62;
 const INPUT_BAR_HEIGHT = 68;
 
 const ICON_SIZE = 23;
-const BANNER = "/img.webp";
+const BANNER = "/123.webp"; // новое фото
 
 const ICONS = {
   telegram: "https://cdn-icons-png.flaticon.com/512/1946/1946547.png",
@@ -30,11 +28,15 @@ const ICONS = {
     </svg>
   ),
 };
+// Фильтр для фиолетовых иконок
 const filterPanel = "brightness(0) saturate(100%) invert(27%) sepia(20%) saturate(916%) hue-rotate(219deg) brightness(87%) contrast(95%)";
 
 const FEEDBACKS_NORA = [
   { name: "Людмила", text: "С Норой я перестала переживать по пустякам — теперь любые вопросы решаю за пару минут!" },
   { name: "Екатерина", text: "Очень удобно: напомнила про посещение врача, подсказала питание по моему анализу — чувствую себя спокойнее!" },
+  { name: "Марина", text: "Получаю поддержку, советы и простые рекомендации каждый день! Уже посоветовала коллегам и подруге." },
+  { name: "Камила", text: "Nora — настоящая подруга во время беременности! Чат легкий, понятный, рекомендации всегда актуальны." },
+  { name: "Ольга", text: "Получила четкую инструкцию по приему витаминов, теперь ничего не путаю. Спасибо!" },
 ];
 
 function filterAsterisks(str) {
@@ -49,7 +51,7 @@ type Message = { text: string; sender: "user" | "bot" };
 const THREAD_KEY = "nora_thread_id";
 
 const FeedbackBubblesNora = ({ visible }) => {
-  const MAX_BUBBLES = 2;
+  const MAX_BUBBLES = 5;
   const [list, setList] = useState(FEEDBACKS_NORA.slice(0, MAX_BUBBLES));
   useEffect(() => {
     if (!visible) return;
@@ -93,12 +95,20 @@ const FeedbackBubblesNora = ({ visible }) => {
               display: "flex",
               flexDirection: "column",
               opacity: 1,
+              animation: idx === list.length - 1 ? "bubbleIn .8s" : undefined
             }}>
             <span style={{ fontWeight: 700, fontSize: 15, color: NORA_COLOR, marginBottom: 7 }}>{fb.name}</span>
             <span style={{ fontWeight: 400, fontSize: 15, color: "#393939", lineHeight: 1.58 }}>{fb.text}</span>
           </div>
         ))}
       </div>
+      <style>{`
+        @keyframes bubbleIn {
+          0% { opacity: 0; transform: translateY(28px) scale(.99);}
+          65% { opacity: .8; transform: translateY(-7px) scale(1.009);}
+          100% { opacity: 1; transform: translateY(0) scale(1);}
+        }
+      `}</style>
     </div>
   );
 };
@@ -146,12 +156,28 @@ const Chat = () => {
     if (chatHistory.length > 0) setShowHowTo(false);
   }, [chatHistory]);
 
-  // handleShare, sendMessageToGPT, handleSendMessage, clearChatAll сюда — если требуется
+  // Пример рабочей функции для share
+  const handleShare = () => {
+    if (navigator.share) {
+      navigator.share({
+        title: "Nora Plus — Ассистент для будущих мам",
+        text: "Современный ассистент для будущих мам — все рекомендации по беременности в одном месте.",
+        url: window.location.href
+      });
+    } else {
+      alert("Ваш браузер не поддерживает Web Share API");
+    }
+  };
+
+  // Пример функции отправки (реализуйте свою)
+  const sendMessageToGPT = async (text: string) => {/* ... your code ... */};
+  const handleSendMessage = () => {/* ... your code ... */};
+  const clearChatAll = () => {/* ... your code ... */};
 
   return (
     <div
       style={{
-        background: LIGHT_BG,
+        background: "#e3e8f0",
         width: "100vw",
         height: "100vh",
         overflow: "auto",
@@ -180,8 +206,7 @@ const Chat = () => {
         }}>
           <span style={{
             fontWeight: 800, fontSize: "19px", lineHeight: 1.06,
-            whiteSpace: "nowrap", marginBottom: 7,
-            color: PRIMARY_PURPLE
+            whiteSpace: "nowrap", marginBottom: 7, color: PRIMARY_PURPLE
           }}>Nora Plus</span>
           <span style={{
             fontWeight: 400, fontSize: "13px",
@@ -193,7 +218,7 @@ const Chat = () => {
             background: "transparent", border: "none", cursor: "pointer",
             width: 38, height: 38, borderRadius: 19,
             display: "flex", alignItems: "center", justifyContent: "center"
-          }}>
+          }} onClick={handleShare}>
             <img src={ICONS.share} alt="Share"
               style={{ width: ICON_SIZE, height: ICON_SIZE, filter: filterPanel }} />
           </button>
@@ -201,7 +226,7 @@ const Chat = () => {
             background: "transparent", border: "none", cursor: "pointer",
             width: 38, height: 38, borderRadius: 19,
             display: "flex", alignItems: "center", justifyContent: "center"
-          }}>
+          }} onClick={() => window.open("https://t.me/norasmart", "_blank")}>
             <img src={ICONS.telegram} alt="Telegram"
               style={{ width: ICON_SIZE, height: ICON_SIZE, filter: filterPanel }} />
           </button>
@@ -209,7 +234,7 @@ const Chat = () => {
             background: "transparent", border: "none", cursor: "pointer",
             width: 38, height: 38, borderRadius: 19,
             display: "flex", alignItems: "center", justifyContent: "center"
-          }}>
+          }} onClick={clearChatAll}>
             <img src={ICONS.trash} alt="Trash"
               style={{ width: ICON_SIZE, height: ICON_SIZE, filter: filterPanel }} />
           </button>
@@ -249,7 +274,7 @@ const Chat = () => {
                 maxWidth: 400,
                 padding: "0 20px",
                 lineHeight: 1.75,
-                color: NORA_COLOR,
+                color: PRIMARY_PURPLE,
                 display: "inline-block"
               }}>
                 Нора — это виртуальный ассистент и помощник для беременных, который помогает будущим мамам чувствовать себя уверенно и спокойно на каждом этапе беременности.
@@ -271,7 +296,7 @@ const Chat = () => {
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center"
-              }}>
+              }} onClick={() => setShowWelcome(false)}>
                 <span style={{
                   display: "flex", alignItems: "center", justifyContent: "center", color: PRIMARY_PURPLE
                 }}>
@@ -294,7 +319,7 @@ const Chat = () => {
           paddingBottom: INPUT_BAR_HEIGHT + 20,
           minHeight: 200
         }}>
-          {/* ... Остальной чат ... */}
+          {/* ... Ваш чат-интерфейс ... */}
         </div>
       )}
     </div>
