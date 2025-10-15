@@ -376,6 +376,7 @@ const Chat = () => {
               }} />
             </div>
             <div style={{ height: 20 }} />
+            <div style={{ height: 20 }} />
             <div style={{ textAlign: "center" }}>
               <div style={{
                 fontWeight: 400, fontSize: "16px", margin: "0 auto", maxWidth: 400,
