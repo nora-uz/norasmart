@@ -258,7 +258,7 @@ const Chat = () => {
           </button>
         </div>
       </div>
-      {/* Фото под панелью, появляется только на welcome экране */}
+      {/* Фото под панелью, показывается только на welcome экране */}
       {showWelcome && (
         <div style={{
           width: "100%",
@@ -266,7 +266,7 @@ const Chat = () => {
           justifyContent: "center",
           paddingLeft: 18,
           paddingRight: 18,
-          marginTop: 17 // отступ 17 пикселей
+          marginTop: 17 // ← ОТСТУП 17 пикселей
         }}>
           <img
             src={BANNER}
