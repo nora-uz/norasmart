@@ -3,7 +3,7 @@ import React, { useState, useEffect, useRef } from "react";
 
 // Цвета бренда
 const PRIMARY_PURPLE = "#7f69a4";
-const NORA_COLOR = "#26151b";
+const NORA_COLOR = "#26151b"; // основной тёмный цвет для текста и панели
 const maxWidth = 560;
 const borderRadius = 22;
 const panelHeight = 62;
@@ -21,7 +21,7 @@ const ICONS = {
     <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
       <path
         d="M6 11H16M16 11L12 7M16 11L12 15"
-        stroke={PRIMARY_PURPLE}
+        stroke="#fff" // белая стрелка для кнопки отправки
         strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -39,10 +39,10 @@ const FEEDBACKS_NORA = [
   { name: "Ольга", text: "Получила четкую инструкцию по приему витаминов, теперь ничего не путаю. Спасибо!" },
 ];
 
-function filterAsterisks(str) {
+function filterAsterisks(str: string) {
   return str.replace(/\*/g, "");
 }
-function splitBotText(text) {
+function splitBotText(text: string) {
   if (!text) return [];
   return text.replace(/\r\n/g, "\n").split(/\n{2,}/).map(s => s.trim()).filter(Boolean);
 }
@@ -50,7 +50,7 @@ function splitBotText(text) {
 type Message = { text: string; sender: "user" | "bot" };
 const THREAD_KEY = "nora_thread_id";
 
-const FeedbackBubblesNora = ({ visible }) => {
+const FeedbackBubblesNora = ({ visible }: { visible: boolean }) => {
   const MAX_BUBBLES = 5;
   const [list, setList] = useState(FEEDBACKS_NORA.slice(0, MAX_BUBBLES));
   useEffect(() => {
@@ -216,7 +216,7 @@ const Chat = () => {
         maxWidth,
         minHeight: panelHeight,
         background: "transparent",
-        color: PRIMARY_PURPLE,
+        color: NORA_COLOR, // цвет текста тёмный
         margin: "20px auto 0 auto",
         display: "flex", alignItems: "center",
         borderRadius: borderRadius,
@@ -229,11 +229,11 @@ const Chat = () => {
         }}>
           <span style={{
             fontWeight: 800, fontSize: "19px", lineHeight: 1.06,
-            whiteSpace: "nowrap", marginBottom: 7, color: PRIMARY_PURPLE
+            whiteSpace: "nowrap", marginBottom: 7, color: NORA_COLOR
           }}>Nora Plus</span>
           <span style={{
             fontWeight: 400, fontSize: "13px",
-            color: PRIMARY_PURPLE, lineHeight: 1.04, whiteSpace: "nowrap"
+            color: NORA_COLOR, lineHeight: 1.04, whiteSpace: "nowrap"
           }}>Ассистент для будущих мам</span>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 8, marginLeft: "auto" }}>
@@ -267,19 +267,20 @@ const Chat = () => {
       {showWelcome ? (
         <div style={{ width: "100%", display: "flex", justifyContent: "center" }}>
           <div style={{ width: "100%", maxWidth }}>
-            <div style={{ height: 30 }} />
+            {/* Фото под панелью, с отступом 20px сверху и по бокам */}
             <div style={{
               width: "100%",
               display: "flex",
-              justifyContent: "center"
+              justifyContent: "center",
+              paddingLeft: 20,
+              paddingRight: 20,
+              marginTop: 20
             }}>
               <img
                 src={BANNER}
                 alt="Nora Plus баннер"
                 style={{
-                  width: maxWidth - 40,
-                  marginLeft: 20,
-                  marginRight: 20,
+                  width: "100%",
                   height: "auto",
                   display: "block",
                   objectFit: "contain",
@@ -288,6 +289,7 @@ const Chat = () => {
               />
             </div>
             <div style={{ height: 37 }} />
+            {/* Описание под фото с тёмным цветом */}
             <div style={{ textAlign: "center" }}>
               <div style={{
                 fontWeight: 400,
@@ -296,7 +298,7 @@ const Chat = () => {
                 maxWidth: 400,
                 padding: "0 20px",
                 lineHeight: 1.75,
-                color: PRIMARY_PURPLE,
+                color: NORA_COLOR,
                 display: "inline-block"
               }}>
                 Нора — это виртуальный ассистент и помощник для беременных, который помогает будущим мамам чувствовать себя уверенно и спокойно на каждом этапе беременности.
