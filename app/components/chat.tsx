@@ -165,7 +165,7 @@ const Chat = () => {
   const handleShare = () => {
     if (navigator.share) {
       navigator.share({
-        title: "Nora AI — Ассистент для будущих мам",
+        title: "Nora Plus — Ассистент для будущих мам",
         text: "Современный ассистент для будущих мам на базе NHS — все рекомендации по беременности в одном месте.",
         url: window.location.href
       });
@@ -257,7 +257,7 @@ const Chat = () => {
           padding: "35px 28px",
           boxShadow: "0 6px 36px 0 rgba(155, 175, 205, 0.12)"
         }}>
-          Nora AI — доступна только <br /> на мобильных устройствах
+          Nora Plus — доступна только <br /> на мобильных устройствах
         </div>
       </div>
     );
@@ -286,7 +286,7 @@ const Chat = () => {
           color: NORA_COLOR,
           letterSpacing: "0.07em",
           animation: "noraPulse 1.4s infinite linear"
-        }}>Nora AI</span>
+        }}>Nora Plus</span>
         <style>{`
           @keyframes noraPulse {
             0% { opacity: 0.30; }
@@ -331,7 +331,7 @@ const Chat = () => {
           <span style={{
             fontWeight: 800, fontSize: "19px", lineHeight: 1.06,
             whiteSpace: "nowrap", marginBottom: 7
-          }}>Nora AI</span>
+          }}>Nora Plus</span>
           <span style={{
             fontWeight: 400, fontSize: "13px",
             color: "#565656", lineHeight: 1.04, whiteSpace: "nowrap"
@@ -368,14 +368,14 @@ const Chat = () => {
       {showWelcome ? (
         <div style={{ width: "100%", display: "flex", justifyContent: "center" }}>
           <div style={{ width: "100%", maxWidth }}>
-            <div style={{ height: 35 }} />
+            <div style={{ height: 37 }} />
             <div style={{ display: "flex", justifyContent: "center" }}>
-              <img src={BANNER} alt="Nora AI баннер" style={{
+              <img src={BANNER} alt="Nora Plus баннер" style={{
                 width: "100%", maxWidth: "300px", height: "auto", display: "block",
                 objectFit: "contain", objectPosition: "center"
               }} />
             </div>
-            <div style={{ height: 35 }} />
+            <div style={{ height: 37 }} />
             <div style={{ textAlign: "center" }}>
               <div style={{
                 fontWeight: 400, fontSize: "16px", margin: "0 auto", maxWidth: 400,
@@ -383,10 +383,10 @@ const Chat = () => {
                 color: NORA_COLOR,
                 display: "inline-block"
               }}>
-                Nora помогает будущим мамам получать актуальные, персональные рекомендации и спокойствие — теперь не нужно искать ответы по разным сайтам.
+                Nora Plus помогает будущим мамам получать актуальные, персональные рекомендации и спокойствие — теперь не нужно искать ответы по разным сайтам.
               </div>
             </div>
-            <div style={{ height: 35 }} />
+            <div style={{ height: 37 }} />
             <div style={{ width: "100%", display: "flex", justifyContent: "center" }}>
               <button style={{
                 background: GRADIENT,
@@ -410,7 +410,7 @@ const Chat = () => {
                 </span>
               </button>
             </div>
-            <div style={{ height: 35 }} />
+            <div style={{ height: 37 }} />
             <FeedbackBubblesNora visible={showWelcome} />
             <div style={{ height: 24 }} />
           </div>
