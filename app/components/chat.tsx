@@ -11,13 +11,10 @@ function filterAsterisks(str: string, keepStars = false) {
   return keepStars ? str : str.replace(/\*/g, "");
 }
 
-// 🟢 Безопасный форматтер: не ломает JSX, не даёт белый экран
 function formatBotText(text: string) {
   if (!text) return "";
 
   let cleaned = text.replace(/_/g, "").trim();
-
-  // Разделяем текст на строки, делаем первую жирной
   const lines = cleaned
     .split(/\n+/)
     .map((l) => l.trim())
@@ -68,7 +65,11 @@ const Chat: React.FC = () => {
 
   const sendMessageToGPT = async (text: string) => {
     setLoading(true);
-    const newHistory = [...chatHistory, { text, sender: "user" }];
+
+    // 🟢 добавляем типизацию, чтобы TS понимал тип sender
+    const newMessage: Message = { text, sender: "user" };
+    const newHistory: Message[] = [...chatHistory, newMessage];
+
     setChatHistory(newHistory);
     setBotProgress("");
 
@@ -85,7 +86,7 @@ const Chat: React.FC = () => {
         window.localStorage.setItem(THREAD_KEY, data.thread_id);
       }
 
-      const botReply =
+      const botReply: string =
         data.reply ||
         "Извини, что-то пошло не так. Попробуй ещё раз позже 💛";
 
@@ -95,16 +96,18 @@ const Chat: React.FC = () => {
         i++;
         if (i > botReply.length) {
           clearInterval(interval);
-          setChatHistory((prev) => [...prev, { text: botReply, sender: "bot" }]);
+          const botMsg: Message = { text: botReply, sender: "bot" };
+          setChatHistory((prev) => [...prev, botMsg]);
           setBotProgress("");
           setLoading(false);
         }
       }, 18);
     } catch {
-      setChatHistory((prev) => [
-        ...prev,
-        { text: "Ошибка соединения. Попробуй снова 💬", sender: "bot" },
-      ]);
+      const errorMsg: Message = {
+        text: "Ошибка соединения. Попробуй снова 💬",
+        sender: "bot",
+      };
+      setChatHistory((prev) => [...prev, errorMsg]);
       setLoading(false);
     }
   };
