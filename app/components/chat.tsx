@@ -15,12 +15,11 @@ const LIGHT_BG = "#e3e8f0";
 const ICON_SIZE = 23;
 const BANNER = "/123.webp";
 
-// Новый градиент фирменных цветов
+// Градиент фирменных цветов
 const PANEL_GRADIENT = `linear-gradient(90deg, ${BRAND_COLOR_1} 0%, ${BRAND_COLOR_2} 100%)`;
 
 const ICONS = {
   telegram: "https://cdn-icons-png.flaticon.com/512/1946/1946547.png",
-  trash: "https://cdn-icons-png.flaticon.com/512/1345/1345823.png",
   share: "https://cdn-icons-png.flaticon.com/512/535/535285.png",
   arrowRight: (
     <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
@@ -257,41 +256,32 @@ const Chat = () => {
             <img src={ICONS.telegram} alt="Telegram"
               style={{ width: ICON_SIZE, height: ICON_SIZE, filter: "brightness(0) invert(1)" }} />
           </button>
-          <button style={{
-            background: "transparent", border: "none", cursor: "pointer",
-            width: 38, height: 38, borderRadius: 19,
-            display: "flex", alignItems: "center", justifyContent: "center"
-          }} onClick={clearChatAll}>
-            <img src={ICONS.trash} alt="Trash"
-              style={{ width: ICON_SIZE, height: ICON_SIZE, filter: "brightness(0) invert(1)" }} />
-          </button>
         </div>
       </div>
-      {/* Welcome-экран */}
+      {/* Фото под панелью, с marginTop: 20px и боковыми отступами 18px */}
+      <div style={{
+        width: "100%",
+        display: "flex",
+        justifyContent: "center",
+        paddingLeft: 18,
+        paddingRight: 18,
+        marginTop: 20
+      }}>
+        <img
+          src={BANNER}
+          alt="Nora Plus баннер"
+          style={{
+            width: "100%",
+            height: "auto",
+            display: "block",
+            objectFit: "contain",
+            objectPosition: "center"
+          }}
+        />
+      </div>
       {showWelcome ? (
         <div style={{ width: "100%", display: "flex", justifyContent: "center" }}>
           <div style={{ width: "100%", maxWidth }}>
-            {/* Фото под панелью, с отступом 20px сверху и по бокам */}
-            <div style={{
-              width: "100%",
-              display: "flex",
-              justifyContent: "center",
-              paddingLeft: 20,
-              paddingRight: 20,
-              marginTop: 20
-            }}>
-              <img
-                src={BANNER}
-                alt="Nora Plus баннер"
-                style={{
-                  width: "100%",
-                  height: "auto",
-                  display: "block",
-                  objectFit: "contain",
-                  objectPosition: "center"
-                }}
-              />
-            </div>
             <div style={{ height: 37 }} />
             {/* Описание под фото с тёмным цветом */}
             <div style={{ textAlign: "center" }}>
