@@ -1,16 +1,22 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
 
-const NORA_COLOR = "#2e2e2e";
+// Фирменные цвета из вашей фотографии:
+const NORA_COLOR = "#26151b";          // основной тёмный для текста, иконок
+const PRIMARY_PURPLE = "#7f69a4";      // кнопки, панель
+const ACCENT_PURPLE = "#a39bce";       // градиент для кнопок/панели
+const LIGHT_BG = "#e3e8f0";            // светлый фон, приветственный экран
+const SATURATED_PURPLE = "#72517a";    // насыщенный элемент/деталь
+
 const ICON_SIZE = 23;
-const BANNER = "/img.webp"; // ← новое фото
+const BANNER = "/img.webp";
 const borderRadius = 22;
 const panelHeight = 62;
 const maxWidth = 560;
-const GRADIENT = "linear-gradient(90deg, #eff5fe 0%, #e5e8ed 100%)";
+const GRADIENT = `linear-gradient(90deg, ${PRIMARY_PURPLE} 0%, ${ACCENT_PURPLE} 100%)`;
 const INPUT_BAR_HEIGHT = 68;
-const NORA_BOX_SHADOW = "0 3px 22px 0 rgba(46,46,46,0.12)";
-const NORA_BORDER = "1.2px solid #e5e8ed";
+const NORA_BOX_SHADOW = "0 3px 22px 0 rgba(38,21,27,0.12)";
+const NORA_BORDER = "1.2px solid #e3e8f0";
 const FEEDBACK_BUBBLE_RADIUS = 21;
 
 const ICONS = {
@@ -28,7 +34,7 @@ const ICONS = {
     </svg>
   ),
 };
-const filterNora = "invert(13%) sepia(4%) saturate(271%) hue-rotate(175deg) brightness(92%) contrast(93%)";
+const filterNora = "invert(17%) sepia(17%) saturate(682%) hue-rotate(241deg) brightness(90%) contrast(92%)";
 
 const FEEDBACKS_NORA = [
   { name: "Людмила", text: "С Норой я перестала переживать по пустякам — теперь любые вопросы решаю за пару минут!" },
@@ -158,7 +164,6 @@ const Chat = () => {
     if (chatHistory.length > 0) setShowHowTo(false);
   }, [chatHistory]);
 
-  // Исправленная функция для иконки "поделиться"
   const handleShare = () => {
     if (navigator.share) {
       navigator.share({
@@ -235,7 +240,7 @@ const Chat = () => {
       <div style={{
         width: "100vw",
         height: "100vh",
-        background: "#f8fdff",
+        background: LIGHT_BG,
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
@@ -263,7 +268,7 @@ const Chat = () => {
   if (preloading) {
     return (
       <div style={{
-        background: "#f8fdff",
+        background: LIGHT_BG,
         width: "100vw",
         height: "100vh",
         minHeight: "100vh",
@@ -298,7 +303,7 @@ const Chat = () => {
   return (
     <div
       style={{
-        background: "#f8fdff",
+        background: LIGHT_BG,
         width: "100vw",
         height: "100vh",
         overflow: "auto",
@@ -331,7 +336,7 @@ const Chat = () => {
           }}>Nora Plus</span>
           <span style={{
             fontWeight: 400, fontSize: "13px",
-            color: "#565656", lineHeight: 1.04, whiteSpace: "nowrap"
+            color: SATURATED_PURPLE, lineHeight: 1.04, whiteSpace: "nowrap"
           }}>Ассистент для будущих мам</span>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 8, marginLeft: "auto" }}>
@@ -387,7 +392,7 @@ const Chat = () => {
             <div style={{ width: "100%", display: "flex", justifyContent: "center" }}>
               <button style={{
                 background: GRADIENT,
-                color: NORA_COLOR,
+                color: "#fff",
                 border: "none",
                 borderRadius: borderRadius,
                 fontWeight: 700,
@@ -428,14 +433,14 @@ const Chat = () => {
               <div style={{ margin: "20px", maxWidth: 450, alignSelf: msg.sender === "user" ? "flex-end" : "flex-start" }}>
                 {msg.sender === "user" ? (
                   <span style={{
-                    background: NORA_COLOR,
+                    background: PRIMARY_PURPLE,
                     color: "#fff",
                     borderRadius: 16,
                     padding: "18px 20px",
                     lineHeight: 1.7,
                     fontSize: 17,
                     minWidth: 0,
-                    boxShadow: "0 2px 14px 0 rgba(46,46,46,0.09)",
+                    boxShadow: NORA_BOX_SHADOW,
                     maxWidth: "100%",
                     display: "inline-block",
                     fontWeight: 400,
@@ -495,7 +500,8 @@ const Chat = () => {
             display: "flex",
             alignItems: "center",
             zIndex: 9,
-            height: INPUT_BAR_HEIGHT
+            height: INPUT_BAR_HEIGHT,
+            background: LIGHT_BG
           }}>
             <input
               value={message}
@@ -505,7 +511,7 @@ const Chat = () => {
               style={{
                 flex: 1,
                 borderRadius: 17,
-                border: "1.2px solid #e8eaf1",
+                border: NORA_BORDER,
                 fontSize: 16,
                 padding: "14px 18px",
                 outline: "none",
@@ -518,7 +524,7 @@ const Chat = () => {
               disabled={loading || !message.trim()}
               style={{
                 background: GRADIENT,
-                color: NORA_COLOR,
+                color: "#fff",
                 border: "none",
                 borderRadius: 17,
                 fontWeight: 700,
