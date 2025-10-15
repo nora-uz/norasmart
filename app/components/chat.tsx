@@ -368,14 +368,14 @@ const Chat = () => {
       {showWelcome ? (
         <div style={{ width: "100%", display: "flex", justifyContent: "center" }}>
           <div style={{ width: "100%", maxWidth }}>
-            <div style={{ height: 40 }} />
+            <div style={{ height: 35 }} />
             <div style={{ display: "flex", justifyContent: "center" }}>
               <img src={BANNER} alt="Nora AI баннер" style={{
                 width: "100%", maxWidth: "300px", height: "auto", display: "block",
                 objectFit: "contain", objectPosition: "center"
               }} />
             </div>
-            <div style={{ height: 40 }} />
+            <div style={{ height: 35 }} />
             <div style={{ textAlign: "center" }}>
               <div style={{
                 fontWeight: 400, fontSize: "16px", margin: "0 auto", maxWidth: 400,
@@ -386,7 +386,7 @@ const Chat = () => {
                 Nora помогает будущим мамам получать актуальные, персональные рекомендации и спокойствие — теперь не нужно искать ответы по разным сайтам.
               </div>
             </div>
-            <div style={{ height: 40 }} />
+            <div style={{ height: 35 }} />
             <div style={{ width: "100%", display: "flex", justifyContent: "center" }}>
               <button style={{
                 background: GRADIENT,
@@ -410,7 +410,7 @@ const Chat = () => {
                 </span>
               </button>
             </div>
-            <div style={{ height: 40 }} />
+            <div style={{ height: 35 }} />
             <FeedbackBubblesNora visible={showWelcome} />
             <div style={{ height: 24 }} />
           </div>
