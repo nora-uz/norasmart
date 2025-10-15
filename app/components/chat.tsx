@@ -3,62 +3,31 @@ import React, { useState, useEffect, useRef } from "react";
 import ReactMarkdown from "react-markdown";
 
 const NORA_COLOR = "#2e2e2e";
-const ICON_SIZE = 23;
-const BANNER = "/banner.webp";
-const borderRadius = 22;
-const panelHeight = 62;
-const maxWidth = 560;
 const GRADIENT = "linear-gradient(90deg, #eff5fe 0%, #e5e8ed 100%)";
 const INPUT_BAR_HEIGHT = 68;
+const maxWidth = 560;
+const THREAD_KEY = "nora_thread_id";
 
-const ICONS = {
-  telegram: "https://cdn-icons-png.flaticon.com/512/1946/1946547.png",
-  trash: "https://cdn-icons-png.flaticon.com/512/1345/1345823.png",
-  share: "https://cdn-icons-png.flaticon.com/512/535/535285.png",
-  arrowRight: (
-    <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-      <path
-        d="M6 11H16M16 11L12 7M16 11L12 15"
-        stroke={NORA_COLOR}
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  ),
-};
-const filterNora =
-  "invert(13%) sepia(4%) saturate(271%) hue-rotate(175deg) brightness(92%) contrast(93%)";
-
-function filterAsterisks(str: string, keepStars = false) {
-  return keepStars ? str : str.replace(/\*/g, "");
-}
-
-// 💫 Форматируем текст бота для абзацев
+// 💬 форматирование текста Норы в читаемые абзацы
 function formatBotText(text: string) {
   if (!text) return "";
-  let cleaned = text.replace(/_/g, "").trim();
-
-  // Разделяем на абзацы
+  // Убираем нижние подчеркивания
+  let cleaned = text.replace(/_/g, "");
+  // Разбиваем по точкам, восклицаниям и переводам строк
   const paragraphs = cleaned
-    .split(/\n{2,}/)
+    .split(/\n+/)
     .map((p) => p.trim())
     .filter((p) => p.length > 0);
 
-  // Авто-добавление жирного для первой строки
-  if (paragraphs.length > 0 && !paragraphs[0].startsWith("**")) {
-    const firstSentenceMatch = paragraphs[0].match(/^([^.!?]+[.!?])/);
-    const firstSentence = firstSentenceMatch ? firstSentenceMatch[1].trim() : "";
-    if (firstSentence) {
-      paragraphs[0] = `**${firstSentence}** ${paragraphs[0].slice(firstSentence.length).trim()}`;
-    }
-  }
-
+  // Склеиваем обратно с двойным переносом строк для ReactMarkdown
   return paragraphs.join("\n\n");
 }
 
+function filterAsterisks(str: string) {
+  return str.replace(/\*/g, "");
+}
+
 type Message = { text: string; sender: "user" | "bot" };
-const THREAD_KEY = "nora_thread_id";
 
 const Chat: React.FC = () => {
   const [showWelcome, setShowWelcome] = useState(true);
@@ -110,18 +79,6 @@ const Chat: React.FC = () => {
   useEffect(() => {
     if (chatHistory.length > 0) setShowHowTo(false);
   }, [chatHistory]);
-
-  const handleShare = () => {
-    if (navigator.share) {
-      navigator.share({
-        title: "Nora AI — Ассистент для будущих мам",
-        text: "Современный ассистент для будущих мам на базе NHS — все рекомендации по беременности в одном месте.",
-        url: window.location.href,
-      });
-    } else {
-      alert("Ваш браузер не поддерживает Web Share API");
-    }
-  };
 
   const sendMessageToGPT = async (text: string) => {
     setLoading(true);
@@ -191,7 +148,36 @@ const Chat: React.FC = () => {
     setBotProgress("");
   };
 
-  // 🩷 Прелоадер
+  if (!isMobile) {
+    return (
+      <div
+        style={{
+          width: "100vw",
+          height: "100vh",
+          background: "#f8fdff",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <div
+          style={{
+            fontWeight: 700,
+            fontSize: "21px",
+            textAlign: "center",
+            color: NORA_COLOR,
+            background: "#fff",
+            borderRadius: 24,
+            padding: "35px 28px",
+            boxShadow: "0 6px 36px 0 rgba(155, 175, 205, 0.12)",
+          }}
+        >
+          Nora AI — доступна только <br /> на мобильных устройствах
+        </div>
+      </div>
+    );
+  }
+
   if (preloading) {
     return (
       <div
@@ -203,10 +189,6 @@ const Chat: React.FC = () => {
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-          position: "fixed",
-          top: 0,
-          left: 0,
-          zIndex: 10000,
         }}
       >
         <span
@@ -231,77 +213,6 @@ const Chat: React.FC = () => {
     );
   }
 
-  // 💫 Приветственный экран
-  if (showWelcome) {
-    return (
-      <div
-        style={{
-          background: "#f8fdff",
-          width: "100vw",
-          height: "100vh",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          position: "fixed",
-          top: 0,
-          left: 0,
-          zIndex: 10000,
-        }}
-      >
-        <img
-          src={BANNER}
-          alt="Nora Banner"
-          style={{
-            width: 180,
-            borderRadius: 24,
-            marginBottom: 32,
-          }}
-        />
-        <h1
-          style={{
-            color: NORA_COLOR,
-            fontSize: 26,
-            fontWeight: 800,
-            marginBottom: 12,
-          }}
-        >
-          Nora AI 🤰
-        </h1>
-        <p
-          style={{
-            color: "#555",
-            fontSize: 17,
-            lineHeight: 1.5,
-            textAlign: "center",
-            maxWidth: 300,
-            marginBottom: 32,
-          }}
-        >
-          Умный помощник для будущих мам 💗  
-          Готова сопровождать Вас на каждом этапе беременности.
-        </p>
-        <button
-          onClick={() => setShowWelcome(false)}
-          style={{
-            background: GRADIENT,
-            border: "none",
-            borderRadius: 18,
-            padding: "14px 32px",
-            fontSize: 17,
-            fontWeight: 600,
-            color: NORA_COLOR,
-            cursor: "pointer",
-            boxShadow: "0 6px 20px rgba(155, 175, 205, 0.3)",
-          }}
-        >
-          Начать
-        </button>
-      </div>
-    );
-  }
-
-  // 💬 Основной чат
   return (
     <div
       style={{
@@ -360,7 +271,7 @@ const Chat: React.FC = () => {
                   style={{
                     color: NORA_COLOR,
                     fontSize: 17,
-                    lineHeight: 1.7,
+                    lineHeight: 1.8,
                     display: "inline-block",
                     wordBreak: "break-word",
                   }}
@@ -368,7 +279,13 @@ const Chat: React.FC = () => {
                   <ReactMarkdown
                     components={{
                       p: ({ node, ...props }) => (
-                        <p style={{ marginBottom: "10px" }} {...props} />
+                        <p
+                          style={{
+                            marginBottom: "12px",
+                            whiteSpace: "pre-wrap",
+                          }}
+                          {...props}
+                        />
                       ),
                       strong: ({ node, ...props }) => (
                         <strong
