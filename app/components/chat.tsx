@@ -266,7 +266,7 @@ const Chat = () => {
           justifyContent: "center",
           paddingLeft: 18,
           paddingRight: 18,
-          marginTop: 17 // ← ОТСТУП 17 пикселей
+          marginTop: 15 // <-- нужный отступ
         }}>
           <img
             src={BANNER}
