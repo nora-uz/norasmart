@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
 
-// Цвета на основе фирменной палитры
+// Цвета бренда
 const NORA_COLOR = "#26151b";
 const PRIMARY_PURPLE = "#7f69a4";
 const ACCENT_PURPLE = "#a39bce";
@@ -35,7 +35,6 @@ const filterPanel = "brightness(0) saturate(100%) invert(27%) sepia(20%) saturat
 const FEEDBACKS_NORA = [
   { name: "Людмила", text: "С Норой я перестала переживать по пустякам — теперь любые вопросы решаю за пару минут!" },
   { name: "Екатерина", text: "Очень удобно: напомнила про посещение врача, подсказала питание по моему анализу — чувствую себя спокойнее!" },
-  // ... остальные отзывы ...
 ];
 
 function filterAsterisks(str) {
@@ -49,10 +48,105 @@ function splitBotText(text) {
 type Message = { text: string; sender: "user" | "bot" };
 const THREAD_KEY = "nora_thread_id";
 
-const FeedbackBubblesNora = ({ visible }) => { /* ... без изменений ... */ };
+const FeedbackBubblesNora = ({ visible }) => {
+  const MAX_BUBBLES = 2;
+  const [list, setList] = useState(FEEDBACKS_NORA.slice(0, MAX_BUBBLES));
+  useEffect(() => {
+    if (!visible) return;
+    let i = MAX_BUBBLES;
+    const timer = setInterval(() => {
+      setList(prev => [FEEDBACKS_NORA[i % FEEDBACKS_NORA.length], ...prev].slice(0, MAX_BUBBLES));
+      i++;
+    }, 7000);
+    return () => clearInterval(timer);
+  }, [visible]);
+  if (!visible) return null;
+  return (
+    <div style={{
+      width: "100%",
+      display: "flex",
+      justifyContent: "center",
+      minHeight: 80,
+      marginTop: 0,
+      marginBottom: 0
+    }}>
+      <div style={{
+        display: "flex",
+        flexDirection: "column-reverse",
+        alignItems: "center",
+        gap: "14px",
+        width: "100%",
+        maxWidth: 370,
+        background: "transparent"
+      }}>
+        {list.map((fb, idx) => (
+          <div key={`${fb.name}_${fb.text}_${idx}`}
+            style={{
+              background: "#fff",
+              borderRadius: 21,
+              boxShadow: "0 3px 22px 0 rgba(38,21,27,0.12)",
+              padding: "18px 25px",
+              minWidth: 240,
+              maxWidth: 370,
+              textAlign: "left",
+              border: "1.2px solid #e3e8f0",
+              display: "flex",
+              flexDirection: "column",
+              opacity: 1,
+            }}>
+            <span style={{ fontWeight: 700, fontSize: 15, color: NORA_COLOR, marginBottom: 7 }}>{fb.name}</span>
+            <span style={{ fontWeight: 400, fontSize: 15, color: "#393939", lineHeight: 1.58 }}>{fb.text}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
 
 const Chat = () => {
-  // ... все useState/useEffect и функции — без изменений ...
+  const [showWelcome, setShowWelcome] = useState(true);
+  const [preloading, setPreloading] = useState(true);
+  const [message, setMessage] = useState("");
+  const [chatHistory, setChatHistory] = useState<Message[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [threadId, setThreadId] = useState<string | null>(null);
+  const [botProgress, setBotProgress] = useState("");
+  const [showHowTo, setShowHowTo] = useState(true);
+  const [isMobile, setIsMobile] = useState(true);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function checkScreen() {
+      if (typeof window !== "undefined") {
+        setIsMobile(window.innerWidth <= 640);
+      }
+    }
+    checkScreen();
+    window.addEventListener("resize", checkScreen);
+    return () => window.removeEventListener("resize", checkScreen);
+  }, []);
+  useEffect(() => {
+    const saved = window.localStorage.getItem(THREAD_KEY);
+    if (saved) setThreadId(saved);
+  }, []);
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => { document.body.style.overflow = "auto"; };
+  }, []);
+  useEffect(() => {
+    const timer = setTimeout(() => setPreloading(false), 1000);
+    return () => clearTimeout(timer);
+  }, []);
+  useEffect(() => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [chatHistory, botProgress]);
+  useEffect(() => {
+    if (chatHistory.length > 0) setShowHowTo(false);
+  }, [chatHistory]);
+
+  // handleShare, sendMessageToGPT, handleSendMessage, clearChatAll сюда — если требуется
 
   return (
     <div
@@ -121,7 +215,6 @@ const Chat = () => {
           </button>
         </div>
       </div>
-
       {/* Welcome-экран */}
       {showWelcome ? (
         <div style={{ width: "100%", display: "flex", justifyContent: "center" }}>
@@ -137,7 +230,7 @@ const Chat = () => {
                 alt="Nora Plus баннер"
                 style={{
                   width: "100%",
-                  maxWidth: maxWidth - 40, // по 20px отступ по бокам
+                  maxWidth: maxWidth - 40,
                   marginLeft: 20,
                   marginRight: 20,
                   height: "auto",
@@ -192,7 +285,6 @@ const Chat = () => {
           </div>
         </div>
       ) : (
-        // Чат-интерфейс
         <div style={{
           width: "100%",
           maxWidth,
@@ -202,7 +294,7 @@ const Chat = () => {
           paddingBottom: INPUT_BAR_HEIGHT + 20,
           minHeight: 200
         }}>
-          {/* ... остальные части чата — по вашему коду ... */}
+          {/* ... Остальной чат ... */}
         </div>
       )}
     </div>
