@@ -258,27 +258,29 @@ const Chat = () => {
           </button>
         </div>
       </div>
-      {/* Фото под панелью, с marginTop: 20px и боковыми отступами 18px */}
-      <div style={{
-        width: "100%",
-        display: "flex",
-        justifyContent: "center",
-        paddingLeft: 18,
-        paddingRight: 18,
-        marginTop: 20
-      }}>
-        <img
-          src={BANNER}
-          alt="Nora Plus баннер"
-          style={{
-            width: "100%",
-            height: "auto",
-            display: "block",
-            objectFit: "contain",
-            objectPosition: "center"
-          }}
-        />
-      </div>
+      {/* Фото под панелью, появляется только на welcome экране */}
+      {showWelcome && (
+        <div style={{
+          width: "100%",
+          display: "flex",
+          justifyContent: "center",
+          paddingLeft: 18,
+          paddingRight: 18,
+          marginTop: 17 // отступ 17 пикселей
+        }}>
+          <img
+            src={BANNER}
+            alt="Nora Plus баннер"
+            style={{
+              width: "100%",
+              height: "auto",
+              display: "block",
+              objectFit: "contain",
+              objectPosition: "center"
+            }}
+          />
+        </div>
+      )}
       {showWelcome ? (
         <div style={{ width: "100%", display: "flex", justifyContent: "center" }}>
           <div style={{ width: "100%", maxWidth }}>
