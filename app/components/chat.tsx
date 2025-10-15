@@ -1,8 +1,10 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
 
-// Цвета бренда
-const PRIMARY_PURPLE = "#7f69a4";
+// Фирменные цвета
+const BRAND_COLOR_1 = "#715b9b";
+const BRAND_COLOR_2 = "#a48fcc";
+const PRIMARY_PURPLE = BRAND_COLOR_1;
 const NORA_COLOR = "#26151b";
 const maxWidth = 560;
 const borderRadius = 22;
@@ -13,8 +15,8 @@ const LIGHT_BG = "#e3e8f0";
 const ICON_SIZE = 23;
 const BANNER = "/123.webp";
 
-// Градиент из вашего примера
-const PANEL_GRADIENT = "linear-gradient(90deg, #b192dc 0%, #e5b6c8 100%)";
+// Новый градиент фирменных цветов
+const PANEL_GRADIENT = `linear-gradient(90deg, ${BRAND_COLOR_1} 0%, ${BRAND_COLOR_2} 100%)`;
 
 const ICONS = {
   telegram: "https://cdn-icons-png.flaticon.com/512/1946/1946547.png",
@@ -245,7 +247,7 @@ const Chat = () => {
             display: "flex", alignItems: "center", justifyContent: "center"
           }} onClick={handleShare}>
             <img src={ICONS.share} alt="Share"
-              style={{ width: ICON_SIZE, height: ICON_SIZE, filter: "none" }} />
+              style={{ width: ICON_SIZE, height: ICON_SIZE, filter: "brightness(0) invert(1)" }} />
           </button>
           <button style={{
             background: "transparent", border: "none", cursor: "pointer",
@@ -253,7 +255,7 @@ const Chat = () => {
             display: "flex", alignItems: "center", justifyContent: "center"
           }} onClick={() => window.open("https://t.me/norasmart", "_blank")}>
             <img src={ICONS.telegram} alt="Telegram"
-              style={{ width: ICON_SIZE, height: ICON_SIZE, filter: "none" }} />
+              style={{ width: ICON_SIZE, height: ICON_SIZE, filter: "brightness(0) invert(1)" }} />
           </button>
           <button style={{
             background: "transparent", border: "none", cursor: "pointer",
@@ -261,7 +263,7 @@ const Chat = () => {
             display: "flex", alignItems: "center", justifyContent: "center"
           }} onClick={clearChatAll}>
             <img src={ICONS.trash} alt="Trash"
-              style={{ width: ICON_SIZE, height: ICON_SIZE, filter: "none" }} />
+              style={{ width: ICON_SIZE, height: ICON_SIZE, filter: "brightness(0) invert(1)" }} />
           </button>
         </div>
       </div>
@@ -308,23 +310,26 @@ const Chat = () => {
             </div>
             <div style={{ height: 37 }} />
             <div style={{ width: "100%", display: "flex", justifyContent: "center" }}>
-              <button style={{
-                background: "transparent",
-                color: PRIMARY_PURPLE,
-                border: `2px solid ${PRIMARY_PURPLE}`,
-                borderRadius: borderRadius,
-                fontWeight: 700,
-                fontSize: "17px",
-                padding: "15px 0",
-                maxWidth: 290,
-                width: "100%",
-                cursor: "pointer",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center"
-              }} onClick={() => setShowWelcome(false)}>
+              <button
+                style={{
+                  background: PANEL_GRADIENT,
+                  color: "#fff",
+                  border: "none",
+                  borderRadius: borderRadius,
+                  fontWeight: 700,
+                  fontSize: "17px",
+                  padding: "15px 0",
+                  maxWidth: 290,
+                  width: "100%",
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center"
+                }}
+                onClick={() => setShowWelcome(false)}
+              >
                 <span style={{
-                  display: "flex", alignItems: "center", justifyContent: "center", color: PRIMARY_PURPLE
+                  display: "flex", alignItems: "center", justifyContent: "center", color: "#fff"
                 }}>
                   Начать пользоваться&nbsp;{ICONS.arrowRight}
                 </span>
@@ -438,7 +443,7 @@ const Chat = () => {
               onClick={handleSendMessage}
               disabled={loading || !message.trim()}
               style={{
-                background: PRIMARY_PURPLE,
+                background: PANEL_GRADIENT,
                 color: "#fff",
                 border: "none",
                 borderRadius: 17,
