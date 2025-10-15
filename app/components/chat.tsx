@@ -27,6 +27,7 @@ const ICONS = {
     </svg>
   ),
 };
+
 const filterNora =
   "invert(13%) sepia(4%) saturate(271%) hue-rotate(175deg) brightness(92%) contrast(93%)";
 
@@ -35,19 +36,29 @@ function filterAsterisks(str: string, keepStars = false) {
   return keepStars ? str : str.replace(/\*/g, "");
 }
 
+// ✅ Улучшенный формат ответов Норы — три абзаца, с жирным первым предложением
 function formatBotText(text: string) {
   if (!text) return "";
-  // Не фильтруем звёздочки для бота!
-  let cleaned = text.replace(/_/g, "");
-  const firstSentenceMatch = cleaned.match(/^([^.!?]+[.!?])/);
-  const firstSentence = firstSentenceMatch ? firstSentenceMatch[1].trim() : "";
-  const restText = firstSentence
-    ? cleaned.slice(firstSentence.length).trim()
-    : cleaned.trim();
-  let result = "";
-  if (firstSentence) result += `**${firstSentence}** `;
-  if (restText) result += restText;
-  return result.trim();
+
+  let cleaned = text.replace(/_/g, "").trim();
+  const sentences = cleaned.split(/(?<=[.?!])\s+/).filter(Boolean);
+
+  if (sentences.length === 0) return cleaned;
+
+  const first = sentences[0];
+  const middle = sentences.slice(1, -1).join(" ");
+  const last = sentences[sentences.length - 1];
+
+  if (sentences.length <= 2) {
+    return `**${first}**\n\n${sentences.slice(1).join(" ")}`;
+  }
+
+  let formatted = "";
+  if (first) formatted += `**${first}**\n\n`;
+  if (middle) formatted += `${middle}\n\n`;
+  if (last) formatted += `${last}`;
+
+  return formatted.trim();
 }
 
 type Message = { text: string; sender: "user" | "bot" };
@@ -184,7 +195,6 @@ const Chat: React.FC = () => {
     setBotProgress("");
   };
 
-  // если не мобилка
   if (!isMobile) {
     return (
       <div
@@ -271,7 +281,6 @@ const Chat: React.FC = () => {
         alignItems: "center",
       }}
     >
-      {/* Основной контент — не тронут */}
       <div
         style={{
           width: "100%",
