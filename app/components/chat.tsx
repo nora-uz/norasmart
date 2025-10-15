@@ -1,15 +1,15 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
 
-// Фирменные цвета из вашей фотографии:
-const NORA_COLOR = "#26151b";          // основной тёмный для текста, иконок
-const PRIMARY_PURPLE = "#7f69a4";      // кнопки, панель
-const ACCENT_PURPLE = "#a39bce";       // градиент для кнопок/панели
-const LIGHT_BG = "#e3e8f0";            // светлый фон, приветственный экран
-const SATURATED_PURPLE = "#72517a";    // насыщенный элемент/деталь
+// Фирменные цвета
+const NORA_COLOR = "#26151b";
+const PRIMARY_PURPLE = "#7f69a4";
+const ACCENT_PURPLE = "#a39bce";
+const LIGHT_BG = "#e3e8f0";
+const SATURATED_PURPLE = "#72517a";
 
 const ICON_SIZE = 23;
-const BANNER = "/img.webp";
+const BANNER = "/123.webp";
 const borderRadius = 22;
 const panelHeight = 62;
 const maxWidth = 560;
@@ -19,14 +19,19 @@ const NORA_BOX_SHADOW = "0 3px 22px 0 rgba(38,21,27,0.12)";
 const NORA_BORDER = "1.2px solid #e3e8f0";
 const FEEDBACK_BUBBLE_RADIUS = 21;
 
+// Белый фильтр для svg/png иконок
+const filterWhite = "brightness(0) invert(1)";
+
 const ICONS = {
   telegram: "https://cdn-icons-png.flaticon.com/512/1946/1946547.png",
   trash: "https://cdn-icons-png.flaticon.com/512/1345/1345823.png",
   share: "https://cdn-icons-png.flaticon.com/512/535/535285.png",
+  // Белая стрелка для кнопок и панели
   arrowRight: (
     <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-      <path d="M6 11H16M16 11L12 7M16 11L12 15"
-        stroke={NORA_COLOR}
+      <path
+        d="M6 11H16M16 11L12 7M16 11L12 15"
+        stroke="#fff"
         strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -34,7 +39,6 @@ const ICONS = {
     </svg>
   ),
 };
-const filterNora = "invert(17%) sepia(17%) saturate(682%) hue-rotate(241deg) brightness(90%) contrast(92%)";
 
 const FEEDBACKS_NORA = [
   { name: "Людмила", text: "С Норой я перестала переживать по пустякам — теперь любые вопросы решаю за пару минут!" },
@@ -253,8 +257,8 @@ const Chat = () => {
           fontWeight: 700,
           fontSize: "21px",
           textAlign: "center",
-          color: NORA_COLOR,
-          background: "#fff",
+          color: "#fff",
+          background: PRIMARY_PURPLE,
           borderRadius: 24,
           padding: "35px 28px",
           boxShadow: "0 6px 36px 0 rgba(155, 175, 205, 0.12)"
@@ -285,9 +289,12 @@ const Chat = () => {
         <span style={{
           fontWeight: 800,
           fontSize: "38px",
-          color: NORA_COLOR,
+          color: "#fff",
           letterSpacing: "0.07em",
-          animation: "noraPulse 1.4s infinite linear"
+          animation: "noraPulse 1.4s infinite linear",
+          background: PRIMARY_PURPLE,
+          borderRadius: 20,
+          padding: "18px 44px"
         }}>Nora Plus</span>
         <style>{`
           @keyframes noraPulse {
@@ -319,7 +326,7 @@ const Chat = () => {
         maxWidth,
         minHeight: panelHeight,
         background: GRADIENT,
-        color: NORA_COLOR,
+        color: "#fff",
         margin: "20px auto 0 auto",
         display: "flex", alignItems: "center",
         borderRadius: borderRadius,
@@ -327,16 +334,16 @@ const Chat = () => {
         justifyContent: "flex-start", boxSizing: "border-box", zIndex: 1, boxShadow: "none"
       }}>
         <div style={{
-          marginRight: 10, color: NORA_COLOR,
+          marginRight: 10,
           display: "flex", flexDirection: "column", justifyContent: "center", minWidth: 0
         }}>
           <span style={{
             fontWeight: 800, fontSize: "19px", lineHeight: 1.06,
-            whiteSpace: "nowrap", marginBottom: 7
+            whiteSpace: "nowrap", marginBottom: 7, color: "#fff"
           }}>Nora Plus</span>
           <span style={{
             fontWeight: 400, fontSize: "13px",
-            color: SATURATED_PURPLE, lineHeight: 1.04, whiteSpace: "nowrap"
+            color: "#fff", lineHeight: 1.04, whiteSpace: "nowrap"
           }}>Ассистент для будущих мам</span>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 8, marginLeft: "auto" }}>
@@ -346,7 +353,7 @@ const Chat = () => {
             display: "flex", alignItems: "center", justifyContent: "center"
           }} onClick={handleShare}>
             <img src={ICONS.share} alt="Share"
-              style={{ width: ICON_SIZE, height: ICON_SIZE, filter: filterNora }} />
+              style={{ width: ICON_SIZE, height: ICON_SIZE, filter: filterWhite }} />
           </button>
           <button style={{
             background: "transparent", border: "none", cursor: "pointer",
@@ -354,7 +361,7 @@ const Chat = () => {
             display: "flex", alignItems: "center", justifyContent: "center"
           }} onClick={() => window.open("https://t.me/norasmart", "_blank")}>
             <img src={ICONS.telegram} alt="Telegram"
-              style={{ width: ICON_SIZE, height: ICON_SIZE, filter: filterNora }} />
+              style={{ width: ICON_SIZE, height: ICON_SIZE, filter: filterWhite }} />
           </button>
           <button style={{
             background: "transparent", border: "none", cursor: "pointer",
@@ -362,7 +369,7 @@ const Chat = () => {
             display: "flex", alignItems: "center", justifyContent: "center"
           }} onClick={clearChatAll}>
             <img src={ICONS.trash} alt="Trash"
-              style={{ width: ICON_SIZE, height: ICON_SIZE, filter: filterNora }} />
+              style={{ width: ICON_SIZE, height: ICON_SIZE, filter: filterWhite }} />
           </button>
         </div>
       </div>
@@ -372,17 +379,27 @@ const Chat = () => {
           <div style={{ width: "100%", maxWidth }}>
             <div style={{ height: 37 }} />
             <div style={{ display: "flex", justifyContent: "center" }}>
-              <img src={BANNER} alt="Nora Plus баннер" style={{
-                width: "100%", maxWidth: "300px", height: "auto", display: "block",
-                objectFit: "contain", objectPosition: "center"
-              }} />
+              <img
+                src={BANNER}
+                alt="Nora Plus баннер"
+                style={{
+                  width: "100%",
+                  maxWidth: maxWidth - 40, // по 20px минимум отступ по бокам
+                  height: "auto",
+                  display: "block",
+                  objectFit: "contain",
+                  objectPosition: "center"
+                }}
+              />
             </div>
             <div style={{ height: 37 }} />
             <div style={{ textAlign: "center" }}>
               <div style={{
                 fontWeight: 400, fontSize: "16px", margin: "0 auto", maxWidth: 400,
                 padding: "0 20px", lineHeight: 1.75,
-                color: NORA_COLOR,
+                color: "#fff",
+                background: GRADIENT,
+                borderRadius: 16,
                 display: "inline-block"
               }}>
                 Нора — это виртуальный ассистент и помощник для беременных, который помогает будущим мамам чувствовать себя уверенно и спокойно на каждом этапе беременности.
@@ -406,7 +423,7 @@ const Chat = () => {
                 justifyContent: "center"
               }} onClick={() => setShowWelcome(false)}>
                 <span style={{
-                  display: "flex", alignItems: "center", justifyContent: "center"
+                  display: "flex", alignItems: "center", justifyContent: "center", color: "#fff"
                 }}>
                   Начать пользоваться&nbsp;{ICONS.arrowRight}
                 </span>
@@ -536,6 +553,7 @@ const Chat = () => {
                 justifyContent: "center"
               }}
             >
+              {/* Белая стрелка */}
               {ICONS.arrowRight}
             </button>
           </div>
