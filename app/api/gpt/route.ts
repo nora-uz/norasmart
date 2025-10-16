@@ -37,7 +37,7 @@ export async function POST(req: Request) {
 Не используй курсив, заглавные буквы, лишние кавычки.  
 
 Если мама попросит ссылку на скачивание — дай эту ссылку:  
-[https://webtoapp.design/apps/download_android_apk/IjE0MDUwNiI.Hrtfag0yFpGp-G8_j14XKK18xMQ](https://webtoapp.design/apps/download_android_apk/IjE0MDUwNiI.Hrtfag0yFpGp-G8_j14XKK18xMQ)  
+https://webtoapp.design/apps/download_android_apk/IjE0MDUwNiI.Hrtfag0yFpGp-G8_j14XKK18xMQ  
 Скажи, что это Android-версия, и через месяц будет доступна версия в App Store и Play Market 🌷  
 
 ---
