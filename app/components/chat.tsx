@@ -277,7 +277,7 @@ const Chat = () => {
               display: "block",
               objectFit: "contain",
               objectPosition: "center",
-              marginBottom: 0 // убираем отступ под фото
+              marginBottom: 7 // отступ после картинки
             }}
           />
         </div>
@@ -285,8 +285,8 @@ const Chat = () => {
       {showWelcome ? (
         <div style={{ width: "100%", display: "flex", justifyContent: "center" }}>
           <div style={{ width: "100%", maxWidth }}>
-            {/* Описание - сразу под фото без отступа */}
-            <div style={{ textAlign: "center", marginTop: 0 }}>
+            {/* Описание под фото с тёмным цветом */}
+            <div style={{ textAlign: "center", marginTop: 0, marginBottom: 7 }}>
               <div style={{
                 fontWeight: 400,
                 fontSize: "16px",
@@ -300,7 +300,6 @@ const Chat = () => {
                 Нора — это виртуальный ассистент и помощник для беременных, который помогает будущим мамам чувствовать себя уверенно и спокойно на каждом этапе беременности.
               </div>
             </div>
-            {/* Кнопка под описанием тоже без отступа */}
             <div style={{ width: "100%", display: "flex", justifyContent: "center", marginTop: 0 }}>
               <button
                 style={{
