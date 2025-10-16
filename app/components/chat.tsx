@@ -277,7 +277,7 @@ const Chat = () => {
               display: "block",
               objectFit: "contain",
               objectPosition: "center",
-              marginBottom: 30  // ← 30px после фото
+              marginBottom: 30
             }}
           />
         </div>
@@ -285,7 +285,7 @@ const Chat = () => {
       {showWelcome ? (
         <div style={{ width: "100%", display: "flex", justifyContent: "center" }}>
           <div style={{ width: "100%", maxWidth }}>
-            {/* Описание под фото с тёмным цветом, 30px отступ вниз */}
+            {/* Описание под фото с тёмным цветом */}
             <div style={{ textAlign: "center", marginTop: 0, marginBottom: 30 }}>
               <div style={{
                 fontWeight: 400,
@@ -297,10 +297,9 @@ const Chat = () => {
                 color: NORA_COLOR,
                 display: "inline-block"
               }}>
-                Нора — это виртуальный ассистент и помощник для беременных, который помогает будущим мамам чувствовать себя уверенно и спокойно на каждом этапе беременности.
+                Nora Plus — это виртуальный ассистент и помощник для беременных, который помогает будущим мамам чувствовать себя уверенно и спокойно на каждом этапе беременности.
               </div>
             </div>
-            {/* Кнопка с отступом 30px вниз */}
             <div style={{ width: "100%", display: "flex", justifyContent: "center", marginTop: 0, marginBottom: 30 }}>
               <button
                 style={{
