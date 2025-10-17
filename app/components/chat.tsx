@@ -28,7 +28,7 @@ function filterAsterisks(str: string) {
 }
 
 const REVIEWS = [
-  // Русские отзывы (месяц беременности)
+  // Русские
   { name: "Анна", pregnancy: "2 месяц", problem: "Токсикоз", text: "Nora Plus подсказала, как справиться с утренней тошнотой. Питание стало более сбалансированным и легче переносить симптомы." },
   { name: "Елена", pregnancy: "4 месяц", problem: "Слабость и усталость", text: "Рекомендации по витаминам и сну очень помогли, чувствую себя намного лучше!" },
   { name: "Ирина", pregnancy: "5 месяц", problem: "Тревожность", text: "Советы от Nora Plus помогли мне расслабиться и больше отдыхать. Теперь спокойна за малыша." },
@@ -95,7 +95,6 @@ const ReviewBlock: React.FC = () => {
           <div style={{ fontSize: 14, color: "#2e2e2e", lineHeight: "1.5" }}>{r.text}</div>
         </div>
       ))}
-      {/* 30px после последнего отзыва */}
       <div style={{ height: 30 }} />
       <style>
         {`
@@ -107,8 +106,6 @@ const ReviewBlock: React.FC = () => {
     </div>
   );
 };
-
-// остальной код не менялся
 
 type Message = { text: string; sender: "user" | "bot" };
 const THREAD_KEY = "nora_thread_id";
@@ -370,7 +367,7 @@ const Chat: React.FC = () => {
       {/* 10px между панелью и видео */}
       <div style={{ height: 10, flexShrink: 0 }} />
 
-      {/* Видео по центру, увеличенное без черных полос */}
+      {/* Видео: средний размер, по центру */}
       <div style={{
         width: "100%",
         maxWidth,
@@ -379,17 +376,15 @@ const Chat: React.FC = () => {
         justifyContent: "center",
         alignItems: "center",
         background: "none",
-        height: 340,
+        height: 200,
         position: "relative"
       }}>
         <video
           src="/nora.mp4"
           style={{
-            maxWidth: "97%",
+            maxWidth: "75%",
             maxHeight: "100%",
-            width: "100%",
-            height: "100%",
-            objectFit: "cover",
+            objectFit: "contain",
             objectPosition: "center",
             display: "block",
             margin: "0 auto",
@@ -496,7 +491,6 @@ const Chat: React.FC = () => {
               </div>}
             <div ref={messagesEndRef} />
           </div>
-          {/* Поле ввода */}
           <form
             style={{
               display: "flex",
