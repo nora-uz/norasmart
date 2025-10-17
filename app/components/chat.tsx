@@ -69,7 +69,7 @@ const REVIEWS = [
   }
 ];
 
-const ReviewBlock: React.FC<{ firstMargin?: number }> = ({ firstMargin = 0 }) => {
+const ReviewBlock: React.FC = () => {
   const [visibleIdx, setVisibleIdx] = useState(0);
   useEffect(() => {
     const interval = setInterval(() => {
@@ -85,7 +85,7 @@ const ReviewBlock: React.FC<{ firstMargin?: number }> = ({ firstMargin = 0 }) =>
   }
   return (
     <div style={{
-      width: "100%", maxWidth: 560, margin: "30px auto 0 auto", background: "none"
+      width: "100%", maxWidth: 560, margin: "0 auto", background: "none"
     }}>
       {reviewsToShow.map((r, idx) => (
         <div
@@ -94,7 +94,6 @@ const ReviewBlock: React.FC<{ firstMargin?: number }> = ({ firstMargin = 0 }) =>
             background: "linear-gradient(90deg, #eff5fe 0%, #e5e8ed 100%)",
             borderRadius: 22,
             margin: "0 20px " + (idx < 4 ? "20px" : "0"),
-            marginTop: idx === 0 ? `${firstMargin}px` : undefined, // Добавлен отступ перед 1-м отзывом
             boxShadow: "0 2px 8px 0 rgba(150, 180, 220, 0.10)",
             padding: "14px 16px 11px 16px",
             animation: idx === 0 ? "slideInTop 0.6s" : undefined,
@@ -320,7 +319,6 @@ const Chat: React.FC = () => {
         boxSizing: "border-box"
       }}
     >
-
       {/* Панель */}
       <div style={{
         width: "calc(100% - 40px)",
@@ -340,7 +338,7 @@ const Chat: React.FC = () => {
         }}>
           <span style={{
             fontWeight: 800, fontSize: "19px", lineHeight: 1.06,
-            whiteSpace: "nowrap", marginBottom: 7
+            whiteSpace: "nowrap"
           }}>Nora AI</span>
           <span style={{
             fontWeight: 400, fontSize: "13px",
@@ -374,13 +372,11 @@ const Chat: React.FC = () => {
           </button>
         </div>
       </div>
-      
-      {/* ОТСТУП между панелью и фото */}
+      {/* Между панелью и фото */}
       <div style={{ height: 40 }} />
 
       {showWelcome ? (
         <>
-          {/* ОТСТУП между панелью и фото */}
           {/* Фото */}
           <div style={{
             width: "100%",
@@ -403,35 +399,31 @@ const Chat: React.FC = () => {
               }}
             />
           </div>
-
-          {/* ОТСТУП между фото и заголовком */}
+          {/* Между фото и заголовком */}
           <div style={{ height: 40 }} />
 
-          {/* Заголовок и описание */}
           <div style={{
             width: "calc(100% - 40px)", maxWidth, textAlign: "center", margin: "0 auto"
           }}>
             <div style={{
-              fontWeight: 700, fontSize: "22px", color: NORA_COLOR, marginBottom: 14
+              fontWeight: 700, fontSize: "22px", color: NORA_COLOR, margin: 0
             }}>Ждёте малыша? Я помогу!</div>
             <div style={{
-              fontWeight: 400, fontSize: "15px", margin: "0 auto 0 auto", maxWidth: 400,
+              fontWeight: 400, fontSize: "15px", margin: 0, maxWidth: 400,
               padding: "0 20px", lineHeight: 1.75, color: NORA_COLOR, display: "inline-block"
             }}>
               Я помогаю будущим мамам на каждом этапе беременности: отвечаю на вопросы, напоминаю о важных делах, слежу за самочувствием и даю советы, основанные на медицине Великобритании NHS.
             </div>
           </div>
-
-          {/* ОТСТУП между описанием и кнопкой */}
+          {/* Между описанием и кнопкой */}
           <div style={{ height: 40 }} />
 
-          {/* Кнопка */}
           <button
             style={{
               width: "100%", maxWidth: 290, background: GRADIENT, color: NORA_COLOR,
               border: "none", borderRadius: borderRadius, fontWeight: 700, fontSize: "17px",
-              padding: "15px 0", margin: "0 20px", cursor: "pointer",
-              display: "flex", alignItems: "center", justifyContent: "center"
+              padding: 0, margin: 0, height: 50,
+              display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer"
             }}
             onClick={() => setShowWelcome(false)}
           >
@@ -440,12 +432,10 @@ const Chat: React.FC = () => {
               {ICONS.arrowRight}
             </span>
           </button>
-
-          {/* ОТСТУП между кнопкой и первым отзывом */}
+          {/* Между кнопкой и первым отзывом */}
           <div style={{ height: 40 }} />
-          
-          <ReviewBlock firstMargin={0} />
 
+          <ReviewBlock />
         </>
       ) : (showHowTo && (
         <div style={{
@@ -466,7 +456,7 @@ const Chat: React.FC = () => {
         </div>
       ))}
 
-      {/* ... остальная часть чата не изменена ... */}
+      {/* ... остальная часть чата ... */}
     </div>
   );
 };
