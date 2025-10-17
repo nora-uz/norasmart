@@ -72,31 +72,22 @@ const REVIEWS = [
 
 const ReviewBlock: React.FC = () => {
   const [visibleIdx, setVisibleIdx] = useState(0);
-
   useEffect(() => {
     const interval = setInterval(() => {
       setVisibleIdx(idx => (idx + 1) % REVIEWS.length);
     }, 7000);
     return () => clearInterval(interval);
   }, []);
-
   let reviewsToShow: typeof REVIEWS = [];
   for (let i = 0; i < 5; i++) {
     reviewsToShow.push(REVIEWS[
       (visibleIdx + REVIEWS.length - i) % REVIEWS.length
     ]);
   }
-
   return (
-    <div
-      style={{
-        width: "100%",
-        maxWidth: maxWidth,
-        margin: "30px auto 0 auto",
-        boxSizing: "border-box",
-        background: "none"
-      }}
-    >
+    <div style={{
+      width: "100%", maxWidth: maxWidth, margin: "30px auto 0 auto", background: "none"
+    }}>
       {reviewsToShow.map((r, idx) => (
         <div
           key={r.name+idx}
@@ -128,6 +119,7 @@ const ReviewBlock: React.FC = () => {
   );
 };
 // ----------- /ОТЗЫВЫ -----------
+
 
 type Message = { text: string; sender: "user" | "bot" };
 const THREAD_KEY = "nora_thread_id";
@@ -329,7 +321,61 @@ const Chat: React.FC = () => {
         boxSizing: "border-box"
       }}
     >
-      {/* --- Блок приветствия --- */}
+      {/* --- ПАНЕЛЬ --- */}
+      <div style={{
+        width: "calc(100% - 40px)",
+        maxWidth,
+        minHeight: panelHeight,
+        background: GRADIENT,
+        color: NORA_COLOR,
+        margin: "20px auto 0 auto",
+        display: "flex", alignItems: "center",
+        borderRadius: borderRadius,
+        paddingLeft: 20, paddingRight: 12, paddingTop: 5, paddingBottom: 5,
+        justifyContent: "flex-start", boxSizing: "border-box", zIndex: 1, boxShadow: "none"
+      }}>
+        <div style={{
+          marginRight: 10, color: NORA_COLOR,
+          display: "flex", flexDirection: "column", justifyContent: "center", minWidth: 0
+        }}>
+          <span style={{
+            fontWeight: 800, fontSize: "19px", lineHeight: 1.06,
+            whiteSpace: "nowrap", marginBottom: 7
+          }}>Nora AI</span>
+          <span style={{
+            fontWeight: 400, fontSize: "13px",
+            color: "#565656", lineHeight: 1.04, whiteSpace: "nowrap"
+          }}>Ассистент для будущих мам</span>
+        </div>
+        <div style={{ display: "flex", alignItems: "center", gap: 8, marginLeft: "auto" }}>
+          <button style={{
+            background: "transparent", border: "none", cursor: "pointer",
+            width: 38, height: 38, borderRadius: 19,
+            display: "flex", alignItems: "center", justifyContent: "center"
+          }} onClick={handleShare}>
+            <img src={ICONS.share} alt="Share"
+              style={{ width: ICON_SIZE, height: ICON_SIZE, filter: filterNora }} />
+          </button>
+          <button style={{
+            background: "transparent", border: "none", cursor: "pointer",
+            width: 38, height: 38, borderRadius: 19,
+            display: "flex", alignItems: "center", justifyContent: "center"
+          }} onClick={() => window.open("https://t.me/norasmart", "_blank")}>
+            <img src={ICONS.telegram} alt="Telegram"
+              style={{ width: ICON_SIZE, height: ICON_SIZE, filter: filterNora }} />
+          </button>
+          <button style={{
+            background: "transparent", border: "none", cursor: "pointer",
+            width: 38, height: 38, borderRadius: 19,
+            display: "flex", alignItems: "center", justifyContent: "center"
+          }} onClick={clearChatAll}>
+            <img src={ICONS.trash} alt="Trash"
+              style={{ width: ICON_SIZE, height: ICON_SIZE, filter: filterNora }} />
+          </button>
+        </div>
+      </div>
+
+      {/* --- ФОТО + ОПИСАНИЕ + КНОПКА --- */}
       <img
         src={BANNER}
         style={{
@@ -382,7 +428,8 @@ const Chat: React.FC = () => {
       </button>
       {/* --- ОТЗЫВЫ --- */}
       <ReviewBlock />
-      {/* --- Остальная часть JSX без изменений --- */}
+
+      {/* --- Остальной JSX без изменений --- */}
     </div>
   );
 };
