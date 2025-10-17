@@ -369,7 +369,7 @@ const Chat: React.FC = () => {
       {/* 10px между панелью и видео */}
       <div style={{ height: 10, flexShrink: 0 }} />
 
-      {/* Видео по центру, чуть меньше и без обрезки */}
+      {/* Видео по центру, увеличенное */}
       <div style={{
         width: "100%",
         maxWidth,
@@ -378,13 +378,13 @@ const Chat: React.FC = () => {
         justifyContent: "center",
         alignItems: "center",
         background: "none",
-        height: 180,
+        height: 240,
         position: "relative"
       }}>
         <video
           src="/nora.mp4"
           style={{
-            maxWidth: "60%",
+            maxWidth: "80%",
             maxHeight: "100%",
             objectFit: "contain",
             objectPosition: "center",
