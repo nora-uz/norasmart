@@ -372,6 +372,8 @@ const Chat: React.FC = () => {
           </button>
         </div>
       </div>
+
+      {/* ОТСТУП между панелью и фото */}
       <div style={{ height: 40 }} />
 
       {showWelcome ? (
@@ -398,6 +400,8 @@ const Chat: React.FC = () => {
               }}
             />
           </div>
+
+          {/* ОТСТУП между фото и заголовком */}
           <div style={{ height: 40 }} />
 
           {/* Заголовок и описание */}
@@ -407,6 +411,8 @@ const Chat: React.FC = () => {
             <div style={{
               fontWeight: 700, fontSize: "22px", color: NORA_COLOR, margin: 0
             }}>Ждёте малыша? Я помогу!</div>
+            {/* ОТСТУП между заголовком и описанием */}
+            <div style={{ height: 20 }} />
             <div style={{
               fontWeight: 400, fontSize: "15px", margin: "0 auto", maxWidth: 400,
               padding: "0 20px", lineHeight: 1.75, color: NORA_COLOR, display: "inline-block"
@@ -414,7 +420,7 @@ const Chat: React.FC = () => {
               Я помогаю будущим мамам на каждом этапе беременности: отвечаю на вопросы, напоминаю о важных делах, слежу за самочувствием и даю советы, основанные на медицине Великобритании NHS.
             </div>
           </div>
-          {/* Отступ между описанием и кнопкой */}
+          {/* ОТСТУП между описанием и кнопкой */}
           <div style={{ height: 40 }} />
 
           {/* Кнопка */}
@@ -432,6 +438,7 @@ const Chat: React.FC = () => {
               {ICONS.arrowRight}
             </span>
           </button>
+          {/* ОТСТУП между кнопкой и отзывами */}
           <div style={{ height: 40 }} />
 
           {/* Отзывы */}
