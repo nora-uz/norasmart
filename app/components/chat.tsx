@@ -319,6 +319,8 @@ const Chat: React.FC = () => {
         boxSizing: "border-box"
       }}
     >
+
+      {/* Панель */}
       <div style={{
         width: "calc(100% - 40px)",
         maxWidth,
@@ -371,14 +373,17 @@ const Chat: React.FC = () => {
           </button>
         </div>
       </div>
+      
+      {/* Отступ между панелью и фото */}
       <div style={{ height: 40 }} />
 
       {showWelcome ? (
         <>
+          {/* Фото */}
           <div style={{
             width: "100%",
             maxWidth,
-            margin: "10px auto 0 auto",
+            margin: "0 auto",
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
@@ -396,7 +401,11 @@ const Chat: React.FC = () => {
               }}
             />
           </div>
-          <div style={{ height: 50 }} />
+
+          {/* Отступ между фото и заголовком */}
+          <div style={{ height: 40 }} />
+
+          {/* Заголовок и описание */}
           <div style={{
             width: "calc(100% - 40px)", maxWidth, textAlign: "center", margin: "0 auto"
           }}>
@@ -409,8 +418,12 @@ const Chat: React.FC = () => {
             }}>
               Я помогаю будущим мамам на каждом этапе беременности: отвечаю на вопросы, напоминаю о важных делах, слежу за самочувствием и даю советы, основанные на медицине Великобритании NHS.
             </div>
-            <div style={{ height: 40 }} />
           </div>
+          
+          {/* Отступ между описанием и кнопкой */}
+          <div style={{ height: 40 }} />
+
+          {/* Кнопка */}
           <button
             style={{
               width: "100%", maxWidth: 290, background: GRADIENT, color: NORA_COLOR,
@@ -425,6 +438,10 @@ const Chat: React.FC = () => {
               {ICONS.arrowRight}
             </span>
           </button>
+
+          {/* Отступ между кнопкой и отзывами */}
+          <div style={{ height: 40 }} />
+
           <ReviewBlock />
         </>
       ) : (showHowTo && (
