@@ -8,7 +8,6 @@ const borderRadius = 22;
 const panelHeight = 62;
 const maxWidth = 560;
 const GRADIENT = "linear-gradient(90deg, #eff5fe 0%, #e5e8ed 100%)";
-const INPUT_BAR_HEIGHT = 68;
 
 const ICONS = {
   telegram: "https://cdn-icons-png.flaticon.com/512/1946/1946547.png",
@@ -367,7 +366,7 @@ const Chat: React.FC = () => {
       {/* 10px между панелью и видео */}
       <div style={{ height: 10, flexShrink: 0 }} />
 
-      {/* Видео: средний размер, по центру */}
+      {/* Видео: чуть больше, по центру */}
       <div style={{
         width: "100%",
         maxWidth,
@@ -376,13 +375,13 @@ const Chat: React.FC = () => {
         justifyContent: "center",
         alignItems: "center",
         background: "none",
-        height: 200,
+        height: 250,
         position: "relative"
       }}>
         <video
           src="/nora.mp4"
           style={{
-            maxWidth: "75%",
+            maxWidth: "85%",
             maxHeight: "100%",
             objectFit: "contain",
             objectPosition: "center",
@@ -408,7 +407,6 @@ const Chat: React.FC = () => {
         <div style={{
           fontWeight: 700, fontSize: "22px", color: NORA_COLOR, margin: 0
         }}>Ждёте малыша? Я помогу!</div>
-        {/* 20px между заголовком и описанием */}
         <div style={{ height: 20, flexShrink: 0 }} />
         <div style={{
           fontWeight: 400, fontSize: "15px", margin: "0 auto", maxWidth: 400,
@@ -418,10 +416,8 @@ const Chat: React.FC = () => {
         </div>
       </div>
 
-      {/* 40px между описанием и кнопкой */}
       <div style={{ height: 40, flexShrink: 0 }} />
 
-      {/* Кнопка */}
       <button
         style={{
           width: "100%", maxWidth: 290, background: GRADIENT, color: NORA_COLOR,
@@ -437,10 +433,8 @@ const Chat: React.FC = () => {
         </span>
       </button>
 
-      {/* 25px между кнопкой и отзывами */}
       <div style={{ height: 25, flexShrink: 0 }} />
 
-      {/* Отзывы */}
       <ReviewBlock />
 
       {!showWelcome && !showHowTo && (
@@ -452,7 +446,6 @@ const Chat: React.FC = () => {
           flexDirection: "column",
           justifyContent: "flex-end"
         }}>
-          {/* Сообщения */}
           <div style={{ flex: 1, overflowY: "auto" }}>
             {chatHistory.map((m, i) => (
               <div key={i}
