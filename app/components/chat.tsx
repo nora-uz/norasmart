@@ -40,32 +40,32 @@ function formatBotText(text: string) {
   return result.trim();
 }
 
-// ------- Добавляем отзывы ---------
+// ----- Отзывы (только русские и узбекские имена) -----
 const REVIEWS = [
   {
     name: "Виктория", pregnancy: "27 недель", 
     problem: "Тревожность из-за анализов", 
-    text: "Nora Plus помогла мне успокоиться и разобраться с результатами. Теперь я сплю намного лучше."
+    text: "Nora Plus помогла мне понять результаты и успокоиться. Теперь я сплю спокойнее."
   },
   {
-    name: "Aigerim", pregnancy: "22 недели", 
+    name: "Мария", pregnancy: "36 недель", 
     problem: "Болели ноги", 
-    text: "Советы Nora Plus реально облегчили мои боли и помогли подобрать правильную обувь!"
+    text: "Рекомендации Nora Plus помогли снять усталость и подобрать упражнения."
   },
   {
-    name: "Madison", pregnancy: "31 week", 
-    problem: "Insomnia", 
-    text: "Nora Plus offered simple sleep routines that helped me finally rest at night."
+    name: "Оля", pregnancy: "18 недель", 
+    problem: "Тошнота", 
+    text: "Советы сервиса помогли выбрать правильное питание и легче переносить токсикоз."
   },
   {
-    name: "Мария", pregnancy: "39 недель", 
-    problem: "Страх перед родами", 
-    text: "Рекомендации и поддержка от Nora Plus сняли многие страхи и придали уверенности!"
+    name: "София", pregnancy: "32 недели", 
+    problem: "Боялась родов", 
+    text: "Nora Plus давала поддержку и ответы на все вопросы. Я чувствую себя уверенней!"
   },
   {
-    name: "Ольга", pregnancy: "18 недель", 
-    problem: "Непонятные симптомы", 
-    text: "Удобно задать вопрос — и сразу получить полезную информацию и советы, спасибо, Nora Plus!"
+    name: "Dilnoza", pregnancy: "24 hafta", 
+    problem: "Uyqusizlik", 
+    text: "Nora Plus maslahatlari yordam berdi, endi yaxshi uxlayman va tashvishlar kamroq."
   }
 ];
 
@@ -79,7 +79,7 @@ const ReviewBlock: React.FC = () => {
     return () => clearInterval(interval);
   }, []);
 
-  // формируем 5 отзывов: текущий + 4 пред
+  // Всегда показываем максимум 5 — карточки появляются сверху
   let reviewsToShow: typeof REVIEWS = [];
   for (let i = 0; i < 5; i++) {
     reviewsToShow.push(REVIEWS[
@@ -94,30 +94,37 @@ const ReviewBlock: React.FC = () => {
         borderRadius: borderRadius,
         maxWidth: maxWidth,
         margin: "24px auto 0 auto",
-        padding: "22px 18px",
+        padding: "16px 0",
         boxSizing: "border-box",
-        boxShadow: "0 4px 28px 0 rgba(155,175,205,0.08)"
+        boxShadow: "0 4px 28px 0 rgba(155,175,205,0.08)",
+        display: "flex",
+        flexDirection: "column",
+        gap: "0"
       }}
     >
       {reviewsToShow.map((r, idx) => (
         <div
           key={r.name+idx}
           style={{
-            marginBottom: idx < 4 ? "19px" : "0",
-            animation: idx === 0 ? "slideInTop 0.5s" : undefined,
-            transition: "all 0.4s"
+            background: "#fff",
+            borderRadius: borderRadius,
+            margin: "0 20px " + (idx < 4 ? "20px" : "0"),
+            boxShadow: "0 2px 8px 0 rgba(150, 180, 220, 0.10)",
+            padding: "14px 16px 11px 16px",
+            animation: idx === 0 ? "slideInTop 0.6s" : undefined,
+            transition: "all 0.5s"
           }}>
-          <div style={{ fontWeight: 700, fontSize: "15px" }}>{r.name} — {r.pregnancy}</div>
-          <div style={{ fontWeight: 700, color: "#795c9c", margin: "3px 0 2px 0" }}>
+          <div style={{ fontWeight: 700, fontSize: 15 }}>{r.name} — {r.pregnancy}</div>
+          <div style={{ fontWeight: 700, color: "#715b9b", margin: "4px 0 3px 0" }}>
             {r.problem}
           </div>
-          <div style={{ fontSize: "14px", color: "#222", lineHeight: 1.45 }}>{r.text}</div>
+          <div style={{ fontSize: 14, color: "#2e2e2e", lineHeight: "1.5" }}>{r.text}</div>
         </div>
       ))}
       <style>
         {`
         @keyframes slideInTop {
-          0% { opacity: 0; transform: translateY(-20px);}
+          0% { opacity: 0; transform: translateY(-30px);}
           100% { opacity: 1; transform: translateY(0);}
         }
         `}
@@ -125,7 +132,7 @@ const ReviewBlock: React.FC = () => {
     </div>
   );
 };
-// ---------- Конец блока отзывов ----------
+// ------------------------------------------
 
 type Message = { text: string; sender: "user" | "bot" };
 const THREAD_KEY = "nora_thread_id";
@@ -311,7 +318,7 @@ const Chat: React.FC = () => {
       </div>
     );
   }
-
+  
   return (
     <div
       style={{
@@ -326,64 +333,62 @@ const Chat: React.FC = () => {
         boxSizing: "border-box"
       }}
     >
+      {/* === Баннер === */}
+      <img
+        src={BANNER}
+        style={{
+          width: "100%",
+          maxWidth,
+          height: "auto",
+          borderRadius: borderRadius,
+          margin: "20px auto 0 auto",
+          boxShadow: "0 4px 20px 0 rgba(170,190,230,0.12)"
+        }}
+        alt="Nora AI"
+      />
+      {/* === Описание === */}
       <div style={{
         width: "calc(100% - 40px)",
         maxWidth,
-        minHeight: panelHeight,
-        background: GRADIENT,
+        fontWeight: 700,
+        fontSize: 20,
         color: NORA_COLOR,
-        margin: "20px auto 0 auto",
-        display: "flex", alignItems: "center",
-        borderRadius: borderRadius,
-        paddingLeft: 20, paddingRight: 12, paddingTop: 5, paddingBottom: 5,
-        justifyContent: "flex-start", boxSizing: "border-box", zIndex: 1, boxShadow: "none"
+        margin: "22px auto 10px auto",
+        textAlign: "center"
       }}>
-        <div style={{
-          marginRight: 10, color: NORA_COLOR,
-          display: "flex", flexDirection: "column", justifyContent: "center", minWidth: 0
+        Nora AI — ассистент для будущих мам <br />
+        <span style={{
+          fontWeight: 400, fontSize: "15px", color: "#565656"
         }}>
-          <span style={{
-            fontWeight: 800, fontSize: "19px", lineHeight: 1.06,
-            whiteSpace: "nowrap", marginBottom: 7
-          }}>Nora AI</span>
-          <span style={{
-            fontWeight: 400, fontSize: "13px",
-            color: "#565656", lineHeight: 1.04, whiteSpace: "nowrap"
-          }}>Ассистент для будущих мам</span>
-        </div>
-        <div style={{ display: "flex", alignItems: "center", gap: 8, marginLeft: "auto" }}>
-          <button style={{
-            background: "transparent", border: "none", cursor: "pointer",
-            width: 38, height: 38, borderRadius: 19,
-            display: "flex", alignItems: "center", justifyContent: "center"
-          }} onClick={handleShare}>
-            <img src={ICONS.share} alt="Share"
-              style={{ width: ICON_SIZE, height: ICON_SIZE, filter: filterNora }} />
-          </button>
-          <button style={{
-            background: "transparent", border: "none", cursor: "pointer",
-            width: 38, height: 38, borderRadius: 19,
-            display: "flex", alignItems: "center", justifyContent: "center"
-          }} onClick={() => window.open("https://t.me/norasmart", "_blank")}>
-            <img src={ICONS.telegram} alt="Telegram"
-              style={{ width: ICON_SIZE, height: ICON_SIZE, filter: filterNora }} />
-          </button>
-          <button style={{
-            background: "transparent", border: "none", cursor: "pointer",
-            width: 38, height: 38, borderRadius: 19,
-            display: "flex", alignItems: "center", justifyContent: "center"
-          }} onClick={clearChatAll}>
-            <img src={ICONS.trash} alt="Trash"
-              style={{ width: ICON_SIZE, height: ICON_SIZE, filter: filterNora }} />
-          </button>
-        </div>
+          Современные рекомендации, поддержка и забота на каждом этапе беременности
+        </span>
       </div>
-
-      {/* ===== Отзывы — Под кнопкой или приветствием ===== */}
+      {/* === Кнопка "Начать пользоваться" === */}
+      <button
+        style={{
+          display: "block",
+          margin: "0 auto",
+          marginBottom: "0px",
+          marginTop: "17px",
+          background: GRADIENT,
+          color: "#fff",
+          fontWeight: 700,
+          fontSize: 18,
+          borderRadius: borderRadius,
+          border: "none",
+          padding: "15px 0",
+          width: "calc(100% - 40px)",
+          maxWidth,
+          cursor: "pointer",
+          boxShadow: "0 2px 10px 0 rgba(140,170,230,0.13)"
+        }}
+        onClick={() => setShowWelcome(false)}
+      >
+        Начать пользоваться
+      </button>
+      {/* === Отзывы === */}
       <ReviewBlock />
-      {/* ===== Конец блока отзывов ===== */}
-
-      {/* остальная часть JSX без изменений */}
+      {/* === Остальной чат/интерфейс... */}
       {/* ... */}
     </div>
   );
