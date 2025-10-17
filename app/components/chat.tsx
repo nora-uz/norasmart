@@ -106,6 +106,8 @@ const ReviewBlock: React.FC = () => {
           <div style={{ fontSize: 14, color: "#2e2e2e", lineHeight: "1.5" }}>{r.text}</div>
         </div>
       ))}
+      {/* 30px после последнего отзыва */}
+      <div style={{ height: 30 }} />
       <style>
         {`
         @keyframes slideInTop {
@@ -444,6 +446,112 @@ const Chat: React.FC = () => {
 
       {/* Отзывы */}
       <ReviewBlock />
+
+      {/* ————————————————————
+           Основной чат, появляется после закрытия welcome 
+      ———————————————————— */}
+      {!showWelcome && !showHowTo && (
+        <div style={{
+          width: "100%",
+          maxWidth: 560,
+          flex: 1,
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "flex-end"
+        }}>
+          {/* Сообщения */}
+          <div style={{ flex: 1, overflowY: "auto" }}>
+            {chatHistory.map((m, i) => (
+              <div key={i}
+                style={{
+                  margin: "10px 14px",
+                  alignSelf: m.sender === "user" ? "flex-end" : "flex-start",
+                  background: m.sender === "user" ? "#fff" : "#f1f3f8",
+                  color: NORA_COLOR,
+                  borderRadius: 18,
+                  maxWidth: "85%",
+                  padding: "13px 15px",
+                  fontSize: 16,
+                  fontWeight: 400,
+                  whiteSpace: "pre-line",
+                  boxShadow: "0 1px 6px 0 rgba(70,80,120,0.06)"
+                }}>
+                <ReactMarkdown>{m.text}</ReactMarkdown>
+              </div>
+            ))}
+            {botProgress &&
+              <div style={{
+                margin: "10px 14px",
+                alignSelf: "flex-start",
+                background: "#f1f3f8",
+                color: NORA_COLOR,
+                borderRadius: 18,
+                maxWidth: "85%",
+                padding: "13px 15px",
+                fontSize: 16,
+                fontWeight: 400,
+                whiteSpace: "pre-line",
+                fontStyle: "italic",
+                opacity: 0.7
+              }}>
+                {botProgress}
+              </div>}
+            <div ref={messagesEndRef} />
+          </div>
+          {/* Поле ввода */}
+          <form
+            style={{
+              display: "flex",
+              alignItems: "center",
+              padding: "0 10px 18px 10px",
+              background: "none"
+            }}
+            onSubmit={e => {
+              e.preventDefault();
+              handleSendMessage();
+            }}
+          >
+            <input
+              type="text"
+              value={message}
+              onChange={e => setMessage(e.target.value)}
+              placeholder="Введите сообщение..."
+              style={{
+                flex: 1,
+                borderRadius: 18,
+                border: "1px solid #e1e1ef",
+                padding: "13px 16px",
+                fontSize: 16,
+                outline: "none",
+                background: "#fff",
+                color: NORA_COLOR,
+                marginRight: 10
+              }}
+              disabled={loading}
+              autoFocus={focused}
+              onFocus={() => setFocused(true)}
+              onBlur={() => setFocused(false)}
+            />
+            <button
+              type="submit"
+              style={{
+                background: GRADIENT,
+                border: "none",
+                borderRadius: 17,
+                fontWeight: 700,
+                color: NORA_COLOR,
+                fontSize: 17,
+                padding: "10px 16px",
+                cursor: loading || !message.trim() ? "not-allowed" : "pointer",
+                opacity: loading || !message.trim() ? 0.6 : 1
+              }}
+              disabled={loading || !message.trim()}
+            >
+              Отправить
+            </button>
+          </form>
+        </div>
+      )}
     </div>
   );
 };
