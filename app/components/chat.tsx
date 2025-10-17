@@ -29,13 +29,14 @@ function filterAsterisks(str: string) {
 }
 function formatBotText(text: string) {
   if (!text) return "";
-  let cleaned = text.replace(/_/g, "");
+  let cleaned = filterAsterisks(text).replace(/_/g, "");
   const firstSentenceMatch = cleaned.match(/^([^.!?]+[.!?])/);
   const firstSentence = firstSentenceMatch ? firstSentenceMatch[1].trim() : "";
   const restText = firstSentence ? cleaned.slice(firstSentence.length).trim() : cleaned.trim();
   let result = "";
   if (firstSentence) result += `**${firstSentence}** `;
   if (restText) result += restText;
+  result = result.replace(/\*\*(.*?)\*\*[*]+/g, "$1");
   return result.trim();
 }
 
@@ -84,14 +85,14 @@ const ReviewBlock: React.FC = () => {
   }
   return (
     <div style={{
-      width: "100%", maxWidth: maxWidth, margin: "30px auto 0 auto", background: "none"
+      width: "100%", maxWidth: 560, margin: "30px auto 0 auto", background: "none"
     }}>
       {reviewsToShow.map((r, idx) => (
         <div
           key={r.name+idx}
           style={{
-            background: GRADIENT,
-            borderRadius: borderRadius,
+            background: "linear-gradient(90deg, #eff5fe 0%, #e5e8ed 100%)",
+            borderRadius: 22,
             margin: "0 20px " + (idx < 4 ? "20px" : "0"),
             boxShadow: "0 2px 8px 0 rgba(150, 180, 220, 0.10)",
             padding: "14px 16px 11px 16px",
@@ -205,6 +206,7 @@ const Chat: React.FC = () => {
       }
       let i = 0;
       setBotProgress("");
+      botReply = filterAsterisks(botReply);
       const interval = setInterval(() => {
         setBotProgress(botReply.slice(0, i));
         i++;
@@ -317,7 +319,6 @@ const Chat: React.FC = () => {
         boxSizing: "border-box"
       }}
     >
-      {/* ======= ПАНЕЛЬ ======= */}
       <div style={{
         width: "calc(100% - 40px)",
         maxWidth,
@@ -370,62 +371,82 @@ const Chat: React.FC = () => {
           </button>
         </div>
       </div>
+      <div style={{ height: 40 }} />
 
-      {/* ======= ФОТО, ОПИСАНИЕ, КНОПКА ======= */}
-      <img
-        src={BANNER}
-        style={{
-          width: "100%",
-          maxWidth,
-          height: "auto",
-          borderRadius: borderRadius,
-          margin: "20px auto 0 auto",
-          boxShadow: "0 4px 20px 0 rgba(170,190,230,0.12)"
-        }}
-        alt="Nora AI"
-      />
-      <div style={{
-        width: "calc(100% - 40px)",
-        maxWidth,
-        fontWeight: 700,
-        fontSize: 20,
-        color: NORA_COLOR,
-        margin: "22px auto 10px auto",
-        textAlign: "center"
-      }}>
-        Nora AI — ассистент для будущих мам <br />
-        <span style={{
-          fontWeight: 400, fontSize: "15px", color: "#565656"
+      {showWelcome ? (
+        <>
+          <div style={{
+            width: "100%",
+            maxWidth,
+            margin: "10px auto 0 auto",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            background: "none"
+          }}>
+            <img
+              src={BANNER}
+              alt="Nora AI баннер"
+              style={{
+                width: "80%",
+                height: "auto",
+                display: "block",
+                objectFit: "contain",
+                objectPosition: "center"
+              }}
+            />
+          </div>
+          <div style={{ height: 50 }} />
+          <div style={{
+            width: "calc(100% - 40px)", maxWidth, textAlign: "center", margin: "0 auto"
+          }}>
+            <div style={{
+              fontWeight: 700, fontSize: "22px", color: NORA_COLOR, marginBottom: 14
+            }}>Ждёте малыша? Я помогу!</div>
+            <div style={{
+              fontWeight: 400, fontSize: "15px", margin: "0 auto 0 auto", maxWidth: 400,
+              padding: "0 20px", lineHeight: 1.75, color: NORA_COLOR, display: "inline-block"
+            }}>
+              Я помогаю будущим мамам на каждом этапе беременности: отвечаю на вопросы, напоминаю о важных делах, слежу за самочувствием и даю советы, основанные на медицине Великобритании NHS.
+            </div>
+            <div style={{ height: 40 }} />
+          </div>
+          <button
+            style={{
+              width: "100%", maxWidth: 290, background: GRADIENT, color: NORA_COLOR,
+              border: "none", borderRadius: borderRadius, fontWeight: 700, fontSize: "17px",
+              padding: "15px 0", margin: "0 20px", cursor: "pointer",
+              display: "flex", alignItems: "center", justifyContent: "center"
+            }}
+            onClick={() => setShowWelcome(false)}
+          >
+            Начать пользоваться&nbsp;
+            <span style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+              {ICONS.arrowRight}
+            </span>
+          </button>
+          <ReviewBlock />
+        </>
+      ) : (showHowTo && (
+        <div style={{
+          width: "calc(100% - 40px)", maxWidth, textAlign: "center", margin: "90px auto 0 auto"
         }}>
-          Современный ассистент для будущих мам на базе NHS — все рекомендации по беременности в одном месте.
-        </span>
-      </div>
-      <button
-        style={{
-          display: "block",
-          margin: "0 auto",
-          marginBottom: "0px",
-          marginTop: "17px",
-          background: GRADIENT,
-          color: "#fff",
-          fontWeight: 700,
-          fontSize: 18,
-          borderRadius: borderRadius,
-          border: "none",
-          padding: "15px 0",
-          width: "calc(100% - 40px)",
-          maxWidth,
-          cursor: "pointer",
-          boxShadow: "0 2px 10px 0 rgba(140,170,230,0.13)"
-        }}
-        onClick={() => setShowWelcome(false)}
-      >
-        Начать пользоваться
-      </button>
-      {/* ======= ОТЗЫВЫ ======= */}
-      <ReviewBlock />
+          <div style={{
+            fontWeight: 700, fontSize: "21px", color: NORA_COLOR, marginBottom: 10, marginTop: 12
+          }}>
+            Как пользоваться Nora?
+          </div>
+          <div style={{
+            fontWeight: 400, fontSize: "15px", margin: "0 auto", maxWidth: 400,
+            padding: "0 20px", lineHeight: 1.75, color: NORA_COLOR, display: "inline-block"
+          }}>
+            Можно спрашивать все, что связано с беременностью, здоровьем, самочувствием, питанием, анализами, подготовкой к родам, эмоциональным состоянием и любые другие темы.
+          </div>
+          <div style={{ height: 40 }} />
+        </div>
+      ))}
 
-      {/* ...Остальной JSX без изменений... */}
+      {/* ... остальная часть чата не изменена ... */}
     </div>
   );
 };
