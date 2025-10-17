@@ -316,13 +316,17 @@ const Chat: React.FC = () => {
         boxSizing: "border-box"
       }}
     >
+      {/* ВЕРХНИЙ ОТСТУП над панелью */}
+      <div style={{ height: 20 }} />
+
+      {/* Панель */}
       <div style={{
         width: "calc(100% - 40px)",
         maxWidth,
         minHeight: panelHeight,
         background: GRADIENT,
         color: NORA_COLOR,
-        margin: "0 auto", // нет отступа сверху!
+        margin: "0 auto",
         display: "flex", alignItems: "center",
         borderRadius: borderRadius,
         paddingLeft: 20, paddingRight: 12, paddingTop: 5, paddingBottom: 5,
@@ -372,6 +376,7 @@ const Chat: React.FC = () => {
 
       {showWelcome ? (
         <>
+          {/* Фото */}
           <div style={{
             width: "100%",
             maxWidth,
@@ -395,6 +400,7 @@ const Chat: React.FC = () => {
           </div>
           <div style={{ height: 40 }} />
 
+          {/* Заголовок и описание */}
           <div style={{
             width: "calc(100% - 40px)", maxWidth, textAlign: "center", margin: "0 auto"
           }}>
@@ -402,16 +408,16 @@ const Chat: React.FC = () => {
               fontWeight: 700, fontSize: "22px", color: NORA_COLOR, margin: 0
             }}>Ждёте малыша? Я помогу!</div>
             <div style={{
-              fontWeight: 400, fontSize: "15px", margin: "0 auto 0 auto", maxWidth: 400,
+              fontWeight: 400, fontSize: "15px", margin: "0 auto", maxWidth: 400,
               padding: "0 20px", lineHeight: 1.75, color: NORA_COLOR, display: "inline-block"
             }}>
               Я помогаю будущим мамам на каждом этапе беременности: отвечаю на вопросы, напоминаю о важных делах, слежу за самочувствием и даю советы, основанные на медицине Великобритании NHS.
             </div>
           </div>
-
-          {/* ВАЖНО: отступ между описанием и кнопкой */}
+          {/* Отступ между описанием и кнопкой */}
           <div style={{ height: 40 }} />
 
+          {/* Кнопка */}
           <button
             style={{
               width: "100%", maxWidth: 290, background: GRADIENT, color: NORA_COLOR,
@@ -428,6 +434,7 @@ const Chat: React.FC = () => {
           </button>
           <div style={{ height: 40 }} />
 
+          {/* Отзывы */}
           <ReviewBlock />
         </>
       ) : (showHowTo && (
