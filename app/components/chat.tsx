@@ -28,7 +28,6 @@ function filterAsterisks(str: string) {
   return str.replace(/\*/g, "");
 }
 
-// ✅ Исправленная функция — теперь жирный шрифт сохраняется
 function formatBotText(text: string) {
   if (!text) return "";
   let cleaned = text.replace(/_/g, "");
@@ -41,31 +40,31 @@ function formatBotText(text: string) {
   return result.trim();
 }
 
-// ====== Блок отзывов (только добавлен, остальное не менялось) ======
+// ----- Блок отзывов -----
 const REVIEWS = [
   {
-    name: "Виктория", pregnancy: "27 недель", 
-    problem: "Тревожность из-за анализов", 
+    name: "Виктория", pregnancy: "27 недель",
+    problem: "Тревожность из-за анализов",
     text: "Nora Plus помогла мне понять результаты и успокоиться. Теперь я сплю спокойнее."
   },
   {
-    name: "Мария", pregnancy: "36 недель", 
-    problem: "Болели ноги", 
+    name: "Мария", pregnancy: "36 недель",
+    problem: "Болели ноги",
     text: "Рекомендации Nora Plus помогли снять усталость и подобрать упражнения."
   },
   {
-    name: "Оля", pregnancy: "18 недель", 
-    problem: "Тошнота", 
+    name: "Оля", pregnancy: "18 недель",
+    problem: "Тошнота",
     text: "Советы сервиса помогли выбрать правильное питание и легче переносить токсикоз."
   },
   {
-    name: "София", pregnancy: "32 недели", 
-    problem: "Боялась родов", 
+    name: "София", pregnancy: "32 недели",
+    problem: "Боялась родов",
     text: "Nora Plus давала поддержку и ответы на все вопросы. Я чувствую себя уверенней!"
   },
   {
-    name: "Dilnoza", pregnancy: "24 hafta", 
-    problem: "Uyqusizlik", 
+    name: "Dilnoza", pregnancy: "24 hafta",
+    problem: "Uyqusizlik",
     text: "Nora Plus maslahatlari yordam berdi, endi yaxshi uxlayman va tashvishlar kamroq."
   }
 ];
@@ -80,7 +79,6 @@ const ReviewBlock: React.FC = () => {
     return () => clearInterval(interval);
   }, []);
 
-  // Всегда показываем максимум 5 — карточки появляются сверху
   let reviewsToShow: typeof REVIEWS = [];
   for (let i = 0; i < 5; i++) {
     reviewsToShow.push(REVIEWS[
@@ -91,23 +89,18 @@ const ReviewBlock: React.FC = () => {
   return (
     <div
       style={{
-        background: GRADIENT,
-        borderRadius: borderRadius,
+        width: "100%",
         maxWidth: maxWidth,
         margin: "24px auto 0 auto",
-        padding: "16px 0",
         boxSizing: "border-box",
-        boxShadow: "0 4px 28px 0 rgba(155,175,205,0.08)",
-        display: "flex",
-        flexDirection: "column",
-        gap: "0"
+        background: "none"
       }}
     >
       {reviewsToShow.map((r, idx) => (
         <div
           key={r.name+idx}
           style={{
-            background: "#fff",
+            background: GRADIENT,
             borderRadius: borderRadius,
             margin: "0 20px " + (idx < 4 ? "20px" : "0"),
             boxShadow: "0 2px 8px 0 rgba(150, 180, 220, 0.10)",
@@ -133,7 +126,7 @@ const ReviewBlock: React.FC = () => {
     </div>
   );
 };
-// ====== Конец блока отзывов ======
+// ----- Конец блока отзывов -----
 
 type Message = { text: string; sender: "user" | "bot" };
 const THREAD_KEY = "nora_thread_id";
@@ -387,15 +380,12 @@ const Chat: React.FC = () => {
         </div>
       </div>
 
-      {/* ===== Кнопка "Начать пользоваться" и отзывы под ней ===== */}
-      {/* Ваш код/кнопка запуска чата остается прежним */}
-      {/* Пример — размести отзывы сразу после вашей кнопки: */}
-      {/* <button ...>Начать пользоваться</button> */}
+      {/* ======= Кнопка "Начать пользоваться", отзывы сразу после ======= */}
+      {/* Если у тебя есть отдельная разметка фото-описания-кнопки в Welcome, то вставь ReviewBlock ПОД кнопкой там! */}
       <ReviewBlock />
-      {/* ===== Конец блока отзывов ===== */}
+      {/* ======= Конец блока отзывов ======= */}
 
-      {/* остальная часть JSX без изменений */}
-      {/* ... */}
+      {/* ...остальной JSX без изменений... */}
     </div>
   );
 };
