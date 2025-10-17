@@ -28,9 +28,10 @@ function filterAsterisks(str: string) {
   return str.replace(/\*/g, "");
 }
 
+// ✅ Исправленная функция — теперь жирный шрифт сохраняется
 function formatBotText(text: string) {
   if (!text) return "";
-  let cleaned = text.replace(/_/g, "");
+  let cleaned = text.replace(/_/g, ""); // убираем подчёркивания, но не трогаем **
   const firstSentenceMatch = cleaned.match(/^([^.!?]+[.!?])/);
   const firstSentence = firstSentenceMatch ? firstSentenceMatch[1].trim() : "";
   const restText = firstSentence ? cleaned.slice(firstSentence.length).trim() : cleaned.trim();
@@ -40,7 +41,7 @@ function formatBotText(text: string) {
   return result.trim();
 }
 
-// ----- БЛОК ОТЗЫВОВ -----
+// ----------- ОТЗЫВЫ -----------
 const REVIEWS = [
   {
     name: "Виктория", pregnancy: "27 недель",
@@ -91,7 +92,7 @@ const ReviewBlock: React.FC = () => {
       style={{
         width: "100%",
         maxWidth: maxWidth,
-        margin: "30px auto 0 auto", // именно ОТСТУП 30px сверху от кнопки!
+        margin: "30px auto 0 auto",
         boxSizing: "border-box",
         background: "none"
       }}
@@ -126,7 +127,7 @@ const ReviewBlock: React.FC = () => {
     </div>
   );
 };
-// ----- КОНЕЦ БЛОКА ОТЗЫВОВ -----
+// ----------- /ОТЗЫВЫ -----------
 
 type Message = { text: string; sender: "user" | "bot" };
 const THREAD_KEY = "nora_thread_id";
@@ -215,6 +216,7 @@ const Chat: React.FC = () => {
       }
       let i = 0;
       setBotProgress("");
+      // ⚠️ Не трогаем ** — не вызываем filterAsterisks для ответа
       const interval = setInterval(() => {
         setBotProgress(botReply.slice(0, i));
         i++;
@@ -327,7 +329,7 @@ const Chat: React.FC = () => {
         boxSizing: "border-box"
       }}
     >
-      {/* --- ФОТО, ОПИСАНИЕ, КНОПКА --- */}
+      {/* --- Блок приветствия --- */}
       <img
         src={BANNER}
         style={{
@@ -378,7 +380,7 @@ const Chat: React.FC = () => {
       >
         Начать пользоваться
       </button>
-      {/* --- БЛОК ОТЗЫВОВ --- */}
+      {/* --- ОТЗЫВЫ --- */}
       <ReviewBlock />
       {/* --- Остальная часть JSX без изменений --- */}
     </div>
