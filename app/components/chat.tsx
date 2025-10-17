@@ -40,7 +40,6 @@ function formatBotText(text: string) {
   return result.trim();
 }
 
-// ОТЗЫВЫ
 const REVIEWS = [
   {
     name: "Виктория", pregnancy: "27 недель",
@@ -65,7 +64,7 @@ const REVIEWS = [
   {
     name: "Dilnoza", pregnancy: "24 hafta",
     problem: "Uyqusizlik",
-    text: "Nora Plus maslahatlari yordam berdi, endi yaxshi uxlayman и ташвишлар камроқ."
+    text: "Nora Plus maslahatlari yordam berdi, endi yaxshi uxlayman ва ташвишлар камроқ."
   }
 ];
 
@@ -117,7 +116,6 @@ const ReviewBlock: React.FC = () => {
   );
 };
 
-// CHAT
 type Message = { text: string; sender: "user" | "bot" };
 const THREAD_KEY = "nora_thread_id";
 
@@ -324,7 +322,7 @@ const Chat: React.FC = () => {
         minHeight: panelHeight,
         background: GRADIENT,
         color: NORA_COLOR,
-        margin: "20px auto 0 auto",
+        margin: "0 auto", // нет отступа сверху!
         display: "flex", alignItems: "center",
         borderRadius: borderRadius,
         paddingLeft: 20, paddingRight: 12, paddingTop: 5, paddingBottom: 5,
@@ -410,6 +408,8 @@ const Chat: React.FC = () => {
               Я помогаю будущим мамам на каждом этапе беременности: отвечаю на вопросы, напоминаю о важных делах, слежу за самочувствием и даю советы, основанные на медицине Великобритании NHS.
             </div>
           </div>
+
+          {/* ВАЖНО: отступ между описанием и кнопкой */}
           <div style={{ height: 40 }} />
 
           <button
