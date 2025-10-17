@@ -69,7 +69,7 @@ const REVIEWS = [
   }
 ];
 
-const ReviewBlock: React.FC = () => {
+const ReviewBlock: React.FC<{ firstMargin?: number }> = ({ firstMargin = 0 }) => {
   const [visibleIdx, setVisibleIdx] = useState(0);
   useEffect(() => {
     const interval = setInterval(() => {
@@ -94,6 +94,7 @@ const ReviewBlock: React.FC = () => {
             background: "linear-gradient(90deg, #eff5fe 0%, #e5e8ed 100%)",
             borderRadius: 22,
             margin: "0 20px " + (idx < 4 ? "20px" : "0"),
+            marginTop: idx === 0 ? `${firstMargin}px` : undefined, // Добавлен отступ перед 1-м отзывом
             boxShadow: "0 2px 8px 0 rgba(150, 180, 220, 0.10)",
             padding: "14px 16px 11px 16px",
             animation: idx === 0 ? "slideInTop 0.6s" : undefined,
@@ -374,11 +375,12 @@ const Chat: React.FC = () => {
         </div>
       </div>
       
-      {/* Отступ между панелью и фото */}
+      {/* ОТСТУП между панелью и фото */}
       <div style={{ height: 40 }} />
 
       {showWelcome ? (
         <>
+          {/* ОТСТУП между панелью и фото */}
           {/* Фото */}
           <div style={{
             width: "100%",
@@ -402,7 +404,7 @@ const Chat: React.FC = () => {
             />
           </div>
 
-          {/* Отступ между фото и заголовком */}
+          {/* ОТСТУП между фото и заголовком */}
           <div style={{ height: 40 }} />
 
           {/* Заголовок и описание */}
@@ -419,8 +421,8 @@ const Chat: React.FC = () => {
               Я помогаю будущим мамам на каждом этапе беременности: отвечаю на вопросы, напоминаю о важных делах, слежу за самочувствием и даю советы, основанные на медицине Великобритании NHS.
             </div>
           </div>
-          
-          {/* Отступ между описанием и кнопкой */}
+
+          {/* ОТСТУП между описанием и кнопкой */}
           <div style={{ height: 40 }} />
 
           {/* Кнопка */}
@@ -439,10 +441,11 @@ const Chat: React.FC = () => {
             </span>
           </button>
 
-          {/* Отступ между кнопкой и отзывами */}
+          {/* ОТСТУП между кнопкой и первым отзывом */}
           <div style={{ height: 40 }} />
+          
+          <ReviewBlock firstMargin={0} />
 
-          <ReviewBlock />
         </>
       ) : (showHowTo && (
         <div style={{
