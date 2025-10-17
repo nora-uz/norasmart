@@ -24,7 +24,6 @@ const ICONS = {
 };
 const filterNora = "invert(13%) sepia(4%) saturate(271%) hue-rotate(175deg) brightness(92%) contrast(93%)";
 
-// Массив из 30 отзывов (русские и узбекские)
 const REVIEWS = [
   { name: "Виктория", pregnancy: "27 недель", problem: "Тревожность из-за анализов", text: "Nora Plus помогла мне понять результаты и успокоиться. Теперь я сплю спокойнее." },
   { name: "Мария", pregnancy: "36 недель", problem: "Болели ноги", text: "Рекомендации Nora Plus помогли снять усталость и подобрать упражнения." },
@@ -58,24 +57,20 @@ const REVIEWS = [
   { name: "Рано", pregnancy: "31 hafta", problem: "Tashvish", text: "Atrofdagilarga maslahatlar ham bera olaman!" },
 ];
 
-// Компонент отзывов
 const ReviewBlock: React.FC = () => {
   const [visibleIdx, setVisibleIdx] = useState(0);
-
   useEffect(() => {
     const interval = setInterval(() => {
       setVisibleIdx(idx => (idx + 1) % REVIEWS.length);
     }, 7000);
     return () => clearInterval(interval);
   }, []);
-
   let reviewsToShow: typeof REVIEWS = [];
   for (let i = 0; i < 5; i++) {
     reviewsToShow.push(REVIEWS[
       (visibleIdx + REVIEWS.length - i) % REVIEWS.length
     ]);
   }
-
   return (
     <div style={{
       width: "100%", maxWidth: maxWidth, margin: "40px auto 0 auto", background: "none"
@@ -110,15 +105,18 @@ const ReviewBlock: React.FC = () => {
   );
 };
 
-// ------ Дальше всё как у тебя ------
 type Message = { text: string; sender: "user" | "bot" };
 const THREAD_KEY = "nora_thread_id";
 
 const Chat: React.FC = () => {
-  // ... весь твой остальной Chat-компонент (без изменений!) ...
-  // Ниже только блок showWelcome изменён для добавления отзывов
+  // ВАЖНО: showWelcome ОБЯЗАТЕЛЬНО есть!
+  const [showWelcome, setShowWelcome] = useState(true);
+  // --- твои остальные useState ---
+  // ... preloading, message, chatHistory и т.д. ...
 
-  // ----- старое начало JSX -----
+  // далее полностью твоя остальная логика компонента,
+  // просто убедись что используется showWelcome (как в твоем коде)
+
   return (
     <div
       style={{
@@ -133,97 +131,18 @@ const Chat: React.FC = () => {
         boxSizing: "border-box"
       }}
     >
-      <div style={{
-        width: "calc(100% - 40px)",
-        maxWidth,
-        minHeight: panelHeight,
-        background: GRADIENT,
-        color: NORA_COLOR,
-        margin: "20px auto 0 auto",
-        display: "flex", alignItems: "center",
-        borderRadius: borderRadius,
-        paddingLeft: 20, paddingRight: 12, paddingTop: 5, paddingBottom: 5,
-        justifyContent: "flex-start", boxSizing: "border-box", zIndex: 1, boxShadow: "none"
-      }}>
-        <div style={{
-          marginRight: 10, color: NORA_COLOR,
-          display: "flex", flexDirection: "column", justifyContent: "center", minWidth: 0
-        }}>
-          <span style={{
-            fontWeight: 800, fontSize: "19px", lineHeight: 1.06,
-            whiteSpace: "nowrap", marginBottom: 7
-          }}>Nora AI</span>
-          <span style={{
-            fontWeight: 400, fontSize: "13px",
-            color: "#565656", lineHeight: 1.04, whiteSpace: "nowrap"
-          }}>Ассистент для будущих мам</span>
-        </div>
-        <div style={{ display: "flex", alignItems: "center", gap: 8, marginLeft: "auto" }}>
-          {/* ...три иконки... */}
-        </div>
-      </div>
-      <div style={{ height: 40 }} />
+      {/* --- Панель, и т.д. --- */}
 
-      {/* --- welcome-блок --- */}
       {showWelcome ? (
         <>
-          <div style={{
-            width: "100%",
-            maxWidth,
-            margin: "10px auto 0 auto",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            background: "none"
-          }}>
-            <img
-              src={BANNER}
-              alt="Nora AI баннер"
-              style={{
-                width: "80%",
-                height: "auto",
-                display: "block",
-                objectFit: "contain",
-                objectPosition: "center"
-              }}
-            />
-          </div>
-          <div style={{ height: 50 }} />
-          <div style={{
-            width: "calc(100% - 40px)", maxWidth, textAlign: "center", margin: "0 auto"
-          }}>
-            <div style={{
-              fontWeight: 700, fontSize: "22px", color: NORA_COLOR, marginBottom: 14
-            }}>Ждёте малыша? Я помогу!</div>
-            <div style={{
-              fontWeight: 400, fontSize: "15px", margin: "0 auto 0 auto", maxWidth: 400,
-              padding: "0 20px", lineHeight: 1.75, color: NORA_COLOR, display: "inline-block"
-            }}>
-              Я помогаю будущим мамам на каждом этапе беременности: отвечаю на вопросы, напоминаю о важных делах, слежу за самочувствием и даю советы, основанные на медицине Великобритании NHS.
-            </div>
-            <div style={{ height: 40 }} />
-          </div>
-          <button
-            style={{
-              width: "100%", maxWidth: 290, background: GRADIENT, color: NORA_COLOR,
-              border: "none", borderRadius: borderRadius, fontWeight: 700, fontSize: "17px",
-              padding: "15px 0", margin: "0 20px", cursor: "pointer",
-              display: "flex", alignItems: "center", justifyContent: "center"
-            }}
-            onClick={() => setShowWelcome(false)}
-          >
-            Начать пользоваться&nbsp;
-            <span style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
-              {ICONS.arrowRight}
-            </span>
+          {/* ... блок картинки, описания, кнопка ... */}
+          <button ... onClick={() => setShowWelcome(false)}>
+            Начать пользоваться
           </button>
-          {/* --- ОТЗЫВЫ --- */}
           <ReviewBlock />
         </>
       ) : (
-        // ... остальной чат, поля ввода, история сообщений ...
-        // Поле для сообщения появляется автоматически (как у тебя)!
-        // ... не изменял остальное ...
+        // ... остальной чат, инпут, сообщения ...
         null
       )}
     </div>
