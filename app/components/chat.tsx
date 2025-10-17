@@ -24,11 +24,37 @@ const ICONS = {
 };
 const filterNora = "invert(13%) sepia(4%) saturate(271%) hue-rotate(175deg) brightness(92%) contrast(93%)";
 
-// --- 30 отзывов ---
+// 30 отзывов, все записи существуют (ни одного undefined!):
 const REVIEWS = [
   { name: "Виктория", pregnancy: "27 недель", problem: "Тревожность из-за анализов", text: "Nora Plus помогла мне понять результаты и успокоиться. Теперь я сплю спокойнее." },
   { name: "Мария", pregnancy: "36 недель", problem: "Болели ноги", text: "Рекомендации Nora Plus помогли снять усталость и подобрать упражнения." },
-  // ...добавь 28 на русском и узбекском по аналогии...
+  { name: "Оля", pregnancy: "18 недель", problem: "Тошнота", text: "Советы сервиса помогли выбрать правильное питание и легче переносить токсикоз." },
+  { name: "София", pregnancy: "32 недели", problem: "Боялась родов", text: "Nora Plus давала поддержку и ответы на все вопросы. Я чувствую себя уверенней!" },
+  { name: "Анастасия", pregnancy: "21 неделя", problem: "Головная боль", text: "Полезные рекомендации и поддержка!" },
+  { name: "Екатерина", pregnancy: "25 недель", problem: "Тревоги", text: "Успокоилась, доверяю системе!" },
+  { name: "Саида", pregnancy: "28 недель", problem: "Dahlsizlik", text: "Yordamingiz uchun rahmat!" },
+  { name: "Азиза", pregnancy: "16 hafta", problem: "Ko'ngil aynish", text: "Nora maslahatlari yordam berdi." },
+  { name: "Жанна", pregnancy: "38 недель", problem: "Бессонница", text: "Методы из приложения реально работают!" },
+  { name: "Гузал", pregnancy: "20 hafta", problem: "Havotir", text: "Dastur ruhlantirdi." },
+  { name: "Алиса", pregnancy: "19 недель", problem: "Страх родов", text: "Теперь спокойна, спасибо Nora!" },
+  { name: "Лола", pregnancy: "24 hafta", problem: "Qorindagi og'riq", text: "Nora maslahatlari orqali qiynaldi ketdi." },
+  { name: "Ирина", pregnancy: "29 недель", problem: "Боли в спине", text: "Удобно задавать вопросы, всё понятно!" },
+  { name: "Диана", pregnancy: "33 недели", problem: "Усталость", text: "Рекомендации реально снимают стресс." },
+  { name: "Малика", pregnancy: "15 hafta", problem: "Ishtaha yo'q", text: "Yordam oldim!" },
+  { name: "Карина", pregnancy: "22 недели", problem: "Анализы", text: "Быстро получила ответы, все в порядке." },
+  { name: "Юлия", pregnancy: "30 недель", problem: "Отеки ног", text: "Nora подсказала, как их уменьшить." },
+  { name: "Зебо", pregnancy: "34 hafta", problem: "Charchoq", text: "Yengillik uchun rahmat!" },
+  { name: "Эльвира", pregnancy: "23 недели", problem: "Эмоции", text: "Прояснила все тревоги." },
+  { name: "Ботирхон", pregnancy: "27 hafta", problem: "Erkak sifatida ham maslahat kerak", text: "Papalar uchun ham foydali!" },
+  { name: "Динара", pregnancy: "40 недель", problem: "Раздражение", text: "Советы о расслаблении супер!" },
+  { name: "Мухлиса", pregnancy: "26 hafta", problem: "Qularoq", text: "Eng yaxshi yordam!" },
+  { name: "Камила", pregnancy: "18 недель", problem: "Токсикоз", text: "Nora спасла моё настроение." },
+  { name: "Анвар", pregnancy: "30 hafta", problem: "Uxlash qiyin", text: "Yordam berdingiz!" },
+  { name: "Нигина", pregnancy: "20 недель", problem: "Страх", text: "Благодарю, меньше боюсь!" },
+  { name: "Мадина", pregnancy: "25 неделя", problem: "Усталость", text: "Удобно, понятные советы!" },
+  { name: "Гуль", pregnancy: "23 hafta", problem: "Ko'ngil xiraligi", text: "Yaxshi kayfiyat uchun rahmat!" },
+  { name: "Феруза", pregnancy: "37 недель", problem: "Бессонница", text: "Удобно, можно задать вопрос ночью." },
+  { name: "Галине", pregnancy: "32 недели", problem: "Питание", text: "Теперь ем правильно!" },
   { name: "Рано", pregnancy: "31 hafta", problem: "Tashvish", text: "Atrofdagilarga maslahatlar ham bera olaman!" },
 ];
 
@@ -48,7 +74,7 @@ const ReviewBlock: React.FC = () => {
     <div style={{
       width: "100%", maxWidth: maxWidth, margin: "40px auto 0 auto", background: "none"
     }}>
-      {reviewsToShow.map((r, idx) => (
+      {reviewsToShow.filter(Boolean).map((r, idx) => (
         <div
           key={r.name+idx}
           style={{
@@ -81,9 +107,9 @@ const THREAD_KEY = "nora_thread_id";
 
 const Chat: React.FC = () => {
   const [showWelcome, setShowWelcome] = useState(true);
-  // Остальные useState как у тебя...
+  // дальше все твои остальные useState...
 
-  // ... здесь вся основная логика чата ...
+  // ... вся логика чата не изменилась ...
 
   return (
     <div style={{
@@ -97,18 +123,17 @@ const Chat: React.FC = () => {
       alignItems: "center",
       boxSizing: "border-box"
     }}>
-      {/* --- панель --- */}
-
+      {/* Панель, баннер, описание и т.д. по твоему стилю */}
       {showWelcome ? (
         <>
-          {/* баннер, описание */}
+          {/* твой приветственный экран, картинка, текст... */}
           <button onClick={() => setShowWelcome(false)}>
             Начать пользоваться
           </button>
           <ReviewBlock />
         </>
       ) : (
-        // ... остальной чат и поле для сообщений ...
+        // остальной чат, input-бар...
         null
       )}
     </div>
