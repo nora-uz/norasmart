@@ -40,7 +40,6 @@ function formatBotText(text: string) {
   return result.trim();
 }
 
-// ----------- ОТЗЫВЫ -----------
 const REVIEWS = [
   {
     name: "Виктория", pregnancy: "27 недель",
@@ -111,13 +110,11 @@ const ReviewBlock: React.FC = () => {
         @keyframes slideInTop {
           0% { opacity: 0; transform: translateY(-30px);}
           100% { opacity: 1; transform: translateY(0);}
-        }
         `}
       </style>
     </div>
   );
 };
-// ----------- /ОТЗЫВЫ -----------
 
 type Message = { text: string; sender: "user" | "bot" };
 const THREAD_KEY = "nora_thread_id";
@@ -319,7 +316,6 @@ const Chat: React.FC = () => {
         boxSizing: "border-box"
       }}
     >
-      {/* Панель */}
       <div style={{
         width: "calc(100% - 40px)",
         maxWidth,
@@ -338,7 +334,7 @@ const Chat: React.FC = () => {
         }}>
           <span style={{
             fontWeight: 800, fontSize: "19px", lineHeight: 1.06,
-            whiteSpace: "nowrap"
+            whiteSpace: "nowrap", marginBottom: 7
           }}>Nora AI</span>
           <span style={{
             fontWeight: 400, fontSize: "13px",
@@ -372,21 +368,22 @@ const Chat: React.FC = () => {
           </button>
         </div>
       </div>
+      
       {/* Между панелью и фото */}
       <div style={{ height: 40 }} />
 
       {showWelcome ? (
         <>
-          {/* Фото */}
-          <div style={{
-            width: "100%",
-            maxWidth,
-            margin: "0 auto",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            background: "none"
-          }}>
+          <div
+            style={{
+              width: "100%",
+              maxWidth,
+              margin: "0 auto",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              background: "none"
+            }}>
             <img
               src={BANNER}
               alt="Nora AI баннер"
@@ -403,14 +400,32 @@ const Chat: React.FC = () => {
           <div style={{ height: 40 }} />
 
           <div style={{
-            width: "calc(100% - 40px)", maxWidth, textAlign: "center", margin: "0 auto"
+            width: "calc(100% - 40px)",
+            maxWidth,
+            textAlign: "center",
+            margin: "0 auto"
           }}>
             <div style={{
               fontWeight: 700, fontSize: "22px", color: NORA_COLOR, margin: 0
-            }}>Ждёте малыша? Я помогу!</div>
+            }}>
+              Ждёте малыша? Я помогу!
+            </div>
+          </div>
+          <div style={{
+            width: "calc(100% - 40px)",
+            maxWidth,
+            textAlign: "center",
+            margin: "0 auto"
+          }}>
             <div style={{
-              fontWeight: 400, fontSize: "15px", margin: 0, maxWidth: 400,
-              padding: "0 20px", lineHeight: 1.75, color: NORA_COLOR, display: "inline-block"
+              fontWeight: 400,
+              fontSize: "15px",
+              margin: 0,
+              maxWidth: 400,
+              padding: "0 20px",
+              lineHeight: 1.75,
+              color: NORA_COLOR,
+              display: "inline-block"
             }}>
               Я помогаю будущим мамам на каждом этапе беременности: отвечаю на вопросы, напоминаю о важных делах, слежу за самочувствием и даю советы, основанные на медицине Великобритании NHS.
             </div>
@@ -420,10 +435,20 @@ const Chat: React.FC = () => {
 
           <button
             style={{
-              width: "100%", maxWidth: 290, background: GRADIENT, color: NORA_COLOR,
-              border: "none", borderRadius: borderRadius, fontWeight: 700, fontSize: "17px",
-              padding: 0, margin: 0, height: 50,
-              display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer"
+              width: "100%",
+              maxWidth: 290,
+              background: GRADIENT,
+              color: NORA_COLOR,
+              border: "none",
+              borderRadius: borderRadius,
+              fontWeight: 700,
+              fontSize: "17px",
+              padding: "15px 0",
+              margin: "0 20px",
+              cursor: "pointer",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center"
             }}
             onClick={() => setShowWelcome(false)}
           >
@@ -434,7 +459,6 @@ const Chat: React.FC = () => {
           </button>
           {/* Между кнопкой и первым отзывом */}
           <div style={{ height: 40 }} />
-
           <ReviewBlock />
         </>
       ) : (showHowTo && (
@@ -456,7 +480,7 @@ const Chat: React.FC = () => {
         </div>
       ))}
 
-      {/* ... остальная часть чата ... */}
+      {/* Остальная часть чата (история, ввод и т.д.) — осталась как раньше */}
     </div>
   );
 };
