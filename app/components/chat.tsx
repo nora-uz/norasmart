@@ -27,11 +27,12 @@ const filterNora = "invert(13%) sepia(4%) saturate(271%) hue-rotate(175deg) brig
 function filterAsterisks(str: string) {
   return str.replace(/\*/g, "");
 }
+
 function formatBotText(text: string) {
   if (!text) return "";
   let cleaned = filterAsterisks(text).replace(/_/g, "");
   const firstSentenceMatch = cleaned.match(/^([^.!?]+[.!?])/);
-  const firstSentence = firstSentenceMatch ? firstSentenceMatch[1].trim() : "";
+  const firstSentence = firstSentenceMatch ? cleaned.match(/^([^.!?]+[.!?])/)![1].trim() : "";
   const restText = firstSentence ? cleaned.slice(firstSentence.length).trim() : cleaned.trim();
   let result = "";
   if (firstSentence) result += `**${firstSentence}** `;
@@ -40,6 +41,7 @@ function formatBotText(text: string) {
   return result.trim();
 }
 
+// --- ОТЗЫВЫ ---
 const REVIEWS = [
   {
     name: "Виктория", pregnancy: "27 недель",
@@ -92,17 +94,17 @@ const ReviewBlock: React.FC = () => {
           style={{
             background: "linear-gradient(90deg, #eff5fe 0%, #e5e8ed 100%)",
             borderRadius: 22,
-            margin: "0 20px " + (idx < 4 ? "20px" : "0"),
+            margin: `0 20px ${idx < 4 ? "20px" : "0"} 20px`,
             boxShadow: "0 2px 8px 0 rgba(150, 180, 220, 0.10)",
             padding: "14px 16px 11px 16px",
             animation: idx === 0 ? "slideInTop 0.6s" : undefined,
             transition: "all 0.5s"
           }}>
-          <div style={{ fontWeight: 700, fontSize: 15 }}>{r.name} — {r.pregnancy}</div>
+          <div style={{ fontWeight: 700, fontSize: 15, margin: 0 }}>{r.name} — {r.pregnancy}</div>
           <div style={{ fontWeight: 700, color: "#715b9b", margin: "4px 0 3px 0" }}>
             {r.problem}
           </div>
-          <div style={{ fontSize: 14, color: "#2e2e2e", lineHeight: "1.5" }}>{r.text}</div>
+          <div style={{ fontSize: 14, color: "#2e2e2e", lineHeight: "1.5", margin: 0 }}>{r.text}</div>
         </div>
       ))}
       <style>
@@ -110,11 +112,13 @@ const ReviewBlock: React.FC = () => {
         @keyframes slideInTop {
           0% { opacity: 0; transform: translateY(-30px);}
           100% { opacity: 1; transform: translateY(0);}
+        }
         `}
       </style>
     </div>
   );
 };
+// --- /ОТЗЫВЫ ---
 
 type Message = { text: string; sender: "user" | "bot" };
 const THREAD_KEY = "nora_thread_id";
@@ -316,6 +320,7 @@ const Chat: React.FC = () => {
         boxSizing: "border-box"
       }}
     >
+      {/* Панель */}
       <div style={{
         width: "calc(100% - 40px)",
         maxWidth,
@@ -368,12 +373,13 @@ const Chat: React.FC = () => {
           </button>
         </div>
       </div>
-      
-      {/* Между панелью и фото */}
+
+      {/* --- Между панелью и фото --- */}
       <div style={{ height: 40 }} />
 
       {showWelcome ? (
         <>
+          {/* Фото */}
           <div
             style={{
               width: "100%",
@@ -396,7 +402,8 @@ const Chat: React.FC = () => {
               }}
             />
           </div>
-          {/* Между фото и заголовком */}
+
+          {/* --- Между фото и заголовком --- */}
           <div style={{ height: 40 }} />
 
           <div style={{
@@ -407,9 +414,7 @@ const Chat: React.FC = () => {
           }}>
             <div style={{
               fontWeight: 700, fontSize: "22px", color: NORA_COLOR, margin: 0
-            }}>
-              Ждёте малыша? Я помогу!
-            </div>
+            }}>Ждёте малыша? Я помогу!</div>
           </div>
           <div style={{
             width: "calc(100% - 40px)",
@@ -430,7 +435,8 @@ const Chat: React.FC = () => {
               Я помогаю будущим мамам на каждом этапе беременности: отвечаю на вопросы, напоминаю о важных делах, слежу за самочувствием и даю советы, основанные на медицине Великобритании NHS.
             </div>
           </div>
-          {/* Между описанием и кнопкой */}
+
+          {/* --- Между описанием и кнопкой --- */}
           <div style={{ height: 40 }} />
 
           <button
@@ -457,8 +463,10 @@ const Chat: React.FC = () => {
               {ICONS.arrowRight}
             </span>
           </button>
-          {/* Между кнопкой и первым отзывом */}
+
+          {/* --- Между кнопкой и первым отзывом --- */}
           <div style={{ height: 40 }} />
+
           <ReviewBlock />
         </>
       ) : (showHowTo && (
@@ -479,8 +487,7 @@ const Chat: React.FC = () => {
           <div style={{ height: 40 }} />
         </div>
       ))}
-
-      {/* Остальная часть чата (история, ввод и т.д.) — осталась как раньше */}
+      {/* ... остальной чат ... */}
     </div>
   );
 };
