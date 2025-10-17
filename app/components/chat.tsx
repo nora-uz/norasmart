@@ -317,7 +317,7 @@ const Chat: React.FC = () => {
       }}
     >
       {/* 20px НАД ПАНЕЛЬЮ */}
-      <div style={{ height: 20 }} />
+      <div style={{ height: 20, flexShrink: 0 }} />
 
       {/* Панель */}
       <div style={{
@@ -374,7 +374,7 @@ const Chat: React.FC = () => {
       </div>
 
       {/* 40px между панелью и фото */}
-      <div style={{ height: 40 }} />
+      <div style={{ height: 40, flexShrink: 0 }} />
 
       {showWelcome ? (
         <>
@@ -402,7 +402,7 @@ const Chat: React.FC = () => {
           </div>
 
           {/* 40px между фото и заголовком */}
-          <div style={{ height: 40 }} />
+          <div style={{ height: 40, flexShrink: 0 }} />
 
           {/* Заголовок и описание */}
           <div style={{
@@ -412,7 +412,7 @@ const Chat: React.FC = () => {
               fontWeight: 700, fontSize: "22px", color: NORA_COLOR, margin: 0
             }}>Ждёте малыша? Я помогу!</div>
             {/* 20px между заголовком и описанием */}
-            <div style={{ height: 20 }} />
+            <div style={{ height: 20, flexShrink: 0 }} />
             <div style={{
               fontWeight: 400, fontSize: "15px", margin: "0 auto", maxWidth: 400,
               padding: "0 20px", lineHeight: 1.75, color: NORA_COLOR, display: "inline-block"
@@ -422,7 +422,7 @@ const Chat: React.FC = () => {
           </div>
 
           {/* 40px между описанием и кнопкой */}
-          <div style={{ height: 40 }} />
+          <div style={{ height: 40, flexShrink: 0 }} />
 
           {/* Кнопка */}
           <button
@@ -441,7 +441,7 @@ const Chat: React.FC = () => {
           </button>
 
           {/* 40px между кнопкой и отзывами */}
-          <div style={{ height: 40 }} />
+          <div style={{ height: 40, flexShrink: 0 }} />
 
           {/* Отзывы */}
           <ReviewBlock />
@@ -461,7 +461,7 @@ const Chat: React.FC = () => {
           }}>
             Можно спрашивать все, что связано с беременностью, здоровьем, самочувствием, питанием, анализами, подготовкой к родам, эмоциональным состоянием и любые другие темы.
           </div>
-          <div style={{ height: 40 }} />
+          <div style={{ height: 40, flexShrink: 0 }} />
         </div>
       ))}
       {/* ... остальная часть чата ... */}
