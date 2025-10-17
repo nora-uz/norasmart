@@ -68,6 +68,7 @@ const REVIEWS = [
   }
 ];
 
+// Обновленный блок отзывов
 const ReviewBlock: React.FC = () => {
   const [visibleIdx, setVisibleIdx] = useState(0);
   useEffect(() => {
@@ -92,7 +93,8 @@ const ReviewBlock: React.FC = () => {
           style={{
             background: "linear-gradient(90deg, #eff5fe 0%, #e5e8ed 100%)",
             borderRadius: 22,
-            margin: "0 20px " + (idx < 4 ? "20px" : "0"),
+            margin: "0 20px 0 20px",
+            marginBottom: idx < 4 ? 20 : 0, // 20px между отзывами кроме последнего
             boxShadow: "0 2px 8px 0 rgba(150, 180, 220, 0.10)",
             padding: "14px 16px 11px 16px",
             animation: idx === 0 ? "slideInTop 0.6s" : undefined,
