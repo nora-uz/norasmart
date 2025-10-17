@@ -28,10 +28,9 @@ function filterAsterisks(str: string) {
   return str.replace(/\*/g, "");
 }
 
-// ✅ Исправленная функция — теперь жирный шрифт сохраняется
 function formatBotText(text: string) {
   if (!text) return "";
-  let cleaned = text.replace(/_/g, ""); // убираем подчёркивания, но не трогаем **
+  let cleaned = text.replace(/_/g, "");
   const firstSentenceMatch = cleaned.match(/^([^.!?]+[.!?])/);
   const firstSentence = firstSentenceMatch ? firstSentenceMatch[1].trim() : "";
   const restText = firstSentence ? cleaned.slice(firstSentence.length).trim() : cleaned.trim();
@@ -40,6 +39,93 @@ function formatBotText(text: string) {
   if (restText) result += restText;
   return result.trim();
 }
+
+// ------- Добавляем отзывы ---------
+const REVIEWS = [
+  {
+    name: "Виктория", pregnancy: "27 недель", 
+    problem: "Тревожность из-за анализов", 
+    text: "Nora Plus помогла мне успокоиться и разобраться с результатами. Теперь я сплю намного лучше."
+  },
+  {
+    name: "Aigerim", pregnancy: "22 недели", 
+    problem: "Болели ноги", 
+    text: "Советы Nora Plus реально облегчили мои боли и помогли подобрать правильную обувь!"
+  },
+  {
+    name: "Madison", pregnancy: "31 week", 
+    problem: "Insomnia", 
+    text: "Nora Plus offered simple sleep routines that helped me finally rest at night."
+  },
+  {
+    name: "Мария", pregnancy: "39 недель", 
+    problem: "Страх перед родами", 
+    text: "Рекомендации и поддержка от Nora Plus сняли многие страхи и придали уверенности!"
+  },
+  {
+    name: "Ольга", pregnancy: "18 недель", 
+    problem: "Непонятные симптомы", 
+    text: "Удобно задать вопрос — и сразу получить полезную информацию и советы, спасибо, Nora Plus!"
+  }
+];
+
+const ReviewBlock: React.FC = () => {
+  const [visibleIdx, setVisibleIdx] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setVisibleIdx(idx => (idx + 1) % REVIEWS.length);
+    }, 7000);
+    return () => clearInterval(interval);
+  }, []);
+
+  // формируем 5 отзывов: текущий + 4 пред
+  let reviewsToShow: typeof REVIEWS = [];
+  for (let i = 0; i < 5; i++) {
+    reviewsToShow.push(REVIEWS[
+      (visibleIdx + REVIEWS.length - i) % REVIEWS.length
+    ]);
+  }
+
+  return (
+    <div
+      style={{
+        background: GRADIENT,
+        borderRadius: borderRadius,
+        maxWidth: maxWidth,
+        margin: "24px auto 0 auto",
+        padding: "22px 18px",
+        boxSizing: "border-box",
+        boxShadow: "0 4px 28px 0 rgba(155,175,205,0.08)"
+      }}
+    >
+      {reviewsToShow.map((r, idx) => (
+        <div
+          key={r.name+idx}
+          style={{
+            marginBottom: idx < 4 ? "19px" : "0",
+            animation: idx === 0 ? "slideInTop 0.5s" : undefined,
+            transition: "all 0.4s"
+          }}>
+          <div style={{ fontWeight: 700, fontSize: "15px" }}>{r.name} — {r.pregnancy}</div>
+          <div style={{ fontWeight: 700, color: "#795c9c", margin: "3px 0 2px 0" }}>
+            {r.problem}
+          </div>
+          <div style={{ fontSize: "14px", color: "#222", lineHeight: 1.45 }}>{r.text}</div>
+        </div>
+      ))}
+      <style>
+        {`
+        @keyframes slideInTop {
+          0% { opacity: 0; transform: translateY(-20px);}
+          100% { opacity: 1; transform: translateY(0);}
+        }
+        `}
+      </style>
+    </div>
+  );
+};
+// ---------- Конец блока отзывов ----------
 
 type Message = { text: string; sender: "user" | "bot" };
 const THREAD_KEY = "nora_thread_id";
@@ -128,7 +214,6 @@ const Chat: React.FC = () => {
       }
       let i = 0;
       setBotProgress("");
-      // ⚠️ Не трогаем ** — не вызываем filterAsterisks для ответа
       const interval = setInterval(() => {
         setBotProgress(botReply.slice(0, i));
         i++;
@@ -293,6 +378,10 @@ const Chat: React.FC = () => {
           </button>
         </div>
       </div>
+
+      {/* ===== Отзывы — Под кнопкой или приветствием ===== */}
+      <ReviewBlock />
+      {/* ===== Конец блока отзывов ===== */}
 
       {/* остальная часть JSX без изменений */}
       {/* ... */}
