@@ -40,7 +40,7 @@ function formatBotText(text: string) {
   return result.trim();
 }
 
-// ----- Блок отзывов -----
+// ----- БЛОК ОТЗЫВОВ -----
 const REVIEWS = [
   {
     name: "Виктория", pregnancy: "27 недель",
@@ -91,7 +91,7 @@ const ReviewBlock: React.FC = () => {
       style={{
         width: "100%",
         maxWidth: maxWidth,
-        margin: "24px auto 0 auto",
+        margin: "30px auto 0 auto", // именно ОТСТУП 30px сверху от кнопки!
         boxSizing: "border-box",
         background: "none"
       }}
@@ -126,7 +126,7 @@ const ReviewBlock: React.FC = () => {
     </div>
   );
 };
-// ----- Конец блока отзывов -----
+// ----- КОНЕЦ БЛОКА ОТЗЫВОВ -----
 
 type Message = { text: string; sender: "user" | "bot" };
 const THREAD_KEY = "nora_thread_id";
@@ -327,65 +327,60 @@ const Chat: React.FC = () => {
         boxSizing: "border-box"
       }}
     >
+      {/* --- ФОТО, ОПИСАНИЕ, КНОПКА --- */}
+      <img
+        src={BANNER}
+        style={{
+          width: "100%",
+          maxWidth,
+          height: "auto",
+          borderRadius: borderRadius,
+          margin: "20px auto 0 auto",
+          boxShadow: "0 4px 20px 0 rgba(170,190,230,0.12)"
+        }}
+        alt="Nora AI"
+      />
       <div style={{
         width: "calc(100% - 40px)",
         maxWidth,
-        minHeight: panelHeight,
-        background: GRADIENT,
+        fontWeight: 700,
+        fontSize: 20,
         color: NORA_COLOR,
-        margin: "20px auto 0 auto",
-        display: "flex", alignItems: "center",
-        borderRadius: borderRadius,
-        paddingLeft: 20, paddingRight: 12, paddingTop: 5, paddingBottom: 5,
-        justifyContent: "flex-start", boxSizing: "border-box", zIndex: 1, boxShadow: "none"
+        margin: "22px auto 10px auto",
+        textAlign: "center"
       }}>
-        <div style={{
-          marginRight: 10, color: NORA_COLOR,
-          display: "flex", flexDirection: "column", justifyContent: "center", minWidth: 0
+        Nora AI — ассистент для будущих мам <br />
+        <span style={{
+          fontWeight: 400, fontSize: "15px", color: "#565656"
         }}>
-          <span style={{
-            fontWeight: 800, fontSize: "19px", lineHeight: 1.06,
-            whiteSpace: "nowrap", marginBottom: 7
-          }}>Nora AI</span>
-          <span style={{
-            fontWeight: 400, fontSize: "13px",
-            color: "#565656", lineHeight: 1.04, whiteSpace: "nowrap"
-          }}>Ассистент для будущих мам</span>
-        </div>
-        <div style={{ display: "flex", alignItems: "center", gap: 8, marginLeft: "auto" }}>
-          <button style={{
-            background: "transparent", border: "none", cursor: "pointer",
-            width: 38, height: 38, borderRadius: 19,
-            display: "flex", alignItems: "center", justifyContent: "center"
-          }} onClick={handleShare}>
-            <img src={ICONS.share} alt="Share"
-              style={{ width: ICON_SIZE, height: ICON_SIZE, filter: filterNora }} />
-          </button>
-          <button style={{
-            background: "transparent", border: "none", cursor: "pointer",
-            width: 38, height: 38, borderRadius: 19,
-            display: "flex", alignItems: "center", justifyContent: "center"
-          }} onClick={() => window.open("https://t.me/norasmart", "_blank")}>
-            <img src={ICONS.telegram} alt="Telegram"
-              style={{ width: ICON_SIZE, height: ICON_SIZE, filter: filterNora }} />
-          </button>
-          <button style={{
-            background: "transparent", border: "none", cursor: "pointer",
-            width: 38, height: 38, borderRadius: 19,
-            display: "flex", alignItems: "center", justifyContent: "center"
-          }} onClick={clearChatAll}>
-            <img src={ICONS.trash} alt="Trash"
-              style={{ width: ICON_SIZE, height: ICON_SIZE, filter: filterNora }} />
-          </button>
-        </div>
+          Современные рекомендации, поддержка и забота на каждом этапе беременности
+        </span>
       </div>
-
-      {/* ======= Кнопка "Начать пользоваться", отзывы сразу после ======= */}
-      {/* Если у тебя есть отдельная разметка фото-описания-кнопки в Welcome, то вставь ReviewBlock ПОД кнопкой там! */}
+      <button
+        style={{
+          display: "block",
+          margin: "0 auto",
+          marginBottom: "0px",
+          marginTop: "17px",
+          background: GRADIENT,
+          color: "#fff",
+          fontWeight: 700,
+          fontSize: 18,
+          borderRadius: borderRadius,
+          border: "none",
+          padding: "15px 0",
+          width: "calc(100% - 40px)",
+          maxWidth,
+          cursor: "pointer",
+          boxShadow: "0 2px 10px 0 rgba(140,170,230,0.13)"
+        }}
+        onClick={() => setShowWelcome(false)}
+      >
+        Начать пользоваться
+      </button>
+      {/* --- БЛОК ОТЗЫВОВ --- */}
       <ReviewBlock />
-      {/* ======= Конец блока отзывов ======= */}
-
-      {/* ...остальной JSX без изменений... */}
+      {/* --- Остальная часть JSX без изменений --- */}
     </div>
   );
 };
