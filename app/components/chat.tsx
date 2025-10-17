@@ -24,8 +24,6 @@ const ICONS = {
 };
 const filterNora = "invert(13%) sepia(4%) saturate(271%) hue-rotate(175deg) brightness(92%) contrast(93%)";
 
-const Spacer = ({ h = 40 }) => <div style={{ height: h }} />;
-
 function filterAsterisks(str: string) {
   return str.replace(/\*/g, "");
 }
@@ -42,6 +40,7 @@ function formatBotText(text: string) {
   return result.trim();
 }
 
+// ОТЗЫВЫ
 const REVIEWS = [
   {
     name: "Виктория", pregnancy: "27 недель",
@@ -66,7 +65,7 @@ const REVIEWS = [
   {
     name: "Dilnoza", pregnancy: "24 hafta",
     problem: "Uyqusizlik",
-    text: "Nora Plus maslahatlari yordam berdi, endi yaxshi uxlayman ва ташвишлар камроқ."
+    text: "Nora Plus maslahatlari yordam berdi, endi yaxshi uxlayman и ташвишлар камроқ."
   }
 ];
 
@@ -86,7 +85,7 @@ const ReviewBlock: React.FC = () => {
   }
   return (
     <div style={{
-      width: "100%", maxWidth: 560, margin: "0 auto", background: "none"
+      width: "100%", maxWidth: 560, margin: "30px auto 0 auto", background: "none"
     }}>
       {reviewsToShow.map((r, idx) => (
         <div
@@ -100,11 +99,11 @@ const ReviewBlock: React.FC = () => {
             animation: idx === 0 ? "slideInTop 0.6s" : undefined,
             transition: "all 0.5s"
           }}>
-          <div style={{ fontWeight: 700, fontSize: 15, margin: 0 }}>{r.name} — {r.pregnancy}</div>
+          <div style={{ fontWeight: 700, fontSize: 15 }}>{r.name} — {r.pregnancy}</div>
           <div style={{ fontWeight: 700, color: "#715b9b", margin: "4px 0 3px 0" }}>
             {r.problem}
           </div>
-          <div style={{ fontSize: 14, color: "#2e2e2e", lineHeight: "1.5", margin: 0 }}>{r.text}</div>
+          <div style={{ fontSize: 14, color: "#2e2e2e", lineHeight: "1.5" }}>{r.text}</div>
         </div>
       ))}
       <style>
@@ -112,13 +111,13 @@ const ReviewBlock: React.FC = () => {
         @keyframes slideInTop {
           0% { opacity: 0; transform: translateY(-30px);}
           100% { opacity: 1; transform: translateY(0);}
-        }
         `}
       </style>
     </div>
   );
 };
 
+// CHAT
 type Message = { text: string; sender: "user" | "bot" };
 const THREAD_KEY = "nora_thread_id";
 
@@ -319,7 +318,6 @@ const Chat: React.FC = () => {
         boxSizing: "border-box"
       }}
     >
-      {/* Панель */}
       <div style={{
         width: "calc(100% - 40px)",
         maxWidth,
@@ -372,21 +370,19 @@ const Chat: React.FC = () => {
           </button>
         </div>
       </div>
-      <Spacer />
+      <div style={{ height: 40 }} />
 
       {showWelcome ? (
         <>
-          {/* Фото */}
-          <div
-            style={{
-              width: "100%",
-              maxWidth,
-              margin: "0 auto",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              background: "none"
-            }}>
+          <div style={{
+            width: "100%",
+            maxWidth,
+            margin: "0 auto",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            background: "none"
+          }}>
             <img
               src={BANNER}
               alt="Nora AI баннер"
@@ -399,55 +395,29 @@ const Chat: React.FC = () => {
               }}
             />
           </div>
-          <Spacer />
-          {/* Заголовок */}
+          <div style={{ height: 40 }} />
+
           <div style={{
-            width: "calc(100% - 40px)",
-            maxWidth,
-            textAlign: "center",
-            margin: "0 auto"
+            width: "calc(100% - 40px)", maxWidth, textAlign: "center", margin: "0 auto"
           }}>
             <div style={{
               fontWeight: 700, fontSize: "22px", color: NORA_COLOR, margin: 0
             }}>Ждёте малыша? Я помогу!</div>
-          </div>
-          {/* Описание */}
-          <div style={{
-            width: "calc(100% - 40px)",
-            maxWidth,
-            textAlign: "center",
-            margin: "0 auto"
-          }}>
             <div style={{
-              fontWeight: 400,
-              fontSize: "15px",
-              margin: 0,
-              maxWidth: 400,
-              padding: "0 20px",
-              lineHeight: 1.75,
-              color: NORA_COLOR,
-              display: "inline-block"
+              fontWeight: 400, fontSize: "15px", margin: "0 auto 0 auto", maxWidth: 400,
+              padding: "0 20px", lineHeight: 1.75, color: NORA_COLOR, display: "inline-block"
             }}>
               Я помогаю будущим мамам на каждом этапе беременности: отвечаю на вопросы, напоминаю о важных делах, слежу за самочувствием и даю советы, основанные на медицине Великобритании NHS.
             </div>
           </div>
-          <Spacer />
+          <div style={{ height: 40 }} />
+
           <button
             style={{
-              width: "100%",
-              maxWidth: 290,
-              background: GRADIENT,
-              color: NORA_COLOR,
-              border: "none",
-              borderRadius: borderRadius,
-              fontWeight: 700,
-              fontSize: "17px",
-              padding: "15px 0",
-              margin: "0 20px",
-              cursor: "pointer",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center"
+              width: "100%", maxWidth: 290, background: GRADIENT, color: NORA_COLOR,
+              border: "none", borderRadius: borderRadius, fontWeight: 700, fontSize: "17px",
+              padding: "15px 0", margin: "0 20px", cursor: "pointer",
+              display: "flex", alignItems: "center", justifyContent: "center"
             }}
             onClick={() => setShowWelcome(false)}
           >
@@ -456,7 +426,8 @@ const Chat: React.FC = () => {
               {ICONS.arrowRight}
             </span>
           </button>
-          <Spacer />
+          <div style={{ height: 40 }} />
+
           <ReviewBlock />
         </>
       ) : (showHowTo && (
@@ -474,10 +445,10 @@ const Chat: React.FC = () => {
           }}>
             Можно спрашивать все, что связано с беременностью, здоровьем, самочувствием, питанием, анализами, подготовкой к родам, эмоциональным состоянием и любые другие темы.
           </div>
-          <Spacer />
+          <div style={{ height: 40 }} />
         </div>
       ))}
-      {/* ...READ CHAT LOGIC/INPUT AS BEFORE... */}
+      {/* ... остальная часть чата ... */}
     </div>
   );
 };
