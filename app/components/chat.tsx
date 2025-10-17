@@ -28,31 +28,34 @@ function filterAsterisks(str: string) {
 }
 
 const REVIEWS = [
-  {
-    name: "Виктория", pregnancy: "27 недель",
-    problem: "Тревожность из-за анализов",
-    text: "Nora Plus помогла мне понять результаты и успокоиться. Теперь я сплю спокойнее."
-  },
-  {
-    name: "Мария", pregnancy: "36 недель",
-    problem: "Болели ноги",
-    text: "Рекомендации Nora Plus помогли снять усталость и подобрать упражнения."
-  },
-  {
-    name: "Оля", pregnancy: "18 недель",
-    problem: "Тошнота",
-    text: "Советы сервиса помогли выбрать правильное питание и легче переносить токсикоз."
-  },
-  {
-    name: "София", pregnancy: "32 недели",
-    problem: "Боялась родов",
-    text: "Nora Plus давала поддержку и ответы на все вопросы. Я чувствую себя уверенней!"
-  },
-  {
-    name: "Dilnoza", pregnancy: "24 hafta",
-    problem: "Uyqusizlik",
-    text: "Nora Plus maslahatlari yordam berdi, endi yaxshi uxlayman ва ташвишлар камроқ."
-  }
+  // Русские отзывы (месяц беременности)
+  { name: "Анна", pregnancy: "2 месяц", problem: "Токсикоз", text: "Nora Plus подсказала, как справиться с утренней тошнотой. Питание стало более сбалансированным и легче переносить симптомы." },
+  { name: "Елена", pregnancy: "4 месяц", problem: "Слабость и усталость", text: "Рекомендации по витаминам и сну очень помогли, чувствую себя намного лучше!" },
+  { name: "Ирина", pregnancy: "5 месяц", problem: "Тревожность", text: "Советы от Nora Plus помогли мне расслабиться и больше отдыхать. Теперь спокойна за малыша." },
+  { name: "Оксана", pregnancy: "6 месяц", problem: "Боль в спине", text: "Упражнения из приложения действительно облегчили боль. Научилась правильно расслабляться." },
+  { name: "Виктория", pregnancy: "7 месяц", problem: "Анализы", text: "Пояснения от сервиса помогли понять результаты, тревога уходит, сплю спокойнее." },
+  { name: "Мария", pregnancy: "9 месяц", problem: "Отёки ног", text: "Полезные советы, упражнения и режим помогли избавиться от тяжести в ногах." },
+  { name: "София", pregnancy: "8 месяц", problem: "Страх родов", text: "Nora отвечала на мои вопросы, теперь чувствую уверенность и готовность." },
+  { name: "Оля", pregnancy: "5 месяц", problem: "Питание", text: "Рекомендации по продуктам помогли избежать лишнего веса и токсикоза." },
+  { name: "Татьяна", pregnancy: "3 месяц", problem: "Сон", text: "Научилась правильно расслабляться по совету приложения, теперь сплю лучше." },
+  { name: "Кристина", pregnancy: "7 месяц", problem: "Забывчивость", text: "Напоминания от Nora Plus о приёме витаминов и воде очень выручают!" },
+  { name: "Алиса", pregnancy: "6 месяц", problem: "Недостаток информации", text: "Ответы на вопросы о здоровье пришли быстро, больше не нервничаю." },
+  { name: "Светлана", pregnancy: "8 месяц", problem: "Беспокойство", text: "Чат с ассистентом помог снять лишние страхи, отлично поддерживает." },
+  { name: "Дарья", pregnancy: "3 месяц", problem: "Токсикоз", text: "Перед сном читаю рекомендации, стало меньше тошноты и улучшилось настроение." },
+
+  // Узбекские отзывы (месяц беременности)
+  { name: "Dilnoza", pregnancy: "6 oy", problem: "Uyqusizlik", text: "Nora Plus maslahatlari yordam berdi, endi yaxshi uxlayman ва ташвишлар камроқ." },
+  { name: "Madina", pregnancy: "4 oy", problem: "Ovqat hazmi", text: "Ovqatlanish bo‘yicha maslahatlar juda foydali, endi oshqozonim qiynalmaydi." },
+  { name: "Gulnora", pregnancy: "8 oy", problem: "Qo‘rqinch", text: "Nora Plus qo‘llablab-quvvatladi, tug‘ruqdan kamroq qo‘rqaman." },
+  { name: "Yulduz", pregnancy: "5 oy", problem: "Bel og‘rig‘i", text: "Mashqlar yordami bilan bel og‘rig‘i ancha kamaydi." },
+  { name: "Zarina", pregnancy: "3 oy", problem: "Toksikoz", text: "Nora maslahatlari tufayli toksikozni osonroq o‘tkazdim." },
+  { name: "Muxlisa", pregnancy: "7 oy", problem: "Vazn ortishi", text: "Sog‘lom ovqatlanish va harakatlar tufayli vaznimni nazorat qila olyapman." },
+  { name: "Kamola", pregnancy: "2 oy", problem: "Xavotir", text: "Assistentim savollarimga tez javob beradi, endi kamroq xavotirdaman." },
+  { name: "Nargiza", pregnancy: "5 oy", problem: "Kichik og‘riqlar", text: "Nora maslahatlariga amal qilib, hal qilmoqdaman." },
+  { name: "Hanifa", pregnancy: "9 oy", problem: "Tayyorlanish", text: "Tug‘ruqqa tayyorgarlik bo‘yicha foydali maslahatlar oldim." },
+  { name: "Shahzoda", pregnancy: "4 oy", problem: "Energiya yetishmasligi", text: "Sog‘lom turmush tarzini boshladim, o‘zimni yaxshi his qilaman." },
+  { name: "Laylo", pregnancy: "7 oy", problem: "Uyqu buzilishi", text: "Qisqa mashqlar va tinchlantiruvchi maslahatlar yordam berdi." },
+  { name: "Feruza", pregnancy: "6 oy", problem: "Xotira", text: "Nora eslatmalari vitamin va suv ichishga yordam beradi." },
 ];
 
 const ReviewBlock: React.FC = () => {
@@ -366,7 +369,7 @@ const Chat: React.FC = () => {
       {/* 10px между панелью и видео */}
       <div style={{ height: 10, flexShrink: 0 }} />
 
-      {/* Видео вместо фото */}
+      {/* Видео по центру, чуть меньше и без обрезки */}
       <div style={{
         width: "100%",
         maxWidth,
@@ -375,16 +378,18 @@ const Chat: React.FC = () => {
         justifyContent: "center",
         alignItems: "center",
         background: "none",
-        aspectRatio: "16/9" // соотношение сторон видео, поменяйте если нужна другая пропорция
+        height: 180,
+        position: "relative"
       }}>
         <video
           src="/nora.mp4"
           style={{
-            width: "100%",
-            height: "100%",
+            maxWidth: "60%",
+            maxHeight: "100%",
+            objectFit: "contain",
+            objectPosition: "center",
             display: "block",
-            objectFit: "cover",
-            objectPosition: "center"
+            margin: "0 auto"
           }}
           autoPlay
           playsInline
