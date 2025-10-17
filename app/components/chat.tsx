@@ -26,18 +26,6 @@ const filterNora = "invert(13%) sepia(4%) saturate(271%) hue-rotate(175deg) brig
 function filterAsterisks(str: string) {
   return str.replace(/\*/g, "");
 }
-function formatBotText(text: string) {
-  if (!text) return "";
-  let cleaned = filterAsterisks(text).replace(/_/g, "");
-  const firstSentenceMatch = cleaned.match(/^([^.!?]+[.!?])/);
-  const firstSentence = firstSentenceMatch ? firstSentenceMatch[1].trim() : "";
-  const restText = firstSentence ? cleaned.slice(firstSentence.length).trim() : cleaned.trim();
-  let result = "";
-  if (firstSentence) result += `**${firstSentence}** `;
-  if (restText) result += restText;
-  result = result.replace(/\*\*(.*?)\*\*[*]+/g, "$1");
-  return result.trim();
-}
 
 const REVIEWS = [
   {
@@ -92,7 +80,7 @@ const ReviewBlock: React.FC = () => {
             background: "linear-gradient(90deg, #eff5fe 0%, #e5e8ed 100%)",
             borderRadius: 22,
             margin: "0 20px 0 20px",
-            marginBottom: idx < 4 ? 20 : 0, // 20px между отзывами кроме последнего
+            marginBottom: idx < 4 ? 20 : 0,
             boxShadow: "0 2px 8px 0 rgba(150, 180, 220, 0.10)",
             padding: "14px 16px 11px 16px",
             animation: idx === 0 ? "slideInTop 0.6s" : undefined,
@@ -386,21 +374,23 @@ const Chat: React.FC = () => {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        background: "none"
+        background: "none",
+        aspectRatio: "16/9" // соотношение сторон видео, поменяйте если нужна другая пропорция
       }}>
         <video
           src="/nora.mp4"
           style={{
-            width: "80%",
-            height: "auto",
+            width: "100%",
+            height: "100%",
             display: "block",
-            objectFit: "contain",
+            objectFit: "cover",
             objectPosition: "center"
           }}
           autoPlay
-          loop
-          muted
           playsInline
+          muted
+          loop
+          preload="auto"
         />
       </div>
 
@@ -449,9 +439,6 @@ const Chat: React.FC = () => {
       {/* Отзывы */}
       <ReviewBlock />
 
-      {/* ————————————————————
-           Основной чат, появляется после закрытия welcome 
-      ———————————————————— */}
       {!showWelcome && !showHowTo && (
         <div style={{
           width: "100%",
