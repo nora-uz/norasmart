@@ -42,8 +42,7 @@ const REVIEWS = [
   { name: "Алиса", pregnancy: "6 месяц", problem: "Недостаток информации", text: "Ответы на вопросы о здоровье пришли быстро, больше не нервничаю." },
   { name: "Светлана", pregnancy: "8 месяц", problem: "Беспокойство", text: "Чат с ассистентом помог снять лишние страхи, отлично поддерживает." },
   { name: "Дарья", pregnancy: "3 месяц", problem: "Токсикоз", text: "Перед сном читаю рекомендации, стало меньше тошноты и улучшилось настроение." },
-
-  // Узбекские отзывы (месяц беременности)
+  // Узбекские
   { name: "Dilnoza", pregnancy: "6 oy", problem: "Uyqusizlik", text: "Nora Plus maslahatlari yordam berdi, endi yaxshi uxlayman ва ташвишлар камроқ." },
   { name: "Madina", pregnancy: "4 oy", problem: "Ovqat hazmi", text: "Ovqatlanish bo‘yicha maslahatlar juda foydali, endi oshqozonim qiynalmaydi." },
   { name: "Gulnora", pregnancy: "8 oy", problem: "Qo‘rqinch", text: "Nora Plus qo‘llablab-quvvatladi, tug‘ruqdan kamroq qo‘rqaman." },
@@ -108,6 +107,8 @@ const ReviewBlock: React.FC = () => {
     </div>
   );
 };
+
+// остальной код не менялся
 
 type Message = { text: string; sender: "user" | "bot" };
 const THREAD_KEY = "nora_thread_id";
@@ -369,7 +370,7 @@ const Chat: React.FC = () => {
       {/* 10px между панелью и видео */}
       <div style={{ height: 10, flexShrink: 0 }} />
 
-      {/* Видео по центру, увеличенное */}
+      {/* Видео по центру, увеличенное без черных полос */}
       <div style={{
         width: "100%",
         maxWidth,
@@ -378,18 +379,21 @@ const Chat: React.FC = () => {
         justifyContent: "center",
         alignItems: "center",
         background: "none",
-        height: 240,
+        height: 340,
         position: "relative"
       }}>
         <video
           src="/nora.mp4"
           style={{
-            maxWidth: "80%",
+            maxWidth: "97%",
             maxHeight: "100%",
-            objectFit: "contain",
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
             objectPosition: "center",
             display: "block",
-            margin: "0 auto"
+            margin: "0 auto",
+            borderRadius: 24
           }}
           autoPlay
           playsInline
