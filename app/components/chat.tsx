@@ -24,15 +24,16 @@ const ICONS = {
 };
 const filterNora = "invert(13%) sepia(4%) saturate(271%) hue-rotate(175deg) brightness(92%) contrast(93%)";
 
+const Spacer = ({ h = 40 }) => <div style={{ height: h }} />;
+
 function filterAsterisks(str: string) {
   return str.replace(/\*/g, "");
 }
-
 function formatBotText(text: string) {
   if (!text) return "";
   let cleaned = filterAsterisks(text).replace(/_/g, "");
   const firstSentenceMatch = cleaned.match(/^([^.!?]+[.!?])/);
-  const firstSentence = firstSentenceMatch ? cleaned.match(/^([^.!?]+[.!?])/)![1].trim() : "";
+  const firstSentence = firstSentenceMatch ? firstSentenceMatch[1].trim() : "";
   const restText = firstSentence ? cleaned.slice(firstSentence.length).trim() : cleaned.trim();
   let result = "";
   if (firstSentence) result += `**${firstSentence}** `;
@@ -41,7 +42,6 @@ function formatBotText(text: string) {
   return result.trim();
 }
 
-// --- ОТЗЫВЫ ---
 const REVIEWS = [
   {
     name: "Виктория", pregnancy: "27 недель",
@@ -66,7 +66,7 @@ const REVIEWS = [
   {
     name: "Dilnoza", pregnancy: "24 hafta",
     problem: "Uyqusizlik",
-    text: "Nora Plus maslahatlari yordam berdi, endi yaxshi uxlayman va tashvishlar kamroq."
+    text: "Nora Plus maslahatlari yordam berdi, endi yaxshi uxlayman ва ташвишлар камроқ."
   }
 ];
 
@@ -94,7 +94,7 @@ const ReviewBlock: React.FC = () => {
           style={{
             background: "linear-gradient(90deg, #eff5fe 0%, #e5e8ed 100%)",
             borderRadius: 22,
-            margin: `0 20px ${idx < 4 ? "20px" : "0"} 20px`,
+            margin: "0 20px " + (idx < 4 ? "20px" : "0"),
             boxShadow: "0 2px 8px 0 rgba(150, 180, 220, 0.10)",
             padding: "14px 16px 11px 16px",
             animation: idx === 0 ? "slideInTop 0.6s" : undefined,
@@ -118,7 +118,6 @@ const ReviewBlock: React.FC = () => {
     </div>
   );
 };
-// --- /ОТЗЫВЫ ---
 
 type Message = { text: string; sender: "user" | "bot" };
 const THREAD_KEY = "nora_thread_id";
@@ -373,9 +372,7 @@ const Chat: React.FC = () => {
           </button>
         </div>
       </div>
-
-      {/* --- Между панелью и фото --- */}
-      <div style={{ height: 40 }} />
+      <Spacer />
 
       {showWelcome ? (
         <>
@@ -402,10 +399,8 @@ const Chat: React.FC = () => {
               }}
             />
           </div>
-
-          {/* --- Между фото и заголовком --- */}
-          <div style={{ height: 40 }} />
-
+          <Spacer />
+          {/* Заголовок */}
           <div style={{
             width: "calc(100% - 40px)",
             maxWidth,
@@ -416,6 +411,7 @@ const Chat: React.FC = () => {
               fontWeight: 700, fontSize: "22px", color: NORA_COLOR, margin: 0
             }}>Ждёте малыша? Я помогу!</div>
           </div>
+          {/* Описание */}
           <div style={{
             width: "calc(100% - 40px)",
             maxWidth,
@@ -435,10 +431,7 @@ const Chat: React.FC = () => {
               Я помогаю будущим мамам на каждом этапе беременности: отвечаю на вопросы, напоминаю о важных делах, слежу за самочувствием и даю советы, основанные на медицине Великобритании NHS.
             </div>
           </div>
-
-          {/* --- Между описанием и кнопкой --- */}
-          <div style={{ height: 40 }} />
-
+          <Spacer />
           <button
             style={{
               width: "100%",
@@ -463,10 +456,7 @@ const Chat: React.FC = () => {
               {ICONS.arrowRight}
             </span>
           </button>
-
-          {/* --- Между кнопкой и первым отзывом --- */}
-          <div style={{ height: 40 }} />
-
+          <Spacer />
           <ReviewBlock />
         </>
       ) : (showHowTo && (
@@ -484,10 +474,10 @@ const Chat: React.FC = () => {
           }}>
             Можно спрашивать все, что связано с беременностью, здоровьем, самочувствием, питанием, анализами, подготовкой к родам, эмоциональным состоянием и любые другие темы.
           </div>
-          <div style={{ height: 40 }} />
+          <Spacer />
         </div>
       ))}
-      {/* ... остальной чат ... */}
+      {/* ...READ CHAT LOGIC/INPUT AS BEFORE... */}
     </div>
   );
 };
