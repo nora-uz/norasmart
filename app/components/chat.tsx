@@ -27,11 +27,9 @@ const filterNora = "invert(13%) sepia(4%) saturate(271%) hue-rotate(175deg) brig
 function filterAsterisks(str: string) {
   return str.replace(/\*/g, "");
 }
-
-// ✅ Исправленная функция — теперь жирный шрифт сохраняется
 function formatBotText(text: string) {
   if (!text) return "";
-  let cleaned = text.replace(/_/g, ""); // убираем подчёркивания, но не трогаем **
+  let cleaned = text.replace(/_/g, "");
   const firstSentenceMatch = cleaned.match(/^([^.!?]+[.!?])/);
   const firstSentence = firstSentenceMatch ? firstSentenceMatch[1].trim() : "";
   const restText = firstSentence ? cleaned.slice(firstSentence.length).trim() : cleaned.trim();
@@ -120,7 +118,6 @@ const ReviewBlock: React.FC = () => {
 };
 // ----------- /ОТЗЫВЫ -----------
 
-
 type Message = { text: string; sender: "user" | "bot" };
 const THREAD_KEY = "nora_thread_id";
 
@@ -208,7 +205,6 @@ const Chat: React.FC = () => {
       }
       let i = 0;
       setBotProgress("");
-      // ⚠️ Не трогаем ** — не вызываем filterAsterisks для ответа
       const interval = setInterval(() => {
         setBotProgress(botReply.slice(0, i));
         i++;
@@ -321,7 +317,7 @@ const Chat: React.FC = () => {
         boxSizing: "border-box"
       }}
     >
-      {/* --- ПАНЕЛЬ --- */}
+      {/* ======= ПАНЕЛЬ ======= */}
       <div style={{
         width: "calc(100% - 40px)",
         maxWidth,
@@ -375,7 +371,7 @@ const Chat: React.FC = () => {
         </div>
       </div>
 
-      {/* --- ФОТО + ОПИСАНИЕ + КНОПКА --- */}
+      {/* ======= ФОТО, ОПИСАНИЕ, КНОПКА ======= */}
       <img
         src={BANNER}
         style={{
@@ -401,7 +397,7 @@ const Chat: React.FC = () => {
         <span style={{
           fontWeight: 400, fontSize: "15px", color: "#565656"
         }}>
-          Современные рекомендации, поддержка и забота на каждом этапе беременности
+          Современный ассистент для будущих мам на базе NHS — все рекомендации по беременности в одном месте.
         </span>
       </div>
       <button
@@ -426,10 +422,10 @@ const Chat: React.FC = () => {
       >
         Начать пользоваться
       </button>
-      {/* --- ОТЗЫВЫ --- */}
+      {/* ======= ОТЗЫВЫ ======= */}
       <ReviewBlock />
 
-      {/* --- Остальной JSX без изменений --- */}
+      {/* ...Остальной JSX без изменений... */}
     </div>
   );
 };
