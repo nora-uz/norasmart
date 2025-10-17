@@ -4,7 +4,6 @@ import ReactMarkdown from "react-markdown";
 
 const NORA_COLOR = "#2e2e2e";
 const ICON_SIZE = 23;
-const BANNER = "/banner.webp";
 const borderRadius = 22;
 const panelHeight = 62;
 const maxWidth = 560;
@@ -376,10 +375,10 @@ const Chat: React.FC = () => {
         </div>
       </div>
 
-      {/* 10px между панелью и фото */}
+      {/* 10px между панелью и видео */}
       <div style={{ height: 10, flexShrink: 0 }} />
 
-      {/* Фото */}
+      {/* Видео вместо фото */}
       <div style={{
         width: "100%",
         maxWidth,
@@ -389,9 +388,8 @@ const Chat: React.FC = () => {
         alignItems: "center",
         background: "none"
       }}>
-        <img
-          src={BANNER}
-          alt="Nora AI баннер"
+        <video
+          src="/nora.mp4"
           style={{
             width: "80%",
             height: "auto",
@@ -399,10 +397,14 @@ const Chat: React.FC = () => {
             objectFit: "contain",
             objectPosition: "center"
           }}
+          autoPlay
+          loop
+          muted
+          playsInline
         />
       </div>
 
-      {/* 40px между фото и заголовком */}
+      {/* 40px между видео и заголовком */}
       <div style={{ height: 40, flexShrink: 0 }} />
 
       {/* Заголовок и описание */}
