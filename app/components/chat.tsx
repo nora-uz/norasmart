@@ -47,12 +47,12 @@ const REVIEWS = [
   { name: "Ирина", pregnancy: "5 месяц", problem: "Тревожность", text: "Советы от Nora Plus помогли мне расслабиться и больше отдыхать. Теперь спокойна за малыша." }
 ];
 
+// Исправленная отзывная обёртка!
 const ReviewBlock = () => (
   <div style={{
     width: "100%",
-    maxWidth: 560,
-    margin: "0 auto",
     padding: "0 20px",
+    margin: 0,
     boxSizing: "border-box",
     background: "none"
   }}>
@@ -319,9 +319,11 @@ const Chat = () => {
             </button>
           </div>
         </div>
+
         {/* Двойной отступ между панелью и видео */}
         <div style={{ height: 20 }} />
         <div style={{ height: 20 }} />
+
         {/* Видео */}
         <div
           style={{
@@ -351,6 +353,7 @@ const Chat = () => {
         {/* Двойной отступ между видео и заголовком */}
         <div style={{ height: 20 }} />
         <div style={{ height: 20 }} />
+
         {/* Заголовок и описание */}
         <div style={{
           width: "calc(100% - 40px)",
