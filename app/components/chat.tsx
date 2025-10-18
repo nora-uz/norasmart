@@ -64,9 +64,9 @@ const ReviewBlock = () => {
       width: "100%",
       maxWidth: 560,
       margin: "0 auto",
-      background: "none",
-      paddingLeft: 20,
-      paddingRight: 20
+      padding: "0 20px",        // ← только внутренний отступ по бокам
+      boxSizing: "border-box",
+      background: "none"
     }}>
       {reviewsToShow.map((r, idx) => (
         <div
@@ -74,15 +74,15 @@ const ReviewBlock = () => {
           style={{
             background: "linear-gradient(90deg, #eff5fe 0%, #e5e8ed 100%)",
             borderRadius: 22,
-            marginBottom: idx < 4 ? 20 : 0,
+            marginBottom: idx < 4 ? 20 : 0, // только вертикальный
             boxShadow: "0 2px 8px 0 rgba(150, 180, 220, 0.10)",
-            padding: "14px 0 11px 0"
+            padding: "14px 0 11px 0"        // нет горизонтальных паддингов!
           }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4, padding: "0 16px" }}>
             <div style={{ fontWeight: 700, fontSize: 15, color: "#222" }}>
               {r.name} — {r.pregnancy}
             </div>
-            <div style={{ fontWeight: 500, fontSize: 13, color: "#acb5bd", textAlign: "right", minWidth: 90 }}>
+            <div style={{ fontWeight: 500, fontSize: 13, color: "#acb5bd", textAlign: "right" }}>
               {r.problem}
             </div>
           </div>
@@ -305,7 +305,6 @@ const Chat = () => {
         paddingLeft: 20, paddingRight: 12, paddingTop: 5, paddingBottom: 5,
         justifyContent: "flex-start", boxSizing: "border-box", zIndex: 1, boxShadow: "none"
       }}>
-        {/* Панель */}
         <div style={{
           marginRight: 10, color: NORA_COLOR,
           display: "flex", flexDirection: "column", justifyContent: "center", minWidth: 0
@@ -347,21 +346,21 @@ const Chat = () => {
         </div>
       </div>
 
-      {/* 40px между панелью и видео */}
+      {/* 40px отступ НАД видео */}
       <div style={{ height: 40 }} />
 
       {showWelcome ? (
         <>
-          {/* Видео */}
+          {/* ВИДЕО */}
           <div
             style={{
-              width: "calc(100% - 40px)",
-              maxWidth,
+              width: "100%",
+              maxWidth: 560,
               margin: "0 auto",
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
-              background: "none",
+              background: "none"
             }}
           >
             <video
@@ -369,7 +368,7 @@ const Chat = () => {
               style={{
                 width: "100%",
                 display: "block",
-                borderRadius: 24,
+                borderRadius: 24
               }}
               autoPlay
               playsInline
@@ -379,15 +378,15 @@ const Chat = () => {
             />
           </div>
 
-          {/* 40px между видео и заголовком */}
+          {/* 40px отступ ПОД видео */}
           <div style={{ height: 40 }} />
 
           <div
             style={{
               width: "calc(100% - 40px)",
-              maxWidth,
+              maxWidth: 560,
               textAlign: "center",
-              margin: "0 auto",
+              margin: "0 auto"
             }}
           >
             <div style={{
@@ -429,14 +428,14 @@ const Chat = () => {
         </>
       ) : (showHowTo && (
         <div style={{
-          width: "calc(100% - 40px)", maxWidth, textAlign: "center", margin: "90px auto 0 auto"
+          width: "calc(100% - 40px)", maxWidth: 560, textAlign: "center", margin: "90px auto 0 auto"
         }}>
-          {/* ... */}
+          {/* ... текст инструкции ... */}
           <div style={{ height: 40 }} />
         </div>
       ))}
 
-      {/* остальной код (чат, ввод, etc.) */}
+      {/* ...chat, input, etc... */}
     </div>
   );
 };
