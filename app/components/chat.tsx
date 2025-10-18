@@ -2,7 +2,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import ReactMarkdown from "react-markdown";
 
-// ------ Константы ------
 const NORA_COLOR = "#2e2e2e";
 const ICON_SIZE = 23;
 const BANNER = "/banner.webp";
@@ -41,7 +40,6 @@ function formatBotText(text: string) {
   return result.trim();
 }
 
-// ----- Отзывы -----
 const REVIEWS = [
   // Русские
   { name: "Анна", pregnancy: "2 месяц", problem: "Токсикоз", text: "Nora Plus подсказала, как справиться с утренней тошнотой. Питание стало более сбалансированным и легче переносить симптомы." },
@@ -60,15 +58,15 @@ const REVIEWS = [
   // Узбекские
   { name: "Dilnoza", pregnancy: "6 oy", problem: "Uyqusizlik", text: "Nora Plus maslahatlari yordam berdi, endi yaxshi uxlayman ва ташвишлар камроқ." },
   { name: "Madina", pregnancy: "4 oy", problem: "Ovqat hazmi", text: "Ovqatlanish bo‘yicha maslahatlar juda foydali, endi oshqozonim qiynalmaydi." },
-  { name: "Gulnora", pregnancy: "8 oy", problem: "Qo‘rqinch", text: "Nora Plus qo‘llablab-quvvatladi, tug‘ruqdan kamroq qo‘rqaman." },
-  { name: "Yulduz", pregnancy: "5 oy", problem: "Bel og‘rig‘i", text: "Mashqlar yordami bilan bel og‘rig‘i ancha kamaydi." },
-  { name: "Zarina", pregnancy: "3 oy", problem: "Toksikoz", text: "Nora maslahatlari tufayli toksikozni osonroq o‘tkazdim." },
-  { name: "Muxlisa", pregnancy: "7 oy", problem: "Vazn ortishi", text: "Sog‘lom ovqatlanish ва harakatlar tufayli vaznimni nazorat qila olyapman." },
-  { name: "Kamola", pregnancy: "2 oy", problem: "Xavotir", text: "Assistentim savollarimga tez javob beradi, endi kamroq xavotirdaman." },
+  { name: "Gulnora", pregnancy: "8 oy", problem: "Qo‘rqinch", text: "Nora Plus qo‘llablab-quvvatladi, tug‘ruqdan kamroq qo‘rqаман." },
+  { name: "Yulduz", pregnancy: "5 oy", problem: "Bel og‘rig‘i", text: "Mashqlar yordami bilan bel og‘rig‘i ancha kamayди." },
+  { name: "Zarina", pregnancy: "3 oy", problem: "Toksikoz", text: "Nora maslahatлари tufayли токсикозни osonroq o‘tkazdim." },
+  { name: "Muxlisa", pregnancy: "7 oy", problem: "Vazn ortishi", text: "Sog‘lom ovqatlanish ва harakatlar tufayli vaznimni nazорат qila olyapman." },
+  { name: "Kamola", pregnancy: "2 oy", problem: "Xavotir", text: "Assistentim savollarimga тез javob beradi, endi kamroq xavotirdaman." },
   { name: "Nargiza", pregnancy: "5 oy", problem: "Kichik og‘riqlar", text: "Nora maslahatlariga amal qilib, hal qilmoqdaman." },
-  { name: "Hanifa", pregnancy: "9 oy", problem: "Tayyorlanish", text: "Tug‘ruqqa tayyorgarlik bo‘yicha foydali maslahatlar oldim." },
-  { name: "Shahzoda", pregnancy: "4 oy", problem: "Energiya yetishmasligi", text: "Sog‘lom turmush tarzini boshlадим, o‘zimni yaxshi his qilaman." },
-  { name: "Laylo", pregnancy: "7 oy", problem: "Uyqu buzilishi", text: "Qisqa mashqlar ва tinchlantiruvchi maslahatлар yordam berdi." },
+  { name: "Hanifa", pregnancy: "9 oy", problem: "Tayyorlanish", text: "Tug‘ruqqa tayyorgarlik bo‘yicha foydali maslahatlar oldим." },
+  { name: "Shahzoda", pregnancy: "4 oy", problem: "Energiya yetishmasligi", text: "Sog‘lom turmush tarzини boshladим, o‘zimni yaxshi his qilaman." },
+  { name: "Laylo", pregnancy: "7 oy", problem: "Uyqu buzilishi", text: "Qisqa mashqlar ва tinchlantирuvchi maslahatлар yordam berdi." },
   { name: "Feruza", pregnancy: "6 oy", problem: "Xotira", text: "Nora eslatmalari vitamin ва suv ichishga yordam beradi." },
 ];
 
@@ -122,7 +120,6 @@ const ReviewBlock: React.FC = () => {
   );
 };
 
-// ---- Chat ----
 type Message = { text: string; sender: "user" | "bot" };
 const THREAD_KEY = "nora_thread_id";
 
@@ -388,15 +385,15 @@ const Chat: React.FC = () => {
             justifyContent: "center",
             alignItems: "center",
             background: "none",
-            paddingLeft: 10,    // отступ слева
-            paddingRight: 20    // отступ справа
+            paddingLeft: 10,
+            paddingRight: 20
           }}>
             <video
               src="/nora.mp4"
               style={{
                 maxWidth: "100%",
                 width: "100%",
-                height: 288, // уменьшено на 2px
+                height: 285, // уменьшили на 5px
                 objectFit: "cover",
                 objectPosition: "center",
                 display: "block",
@@ -410,7 +407,7 @@ const Chat: React.FC = () => {
               preload="auto"
             />
           </div>
-          <div style={{ height: 50 }} />
+          <div style={{ height: 30 }} /> {/* отступ между видео и заголовком */}
           <div style={{
             width: "calc(100% - 40px)", maxWidth, textAlign: "center", margin: "0 auto"
           }}>
@@ -439,6 +436,7 @@ const Chat: React.FC = () => {
               {ICONS.arrowRight}
             </span>
           </button>
+          <div style={{ height: 30 }} /> {/* отступ между фото и отзывами */}
           <ReviewBlock />
         </>
       ) : (showHowTo && (
