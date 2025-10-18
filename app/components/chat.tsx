@@ -7,7 +7,7 @@ const ICON_SIZE = 23;
 const borderRadius = 22;
 const panelHeight = 62;
 const maxWidth = 560;
-const videoMaxWidth = 314; // 490px - 20% -> 392px - 20% = 314px
+const videoMaxWidth = 314;
 const GRADIENT = "linear-gradient(90deg, #eff5fe 0%, #e5e8ed 100%)";
 const INPUT_BAR_HEIGHT = 68;
 
@@ -40,7 +40,7 @@ function formatBotText(text) {
   return result.trim();
 }
 
-// Перемешанные русские и узбекские отзывы
+// Чередуем узбекские и русские отзывы
 const REVIEWS = [
   { name: "Анна", pregnancy: "2 месяц", problem: "Токсикоз", text: "Nora Plus подсказала, как справиться с утренней тошнотой. Питание стало более сбалансированным и легче переносить симптомы." },
   { name: "Dilnoza", pregnancy: "3 oy", problem: "Ko'ngil aynishi", text: "Nora maslahatlari ko'ngil aynishi va ahvolni yengil o'tkazish uchun yordam berdi. O'z vaqtida maslahat olaman." },
@@ -54,7 +54,7 @@ const ReviewBlock = () => (
     width: "100%",
     maxWidth: 560,
     margin: "0 auto",
-    padding: "0 20px",
+    padding: "0 20px", // Строго 20 по бокам
     boxSizing: "border-box",
     background: "none"
   }}>
@@ -82,6 +82,11 @@ const ReviewBlock = () => (
     <div style={{ height: 30 }} />
   </div>
 );
+
+// --- Чтение блока ассистента по предложениям ---
+function splitSentences(text) {
+  return text.split(/(?<=[.!?])\s+/g).filter(Boolean);
+}
 
 const THREAD_KEY = "nora_thread_id";
 
@@ -262,7 +267,6 @@ const Chat = () => {
     );
   }
 
-  // --- ПРИВЕТСТВЕННЫЙ ЭКРАН ---
   if (showWelcome) {
     return (
       <div style={{
@@ -341,7 +345,7 @@ const Chat = () => {
             src="/nora.mp4"
             style={{
               width: "100%",
-              maxWidth: videoMaxWidth, // 314px
+              maxWidth: videoMaxWidth,
               display: "block",
               borderRadius: 24
             }}
@@ -354,7 +358,6 @@ const Chat = () => {
         </div>
         {/* Отступ между видео и заголовком */}
         <div style={{ height: 20 }} />
-
         {/* Заголовок и описание */}
         <div style={{
           width: "calc(100% - 40px)",
@@ -459,7 +462,6 @@ const Chat = () => {
           </button>
         </div>
       </div>
-      {/* Всё остальное скрыто, кроме панели и чат-интерфейса */}
       <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "flex-end" }}>
         <div style={{ width: "100%", maxWidth: maxWidth, margin: "0 auto", padding: "80px 0 110px 0" }}>
           {chatHistory.map((msg, idx) => (
@@ -470,16 +472,49 @@ const Chat = () => {
                 margin: "8px 20px"
               }}
             >
-              {msg.sender === "user" ?
-                <span style={{ background: GRADIENT, padding: 10, borderRadius: 16 }}>{filterAsterisks(msg.text)}</span> :
-                <span style={{ color: NORA_COLOR }}><ReactMarkdown>{formatBotText(msg.text)}</ReactMarkdown></span>
+              {msg.sender === "user"
+                ? <span style={{
+                    background: GRADIENT,
+                    padding: 10,
+                    borderRadius: 16,
+                    fontSize: 16
+                  }}>{filterAsterisks(msg.text)}</span>
+                : splitSentences(formatBotText(msg.text)).map((sentence, sIdx) => (
+                  <div
+                    key={sIdx}
+                    style={{
+                      background: "#f7fafd",
+                      borderRadius: 12,
+                      padding: "10px 15px",
+                      marginBottom: 10,
+                      color: NORA_COLOR,
+                      fontSize: 16,
+                      lineHeight: 1.7
+                    }}
+                  >
+                    {sentence}
+                  </div>
+                ))
               }
             </div>
           ))}
           {botProgress &&
-            <div style={{ margin: "8px 20px", color: NORA_COLOR }}>
-              <ReactMarkdown>{formatBotText(botProgress)}</ReactMarkdown>
-            </div>
+            splitSentences(formatBotText(botProgress)).map((sentence, sIdx) => (
+              <div
+                key={sIdx}
+                style={{
+                  background: "#f7fafd",
+                  borderRadius: 12,
+                  padding: "10px 15px",
+                  margin: "0 20px 10px 20px",
+                  color: NORA_COLOR,
+                  fontSize: 16,
+                  lineHeight: 1.7
+                }}
+              >
+                {sentence}
+              </div>
+            ))
           }
           <div ref={messagesEndRef} />
         </div>
