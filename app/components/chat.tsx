@@ -24,26 +24,21 @@ const ICONS = {
 };
 const filterNora = "invert(13%) sepia(4%) saturate(271%) hue-rotate(175deg) brightness(92%) contrast(93%)";
 
-// Функция для жирного первого предложения
-function splitBotText(text) {
+// Формируем 2 блока: первый — всё кроме последнего предложения (жирно), второй — последнее предложение (отдельный блок)
+function splitBotTextTwoBlocks(text) {
   if (!text) return [];
-  let cleaned = text.replace(/[*_]/g, ""); // убираем * и _
-  // находим первое предложение
-  const match = cleaned.match(/^([^.!?]+[.!?])\s?(.*)$/s);
-  if (match) {
-    const first = match[1].trim();
-    const rest = match[2].trim();
-    // разбить дальнейший текст на отдельные предложения
-    const restSentences = rest.length
-      ? rest.split(/(?<=[.!?])\s+/g).filter(Boolean)
-      : [];
-    return [{ bold: true, text: first }, ...restSentences.map(t => ({ bold: false, text: t }))];
-  } else {
-    return [{ bold: true, text: cleaned }];
-  }
+  let cleaned = text.replace(/[*_]/g, "");
+  const sentences = cleaned.split(/(?<=[.!?])\s+/g).filter(Boolean);
+  if (sentences.length === 1) return [
+    { text: sentences[0], bold: true }
+  ];
+  return [
+    { text: sentences.slice(0, -1).join(" "), bold: true },
+    { text: sentences[sentences.length - 1], bold: false }
+  ];
 }
 
-// Чередуем узбекские и русские отзывы
+// Отзывы (русские и узбекские чередуются)
 const REVIEWS = [
   { name: "Анна", pregnancy: "2 месяц", problem: "Токсикоз", text: "Nora Plus подсказала, как справиться с утренней тошнотой. Питание стало более сбалансированным и легче переносить симптомы." },
   { name: "Dilnoza", pregnancy: "3 oy", problem: "Ko'ngil aynishi", text: "Nora maslahatlari ko'ngil aynishi va ahvolni yengil o'tkazish uchun yordam berdi. O'z vaqtida maslahat olaman." },
@@ -282,7 +277,7 @@ const Chat = () => {
           display: "flex", alignItems: "center",
           borderRadius: borderRadius,
           paddingLeft: 20, paddingRight: 12, paddingTop: 5, paddingBottom: 5,
-          justifyContent: "flex-start", boxSizing: "border-box", zIndex: 1, boxShadow: "none"
+          justifyContent: "flex-start", boxSizing: "border-box", zIndex: 1
         }}>
           <div style={{
             marginRight: 10, color: NORA_COLOR,
@@ -324,7 +319,8 @@ const Chat = () => {
             </button>
           </div>
         </div>
-        {/* Отступ между панелью и видео */}
+        {/* Двойной отступ между панелью и видео */}
+        <div style={{ height: 20 }} />
         <div style={{ height: 20 }} />
         {/* Видео */}
         <div
@@ -334,8 +330,7 @@ const Chat = () => {
             margin: "0 auto",
             display: "flex",
             justifyContent: "center",
-            alignItems: "center",
-            background: "none"
+            alignItems: "center"
           }}
         >
           <video
@@ -353,7 +348,8 @@ const Chat = () => {
             preload="auto"
           />
         </div>
-        {/* Отступ между видео и заголовком */}
+        {/* Двойной отступ между видео и заголовком */}
+        <div style={{ height: 20 }} />
         <div style={{ height: 20 }} />
         {/* Заголовок и описание */}
         <div style={{
@@ -395,7 +391,7 @@ const Chat = () => {
     );
   }
 
-  // --- ЧАТ ОКНО ---
+  // --- Чат-экран ---
   return (
     <div
       style={{
@@ -417,7 +413,7 @@ const Chat = () => {
         display: "flex", alignItems: "center",
         borderRadius: borderRadius,
         paddingLeft: 20, paddingRight: 12, paddingTop: 5, paddingBottom: 5,
-        justifyContent: "flex-start", boxSizing: "border-box", zIndex: 1, boxShadow: "none"
+        justifyContent: "flex-start", boxSizing: "border-box", zIndex: 1
       }}>
         <div style={{
           marginRight: 10, color: NORA_COLOR,
@@ -476,14 +472,14 @@ const Chat = () => {
                     borderRadius: 16,
                     fontSize: 16
                   }}>{msg.text}</span>
-                : splitBotText(msg.text).map((part, sIdx) => (
+                : splitBotTextTwoBlocks(msg.text).map((part, sIdx) => (
                   <div
                     key={sIdx}
                     style={{
                       background: "#f7fafd",
                       borderRadius: 12,
                       padding: "10px 15px",
-                      marginBottom: 10,
+                      marginBottom: sIdx === 0 ? 18 : 30,
                       color: NORA_COLOR,
                       fontSize: 16,
                       lineHeight: 1.7,
@@ -497,7 +493,7 @@ const Chat = () => {
             </div>
           ))}
           {botProgress &&
-            splitBotText(botProgress).map((part, sIdx) => (
+            splitBotTextTwoBlocks(botProgress).map((part, sIdx) => (
               <div
                 key={sIdx}
                 style={{
