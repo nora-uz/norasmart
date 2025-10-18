@@ -24,11 +24,9 @@ const ICONS = {
 };
 const filterNora = "invert(13%) sepia(4%) saturate(271%) hue-rotate(175deg) brightness(92%) contrast(93%)";
 
-// Функция для рендера ответа ассистента ровно 2 блока: первое предложение (жирное), остальное (обычно)
 function splitBotTextTwoBlocks(text) {
   if (!text) return [];
   let cleaned = text.replace(/[*_]/g, "");
-  // Находим первое предложение
   const match = cleaned.match(/^([^.!?]+[.!?])\s*(.*)$/s);
   if (match) {
     const first = match[1].trim();
@@ -38,17 +36,16 @@ function splitBotTextTwoBlocks(text) {
       { text: rest, bold: false }
     ];
   } else {
-    // Если был одинокий текст — весь жирным
     return [{ text: cleaned, bold: true }];
   }
 }
 
-// Перемешанные русские и узбекские отзывы
+// Обычные отзывы, нет [translate:], всё просто текст!
 const REVIEWS = [
   { name: "Анна", pregnancy: "2 месяц", problem: "Токсикоз", text: "Nora Plus подсказала, как справиться с утренней тошнотой. Питание стало более сбалансированным и легче переносить симптомы." },
-  { name: "Dilnoza", pregnancy: "3 oy", problem: "Ko'ngil aynishi", text: "[translate:Nora maslahatlari ko'ngil aynishi va ahvolni yengil o'tkazish uchun yordam berdi. O'z vaqtida maslahat olaman.]" },
+  { name: "Dilnoza", pregnancy: "3 oy", problem: "Ko'ngil aynishi", text: "Nora maslahatlari ko'ngil aynishi va ahvolni yengil o'tkazish uchun yordam berdi. O'z vaqtida maslahat olaman." },
   { name: "Елена", pregnancy: "4 месяц", problem: "Слабость и усталость", text: "Рекомендации по витаминам и сну очень помогли, чувствую себя намного лучше!" },
-  { name: "Shahnoza", pregnancy: "5 oy", problem: "[translate:Hafsalasi pastlik]", text: "[translate:Nora Plus motivatsiya va ijobiy maslahatlarni oʻz vaqtida beradi. Oʻzimni yaxshi his qila boshladim.]" },
+  { name: "Shahnoza", pregnancy: "5 oy", problem: "Hafsalasi pastlik", text: "Nora Plus motivatsiya va ijobiy maslahatlarni oʻz vaqtida beradi. Oʻzimni yaxshi his qila boshlадим." },
   { name: "Ирина", pregnancy: "5 месяц", problem: "Тревожность", text: "Советы от Nora Plus помогли мне расслабиться и больше отдыхать. Теперь спокойна за малыша." }
 ];
 
