@@ -388,7 +388,8 @@ const Chat: React.FC = () => {
             objectPosition: "center",
             display: "block",
             margin: "0 auto",
-            borderRadius: 24
+            borderRadius: 24,
+            paddingRight: 20 // <-- вот оно!
           }}
           autoPlay
           playsInline
