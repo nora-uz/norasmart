@@ -42,7 +42,10 @@ function formatBotText(text) {
 const REVIEWS = [
   { name: "Анна", pregnancy: "2 месяц", problem: "Токсикоз", text: "Nora Plus подсказала, как справиться с утренней тошнотой. Питание стало более сбалансированным и легче переносить симптомы." },
   { name: "Елена", pregnancy: "4 месяц", problem: "Слабость и усталость", text: "Рекомендации по витаминам и сну очень помогли, чувствую себя намного лучше!" },
-  // ... другие отзывы ...
+  { name: "Ирина", pregnancy: "5 месяц", problem: "Тревожность", text: "Советы от Nora Plus помогли мне расслабиться и больше отдыхать. Теперь спокойна за малыша." },
+  { name: "Оксана", pregnancy: "6 месяц", problem: "Боль в спине", text: "Упражнения из приложения действительно облегчили боль. Научилась правильно расслабляться." },
+  { name: "Виктория", pregnancy: "7 месяц", problem: "Анализы", text: "Пояснения от сервиса помогли понять результаты, тревога уходит, сплю спокойнее." },
+  // ... добавьте остальные отзывы по аналогии ...
 ];
 
 const ReviewBlock = () => {
@@ -70,23 +73,20 @@ const ReviewBlock = () => {
             margin: "0 20px 0 20px",
             marginBottom: idx < 4 ? 20 : 0,
             boxShadow: "0 2px 8px 0 rgba(150, 180, 220, 0.10)",
-            padding: "14px 16px 11px 16px",
-            animation: idx === 0 ? "slideInTop 0.6s" : undefined,
-            transition: "all 0.5s"
+            padding: "14px 16px 11px 16px"
           }}>
-          <div style={{ fontWeight: 700, fontSize: 15 }}>{r.name} — {r.pregnancy}</div>
-          <div style={{ fontWeight: 700, color: "#715b9b", margin: "4px 0 3px 0" }}>{r.problem}</div>
-          <div style={{ fontSize: 14, color: "#2e2e2e", lineHeight: "1.5" }}>{r.text}</div>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4 }}>
+            <div style={{ fontWeight: 700, fontSize: 15, color: "#222" }}>
+              {r.name} — {r.pregnancy}
+            </div>
+            <div style={{ fontWeight: 500, fontSize: 13, color: "#acb5bd", textAlign: "right", minWidth: 90 }}>
+              {r.problem}
+            </div>
+          </div>
+          <div style={{ fontSize: 13, color: "#3a3a3a", lineHeight: "1.57", textAlign: "left" }}>{r.text}</div>
         </div>
       ))}
       <div style={{ height: 30 }} />
-      <style>
-        {`
-        @keyframes slideInTop {
-          0% { opacity: 0; transform: translateY(-30px);}
-          100% { opacity: 1; transform: translateY(0);}
-        `}
-      </style>
     </div>
   );
 };
@@ -344,16 +344,17 @@ const Chat = () => {
         </div>
       </div>
 
-      {/* 40px между панелью и видео */}
+      {/* 40px над видео */}
       <div style={{ height: 40 }} />
 
       {showWelcome ? (
         <>
+          {/* ВИДЕО */}
           <div
             style={{
               width: "calc(100% - 40px)",
               maxWidth,
-              margin: "10px auto 0 auto",
+              margin: "0 auto",
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
@@ -375,7 +376,7 @@ const Chat = () => {
             />
           </div>
 
-          {/* 40px между видео и заголовком */}
+          {/* 40px под видео */}
           <div style={{ height: 40 }} />
 
           <div
