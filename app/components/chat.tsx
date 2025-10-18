@@ -40,30 +40,56 @@ function formatBotText(text) {
 }
 
 const REVIEWS = [
-  // ... списки отзывов как в оригинале
+  { name: "Анна", pregnancy: "2 месяц", problem: "Токсикоз", text: "Nora Plus подсказала, как справиться с утренней тошнотой. Питание стало более сбалансированным и легче переносить симптомы." },
+  { name: "Елена", pregnancy: "4 месяц", problem: "Слабость и усталость", text: "Рекомендации по витаминам и сну очень помогли, чувствую себя намного лучше!" },
+  { name: "Ирина", pregnancy: "5 месяц", problem: "Тревожность", text: "Советы от Nora Plus помогли мне расслабиться и больше отдыхать. Теперь спокойна за малыша." },
+  { name: "Оксана", pregnancy: "6 месяц", problem: "Боль в спине", text: "Упражнения из приложения действительно облегчили боль. Научилась правильно расслабляться." },
+  { name: "Виктория", pregnancy: "7 месяц", problem: "Анализы", text: "Пояснения от сервиса помогли понять результаты, тревога уходит, сплю спокойнее." },
+  { name: "Мария", pregnancy: "9 месяц", problem: "Отёки ног", text: "Полезные советы, упражнения и режим помогли избавиться от тяжести в ногах." },
+  { name: "София", pregnancy: "8 месяц", problem: "Страх родов", text: "Nora отвечала на мои вопросы, теперь чувствую уверенность и готовность." },
+  { name: "Оля", pregnancy: "5 месяц", problem: "Питание", text: "Рекомендации по продуктам помогли избежать лишнего веса и токсикоза." },
+  { name: "Татьяна", pregnancy: "3 месяц", problem: "Сон", text: "Научилась правильно расслабляться по совету приложения, теперь сплю лучше." },
+  { name: "Кристина", pregnancy: "7 месяц", problem: "Забывчивость", text: "Напоминания от Nora Plus о приёме витаминов и воде очень выручают!" },
+  { name: "Алиса", pregnancy: "6 месяц", problem: "Недостаток информации", text: "Ответы на вопросы о здоровье пришли быстро, больше не нервничаю." },
+  { name: "Светлана", pregnancy: "8 месяц", problem: "Беспокойство", text: "Чат с ассистентом помог снять лишние страхи, отлично поддерживает." },
+  { name: "Дарья", pregnancy: "3 месяц", problem: "Токсикоз", text: "Перед сном читаю рекомендации, стало меньше тошноты и улучшилось настроение." },
+  { name: "Dilnoza", pregnancy: "6 oy", problem: "Uyqusizlik", text: "Nora Plus maslahatlari yordam berdi, endi yaxshi uxlayman ва ташвишлар камроқ." },
+  { name: "Madina", pregnancy: "4 oy", problem: "Ovqat hazmi", text: "Ovqatlanish bo‘yicha maslahatlar juda foydali, endi oshqozonim qiynalmaydi." },
+  { name: "Gulnora", pregnancy: "8 oy", problem: "Qo‘rqinch", text: "Nora Plus qo‘llablab-quvvatladi, tug‘ruqdan kamroq qo‘rqаман." },
+  { name: "Yulduz", pregnancy: "5 oy", problem: "Bel og‘rig‘i", text: "Mashqlar yordami bilan bel og‘rig‘i ancha kamayди." },
+  { name: "Zarina", pregnancy: "3 oy", problem: "Toksikoz", text: "Nora maslahatlari tufayli toksikозni osonroq o‘tkazdim." },
+  { name: "Muxlisa", pregnancy: "7 oy", problem: "Vazn ortishi", text: "Sog‘lom ovqatlanish ва harakatлар tufayli vaznimni nazорат qила оляпман." },
+  { name: "Kamola", pregnancy: "2 oy", problem: "Xavotir", text: "Assistentim savollarимга тез javob beradi, endi kamroq xavotirdaman." },
+  { name: "Nargiza", pregnancy: "5 oy", problem: "Kichik og‘riqlar", text: "Nora maslahatlariga amal qilib, hal qilмоқдаман." },
+  { name: "Hanifa", pregnancy: "9 oy", problem: "Tayyorланиш", text: "Tug‘рукка tayyorgarlik bo‘yicha foydali maslahatлар олдим." },
+  { name: "Shahzoda", pregnancy: "4 oy", problem: "Energiya yetishmasligi", text: "Sog‘лом turmush tarzини boshlадим, o‘zimни яхши his qilaman." },
+  { name: "Laylo", pregnancy: "7 oy", problem: "Uyqu buzilishi", text: "Qisqa mashqlar ва tinchlantирuvchi маҳсалатлар ёрдам берди." },
+  { name: "Feruza", pregnancy: "6 oy", problem: "Xotira", text: "Nora eslatmalari vitamin ва сув ичищга ёрдам беради." }
 ];
 
 const ReviewBlock = () => {
   const [visibleIdx, setVisibleIdx] = useState(0);
   useEffect(() => {
     const interval = setInterval(() => {
-      setVisibleIdx(idx => (idx + 1) % REVIEWS.length);
+      setVisibleIdx(idx => (REVIEWS.length ? (idx + 1) % REVIEWS.length : 0));
     }, 7000);
     return () => clearInterval(interval);
   }, []);
+
+  // Пропускаем пустые элементы
   let reviewsToShow = [];
-  for (let i = 0; i < 5; i++) {
-    reviewsToShow.push(REVIEWS[
-      (visibleIdx + REVIEWS.length - i) % REVIEWS.length
-    ]);
+  for (let i = 0; i < 5 && REVIEWS.length; i++) {
+    const review = REVIEWS[(visibleIdx + REVIEWS.length - i) % REVIEWS.length];
+    if (review) reviewsToShow.push(review);
   }
+
+  if (!reviewsToShow.length) return null;
+
   return (
-    <div style={{
-      width: "100%", maxWidth: 560, margin: "30px auto 0 auto", background: "none"
-    }}>
+    <div style={{ width: "100%", maxWidth: 560, margin: "30px auto 0 auto", background: "none" }}>
       {reviewsToShow.map((r, idx) => (
         <div
-          key={r.name+idx}
+          key={r.name + idx}
           style={{
             background: "linear-gradient(90deg, #eff5fe 0%, #e5e8ed 100%)",
             borderRadius: 22,
@@ -75,9 +101,7 @@ const ReviewBlock = () => {
             transition: "all 0.5s"
           }}>
           <div style={{ fontWeight: 700, fontSize: 15 }}>{r.name} — {r.pregnancy}</div>
-          <div style={{ fontWeight: 700, color: "#715b9b", margin: "4px 0 3px 0" }}>
-            {r.problem}
-          </div>
+          <div style={{ fontWeight: 700, color: "#715b9b", margin: "4px 0 3px 0" }}>{r.problem}</div>
           <div style={{ fontSize: 14, color: "#2e2e2e", lineHeight: "1.5" }}>{r.text}</div>
         </div>
       ))}
