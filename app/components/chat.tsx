@@ -24,30 +24,34 @@ const ICONS = {
 };
 const filterNora = "invert(13%) sepia(4%) saturate(271%) hue-rotate(175deg) brightness(92%) contrast(93%)";
 
-// Формируем 2 блока: первый — всё кроме последнего предложения (жирно), второй — последнее предложение (отдельный блок)
+// Функция для рендера ответа ассистента ровно 2 блока: первое предложение (жирное), остальное (обычно)
 function splitBotTextTwoBlocks(text) {
   if (!text) return [];
   let cleaned = text.replace(/[*_]/g, "");
-  const sentences = cleaned.split(/(?<=[.!?])\s+/g).filter(Boolean);
-  if (sentences.length === 1) return [
-    { text: sentences[0], bold: true }
-  ];
-  return [
-    { text: sentences.slice(0, -1).join(" "), bold: true },
-    { text: sentences[sentences.length - 1], bold: false }
-  ];
+  // Находим первое предложение
+  const match = cleaned.match(/^([^.!?]+[.!?])\s*(.*)$/s);
+  if (match) {
+    const first = match[1].trim();
+    const rest = match[2].trim();
+    return [
+      { text: first, bold: true },
+      { text: rest, bold: false }
+    ];
+  } else {
+    // Если был одинокий текст — весь жирным
+    return [{ text: cleaned, bold: true }];
+  }
 }
 
-// Отзывы (русские и узбекские чередуются)
+// Перемешанные русские и узбекские отзывы
 const REVIEWS = [
   { name: "Анна", pregnancy: "2 месяц", problem: "Токсикоз", text: "Nora Plus подсказала, как справиться с утренней тошнотой. Питание стало более сбалансированным и легче переносить симптомы." },
-  { name: "Dilnoza", pregnancy: "3 oy", problem: "Ko'ngil aynishi", text: "Nora maslahatlari ko'ngil aynishi va ahvolni yengil o'tkazish uchun yordam berdi. O'z vaqtida maslahat olaman." },
+  { name: "Dilnoza", pregnancy: "3 oy", problem: "Ko'ngil aynishi", text: "[translate:Nora maslahatlari ko'ngil aynishi va ahvolni yengil o'tkazish uchun yordam berdi. O'z vaqtida maslahat olaman.]" },
   { name: "Елена", pregnancy: "4 месяц", problem: "Слабость и усталость", text: "Рекомендации по витаминам и сну очень помогли, чувствую себя намного лучше!" },
-  { name: "Shahnoza", pregnancy: "5 oy", problem: "Hafsalasi pastlik", text: "Nora Plus motivatsiya va ijobiy maslahatlarni oʻz vaqtida beradi. Oʻzimni yaxshi his qila boshladim." },
+  { name: "Shahnoza", pregnancy: "5 oy", problem: "[translate:Hafsalasi pastlik]", text: "[translate:Nora Plus motivatsiya va ijobiy maslahatlarni oʻz vaqtida beradi. Oʻzimni yaxshi his qila boshladim.]" },
   { name: "Ирина", pregnancy: "5 месяц", problem: "Тревожность", text: "Советы от Nora Plus помогли мне расслабиться и больше отдыхать. Теперь спокойна за малыша." }
 ];
 
-// Исправленная отзывная обёртка!
 const ReviewBlock = () => (
   <div style={{
     width: "100%",
@@ -476,42 +480,46 @@ const Chat = () => {
                     fontSize: 16
                   }}>{msg.text}</span>
                 : splitBotTextTwoBlocks(msg.text).map((part, sIdx) => (
-                  <div
-                    key={sIdx}
-                    style={{
-                      background: "#f7fafd",
-                      borderRadius: 12,
-                      padding: "10px 15px",
-                      marginBottom: sIdx === 0 ? 18 : 30,
-                      color: NORA_COLOR,
-                      fontSize: 16,
-                      lineHeight: 1.7,
-                      fontWeight: part.bold ? "bold" : "normal"
-                    }}
-                  >
-                    {part.text}
-                  </div>
+                  part.text && (
+                    <div
+                      key={sIdx}
+                      style={{
+                        background: "#f7fafd",
+                        borderRadius: 12,
+                        padding: "10px 15px",
+                        marginBottom: sIdx === 0 ? 18 : 30,
+                        color: NORA_COLOR,
+                        fontSize: 16,
+                        lineHeight: 1.7,
+                        fontWeight: part.bold ? "bold" : "normal"
+                      }}
+                    >
+                      {part.text}
+                    </div>
+                  )
                 ))
               }
             </div>
           ))}
           {botProgress &&
             splitBotTextTwoBlocks(botProgress).map((part, sIdx) => (
-              <div
-                key={sIdx}
-                style={{
-                  background: "#f7fafd",
-                  borderRadius: 12,
-                  padding: "10px 15px",
-                  margin: "0 20px 10px 20px",
-                  color: NORA_COLOR,
-                  fontSize: 16,
-                  lineHeight: 1.7,
-                  fontWeight: part.bold ? "bold" : "normal"
-                }}
-              >
-                {part.text}
-              </div>
+              part.text && (
+                <div
+                  key={sIdx}
+                  style={{
+                    background: "#f7fafd",
+                    borderRadius: 12,
+                    padding: "10px 15px",
+                    margin: "0 20px 10px 20px",
+                    color: NORA_COLOR,
+                    fontSize: 16,
+                    lineHeight: 1.7,
+                    fontWeight: part.bold ? "bold" : "normal"
+                  }}
+                >
+                  {part.text}
+                </div>
+              )
             ))
           }
           <div ref={messagesEndRef} />
