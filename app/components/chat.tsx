@@ -56,15 +56,15 @@ const REVIEWS = [
   { name: "Dilnoza", pregnancy: "6 oy", problem: "Uyqusizlik", text: "Nora Plus maslahatlari yordam berdi, endi yaxshi uxlayman ва ташвишлар камроқ." },
   { name: "Madina", pregnancy: "4 oy", problem: "Ovqat hazmi", text: "Ovqatlanish bo‘yicha maslahatlar juda foydali, endi oshqozonim qiynalmaydi." },
   { name: "Gulnora", pregnancy: "8 oy", problem: "Qo‘rqinch", text: "Nora Plus qo‘llablab-quvvatladi, tug‘ruqdan kamroq qo‘rqаман." },
-  { name: "Yulduz", pregnancy: "5 oy", problem: "Bel og‘rig‘i", text: "Mashqlar yordami bilan bel og‘rig‘i ancha kamayди." },
+  { name: "Yulduz", pregnancy: "5 oy", problem: "Bel og‘rig‘i", text: "Mashqlar yordami bilan bel og‘ригӣ ancha kamayди." },
   { name: "Zarina", pregnancy: "3 oy", problem: "Toksikoz", text: "Nora maslahatлари tufayли токсикозни osonroq o‘tkazdim." },
-  { name: "Muxlisa", pregnancy: "7 oy", problem: "Vazn ortishi", text: "Sog‘лом ovqatlanish ва harakatлар tufayli vaznimni назорат qила оляпман." },
-  { name: "Kamola", pregnancy: "2 oy", problem: "Xavotir", text: "Assistentim savollarимга тез javob beradi, endi kamroq xavotirdaman." },
+  { name: "Muxlisa", pregnancy: "7 oy", problem: "Vazn ortishi", text: "Sog‘лом ovqatlanish ва harakatлар tufayli vazнимни назорат qила оляпман." },
+  { name: "Kamola", pregnancy: "2 oy", problem: "Xavotir", text: "Assistentим savollarимга тез javob beradi, endi kamроқ xavotirdaman." },
   { name: "Nargiza", pregnancy: "5 oy", problem: "Kichik og‘риқлар", text: "Nora maslahatlariga amal qilib, hal qilмоқдаман." },
-  { name: "Hanifa", pregnancy: "9 oy", problem: "Tayyorланиш", text: "Tug‘руққа tayyorgarlik bo‘yicha foydali maslahatлар олдим." },
-  { name: "Shahzoda", pregnancy: "4 oy", problem: "Energiya yetishmasligi", text: "Sog‘лом turmush tarzини boshlадим, o‘zimни яхши his qilaman." },
-  { name: "Laylo", pregnancy: "7 oy", problem: "Uyqu buzilishi", text: "Qisqa mashqlar ва tinchлантирувчи маҳсалатлар ёрдам берди." },
-  { name: "Feruza", pregnancy: "6 oy", problem: "Xotira", text: "Nora eslatмалари витамин ва сув ичищга ёрдам беради." }
+  { name: "Hanifa", pregnancy: "9 oy", problem: "Tayyorlanиш", text: "Tug‘руққа tayyorgarlik bo‘yicha foydali maslahatлар олдим." },
+  { name: "Shahzoda", pregnancy: "4 oy", problem: "Energiya yetishmasлиги", text: "Sog‘лом turмуш tarzини boshlадим, o‘zimни яхши his qilaman." },
+  { name: "Laylo", pregnancy: "7 oy", problem: "Uyqu buzilishi", text: "Qisқа mashқлар ва tinchлантирувчи маҳсалатлар ёрдам берди." },
+  { name: "Feruza", pregnancy: "6 oy", problem: "Xotira", text: "Nora esлатмалари витамин ва сув ичищга ёрдам беради." }
 ];
 
 const ReviewBlock = () => {
@@ -369,28 +369,20 @@ const Chat = () => {
         <>
           <div
             style={{
-              width: "100%",
+              width: "calc(100% - 40px)",
               maxWidth,
               margin: "10px auto 0 auto",
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
               background: "none",
-              paddingLeft: 10,
-              paddingRight: 20,
-              minHeight: 160
             }}
           >
             <video
               src="/nora.mp4"
               style={{
-                maxWidth: "100%",
                 width: "100%",
-                aspectRatio: "16/9",
-                objectFit: "cover",
-                objectPosition: "center",
                 display: "block",
-                margin: "0 auto",
                 borderRadius: 24,
               }}
               autoPlay
@@ -401,9 +393,14 @@ const Chat = () => {
             />
           </div>
           <div style={{ height: 30 }} />
-          <div style={{
-            width: "calc(100% - 40px)", maxWidth, textAlign: "center", margin: "0 auto"
-          }}>
+          <div
+            style={{
+              width: "calc(100% - 40px)",
+              maxWidth,
+              textAlign: "center",
+              margin: "0 auto",
+            }}
+          >
             <div style={{
               fontWeight: 700, fontSize: "22px", color: NORA_COLOR, marginBottom: 14
             }}>Ждёте малыша? Я помогу!</div>
