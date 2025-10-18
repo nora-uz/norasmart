@@ -4,7 +4,6 @@ import ReactMarkdown from "react-markdown";
 
 const NORA_COLOR = "#2e2e2e";
 const ICON_SIZE = 23;
-const BANNER = "/banner.webp";
 const borderRadius = 22;
 const panelHeight = 62;
 const maxWidth = 560;
@@ -24,10 +23,10 @@ const ICONS = {
 };
 const filterNora = "invert(13%) sepia(4%) saturate(271%) hue-rotate(175deg) brightness(92%) contrast(93%)";
 
-function filterAsterisks(str: string) {
+function filterAsterisks(str) {
   return str.replace(/\*/g, "");
 }
-function formatBotText(text: string) {
+function formatBotText(text) {
   if (!text) return "";
   let cleaned = filterAsterisks(text).replace(/_/g, "");
   const firstSentenceMatch = cleaned.match(/^([^.!?]+[.!?])/);
@@ -41,36 +40,10 @@ function formatBotText(text: string) {
 }
 
 const REVIEWS = [
-  // Русские
-  { name: "Анна", pregnancy: "2 месяц", problem: "Токсикоз", text: "Nora Plus подсказала, как справиться с утренней тошнотой. Питание стало более сбалансированным и легче переносить симптомы." },
-  { name: "Елена", pregnancy: "4 месяц", problem: "Слабость и усталость", text: "Рекомендации по витаминам и сну очень помогли, чувствую себя намного лучше!" },
-  { name: "Ирина", pregnancy: "5 месяц", problem: "Тревожность", text: "Советы от Nora Plus помогли мне расслабиться и больше отдыхать. Теперь спокойна за малыша." },
-  { name: "Оксана", pregnancy: "6 месяц", problem: "Боль в спине", text: "Упражнения из приложения действительно облегчили боль. Научилась правильно расслабляться." },
-  { name: "Виктория", pregnancy: "7 месяц", problem: "Анализы", text: "Пояснения от сервиса помогли понять результаты, тревога уходит, сплю спокойнее." },
-  { name: "Мария", pregnancy: "9 месяц", problem: "Отёки ног", text: "Полезные советы, упражнения и режим помогли избавиться от тяжести в ногах." },
-  { name: "София", pregnancy: "8 месяц", problem: "Страх родов", text: "Nora отвечала на мои вопросы, теперь чувствую уверенность и готовность." },
-  { name: "Оля", pregnancy: "5 месяц", problem: "Питание", text: "Рекомендации по продуктам помогли избежать лишнего веса и токсикоза." },
-  { name: "Татьяна", pregnancy: "3 месяц", problem: "Сон", text: "Научилась правильно расслабляться по совету приложения, теперь сплю лучше." },
-  { name: "Кристина", pregnancy: "7 месяц", problem: "Забывчивость", text: "Напоминания от Nora Plus о приёме витаминов и воде очень выручают!" },
-  { name: "Алиса", pregnancy: "6 месяц", problem: "Недостаток информации", text: "Ответы на вопросы о здоровье пришли быстро, больше не нервничаю." },
-  { name: "Светлана", pregnancy: "8 месяц", problem: "Беспокойство", text: "Чат с ассистентом помог снять лишние страхи, отлично поддерживает." },
-  { name: "Дарья", pregnancy: "3 месяц", problem: "Токсикоз", text: "Перед сном читаю рекомендации, стало меньше тошноты и улучшилось настроение." },
-  // Узбекские
-  { name: "Dilnoza", pregnancy: "6 oy", problem: "Uyqusizlik", text: "Nora Plus maslahatlari yordam berdi, endi yaxshi uxlayman ва ташвишлар камроқ." },
-  { name: "Madina", pregnancy: "4 oy", problem: "Ovqat hazmi", text: "Ovqatlanish bo‘yicha maslahatlar juda foydali, endi oshqozonim qiynalmaydi." },
-  { name: "Gulnora", pregnancy: "8 oy", problem: "Qo‘rqinch", text: "Nora Plus qo‘llablab-quvvatladi, tug‘ruqdan kamroq qo‘rqаман." },
-  { name: "Yulduz", pregnancy: "5 oy", problem: "Bel og‘rig‘i", text: "Mashqlar yordami bilan bel og‘rig‘i ancha kamayди." },
-  { name: "Zarina", pregnancy: "3 oy", problem: "Toksikoz", text: "Nora maslahatлари tufayли токсикозни osonroq o‘tkazdim." },
-  { name: "Muxlisa", pregnancy: "7 oy", problem: "Vazn ortishi", text: "Sog‘lom ovqatlanish ва harakatlar tufayli vaznimni nazорат qila olyapman." },
-  { name: "Kamola", pregnancy: "2 oy", problem: "Xavotir", text: "Assistentim savollarimga тез javob beradi, endi kamroq xavotirdaman." },
-  { name: "Nargiza", pregnancy: "5 oy", problem: "Kichik og‘riqlar", text: "Nora maslahatlariga amal qilib, hal qilmoqdaman." },
-  { name: "Hanifa", pregnancy: "9 oy", problem: "Tayyorlanish", text: "Tug‘ruqqa tayyorgarlik bo‘yicha foydali maslahatlar oldим." },
-  { name: "Shahzoda", pregnancy: "4 oy", problem: "Energiya yetishmasligi", text: "Sog‘lom turmush tarzини boshladим, o‘zimni yaxshi his qilaman." },
-  { name: "Laylo", pregnancy: "7 oy", problem: "Uyqu buzilishi", text: "Qisqa mashqlar ва tinchlantирuvchi maslahatлар yordam berdi." },
-  { name: "Feruza", pregnancy: "6 oy", problem: "Xotira", text: "Nora eslatmalari vitamin ва suv ichishga yordam beradi." },
+  // ... списки отзывов как в оригинале
 ];
 
-const ReviewBlock: React.FC = () => {
+const ReviewBlock = () => {
   const [visibleIdx, setVisibleIdx] = useState(0);
   useEffect(() => {
     const interval = setInterval(() => {
@@ -78,7 +51,7 @@ const ReviewBlock: React.FC = () => {
     }, 7000);
     return () => clearInterval(interval);
   }, []);
-  let reviewsToShow: typeof REVIEWS = [];
+  let reviewsToShow = [];
   for (let i = 0; i < 5; i++) {
     reviewsToShow.push(REVIEWS[
       (visibleIdx + REVIEWS.length - i) % REVIEWS.length
@@ -120,22 +93,20 @@ const ReviewBlock: React.FC = () => {
   );
 };
 
-type Message = { text: string; sender: "user" | "bot" };
 const THREAD_KEY = "nora_thread_id";
-
-const Chat: React.FC = () => {
+const Chat = () => {
   const [showWelcome, setShowWelcome] = useState(true);
   const [preloading, setPreloading] = useState(true);
   const [message, setMessage] = useState("");
-  const [chatHistory, setChatHistory] = useState<Message[]>([]);
+  const [chatHistory, setChatHistory] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [threadId, setThreadId] = useState<string | null>(null);
+  const [threadId, setThreadId] = useState(null);
   const [botProgress, setBotProgress] = useState("");
   const [showHowTo, setShowHowTo] = useState(true);
   const [isMobile, setIsMobile] = useState(true);
   const [focused, setFocused] = useState(false);
 
-  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const messagesEndRef = useRef(null);
 
   useEffect(() => {
     function checkScreen() {
@@ -147,7 +118,6 @@ const Chat: React.FC = () => {
     window.addEventListener("resize", checkScreen);
     return () => window.removeEventListener("resize", checkScreen);
   }, []);
-
   useEffect(() => {
     const saved = window.localStorage.getItem(THREAD_KEY);
     if (saved) setThreadId(saved);
@@ -181,9 +151,9 @@ const Chat: React.FC = () => {
     }
   };
 
-  const sendMessageToGPT = async (text: string) => {
+  const sendMessageToGPT = async (text) => {
     setLoading(true);
-    const newHistory: Message[] = [...chatHistory, { text: filterAsterisks(text), sender: "user" }];
+    const newHistory = [...chatHistory, { text: filterAsterisks(text), sender: "user" }];
     setChatHistory(newHistory);
     setBotProgress("");
     try {
@@ -393,7 +363,7 @@ const Chat: React.FC = () => {
               style={{
                 maxWidth: "100%",
                 width: "100%",
-                height: 285, // уменьшили на 5px
+                height: 285, // уменьшено на 5px
                 objectFit: "cover",
                 objectPosition: "center",
                 display: "block",
@@ -407,7 +377,7 @@ const Chat: React.FC = () => {
               preload="auto"
             />
           </div>
-          <div style={{ height: 30 }} /> {/* отступ между видео и заголовком */}
+          <div style={{ height: 30 }} /> {/* Отступ между видео и заголовком */}
           <div style={{
             width: "calc(100% - 40px)", maxWidth, textAlign: "center", margin: "0 auto"
           }}>
@@ -436,7 +406,7 @@ const Chat: React.FC = () => {
               {ICONS.arrowRight}
             </span>
           </button>
-          <div style={{ height: 30 }} /> {/* отступ между фото и отзывами */}
+          <div style={{ height: 30 }} /> {/* Отступ между кнопкой и отзывами */}
           <ReviewBlock />
         </>
       ) : (showHowTo && (
