@@ -7,6 +7,7 @@ const ICON_SIZE = 23;
 const borderRadius = 22;
 const panelHeight = 62;
 const maxWidth = 560;
+const videoWidth = 490; // Увеличено на 10px
 const GRADIENT = "linear-gradient(90deg, #eff5fe 0%, #e5e8ed 100%)";
 const INPUT_BAR_HEIGHT = 68;
 
@@ -103,7 +104,7 @@ const Chat = () => {
   const [loading, setLoading] = useState(false);
   const [threadId, setThreadId] = useState(null);
   const [botProgress, setBotProgress] = useState("");
-  const [showHowTo, setShowHowTo] = useState(true);
+  const [showHowTo] = useState(true);
   const [isMobile, setIsMobile] = useState(true);
   const [focused, setFocused] = useState(false);
 
@@ -136,9 +137,6 @@ const Chat = () => {
       messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
     }
   }, [chatHistory, botProgress]);
-  useEffect(() => {
-    if (chatHistory.length > 0) setShowHowTo(false);
-  }, [chatHistory]);
 
   const handleShare = () => {
     if (navigator.share) {
@@ -208,7 +206,6 @@ const Chat = () => {
     setThreadId(null);
     window.localStorage.removeItem(THREAD_KEY);
     setShowWelcome(true);
-    setShowHowTo(true);
     setBotProgress("");
   };
 
@@ -291,7 +288,7 @@ const Chat = () => {
         boxSizing: "border-box"
       }}
     >
-
+      {/* --- Верхняя панель --- */}
       <div style={{
         width: "calc(100% - 40px)",
         maxWidth,
@@ -345,14 +342,14 @@ const Chat = () => {
         </div>
       </div>
 
-      {/* ОТСТУП НАД ВИДЕО */}
+      {/* --- Отступ над видео --- */}
       <div style={{ height: 40 }} />
 
-      {/* ВИДЕО (на 10px шире) */}
+      {/* --- Видео --- */}
       <div
         style={{
           width: "100%",
-          maxWidth: 560,
+          maxWidth,
           margin: "0 auto",
           display: "flex",
           justifyContent: "center",
@@ -364,7 +361,7 @@ const Chat = () => {
           src="/nora.mp4"
           style={{
             width: "100%",
-            maxWidth: 490,   // Было 480, теперь 490 (на 10 пикселей больше)
+            maxWidth: videoWidth, // 490px
             display: "block",
             borderRadius: 24
           }}
@@ -376,13 +373,129 @@ const Chat = () => {
         />
       </div>
 
-      {/* ОТСТУП ПОД ВИДЕО */}
+      {/* --- Отступ под видео --- */}
       <div style={{ height: 40 }} />
 
-      {/* ... Остальные блоки ... */}
-      <ReviewBlock />
+      {/* --- Заголовок и описание --- */}
+      <div
+        style={{
+          width: "calc(100% - 40px)",
+          maxWidth,
+          textAlign: "center",
+          margin: "0 auto"
+        }}
+      >
+        <div style={{
+          fontWeight: 700, fontSize: "22px", color: NORA_COLOR, marginBottom: 14
+        }}>Ждёте малыша? Я помогу!</div>
+        <div style={{
+          fontWeight: 400, fontSize: "15px", margin: "0 auto 0 auto", maxWidth: 400,
+          padding: "0 20px", lineHeight: 1.75, color: NORA_COLOR, display: "inline-block"
+        }}>
+          Я помогаю будущим мамам на каждом этапе беременности: отвечаю на вопросы, напоминаю о важных делах, слежу за самочувствием и даю советы, основанные на медицине Великобритании NHS.
+        </div>
 
-      {/* ... Остальной код и поле для сообщения ... */}
+        {/* --- Отступ между описанием и кнопкой --- */}
+        <div style={{ height: 40 }} />
+
+        {/* --- Кнопка или поле для сообщения --- */}
+        {showWelcome ? (
+          <div style={{ display: "flex", justifyContent: "center", width: "100%" }}>
+            <button
+              style={{
+                width: "100%", maxWidth: 290, background: GRADIENT, color: NORA_COLOR,
+                border: "none", borderRadius: borderRadius, fontWeight: 700, fontSize: "17px",
+                padding: "15px 0", margin: "0 20px", cursor: "pointer",
+                display: "flex", alignItems: "center", justifyContent: "center"
+              }}
+              onClick={() => setShowWelcome(false)}
+            >
+              Начать пользоваться&nbsp;
+              <span style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+                {ICONS.arrowRight}
+              </span>
+            </button>
+          </div>
+        ) : null}
+
+        {/* --- 40px между кнопкой/полем и отзывами --- */}
+        <div style={{ height: 40 }} />
+
+        <ReviewBlock />
+
+        {/* --- После нажатия показываем поле для сообщений --- */}
+        {!showWelcome && (
+          <>
+            <div style={{
+              width: "calc(100% - 40px)",
+              margin: "0 20px",
+              display: "flex",
+              alignItems: "center",
+              boxSizing: "border-box",
+              maxWidth: maxWidth,
+              height: INPUT_BAR_HEIGHT,
+              position: "fixed",
+              left: 0,
+              bottom: 25,
+              background: "transparent",
+              borderRadius: borderRadius,
+              zIndex: 20,
+              boxShadow: "none"
+            }}>
+              <input
+                type="text"
+                value={message}
+                onFocus={() => setFocused(true)}
+                onBlur={() => setFocused(false)}
+                onChange={e => setMessage(filterAsterisks(e.target.value))}
+                placeholder="Введите сообщение..."
+                style={{
+                  flex: 1,
+                  height: 48,
+                  fontSize: "16px",
+                  borderRadius: borderRadius,
+                  borderWidth: focused ? 2 : 1,
+                  borderStyle: "solid",
+                  borderColor: focused ? "transparent" : "#e5e8ed",
+                  borderImage: focused ? GRADIENT + " 1" : undefined,
+                  padding: "0 18px",
+                  background: "#fff",
+                  color: NORA_COLOR,
+                  boxSizing: "border-box",
+                  marginRight: 8,
+                  transition: "border 0.22s"
+                }}
+                onKeyDown={e => { if (e.key === 'Enter') handleSendMessage(); }}
+                disabled={loading || !!botProgress}
+              />
+              <button
+                style={{
+                  width: 48,
+                  height: 48,
+                  background: GRADIENT,
+                  color: NORA_COLOR,
+                  border: "none",
+                  borderRadius: borderRadius,
+                  fontWeight: 700,
+                  fontSize: "17px",
+                  cursor: (loading || !!botProgress) ? "not-allowed" : "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  boxShadow: "0 2px 14px 0 rgba(155,175,205,0.12)"
+                }}
+                onClick={handleSendMessage}
+                disabled={loading || !!botProgress}
+              >
+                <span style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+                  {ICONS.arrowRight}
+                </span>
+              </button>
+            </div>
+            <div style={{ height: 20 }} />
+          </>
+        )}
+      </div>
     </div>
   );
 };
