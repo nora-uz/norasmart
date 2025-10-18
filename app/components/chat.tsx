@@ -40,7 +40,9 @@ function formatBotText(text) {
 }
 
 const REVIEWS = [
-  // ...ваш массив REVIEWS...
+  { name: "Анна", pregnancy: "2 месяц", problem: "Токсикоз", text: "Nora Plus подсказала, как справиться с утренней тошнотой. Питание стало более сбалансированным и легче переносить симптомы." },
+  { name: "Елена", pregnancy: "4 месяц", problem: "Слабость и усталость", text: "Рекомендации по витаминам и сну очень помогли, чувствую себя намного лучше!" },
+  // ... другие отзывы ...
 ];
 
 const ReviewBlock = () => {
@@ -300,6 +302,7 @@ const Chat = () => {
         paddingLeft: 20, paddingRight: 12, paddingTop: 5, paddingBottom: 5,
         justifyContent: "flex-start", boxSizing: "border-box", zIndex: 1, boxShadow: "none"
       }}>
+        {/* ...иконки и надписи... */}
         <div style={{
           marginRight: 10, color: NORA_COLOR,
           display: "flex", flexDirection: "column", justifyContent: "center", minWidth: 0
@@ -341,7 +344,7 @@ const Chat = () => {
         </div>
       </div>
 
-      {/* ОТСТУП 40 пикселей между панелью и видео */}
+      {/* 40px между панелью и видео */}
       <div style={{ height: 40 }} />
 
       {showWelcome ? (
@@ -372,7 +375,7 @@ const Chat = () => {
             />
           </div>
 
-          {/* ОТСТУП 40 пикселей между видео и заголовком */}
+          {/* 40px между видео и заголовком */}
           <div style={{ height: 40 }} />
 
           <div
@@ -393,25 +396,28 @@ const Chat = () => {
               Я помогаю будущим мамам на каждом этапе беременности: отвечаю на вопросы, напоминаю о важных делах, слежу за самочувствием и даю советы, основанные на медицине Великобритании NHS.
             </div>
 
-            {/* ОТСТУП 40 пикселей между описанием и кнопкой */}
+            {/* 40px между описанием и кнопкой */}
             <div style={{ height: 40 }} />
 
-            <button
-              style={{
-                width: "100%", maxWidth: 290, background: GRADIENT, color: NORA_COLOR,
-                border: "none", borderRadius: borderRadius, fontWeight: 700, fontSize: "17px",
-                padding: "15px 0", margin: "0 20px", cursor: "pointer",
-                display: "flex", alignItems: "center", justifyContent: "center"
-              }}
-              onClick={() => setShowWelcome(false)}
-            >
-              Начать пользоваться&nbsp;
-              <span style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
-                {ICONS.arrowRight}
-              </span>
-            </button>
+            {/* Центрируем кнопку */}
+            <div style={{ display: "flex", justifyContent: "center", width: "100%" }}>
+              <button
+                style={{
+                  width: "100%", maxWidth: 290, background: GRADIENT, color: NORA_COLOR,
+                  border: "none", borderRadius: borderRadius, fontWeight: 700, fontSize: "17px",
+                  padding: "15px 0", margin: "0 20px", cursor: "pointer",
+                  display: "flex", alignItems: "center", justifyContent: "center"
+                }}
+                onClick={() => setShowWelcome(false)}
+              >
+                Начать пользоваться&nbsp;
+                <span style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+                  {ICONS.arrowRight}
+                </span>
+              </button>
+            </div>
 
-            {/* ОТСТУП 40 пикселей между кнопкой и отзывами */}
+            {/* 40px между кнопкой и отзывами */}
             <div style={{ height: 40 }} />
 
             <ReviewBlock />
