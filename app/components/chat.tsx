@@ -42,7 +42,7 @@ function formatBotText(text) {
 const REVIEWS = [
   { name: "Анна", pregnancy: "2 месяц", problem: "Токсикоз", text: "Nora Plus подсказала, как справиться с утренней тошнотой. Питание стало более сбалансированным и легче переносить симптомы." },
   { name: "Елена", pregnancy: "4 месяц", problem: "Слабость и усталость", text: "Рекомендации по витаминам и сну очень помогли, чувствую себя намного лучше!" },
-  // ... ваши отзывы ...
+  // ... другие отзывы ...
 ];
 
 const ReviewBlock = () => {
@@ -305,7 +305,7 @@ const Chat = () => {
         paddingLeft: 20, paddingRight: 12, paddingTop: 5, paddingBottom: 5,
         justifyContent: "flex-start", boxSizing: "border-box", zIndex: 1, boxShadow: "none"
       }}>
-        {/* ...иконки и надписи... */}
+        {/* Панель */}
         <div style={{
           marginRight: 10, color: NORA_COLOR,
           display: "flex", flexDirection: "column", justifyContent: "center", minWidth: 0
