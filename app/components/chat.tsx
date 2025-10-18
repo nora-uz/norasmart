@@ -7,7 +7,7 @@ const ICON_SIZE = 23;
 const borderRadius = 22;
 const panelHeight = 62;
 const maxWidth = 560;
-const videoMaxWidth = 392; // уменьшено на 20%
+const videoMaxWidth = 314; // 490px - 20% -> 392px - 20% = 314px
 const GRADIENT = "linear-gradient(90deg, #eff5fe 0%, #e5e8ed 100%)";
 const INPUT_BAR_HEIGHT = 68;
 
@@ -40,12 +40,13 @@ function formatBotText(text) {
   return result.trim();
 }
 
+// Перемешанные русские и узбекские отзывы
 const REVIEWS = [
   { name: "Анна", pregnancy: "2 месяц", problem: "Токсикоз", text: "Nora Plus подсказала, как справиться с утренней тошнотой. Питание стало более сбалансированным и легче переносить симптомы." },
+  { name: "Dilnoza", pregnancy: "3 oy", problem: "Ko'ngil aynishi", text: "Nora maslahatlari ko'ngil aynishi va ahvolni yengil o'tkazish uchun yordam berdi. O'z vaqtida maslahat olaman." },
   { name: "Елена", pregnancy: "4 месяц", problem: "Слабость и усталость", text: "Рекомендации по витаминам и сну очень помогли, чувствую себя намного лучше!" },
-  { name: "Ирина", pregnancy: "5 месяц", problem: "Тревожность", text: "Советы от Nora Plus помогли мне расслабиться и больше отдыхать. Теперь спокойна за малыша." },
-  { name: "Оксана", pregnancy: "6 месяц", problem: "Боль в спине", text: "Упражнения из приложения действительно облегчили боль. Научилась правильно расслабляться." },
-  { name: "Виктория", pregnancy: "7 месяц", problem: "Анализы", text: "Пояснения от сервиса помогли понять результаты, тревога уходит, сплю спокойнее." },
+  { name: "Shahnoza", pregnancy: "5 oy", problem: "Hafsalasi pastlik", text: "Nora Plus motivatsiya va ijobiy maslahatlarni oʻz vaqtida beradi. Oʻzimni yaxshi his qila boshladim." },
+  { name: "Ирина", pregnancy: "5 месяц", problem: "Тревожность", text: "Советы от Nora Plus помогли мне расслабиться и больше отдыхать. Теперь спокойна за малыша." }
 ];
 
 const ReviewBlock = () => (
@@ -83,6 +84,7 @@ const ReviewBlock = () => (
 );
 
 const THREAD_KEY = "nora_thread_id";
+
 const Chat = () => {
   const [showWelcome, setShowWelcome] = useState(true);
   const [preloading, setPreloading] = useState(true);
@@ -260,7 +262,7 @@ const Chat = () => {
     );
   }
 
-  // --- СЕКЦИЯ "ПРИВЕТСТВЕННОЕ ОКНО" ---
+  // --- ПРИВЕТСТВЕННЫЙ ЭКРАН ---
   if (showWelcome) {
     return (
       <div style={{
@@ -268,7 +270,7 @@ const Chat = () => {
         width: "100vw",
         minHeight: "100vh"
       }}>
-        {/* Панель всегда сверху! */}
+        {/* Панель */}
         <div style={{
           width: "calc(100% - 40px)",
           maxWidth,
@@ -339,7 +341,7 @@ const Chat = () => {
             src="/nora.mp4"
             style={{
               width: "100%",
-              maxWidth: videoMaxWidth, // уменьшено на 20%
+              maxWidth: videoMaxWidth, // 314px
               display: "block",
               borderRadius: 24
             }}
@@ -352,6 +354,7 @@ const Chat = () => {
         </div>
         {/* Отступ между видео и заголовком */}
         <div style={{ height: 20 }} />
+
         {/* Заголовок и описание */}
         <div style={{
           width: "calc(100% - 40px)",
@@ -392,7 +395,7 @@ const Chat = () => {
     );
   }
 
-  // --- СЕКЦИЯ "ЧАТ" ---
+  // --- ЧАТ ОКНО ---
   return (
     <div
       style={{
@@ -403,7 +406,7 @@ const Chat = () => {
         flexDirection: "column"
       }}
     >
-      {/* Панель — ОСТАЕТСЯ при чате! */}
+      {/* Панель */}
       <div style={{
         width: "calc(100% - 40px)",
         maxWidth,
@@ -456,13 +459,30 @@ const Chat = () => {
           </button>
         </div>
       </div>
-      {/* Остальное скрыто! */}
-      {/* (если нужны чат/отзывы/описание — дописать, сейчас только панель и поле ввода) */}
-      {/* В зависимости от вашей логики, можно отобразить поле для сообщений/чат: */}
-      <div style={{ marginTop: 60, padding: "0 20px" }}>
-        {chatHistory.map((msg, idx) => (
-          <div key={idx}>{msg.text}</div>
-        ))}
+      {/* Всё остальное скрыто, кроме панели и чат-интерфейса */}
+      <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "flex-end" }}>
+        <div style={{ width: "100%", maxWidth: maxWidth, margin: "0 auto", padding: "80px 0 110px 0" }}>
+          {chatHistory.map((msg, idx) => (
+            <div
+              key={idx}
+              style={{
+                textAlign: msg.sender === "user" ? "right" : "left",
+                margin: "8px 20px"
+              }}
+            >
+              {msg.sender === "user" ?
+                <span style={{ background: GRADIENT, padding: 10, borderRadius: 16 }}>{filterAsterisks(msg.text)}</span> :
+                <span style={{ color: NORA_COLOR }}><ReactMarkdown>{formatBotText(msg.text)}</ReactMarkdown></span>
+              }
+            </div>
+          ))}
+          {botProgress &&
+            <div style={{ margin: "8px 20px", color: NORA_COLOR }}>
+              <ReactMarkdown>{formatBotText(botProgress)}</ReactMarkdown>
+            </div>
+          }
+          <div ref={messagesEndRef} />
+        </div>
       </div>
       <div style={{
         width: "calc(100% - 40px)",
