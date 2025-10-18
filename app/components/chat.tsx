@@ -42,7 +42,7 @@ function formatBotText(text) {
 const REVIEWS = [
   { name: "Анна", pregnancy: "2 месяц", problem: "Токсикоз", text: "Nora Plus подсказала, как справиться с утренней тошнотой. Питание стало более сбалансированным и легче переносить симптомы." },
   { name: "Елена", pregnancy: "4 месяц", problem: "Слабость и усталость", text: "Рекомендации по витаминам и сну очень помогли, чувствую себя намного лучше!" },
-  // ... другие отзывы ...
+  // ... ваши остальные отзывы ...
 ];
 
 const ReviewBlock = () => {
@@ -64,7 +64,7 @@ const ReviewBlock = () => {
       width: "100%",
       maxWidth: 560,
       margin: "0 auto",
-      padding: "0 20px",        // ← только внутренний отступ по бокам
+      padding: "0 20px",
       boxSizing: "border-box",
       background: "none"
     }}>
@@ -74,9 +74,9 @@ const ReviewBlock = () => {
           style={{
             background: "linear-gradient(90deg, #eff5fe 0%, #e5e8ed 100%)",
             borderRadius: 22,
-            marginBottom: idx < 4 ? 20 : 0, // только вертикальный
+            marginBottom: idx < 4 ? 20 : 0,
             boxShadow: "0 2px 8px 0 rgba(150, 180, 220, 0.10)",
-            padding: "14px 0 11px 0"        // нет горизонтальных паддингов!
+            padding: "14px 0 11px 0"
           }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4, padding: "0 16px" }}>
             <div style={{ fontWeight: 700, fontSize: 15, color: "#222" }}>
@@ -305,6 +305,7 @@ const Chat = () => {
         paddingLeft: 20, paddingRight: 12, paddingTop: 5, paddingBottom: 5,
         justifyContent: "flex-start", boxSizing: "border-box", zIndex: 1, boxShadow: "none"
       }}>
+        {/* ...иконки и текст панели... */}
         <div style={{
           marginRight: 10, color: NORA_COLOR,
           display: "flex", flexDirection: "column", justifyContent: "center", minWidth: 0
@@ -351,7 +352,7 @@ const Chat = () => {
 
       {showWelcome ? (
         <>
-          {/* ВИДЕО */}
+          {/* Видео */}
           <div
             style={{
               width: "100%",
@@ -367,6 +368,8 @@ const Chat = () => {
               src="/nora.mp4"
               style={{
                 width: "100%",
+                maxWidth: 470,      // уменьшено на 10px!
+                height: "210px",    // если нужна фиксированная высота
                 display: "block",
                 borderRadius: 24
               }}
@@ -435,7 +438,78 @@ const Chat = () => {
         </div>
       ))}
 
-      {/* ...chat, input, etc... */}
+      {/* поле для сообщения — всегда показывается после старта */}
+      {!showWelcome && (
+        <>
+          <div style={{
+            width: "calc(100% - 40px)",
+            margin: "0 20px",
+            display: "flex",
+            alignItems: "center",
+            boxSizing: "border-box",
+            maxWidth: maxWidth,
+            height: INPUT_BAR_HEIGHT,
+            position: "fixed",
+            left: 0,
+            bottom: 25,
+            background: "transparent",
+            borderRadius: borderRadius,
+            zIndex: 20,
+            boxShadow: "none"
+          }}>
+            <input
+              type="text"
+              value={message}
+              onFocus={() => setFocused(true)}
+              onBlur={() => setFocused(false)}
+              onChange={e => setMessage(filterAsterisks(e.target.value))}
+              placeholder="Введите сообщение..."
+              style={{
+                flex: 1,
+                height: 48,
+                fontSize: "16px",
+                borderRadius: borderRadius,
+                borderWidth: focused ? 2 : 1,
+                borderStyle: "solid",
+                borderColor: focused ? "transparent" : "#e5e8ed",
+                borderImage: focused ? GRADIENT + " 1" : undefined,
+                padding: "0 18px",
+                background: "#fff",
+                color: NORA_COLOR,
+                boxSizing: "border-box",
+                marginRight: 8,
+                transition: "border 0.22s"
+              }}
+              onKeyDown={e => { if (e.key === 'Enter') handleSendMessage(); }}
+              disabled={loading || !!botProgress}
+            />
+            <button
+              style={{
+                width: 48,
+                height: 48,
+                background: GRADIENT,
+                color: NORA_COLOR,
+                border: "none",
+                borderRadius: borderRadius,
+                fontWeight: 700,
+                fontSize: "17px",
+                cursor: (loading || !!botProgress) ? "not-allowed" : "pointer",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                boxShadow: "0 2px 14px 0 rgba(155,175,205,0.12)"
+              }}
+              onClick={handleSendMessage}
+              disabled={loading || !!botProgress}
+            >
+              <span style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+                {ICONS.arrowRight}
+              </span>
+            </button>
+          </div>
+          <div style={{ height: 20 }} />
+        </>
+      )}
     </div>
   );
 };
