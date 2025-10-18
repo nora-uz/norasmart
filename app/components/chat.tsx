@@ -40,31 +40,7 @@ function formatBotText(text) {
 }
 
 const REVIEWS = [
-  { name: "Анна", pregnancy: "2 месяц", problem: "Токсикоз", text: "Nora Plus подсказала, как справиться с утренней тошнотой. Питание стало более сбалансированным и легче переносить симптомы." },
-  { name: "Елена", pregnancy: "4 месяц", problem: "Слабость и усталость", text: "Рекомендации по витаминам и сну очень помогли, чувствую себя намного лучше!" },
-  { name: "Ирина", pregnancy: "5 месяц", problem: "Тревожность", text: "Советы от Nora Plus помогли мне расслабиться и больше отдыхать. Теперь спокойна за малыша." },
-  { name: "Оксана", pregnancy: "6 месяц", problem: "Боль в спине", text: "Упражнения из приложения действительно облегчили боль. Научилась правильно расслабляться." },
-  { name: "Виктория", pregnancy: "7 месяц", problem: "Анализы", text: "Пояснения от сервиса помогли понять результаты, тревога уходит, сплю спокойнее." },
-  { name: "Мария", pregnancy: "9 месяц", problem: "Отёки ног", text: "Полезные советы, упражнения и режим помогли избавиться от тяжести в ногах." },
-  { name: "София", pregnancy: "8 месяц", problem: "Страх родов", text: "Nora отвечала на мои вопросы, теперь чувствую уверенность и готовность." },
-  { name: "Оля", pregnancy: "5 месяц", problem: "Питание", text: "Рекомендации по продуктам помогли избежать лишнего веса и токсикоза." },
-  { name: "Татьяна", pregnancy: "3 месяц", problem: "Сон", text: "Научилась правильно расслабляться по совету приложения, теперь сплю лучше." },
-  { name: "Кристина", pregnancy: "7 месяц", problem: "Забывчивость", text: "Напоминания от Nora Plus о приёме витаминов и воде очень выручают!" },
-  { name: "Алиса", pregnancy: "6 месяц", problem: "Недостаток информации", text: "Ответы на вопросы о здоровье пришли быстро, больше не нервничаю." },
-  { name: "Светлана", pregnancy: "8 месяц", problem: "Беспокойство", text: "Чат с ассистентом помог снять лишние страхи, отлично поддерживает." },
-  { name: "Дарья", pregnancy: "3 месяц", problem: "Токсикоз", text: "Перед сном читаю рекомендации, стало меньше тошноты и улучшилось настроение." },
-  { name: "Dilnoza", pregnancy: "6 oy", problem: "Uyqusizlik", text: "Nora Plus maslahatlari yordam berdi, endi yaxshi uxlayman ва ташвишлар камроқ." },
-  { name: "Madina", pregnancy: "4 oy", problem: "Ovqat hazmi", text: "Ovqatlanish bo‘yicha maslahatlar juda foydali, endi oshqozonim qiynalmaydi." },
-  { name: "Gulnora", pregnancy: "8 oy", problem: "Qo‘rqinch", text: "Nora Plus qo‘llablab-quvvatladi, tug‘ruqdan kamroq qo‘rqаман." },
-  { name: "Yulduz", pregnancy: "5 oy", problem: "Bel og‘rig‘i", text: "Mashqlar yordami bilan bel og‘ригӣ ancha kamayди." },
-  { name: "Zarina", pregnancy: "3 oy", problem: "Toksikoz", text: "Nora maslahatлари tufayли токсикозни osonroq o‘tkazdim." },
-  { name: "Muxlisa", pregnancy: "7 oy", problem: "Vazn ortishi", text: "Sog‘лом ovqatlanish ва harakatлар tufayli vazнимни назорат qила оляпман." },
-  { name: "Kamola", pregnancy: "2 oy", problem: "Xavotir", text: "Assistentим savollarимга тез javob beradi, endi kamроқ xavotirdaman." },
-  { name: "Nargiza", pregnancy: "5 oy", problem: "Kichik og‘риқлар", text: "Nora maslahatlariga amal qilib, hal qilмоқдаман." },
-  { name: "Hanifa", pregnancy: "9 oy", problem: "Tayyorlanиш", text: "Tug‘руққа tayyorgarlik bo‘yicha foydali maslahatлар олдим." },
-  { name: "Shahzoda", pregnancy: "4 oy", problem: "Energiya yetishmasлиги", text: "Sog‘лом turмуш tarzини boshlадим, o‘zimни яхши his qilaman." },
-  { name: "Laylo", pregnancy: "7 oy", problem: "Uyqu buzilishi", text: "Qisқа mashқлар ва tinchлантирувчи маҳсалатлар ёрдам берди." },
-  { name: "Feruza", pregnancy: "6 oy", problem: "Xotira", text: "Nora esлатмалари витамин ва сув ичищга ёрдам беради." }
+  // ...Ваши отзывы...
 ];
 
 const ReviewBlock = () => {
@@ -311,6 +287,7 @@ const Chat = () => {
       }}
     >
 
+      {/* Верхняя панель */}
       <div style={{
         width: "calc(100% - 40px)",
         maxWidth,
@@ -363,7 +340,9 @@ const Chat = () => {
           </button>
         </div>
       </div>
-      <div style={{ height: 40 }} />
+
+      {/* Новый отступ между панелью и видео */}
+      <div style={{ height: 20 }} />
 
       {showWelcome ? (
         <>
@@ -392,7 +371,10 @@ const Chat = () => {
               preload="auto"
             />
           </div>
-          <div style={{ height: 30 }} />
+
+          {/* Новый отступ между видео и заголовком */}
+          <div style={{ height: 20 }} />
+
           <div
             style={{
               width: "calc(100% - 40px)",
@@ -410,24 +392,30 @@ const Chat = () => {
             }}>
               Я помогаю будущим мамам на каждом этапе беременности: отвечаю на вопросы, напоминаю о важных делах, слежу за самочувствием и даю советы, основанные на медицине Великобритании NHS.
             </div>
-            <div style={{ height: 40 }} />
+
+            {/* Новый отступ между описанием и кнопкой */}
+            <div style={{ height: 30 }} />
+
+            <button
+              style={{
+                width: "100%", maxWidth: 290, background: GRADIENT, color: NORA_COLOR,
+                border: "none", borderRadius: borderRadius, fontWeight: 700, fontSize: "17px",
+                padding: "15px 0", margin: "0 20px", cursor: "pointer",
+                display: "flex", alignItems: "center", justifyContent: "center"
+              }}
+              onClick={() => setShowWelcome(false)}
+            >
+              Начать пользоваться&nbsp;
+              <span style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+                {ICONS.arrowRight}
+              </span>
+            </button>
+
+            {/* Новый отступ между кнопкой и отзывами */}
+            <div style={{ height: 30 }} />
+
+            <ReviewBlock />
           </div>
-          <button
-            style={{
-              width: "100%", maxWidth: 290, background: GRADIENT, color: NORA_COLOR,
-              border: "none", borderRadius: borderRadius, fontWeight: 700, fontSize: "17px",
-              padding: "15px 0", margin: "0 20px", cursor: "pointer",
-              display: "flex", alignItems: "center", justifyContent: "center"
-            }}
-            onClick={() => setShowWelcome(false)}
-          >
-            Начать пользоваться&nbsp;
-            <span style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
-              {ICONS.arrowRight}
-            </span>
-          </button>
-          <div style={{ height: 30 }} />
-          <ReviewBlock />
         </>
       ) : (showHowTo && (
         <div style={{
