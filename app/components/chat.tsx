@@ -24,20 +24,23 @@ const ICONS = {
 };
 const filterNora = "invert(13%) sepia(4%) saturate(271%) hue-rotate(175deg) brightness(92%) contrast(93%)";
 
-function filterAsterisks(str) {
-  return str.replace(/\*/g, "");
-}
-function formatBotText(text) {
-  if (!text) return "";
-  let cleaned = filterAsterisks(text).replace(/_/g, "");
-  const firstSentenceMatch = cleaned.match(/^([^.!?]+[.!?])/);
-  const firstSentence = firstSentenceMatch ? firstSentenceMatch[1].trim() : "";
-  const restText = firstSentence ? cleaned.slice(firstSentence.length).trim() : cleaned.trim();
-  let result = "";
-  if (firstSentence) result += `**${firstSentence}** `;
-  if (restText) result += restText;
-  result = result.replace(/\*\*(.*?)\*\*[*]+/g, "$1");
-  return result.trim();
+// Функция для жирного первого предложения
+function splitBotText(text) {
+  if (!text) return [];
+  let cleaned = text.replace(/[*_]/g, ""); // убираем * и _
+  // находим первое предложение
+  const match = cleaned.match(/^([^.!?]+[.!?])\s?(.*)$/s);
+  if (match) {
+    const first = match[1].trim();
+    const rest = match[2].trim();
+    // разбить дальнейший текст на отдельные предложения
+    const restSentences = rest.length
+      ? rest.split(/(?<=[.!?])\s+/g).filter(Boolean)
+      : [];
+    return [{ bold: true, text: first }, ...restSentences.map(t => ({ bold: false, text: t }))];
+  } else {
+    return [{ bold: true, text: cleaned }];
+  }
 }
 
 // Чередуем узбекские и русские отзывы
@@ -54,7 +57,7 @@ const ReviewBlock = () => (
     width: "100%",
     maxWidth: 560,
     margin: "0 auto",
-    padding: "0 20px", // Строго 20 по бокам
+    padding: "0 20px",
     boxSizing: "border-box",
     background: "none"
   }}>
@@ -82,11 +85,6 @@ const ReviewBlock = () => (
     <div style={{ height: 30 }} />
   </div>
 );
-
-// --- Чтение блока ассистента по предложениям ---
-function splitSentences(text) {
-  return text.split(/(?<=[.!?])\s+/g).filter(Boolean);
-}
 
 const THREAD_KEY = "nora_thread_id";
 
@@ -145,7 +143,7 @@ const Chat = () => {
 
   const sendMessageToGPT = async (text) => {
     setLoading(true);
-    const newHistory = [...chatHistory, { text: filterAsterisks(text), sender: "user" }];
+    const newHistory = [...chatHistory, { text, sender: "user" }];
     setChatHistory(newHistory);
     setBotProgress("");
     try {
@@ -169,7 +167,6 @@ const Chat = () => {
       }
       let i = 0;
       setBotProgress("");
-      botReply = filterAsterisks(botReply);
       const interval = setInterval(() => {
         setBotProgress(botReply.slice(0, i));
         i++;
@@ -478,8 +475,8 @@ const Chat = () => {
                     padding: 10,
                     borderRadius: 16,
                     fontSize: 16
-                  }}>{filterAsterisks(msg.text)}</span>
-                : splitSentences(formatBotText(msg.text)).map((sentence, sIdx) => (
+                  }}>{msg.text}</span>
+                : splitBotText(msg.text).map((part, sIdx) => (
                   <div
                     key={sIdx}
                     style={{
@@ -489,17 +486,18 @@ const Chat = () => {
                       marginBottom: 10,
                       color: NORA_COLOR,
                       fontSize: 16,
-                      lineHeight: 1.7
+                      lineHeight: 1.7,
+                      fontWeight: part.bold ? "bold" : "normal"
                     }}
                   >
-                    {sentence}
+                    {part.text}
                   </div>
                 ))
               }
             </div>
           ))}
           {botProgress &&
-            splitSentences(formatBotText(botProgress)).map((sentence, sIdx) => (
+            splitBotText(botProgress).map((part, sIdx) => (
               <div
                 key={sIdx}
                 style={{
@@ -509,10 +507,11 @@ const Chat = () => {
                   margin: "0 20px 10px 20px",
                   color: NORA_COLOR,
                   fontSize: 16,
-                  lineHeight: 1.7
+                  lineHeight: 1.7,
+                  fontWeight: part.bold ? "bold" : "normal"
                 }}
               >
-                {sentence}
+                {part.text}
               </div>
             ))
           }
@@ -540,7 +539,7 @@ const Chat = () => {
           value={message}
           onFocus={() => setFocused(true)}
           onBlur={() => setFocused(false)}
-          onChange={e => setMessage(filterAsterisks(e.target.value))}
+          onChange={e => setMessage(e.target.value)}
           placeholder="Введите сообщение..."
           style={{
             flex: 1,
