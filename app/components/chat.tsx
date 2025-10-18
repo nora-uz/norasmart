@@ -57,14 +57,14 @@ const REVIEWS = [
   { name: "Madina", pregnancy: "4 oy", problem: "Ovqat hazmi", text: "Ovqatlanish bo‘yicha maslahatlar juda foydali, endi oshqozonim qiynalmaydi." },
   { name: "Gulnora", pregnancy: "8 oy", problem: "Qo‘rqinch", text: "Nora Plus qo‘llablab-quvvatladi, tug‘ruqdan kamroq qo‘rqаман." },
   { name: "Yulduz", pregnancy: "5 oy", problem: "Bel og‘rig‘i", text: "Mashqlar yordami bilan bel og‘rig‘i ancha kamayди." },
-  { name: "Zarina", pregnancy: "3 oy", problem: "Toksikoz", text: "Nora maslahatlari tufayli toksikозni osonroq o‘tkazdim." },
-  { name: "Muxlisa", pregnancy: "7 oy", problem: "Vazn ortishi", text: "Sog‘lom ovqatlanish ва harakatлар tufayli vaznimni nazорат qила оляпман." },
+  { name: "Zarina", pregnancy: "3 oy", problem: "Toksikoz", text: "Nora maslahatлари tufayли токсикозни osonroq o‘tkazdim." },
+  { name: "Muxlisa", pregnancy: "7 oy", problem: "Vazn ortishi", text: "Sog‘лом ovqatlanish ва harakatлар tufayli vaznimni назорат qила оляпман." },
   { name: "Kamola", pregnancy: "2 oy", problem: "Xavotir", text: "Assistentim savollarимга тез javob beradi, endi kamroq xavotirdaman." },
-  { name: "Nargiza", pregnancy: "5 oy", problem: "Kichik og‘riqlar", text: "Nora maslahatlariga amal qilib, hal qilмоқдаман." },
-  { name: "Hanifa", pregnancy: "9 oy", problem: "Tayyorланиш", text: "Tug‘рукка tayyorgarlik bo‘yicha foydali maslahatлар олдим." },
+  { name: "Nargiza", pregnancy: "5 oy", problem: "Kichik og‘риқлар", text: "Nora maslahatlariga amal qilib, hal qilмоқдаман." },
+  { name: "Hanifa", pregnancy: "9 oy", problem: "Tayyorланиш", text: "Tug‘руққа tayyorgarlik bo‘yicha foydali maslahatлар олдим." },
   { name: "Shahzoda", pregnancy: "4 oy", problem: "Energiya yetishmasligi", text: "Sog‘лом turmush tarzини boshlадим, o‘zimни яхши his qilaman." },
-  { name: "Laylo", pregnancy: "7 oy", problem: "Uyqu buzilishi", text: "Qisqa mashqlar ва tinchlantирuvchi маҳсалатлар ёрдам берди." },
-  { name: "Feruza", pregnancy: "6 oy", problem: "Xotira", text: "Nora eslatmalari vitamin ва сув ичищга ёрдам беради." }
+  { name: "Laylo", pregnancy: "7 oy", problem: "Uyqu buzilishi", text: "Qisqa mashqlar ва tinchлантирувчи маҳсалатлар ёрдам берди." },
+  { name: "Feruza", pregnancy: "6 oy", problem: "Xotira", text: "Nora eslatмалари витамин ва сув ичищга ёрдам беради." }
 ];
 
 const ReviewBlock = () => {
@@ -75,16 +75,12 @@ const ReviewBlock = () => {
     }, 7000);
     return () => clearInterval(interval);
   }, []);
-
-  // Пропускаем пустые элементы
   let reviewsToShow = [];
   for (let i = 0; i < 5 && REVIEWS.length; i++) {
     const review = REVIEWS[(visibleIdx + REVIEWS.length - i) % REVIEWS.length];
     if (review) reviewsToShow.push(review);
   }
-
   if (!reviewsToShow.length) return null;
-
   return (
     <div style={{ width: "100%", maxWidth: 560, margin: "30px auto 0 auto", background: "none" }}>
       {reviewsToShow.map((r, idx) => (
@@ -371,23 +367,26 @@ const Chat = () => {
 
       {showWelcome ? (
         <>
-          <div style={{
-            width: "100%",
-            maxWidth,
-            margin: "10px auto 0 auto",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            background: "none",
-            paddingLeft: 10,
-            paddingRight: 20
-          }}>
+          <div
+            style={{
+              width: "100%",
+              maxWidth,
+              margin: "10px auto 0 auto",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              background: "none",
+              paddingLeft: 10,
+              paddingRight: 20,
+              minHeight: 160
+            }}
+          >
             <video
               src="/nora.mp4"
               style={{
                 maxWidth: "100%",
                 width: "100%",
-                height: 285, // уменьшено на 5px
+                aspectRatio: "16/9",
                 objectFit: "cover",
                 objectPosition: "center",
                 display: "block",
@@ -401,7 +400,7 @@ const Chat = () => {
               preload="auto"
             />
           </div>
-          <div style={{ height: 30 }} /> {/* Отступ между видео и заголовком */}
+          <div style={{ height: 30 }} />
           <div style={{
             width: "calc(100% - 40px)", maxWidth, textAlign: "center", margin: "0 auto"
           }}>
@@ -430,7 +429,7 @@ const Chat = () => {
               {ICONS.arrowRight}
             </span>
           </button>
-          <div style={{ height: 30 }} /> {/* Отступ между кнопкой и отзывами */}
+          <div style={{ height: 30 }} />
           <ReviewBlock />
         </>
       ) : (showHowTo && (
