@@ -4,10 +4,12 @@ import ReactMarkdown from "react-markdown";
 
 const NORA_COLOR = "#2e2e2e";
 const ICON_SIZE = 23;
+const BANNER = "/banner.webp";
 const borderRadius = 22;
 const panelHeight = 62;
 const maxWidth = 560;
 const GRADIENT = "linear-gradient(90deg, #eff5fe 0%, #e5e8ed 100%)";
+const INPUT_BAR_HEIGHT = 68;
 
 const ICONS = {
   telegram: "https://cdn-icons-png.flaticon.com/512/1946/1946547.png",
@@ -25,86 +27,18 @@ const filterNora = "invert(13%) sepia(4%) saturate(271%) hue-rotate(175deg) brig
 function filterAsterisks(str: string) {
   return str.replace(/\*/g, "");
 }
-
-const REVIEWS = [
-  // Русские
-  { name: "Анна", pregnancy: "2 месяц", problem: "Токсикоз", text: "Nora Plus подсказала, как справиться с утренней тошнотой. Питание стало более сбалансированным и легче переносить симптомы." },
-  { name: "Елена", pregnancy: "4 месяц", problem: "Слабость и усталость", text: "Рекомендации по витаминам и сну очень помогли, чувствую себя намного лучше!" },
-  { name: "Ирина", pregnancy: "5 месяц", problem: "Тревожность", text: "Советы от Nora Plus помогли мне расслабиться и больше отдыхать. Теперь спокойна за малыша." },
-  { name: "Оксана", pregnancy: "6 месяц", problem: "Боль в спине", text: "Упражнения из приложения действительно облегчили боль. Научилась правильно расслабляться." },
-  { name: "Виктория", pregnancy: "7 месяц", problem: "Анализы", text: "Пояснения от сервиса помогли понять результаты, тревога уходит, сплю спокойнее." },
-  { name: "Мария", pregnancy: "9 месяц", problem: "Отёки ног", text: "Полезные советы, упражнения и режим помогли избавиться от тяжести в ногах." },
-  { name: "София", pregnancy: "8 месяц", problem: "Страх родов", text: "Nora отвечала на мои вопросы, теперь чувствую уверенность и готовность." },
-  { name: "Оля", pregnancy: "5 месяц", problem: "Питание", text: "Рекомендации по продуктам помогли избежать лишнего веса и токсикоза." },
-  { name: "Татьяна", pregnancy: "3 месяц", problem: "Сон", text: "Научилась правильно расслабляться по совету приложения, теперь сплю лучше." },
-  { name: "Кристина", pregnancy: "7 месяц", problem: "Забывчивость", text: "Напоминания от Nora Plus о приёме витаминов и воде очень выручают!" },
-  { name: "Алиса", pregnancy: "6 месяц", problem: "Недостаток информации", text: "Ответы на вопросы о здоровье пришли быстро, больше не нервничаю." },
-  { name: "Светлана", pregnancy: "8 месяц", problem: "Беспокойство", text: "Чат с ассистентом помог снять лишние страхи, отлично поддерживает." },
-  { name: "Дарья", pregnancy: "3 месяц", problem: "Токсикоз", text: "Перед сном читаю рекомендации, стало меньше тошноты и улучшилось настроение." },
-  // Узбекские
-  { name: "Dilnoza", pregnancy: "6 oy", problem: "Uyqusizlik", text: "Nora Plus maslahatlari yordam berdi, endi yaxshi uxlayman ва ташвишлар камроқ." },
-  { name: "Madina", pregnancy: "4 oy", problem: "Ovqat hazmi", text: "Ovqatlanish bo‘yicha maslahatlar juda foydali, endi oshqozonim qiynalmaydi." },
-  { name: "Gulnora", pregnancy: "8 oy", problem: "Qo‘rqinch", text: "Nora Plus qo‘llablab-quvvatladi, tug‘ruqdan kamroq qo‘rqaman." },
-  { name: "Yulduz", pregnancy: "5 oy", problem: "Bel og‘rig‘i", text: "Mashqlar yordami bilan bel og‘rig‘i ancha kamaydi." },
-  { name: "Zarina", pregnancy: "3 oy", problem: "Toksikoz", text: "Nora maslahatlari tufayli toksikozni osonroq o‘tkazdim." },
-  { name: "Muxlisa", pregnancy: "7 oy", problem: "Vazn ortishi", text: "Sog‘lom ovqatlanish va harakatlar tufayli vaznimni nazorat qila olyapman." },
-  { name: "Kamola", pregnancy: "2 oy", problem: "Xavotir", text: "Assistentim savollarimga tez javob beradi, endi kamroq xavotirdaman." },
-  { name: "Nargiza", pregnancy: "5 oy", problem: "Kichik og‘riqlar", text: "Nora maslahatlariga amal qilib, hal qilmoqdaman." },
-  { name: "Hanifa", pregnancy: "9 oy", problem: "Tayyorlanish", text: "Tug‘ruqqa tayyorgarlik bo‘yicha foydali maslahatlar oldim." },
-  { name: "Shahzoda", pregnancy: "4 oy", problem: "Energiya yetishmasligi", text: "Sog‘lom turmush tarzini boshladim, o‘zimni yaxshi his qilaman." },
-  { name: "Laylo", pregnancy: "7 oy", problem: "Uyqu buzilishi", text: "Qisqa mashqlar va tinchlantiruvchi maslahatlar yordam berdi." },
-  { name: "Feruza", pregnancy: "6 oy", problem: "Xotira", text: "Nora eslatmalari vitamin va suv ichishga yordam beradi." },
-];
-
-const ReviewBlock: React.FC = () => {
-  const [visibleIdx, setVisibleIdx] = useState(0);
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setVisibleIdx(idx => (idx + 1) % REVIEWS.length);
-    }, 7000);
-    return () => clearInterval(interval);
-  }, []);
-  let reviewsToShow: typeof REVIEWS = [];
-  for (let i = 0; i < 5; i++) {
-    reviewsToShow.push(REVIEWS[
-      (visibleIdx + REVIEWS.length - i) % REVIEWS.length
-    ]);
-  }
-  return (
-    <div style={{
-      width: "100%", maxWidth: 560, margin: "30px auto 0 auto", background: "none"
-    }}>
-      {reviewsToShow.map((r, idx) => (
-        <div
-          key={r.name+idx}
-          style={{
-            background: "linear-gradient(90deg, #eff5fe 0%, #e5e8ed 100%)",
-            borderRadius: 22,
-            margin: "0 20px 0 20px",
-            marginBottom: idx < 4 ? 20 : 0,
-            boxShadow: "0 2px 8px 0 rgba(150, 180, 220, 0.10)",
-            padding: "14px 16px 11px 16px",
-            animation: idx === 0 ? "slideInTop 0.6s" : undefined,
-            transition: "all 0.5s"
-          }}>
-          <div style={{ fontWeight: 700, fontSize: 15 }}>{r.name} — {r.pregnancy}</div>
-          <div style={{ fontWeight: 700, color: "#715b9b", margin: "4px 0 3px 0" }}>
-            {r.problem}
-          </div>
-          <div style={{ fontSize: 14, color: "#2e2e2e", lineHeight: "1.5" }}>{r.text}</div>
-        </div>
-      ))}
-      <div style={{ height: 30 }} />
-      <style>
-        {`
-        @keyframes slideInTop {
-          0% { opacity: 0; transform: translateY(-30px);}
-          100% { opacity: 1; transform: translateY(0);}
-        `}
-      </style>
-    </div>
-  );
-};
+function formatBotText(text: string) {
+  if (!text) return "";
+  let cleaned = filterAsterisks(text).replace(/_/g, "");
+  const firstSentenceMatch = cleaned.match(/^([^.!?]+[.!?])/);
+  const firstSentence = firstSentenceMatch ? firstSentenceMatch[1].trim() : "";
+  const restText = firstSentence ? cleaned.slice(firstSentence.length).trim() : cleaned.trim();
+  let result = "";
+  if (firstSentence) result += `**${firstSentence}** `;
+  if (restText) result += restText;
+  result = result.replace(/\*\*(.*?)\*\*[*]+/g, "$1");
+  return result.trim();
+}
 
 type Message = { text: string; sender: "user" | "bot" };
 const THREAD_KEY = "nora_thread_id";
@@ -306,17 +240,14 @@ const Chat: React.FC = () => {
         boxSizing: "border-box"
       }}
     >
-      {/* 20px НАД ПАНЕЛЬЮ */}
-      <div style={{ height: 20, flexShrink: 0 }} />
 
-      {/* Панель */}
       <div style={{
         width: "calc(100% - 40px)",
         maxWidth,
         minHeight: panelHeight,
         background: GRADIENT,
         color: NORA_COLOR,
-        margin: "0 auto",
+        margin: "20px auto 0 auto",
         display: "flex", alignItems: "center",
         borderRadius: borderRadius,
         paddingLeft: 20, paddingRight: 12, paddingTop: 5, paddingBottom: 5,
@@ -362,182 +293,259 @@ const Chat: React.FC = () => {
           </button>
         </div>
       </div>
+      <div style={{ height: 40 }} />
 
-      {/* 10px между панелью и видео */}
-      <div style={{ height: 10, flexShrink: 0 }} />
+      {showWelcome ? (
+        <>
+          <div style={{
+            width: "100%",
+            maxWidth,
+            margin: "10px auto 0 auto",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            background: "none",
+            paddingRight: 20 // отступ справа у блока!
+          }}>
+            <video
+              src="/nora.mp4"
+              style={{
+                maxWidth: "100%",
+                width: "100%",
+                height: 288, // уменьшено на 2px!
+                objectFit: "cover",
+                objectPosition: "center",
+                display: "block",
+                margin: "0 auto",
+                borderRadius: 24,
+              }}
+              autoPlay
+              playsInline
+              muted
+              loop
+              preload="auto"
+            />
+          </div>
+          <div style={{ height: 50 }} />
+          <div style={{
+            width: "calc(100% - 40px)", maxWidth, textAlign: "center", margin: "0 auto"
+          }}>
+            <div style={{
+              fontWeight: 700, fontSize: "22px", color: NORA_COLOR, marginBottom: 14
+            }}>Ждёте малыша? Я помогу!</div>
+            <div style={{
+              fontWeight: 400, fontSize: "15px", margin: "0 auto 0 auto", maxWidth: 400,
+              padding: "0 20px", lineHeight: 1.75, color: NORA_COLOR, display: "inline-block"
+            }}>
+              Я помогаю будущим мамам на каждом этапе беременности: отвечаю на вопросы, напоминаю о важных делах, слежу за самочувствием и даю советы, основанные на медицине Великобритании NHS.
+            </div>
+            <div style={{ height: 40 }} />
+          </div>
+          <button
+            style={{
+              width: "100%", maxWidth: 290, background: GRADIENT, color: NORA_COLOR,
+              border: "none", borderRadius: borderRadius, fontWeight: 700, fontSize: "17px",
+              padding: "15px 0", margin: "0 20px", cursor: "pointer",
+              display: "flex", alignItems: "center", justifyContent: "center"
+            }}
+            onClick={() => setShowWelcome(false)}
+          >
+            Начать пользоваться&nbsp;
+            <span style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+              {ICONS.arrowRight}
+            </span>
+          </button>
+        </>
+      ) : (showHowTo && (
+        <div style={{
+          width: "calc(100% - 40px)", maxWidth, textAlign: "center", margin: "90px auto 0 auto"
+        }}>
+          <div style={{
+            fontWeight: 700, fontSize: "21px", color: NORA_COLOR, marginBottom: 10, marginTop: 12
+          }}>
+            Как пользоваться Nora?
+          </div>
+          <div style={{
+            fontWeight: 400, fontSize: "15px", margin: "0 auto", maxWidth: 400,
+            padding: "0 20px", lineHeight: 1.75, color: NORA_COLOR, display: "inline-block"
+          }}>
+            Можно спрашивать все, что связано с беременностью, здоровьем, самочувствием, питанием, анализами, подготовкой к родам, эмоциональным состоянием и любые другие темы.
+          </div>
+          <div style={{ height: 40 }} />
+        </div>
+      ))}
 
-      {/* Видео: чуть больше, без полос */}
       <div style={{
         width: "100%",
         maxWidth,
+        padding: "0 0px",
         margin: "0 auto",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        background: "none",
-        height: 290,
-        position: "relative"
+        marginTop: 0,
+        flex: 1,
+        overflowY: "auto",
+        paddingBottom: INPUT_BAR_HEIGHT + 20
       }}>
-        <video
-          src="/nora.mp4"
-          style={{
-            maxWidth: "100%",
-            width: "100%",
-            height: "100%",
-            objectFit: "cover",
-            objectPosition: "center",
-            display: "block",
-            margin: "0 auto",
-            borderRadius: 24,
-            paddingRight: 20 // <-- вот оно!
-          }}
-          autoPlay
-          playsInline
-          muted
-          loop
-          preload="auto"
-        />
-      </div>
-
-      {/* 40px между видео и заголовком */}
-      <div style={{ height: 40, flexShrink: 0 }} />
-
-      {/* Заголовок и описание */}
-      <div style={{
-        width: "calc(100% - 40px)", maxWidth, textAlign: "center", margin: "0 auto"
-      }}>
-        <div style={{
-          fontWeight: 700, fontSize: "22px", color: NORA_COLOR, margin: 0
-        }}>Ждёте малыша? Я помогу!</div>
-        <div style={{ height: 20, flexShrink: 0 }} />
-        <div style={{
-          fontWeight: 400, fontSize: "15px", margin: "0 auto", maxWidth: 400,
-          padding: "0 20px", lineHeight: 1.75, color: NORA_COLOR, display: "inline-block"
-        }}>
-          Я помогаю будущим мамам на каждом этапе беременности: отвечаю на вопросы, напоминаю о важных делах, слежу за самочувствием и даю советы, основанные на медицине Великобритании NHS.
-        </div>
-      </div>
-
-      <div style={{ height: 40, flexShrink: 0 }} />
-
-      <button
-        style={{
-          width: "100%", maxWidth: 290, background: GRADIENT, color: NORA_COLOR,
-          border: "none", borderRadius: borderRadius, fontWeight: 700, fontSize: "17px",
-          padding: "15px 0", margin: "0 20px", cursor: "pointer",
-          display: "flex", alignItems: "center", justifyContent: "center"
-        }}
-        onClick={() => setShowWelcome(false)}
-      >
-        Начать пользоваться&nbsp;
-        <span style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
-          {ICONS.arrowRight}
-        </span>
-      </button>
-
-      <div style={{ height: 25, flexShrink: 0 }} />
-
-      <ReviewBlock />
-
-      {!showWelcome && !showHowTo && (
-        <div style={{
-          width: "100%",
-          maxWidth: 560,
-          flex: 1,
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "flex-end"
-        }}>
-          <div style={{ flex: 1, overflowY: "auto" }}>
-            {chatHistory.map((m, i) => (
-              <div key={i}
-                style={{
-                  margin: "10px 14px",
-                  alignSelf: m.sender === "user" ? "flex-end" : "flex-start",
-                  background: m.sender === "user" ? "#fff" : "#f1f3f8",
-                  color: NORA_COLOR,
-                  borderRadius: 18,
-                  maxWidth: "85%",
-                  padding: "13px 15px",
-                  fontSize: 16,
-                  fontWeight: 400,
-                  whiteSpace: "pre-line",
-                  boxShadow: "0 1px 6px 0 rgba(70,80,120,0.06)"
-                }}>
-                <ReactMarkdown>{m.text}</ReactMarkdown>
-              </div>
-            ))}
-            {botProgress &&
-              <div style={{
-                margin: "10px 14px",
-                alignSelf: "flex-start",
-                background: "#f1f3f8",
-                color: NORA_COLOR,
-                borderRadius: 18,
-                maxWidth: "85%",
-                padding: "13px 15px",
-                fontSize: 16,
-                fontWeight: 400,
-                whiteSpace: "pre-line",
-                fontStyle: "italic",
-                opacity: 0.7
-              }}>
-                {botProgress}
-              </div>}
-            <div ref={messagesEndRef} />
-          </div>
-          <form
+        {chatHistory.map((msg, idx) => (
+          <div
+            key={idx}
             style={{
               display: "flex",
-              alignItems: "center",
-              padding: "0 10px 18px 10px",
-              background: "none"
-            }}
-            onSubmit={e => {
-              e.preventDefault();
-              handleSendMessage();
+              width: "100%",
+              justifyContent: msg.sender === "user" ? "flex-end" : "flex-start"
             }}
           >
+            <div
+              style={{
+                margin: "20px",
+                maxWidth: 450,
+                alignSelf: msg.sender === "user" ? "flex-end" : "flex-start"
+              }}
+            >
+              {msg.sender === "user" ? (
+                <span
+                  style={{
+                    background: GRADIENT,
+                    color: NORA_COLOR,
+                    borderRadius: 16,
+                    padding: "18px 20px",
+                    lineHeight: 1.7,
+                    fontSize: 17,
+                    minWidth: 0,
+                    boxShadow: "0 2px 14px 0 rgba(155,175,205,0.07)",
+                    maxWidth: "100%",
+                    display: "inline-block",
+                    fontWeight: 400,
+                    wordBreak: "break-word"
+                  }}
+                >
+                  {filterAsterisks(msg.text)}
+                </span>
+              ) : (
+                <span
+                  style={{
+                    color: NORA_COLOR,
+                    background: "transparent",
+                    borderRadius: 0,
+                    padding: 0,
+                    lineHeight: 1.7,
+                    fontSize: 17,
+                    minWidth: 0,
+                    maxWidth: "100%",
+                    display: "inline-block",
+                    fontWeight: 400,
+                    wordBreak: "break-word"
+                  }}
+                >
+                  <ReactMarkdown>{formatBotText(msg.text)}</ReactMarkdown>
+                </span>
+              )}
+            </div>
+          </div>
+        ))}
+        {botProgress && (
+          <div
+            style={{
+              width: "100%",
+              display: "flex",
+              justifyContent: "flex-start",
+              marginTop: "20px",
+              marginBottom: "20px",
+              paddingLeft: 20,
+              paddingRight: 20,
+              boxSizing: "border-box"
+            }}
+          >
+            <div
+              style={{
+                maxWidth: 450,
+                width: "100%",
+                color: NORA_COLOR,
+                fontSize: 17,
+                fontWeight: 400,
+                background: "transparent",
+                borderRadius: 0,
+                padding: 0,
+                lineHeight: 1.7,
+                wordBreak: "break-word"
+              }}
+            >
+              <ReactMarkdown>{formatBotText(botProgress)}</ReactMarkdown>
+            </div>
+          </div>
+        )}
+        <div ref={messagesEndRef} />
+      </div>
+
+      {!showWelcome && (
+        <>
+          <div style={{
+            width: "calc(100% - 40px)",
+            margin: "0 20px",
+            display: "flex",
+            alignItems: "center",
+            boxSizing: "border-box",
+            maxWidth: maxWidth,
+            height: INPUT_BAR_HEIGHT,
+            position: "fixed",
+            left: 0,
+            bottom: 25,
+            background: "transparent",
+            borderRadius: borderRadius,
+            zIndex: 20,
+            boxShadow: "none"
+          }}>
             <input
               type="text"
               value={message}
-              onChange={e => setMessage(e.target.value)}
+              onFocus={() => setFocused(true)}
+              onBlur={() => setFocused(false)}
+              onChange={e => setMessage(filterAsterisks(e.target.value))}
               placeholder="Введите сообщение..."
               style={{
                 flex: 1,
-                borderRadius: 18,
-                border: "1px solid #e1e1ef",
-                padding: "13px 16px",
-                fontSize: 16,
-                outline: "none",
+                height: 48,
+                fontSize: "16px",
+                borderRadius: borderRadius,
+                borderWidth: focused ? 2 : 1,
+                borderStyle: "solid",
+                borderColor: focused ? "transparent" : "#e5e8ed",
+                borderImage: focused ? GRADIENT + " 1" : undefined,
+                padding: "0 18px",
                 background: "#fff",
                 color: NORA_COLOR,
-                marginRight: 10
+                boxSizing: "border-box",
+                marginRight: 8,
+                transition: "border 0.22s"
               }}
-              disabled={loading}
-              autoFocus={focused}
-              onFocus={() => setFocused(true)}
-              onBlur={() => setFocused(false)}
+              onKeyDown={e => { if (e.key === 'Enter') handleSendMessage(); }}
+              disabled={loading || !!botProgress}
             />
             <button
-              type="submit"
               style={{
+                width: 48,
+                height: 48,
                 background: GRADIENT,
-                border: "none",
-                borderRadius: 17,
-                fontWeight: 700,
                 color: NORA_COLOR,
-                fontSize: 17,
-                padding: "10px 16px",
-                cursor: loading || !message.trim() ? "not-allowed" : "pointer",
-                opacity: loading || !message.trim() ? 0.6 : 1
+                border: "none",
+                borderRadius: borderRadius,
+                fontWeight: 700,
+                fontSize: "17px",
+                cursor: (loading || !!botProgress) ? "not-allowed" : "pointer",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                boxShadow: "0 2px 14px 0 rgba(155,175,205,0.12)"
               }}
-              disabled={loading || !message.trim()}
+              onClick={handleSendMessage}
+              disabled={loading || !!botProgress}
             >
-              Отправить
+              <span style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+                {ICONS.arrowRight}
+              </span>
             </button>
-          </form>
-        </div>
+          </div>
+          <div style={{ height: 20 }} />
+        </>
       )}
     </div>
   );
