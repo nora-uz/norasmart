@@ -40,43 +40,87 @@ function splitBotTextTwoBlocks(text) {
   }
 }
 
-// Новый блок преимуществ
+// Блок преимуществ Nora Plus
 const BENEFITS = [
-  { icon: "🩺", title: "Медицинская точность", text: "Советы основаны на рекомендациях британской службы NHS и адаптированы под локальные реалии." },
-  { icon: "🤝", title: "Поддержка 24/7", text: "Ваш личный ассистент всегда на связи: быстрые ответы на любые вопросы и помощь в любых ситуациях." },
-  { icon: "⏰", title: "Напоминания о важных делах", text: "Nora Plus подскажет, когда сдавать анализы, принимать витамины или идти на приём." },
-  { icon: "🔒", title: "Конфиденциальность", text: "Вся информация строго защищена и не передаётся третьим лицам." },
-  { icon: "⚡️", title: "Быстрые решения", text: "Реальные советы и полезные инструкции без лишних поисков." },
+  { emoji: "🩺", title: "Медицинская точность", text: "Советы основаны на рекомендациях британской службы NHS и адаптированы под ваш регион." },
+  { emoji: "🤝", title: "Поддержка 24/7", text: "Ассистент всегда на связи для заботы и помощи в любой ситуации." },
+  { emoji: "⏰", title: "Напоминания о важных делах", text: "Следим, чтобы вы ничего не забыли — анализы, витамины, визиты." },
+  { emoji: "🔒", title: "Конфиденциальность", text: "Личные данные остаются только у вас — никакой передачи сторонним." },
+  { emoji: "⚡️", title: "Быстрые решения", text: "Полезные советы и поддержка сразу, когда это нужно." },
 ];
 
 const WhyNoraBlock = () => (
-  <div style={{
-    width: "100%", maxWidth, margin: "0 auto 38px auto", padding: "0 22px", boxSizing: "border-box",
-  }}>
-    <div style={{
-      fontWeight: 700, fontSize: "18px", color: NORA_COLOR, marginBottom: 22, textAlign: "center",
-    }}>
-      Почему Nora Plus?
-    </div>
-    <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
-      {BENEFITS.map(({ icon, title, text }, idx) => (
-        <div key={idx} style={{
-          display: "flex", alignItems: "flex-start", background: GRADIENT,
-          borderRadius: 19, boxShadow: "0 2px 8px 0 rgba(150, 180, 220, 0.10)",
-          padding: "13px 18px"
-        }}>
-          <div style={{ fontSize: "21px", marginRight: 13 }}>{icon}</div>
-          <div>
-            <div style={{ fontWeight: 700, fontSize: 15, color: NORA_COLOR, marginBottom: 3 }}>{title}</div>
-            <div style={{ fontSize: 13, color: "#3a3a3a", lineHeight: "1.57" }}>{text}</div>
+  <div
+    style={{
+      width: "calc(100% - 40px)",
+      maxWidth,
+      margin: "0 auto 38px auto",
+      padding: 0,
+      background: GRADIENT,
+      borderRadius: borderRadius,
+      boxShadow: "0 6px 20px 0 rgba(150, 175, 205, 0.10)",
+      boxSizing: "border-box",
+    }}
+  >
+    <div style={{ padding: "21px 20px 20px 20px" }}>
+      <div
+        style={{
+          fontWeight: 700,
+          fontSize: "20px",
+          color: NORA_COLOR,
+          marginBottom: 20,
+          textAlign: "center",
+          letterSpacing: "0.01em"
+        }}
+      >
+        Почему Nora Plus?
+      </div>
+      <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
+        {BENEFITS.map(({ emoji, title, text }, idx) => (
+          <div
+            key={idx}
+            style={{
+              position: "relative",
+              background: "#fff",
+              borderRadius: 18,
+              boxShadow: "0 2px 18px 0 rgba(150,180,220,0.07)",
+              padding: "19px 22px 19px 20px",
+              overflow: "hidden",
+              minHeight: 56,
+            }}
+          >
+            <span
+              style={{
+                position: "absolute",
+                right: 18,
+                top: 14,
+                fontSize: 62,
+                opacity: 0.14,
+                pointerEvents: "none",
+                userSelect: "none",
+                lineHeight: 1,
+                zIndex: 0,
+              }}
+              aria-hidden="true"
+            >
+              {emoji}
+            </span>
+            <div style={{ position: "relative", zIndex: 1 }}>
+              <div style={{ fontWeight: 700, fontSize: 16, color: NORA_COLOR, marginBottom: 7 }}>
+                {title}
+              </div>
+              <div style={{ fontSize: 13, color: "#3a3a3a", lineHeight: "1.57" }}>
+                {text}
+              </div>
+            </div>
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
   </div>
 );
 
-// Обычные отзывы
+// Отзывы
 const REVIEWS = [
   { name: "Анна", pregnancy: "2 месяц", problem: "Токсикоз", text: "Nora Plus подсказала, как справиться с утренней тошнотой. Питание стало более сбалансированным и легче переносить симптомы." },
   { name: "Dilnoza", pregnancy: "3 oy", problem: "Ko'ngil aynishi", text: "Nora maslahatlari ko'ngil aynishi va ahvolni yengil o'tkazish uchun yordam berdi. O'z vaqtida maslahat olaman." },
@@ -426,7 +470,7 @@ const Chat = () => {
           </div>
           <div style={{ height: 40 }} />
 
-          {/* ВСТАВКА БЛОКА ПРЕИМУЩЕСТВ */}
+          {/* БЛОК ПРЕИМУЩЕСТВ */}
           <WhyNoraBlock />
 
           <ReviewBlock />
