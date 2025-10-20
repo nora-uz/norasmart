@@ -10,6 +10,7 @@ const maxWidth = 560;
 const videoMaxWidth = 314;
 const GRADIENT = "linear-gradient(90deg, #eff5fe 0%, #e5e8ed 100%)";
 const INPUT_BAR_HEIGHT = 68;
+const BLOCK_HORIZONTAL_PADDING = 20;
 
 const ICONS = {
   telegram: "https://cdn-icons-png.flaticon.com/512/1946/1946547.png",
@@ -52,7 +53,7 @@ const BENEFITS = [
 const WhyNoraBlock = () => (
   <div
     style={{
-      width: "calc(100% - 40px)",
+      width: `calc(100% - ${2 * BLOCK_HORIZONTAL_PADDING}px)`,
       maxWidth,
       margin: "0 auto 38px auto",
       padding: 0,
@@ -62,7 +63,12 @@ const WhyNoraBlock = () => (
       boxSizing: "border-box",
     }}
   >
-    <div style={{ padding: "21px 20px 20px 20px" }}>
+    <div style={{
+      paddingTop: 21,
+      paddingBottom: 20,
+      paddingLeft: BLOCK_HORIZONTAL_PADDING,
+      paddingRight: BLOCK_HORIZONTAL_PADDING
+    }}>
       <div
         style={{
           fontWeight: 700,
@@ -125,14 +131,14 @@ const REVIEWS = [
   { name: "Анна", pregnancy: "2 месяц", problem: "Токсикоз", text: "Nora Plus подсказала, как справиться с утренней тошнотой. Питание стало более сбалансированным и легче переносить симптомы." },
   { name: "Dilnoza", pregnancy: "3 oy", problem: "Ko'ngil aynishi", text: "Nora maslahatlari ko'ngil aynishi va ahvolni yengil o'tkazish uchun yordam berdi. O'z vaqtida maslahat olaman." },
   { name: "Елена", pregnancy: "4 месяц", problem: "Слабость и усталость", text: "Рекомендации по витаминам и сну очень помогли, чувствую себя намного лучше!" },
-  { name: "Shahnoza", pregnancy: "5 oy", problem: "Hafsalasi pastlik", text: "Nora Plus motivatsiya va ijobiy maslahatlarni oʻz vaqtida beradi. Oʻzimni yaxshi his qila boshlадим." },
+  { name: "Shahnoza", pregnancy: "5 oy", problem: "Hafsalasi pastlik", text: "Nora Plus motivatsiya va ijobiy maslahatlarni oʻz vaqtida beradi. Oʻzimni хорошо his qila boshlадим." },
   { name: "Ирина", pregnancy: "5 месяц", problem: "Тревожность", text: "Советы от Nora Plus помогли мне расслабиться и больше отдыхать. Теперь спокойна за малыша." }
 ];
 
 const ReviewBlock = () => (
   <div style={{
     width: "100%",
-    padding: "0 20px",
+    padding: `0 ${BLOCK_HORIZONTAL_PADDING}px`,
     margin: 0,
     boxSizing: "border-box",
     background: "none"
@@ -147,7 +153,7 @@ const ReviewBlock = () => (
           boxShadow: "0 2px 8px 0 rgba(150, 180, 220, 0.10)",
           padding: "14px 0 11px 0"
         }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4, padding: "0 16px" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4, padding: `0 16px` }}>
           <div style={{ fontWeight: 700, fontSize: 15, color: "#222" }}>
             {r.name} — {r.pregnancy}
           </div>
@@ -155,7 +161,7 @@ const ReviewBlock = () => (
             {r.problem}
           </div>
         </div>
-        <div style={{ fontSize: 13, color: "#3a3a3a", lineHeight: "1.57", textAlign: "left", padding: "0 16px" }}>{r.text}</div>
+        <div style={{ fontSize: 13, color: "#3a3a3a", lineHeight: "1.57", textAlign: "left", padding: `0 16px` }}>{r.text}</div>
       </div>
     ))}
     <div style={{ height: 30 }} />
@@ -349,7 +355,7 @@ const Chat = () => {
       }}>
         {/* Панель */}
         <div style={{
-          width: "calc(100% - 40px)",
+          width: `calc(100% - ${2 * BLOCK_HORIZONTAL_PADDING}px)`,
           maxWidth,
           minHeight: panelHeight,
           background: GRADIENT,
@@ -357,12 +363,13 @@ const Chat = () => {
           margin: "20px auto 0 auto",
           display: "flex", alignItems: "center",
           borderRadius: borderRadius,
-          paddingLeft: 20, paddingRight: 12, paddingTop: 5, paddingBottom: 5,
+          paddingLeft: BLOCK_HORIZONTAL_PADDING, paddingRight: BLOCK_HORIZONTAL_PADDING, paddingTop: 5, paddingBottom: 5,
           justifyContent: "flex-start", boxSizing: "border-box", zIndex: 1
         }}>
           <div style={{
             marginRight: 10, color: NORA_COLOR,
-            display: "flex", flexDirection: "column", justifyContent: "center", minWidth: 0
+            display: "flex", flexDirection: "column", justifyContent: "center", minWidth: 0, width: "100%",
+            textAlign: "center"
           }}>
             <span style={{
               fontWeight: 800, fontSize: "19px", lineHeight: 1.06,
@@ -437,7 +444,7 @@ const Chat = () => {
 
         {/* Заголовок и описание */}
         <div style={{
-          width: "calc(100% - 40px)",
+          width: `calc(100% - ${2 * BLOCK_HORIZONTAL_PADDING}px)`,
           maxWidth,
           textAlign: "center",
           margin: "0 auto"
@@ -447,7 +454,7 @@ const Chat = () => {
           }}>Ждёте малыша? Я помогу!</div>
           <div style={{
             fontWeight: 400, fontSize: "15px", margin: "0 auto 0 auto", maxWidth: 400,
-            padding: "0 20px", lineHeight: 1.75, color: NORA_COLOR, display: "inline-block"
+            padding: `0 ${BLOCK_HORIZONTAL_PADDING}px`, lineHeight: 1.75, color: NORA_COLOR, display: "inline-block"
           }}>
             Я помогаю будущим мамам на каждом этапе беременности: отвечаю на вопросы, напоминаю о важных делах, слежу за самочувствием и даю советы, основанные на медицине Великобритании NHS.
           </div>
@@ -457,7 +464,7 @@ const Chat = () => {
               style={{
                 width: "100%", maxWidth: 290, background: GRADIENT, color: NORA_COLOR,
                 border: "none", borderRadius: borderRadius, fontWeight: 700, fontSize: "17px",
-                padding: "15px 0", margin: "0 20px", cursor: "pointer",
+                padding: "15px 0", margin: `0 ${BLOCK_HORIZONTAL_PADDING}px`, cursor: "pointer",
                 display: "flex", alignItems: "center", justifyContent: "center"
               }}
               onClick={() => setShowWelcome(false)}
@@ -492,7 +499,7 @@ const Chat = () => {
     >
       {/* Панель */}
       <div style={{
-        width: "calc(100% - 40px)",
+        width: `calc(100% - ${2 * BLOCK_HORIZONTAL_PADDING}px)`,
         maxWidth,
         minHeight: panelHeight,
         background: GRADIENT,
@@ -500,12 +507,13 @@ const Chat = () => {
         margin: "20px auto 0 auto",
         display: "flex", alignItems: "center",
         borderRadius: borderRadius,
-        paddingLeft: 20, paddingRight: 12, paddingTop: 5, paddingBottom: 5,
+        paddingLeft: BLOCK_HORIZONTAL_PADDING, paddingRight: BLOCK_HORIZONTAL_PADDING, paddingTop: 5, paddingBottom: 5,
         justifyContent: "flex-start", boxSizing: "border-box", zIndex: 1
       }}>
         <div style={{
           marginRight: 10, color: NORA_COLOR,
-          display: "flex", flexDirection: "column", justifyContent: "center", minWidth: 0
+          display: "flex", flexDirection: "column", justifyContent: "center", minWidth: 0, width: "100%",
+          textAlign: "center"
         }}>
           <span style={{
             fontWeight: 800, fontSize: "19px", lineHeight: 1.06,
@@ -550,7 +558,7 @@ const Chat = () => {
               key={idx}
               style={{
                 textAlign: msg.sender === "user" ? "right" : "left",
-                margin: "8px 20px"
+                margin: `8px ${BLOCK_HORIZONTAL_PADDING}px`
               }}
             >
               {msg.sender === "user"
@@ -591,7 +599,7 @@ const Chat = () => {
                     background: "#f7fafd",
                     borderRadius: 12,
                     padding: "10px 15px",
-                    margin: "0 20px 10px 20px",
+                    margin: `0 ${BLOCK_HORIZONTAL_PADDING}px 10px ${BLOCK_HORIZONTAL_PADDING}px`,
                     color: NORA_COLOR,
                     fontSize: 16,
                     lineHeight: 1.7,
@@ -607,8 +615,8 @@ const Chat = () => {
         </div>
       </div>
       <div style={{
-        width: "calc(100% - 40px)",
-        margin: "0 20px",
+        width: `calc(100% - ${2 * BLOCK_HORIZONTAL_PADDING}px)`,
+        margin: `0 ${BLOCK_HORIZONTAL_PADDING}px`,
         display: "flex",
         alignItems: "center",
         boxSizing: "border-box",
