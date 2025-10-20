@@ -14,6 +14,21 @@ const PANEL_SIDE_PADDING = 15;
 const BLOCK_SIDE_PADDING = 10;
 const CARD_GAP = 10;
 
+// Минималистичные иконки (SVG, монохромные)
+const IconPartner = (
+  <svg width="18" height="18" fill="none" viewBox="0 0 20 20">
+    <circle cx="10" cy="6.5" r="3.3" stroke="#5a6573" strokeWidth="1.5"/>
+    <path d="M2.8 16c.9-2.5 3.4-4.2 7.2-4.2s6.2 1.7 7.2 4.2" stroke="#5a6573" strokeWidth="1.5" strokeLinecap="round"/>
+  </svg>
+);
+
+const IconContact = (
+  <svg width="18" height="18" fill="none" viewBox="0 0 20 20">
+    <rect x="2.8" y="3.5" width="14.4" height="11" rx="2.2" stroke="#5a6573" strokeWidth="1.5"/>
+    <path d="M3.5 4l6.5 6.1c.3.2.8.2 1.1 0L17 4" stroke="#5a6573" strokeWidth="1.5"/>
+  </svg>
+);
+
 const ICONS = {
   telegram: "https://cdn-icons-png.flaticon.com/512/1946/1946547.png",
   trash: "https://cdn-icons-png.flaticon.com/512/1345/1345823.png",
@@ -33,6 +48,21 @@ const BENEFITS = [
   { emoji: "⏰", title: "Напоминания о важных делах", text: "Следим, чтобы вы ничего не забыли — анализы, витамины, визиты." },
   { emoji: "🔒", title: "Конфиденциальность", text: "Личные данные остаются только у вас — никакой передачи сторонним." },
   { emoji: "⚡️", title: "Быстрые решения", text: "Полезные советы и поддержка сразу, когда это нужно." },
+];
+
+// Восстановленный большой массив отзывов
+const REVIEWS = [
+  { name: "Анна", badge: "2 месяц беременности", problem: "Токсикоз", text: "Nora Plus подсказала, как справиться с утренней тошнотой. Благодаря рекомендациям по питанию и режиму дня симптомы стали гораздо легче." },
+  { name: "Dilnoza", badge: "Homiladorlik 3 oy", problem: "Ko'ngil aynishi", text: "Nora Plus maslahatlari yordam berdi va ko‘нгил aynишини енгиллaштирди. Hamma maslahatlar o‘z vaqtida etkaziladi." },
+  { name: "Елена", badge: "4 месяц беременности", problem: "Слабость и усталость", text: "Теперь я знаю, какие витамины нужны, сколько отдыхать и как строить день. Чувствую себя в разы лучше!" },
+  { name: "Shahnoza", badge: "Homiladorlik 5 oy", problem: "Kayfiyat pastligi", text: "Nora Plus motivatsion so‘zlari ва ijobiy maslahatлари orqali kayfiyatим анча яхшиланди." },
+  { name: "Ирина", badge: "5 месяц беременности", problem: "Тревожность", text: "Советы Nora Plus помогли мне больше отдыхать, заботиться о себе и избавили от лишних переживаний за малыша." },
+  { name: "Мария", badge: "7 месяц беременности", problem: "Бессонница", text: "Благодаря советам Nora Plus я стала лучше спать и спокойно дожидаюсь рождения малыша." },
+  { name: "Виктория", badge: "3 месяц беременности", problem: "Страхи", text: "Nora Plus помогла разобраться с тревогами и поддержала советами, теперь чувствую себя увереннее." },
+  { name: "Екатерина", badge: "6 месяц беременности", problem: "Питание", text: "Ассистент напомнил про важные витамины и режим, теперь питаюсь правильно и чувствую себя энергичной." },
+  { name: "Gulnora", badge: "Homiladorlik 2 oy", problem: "Uyqu buzilishi", text: "Nora билан maslahatlashib, uyqum tiklandi ва энди тонгни яхши куtаман." },
+  { name: "Malika", badge: "Homiladorlik 8 oy", problem: "Asabiylik", text: "Homiladorlikда asabiy bo‘lib qolgandим, Nora maslahatлари yordam berdi ва kayfiyatим ko‘tarildi." },
+  { name: "Lola", badge: "Homiladorlik 4 oy", problem: "Oqsil yetishmaydi", text: "To‘g‘ри ovqatланиш бўйича maslahatлар judayam foydali bo‘ldi, эндi o‘zimda kuch топяпман." }
 ];
 
 const WhyNoraBlock = () => (
@@ -110,22 +140,6 @@ const WhyNoraBlock = () => (
   </div>
 );
 
-const REVIEWS = [
-  {
-    name: "Анна",
-    badge: "2 месяц беременности",
-    problem: "Токсикоз",
-    text: "Nora Plus подсказала, как справиться с утренней тошнотой. Благодаря рекомендациям по питанию и режиму дня симптомы стали гораздо легче."
-  },
-  {
-    name: "Dilnoza",
-    badge: "Homiladorlik 3 oy",
-    problem: "Ko'ngil aynиши",
-    text: "Nora Plus maslahatlari yordam berdi va ko‘нгил aynишини енгиллaштирди. Hamma maslahatlar o‘z vaqtida etkaziladi."
-  },
-  // ... остальные ...
-];
-
 const ReviewBlock = () => (
   <div
     style={{
@@ -160,7 +174,6 @@ const ReviewBlock = () => (
           <div
             key={idx}
             style={{
-              position: "relative",
               background: "#fff",
               borderRadius: 18,
               boxShadow: "0 2px 18px 0 rgba(150,180,220,0.07)",
@@ -200,7 +213,7 @@ const ReviewBlock = () => (
 const Footer = () => (
   <div
     style={{
-      width: `calc(100% - ${BLOCK_SIDE_PADDING * 2}px)`,
+      width: `calc(100% - 40px)`,
       maxWidth,
       margin: "0 auto",
       background: GRADIENT,
@@ -227,28 +240,50 @@ const Footer = () => (
     }}>
       Ташкент, Юнусабадский район, массив Кашгар 26
     </div>
+    {/* Кнопки растянуты по ширине, иконки минималистичные слева */}
     <div style={{
       display: "flex",
-      gap: 9,
-      justifyContent: "center",
-      width: "100%"
+      gap: 11,
+      width: "100%",
+      justifyContent: "center"
     }}>
       <a href="#" style={{
-        background: BABY_GRADIENT,
-        width: "130px", padding: "7px 0",
-        borderRadius: 14, color: "#fff", fontWeight: 600, fontSize: 14,
-        textDecoration: "none", textAlign: "center"
-      }}>Стать партнёром</a>
+        background: "#fff",
+        width: "100%",
+        borderRadius: 13,
+        color: "#495062",
+        fontWeight: 600,
+        fontSize: 14,
+        padding: "9px 0",
+        textDecoration: "none",
+        textAlign: "center",
+        border: "1px solid #e1e9f5",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: 7
+      }}>{IconPartner} Стать партнёром</a>
       <a href="#" style={{
-        background: BABY_GRADIENT,
-        width: "130px", padding: "7px 0",
-        borderRadius: 14, color: "#fff", fontWeight: 600, fontSize: 14,
-        textDecoration: "none", textAlign: "center"
-      }}>Связаться с менеджером</a>
+        background: "#fff",
+        width: "100%",
+        borderRadius: 13,
+        color: "#495062",
+        fontWeight: 600,
+        fontSize: 14,
+        padding: "9px 0",
+        textDecoration: "none",
+        textAlign: "center",
+        border: "1px solid #e1e9f5",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: 7
+      }}>{IconContact} Контакты</a>
     </div>
     <a href="#" style={{
       background: "#fff",
-      padding: "7px 0", width: "145px",
+      padding: "7px 0",
+      width: "100%",
       borderRadius: 14,
       color: "#556",
       fontWeight: 500,
@@ -266,9 +301,11 @@ const Footer = () => (
     }}>
       © {new Date().getFullYear()} Nora Plus — забота и поддержка будущих мам
     </div>
-    <div style={{ height: 20 }} />
   </div>
 );
+
+// Отступ после футера 20px
+const FooterGap = () => <div style={{height: 20}} />;
 
 const THREAD_KEY = "nora_thread_id";
 function splitBotTextTwoBlocks(text) {
@@ -574,6 +611,7 @@ const Chat = () => {
             Я помогаю будущим мамам на каждом этапе беременности: отвечаю на вопросы, напоминаю о важных делах, слежу за самочувствием и даю советы, основанные на медицине Великобритании NHS.
           </div>
           <div style={{ height: 40 }} />
+          {/* Кнопка и подпись */}
           <div style={{ display: "flex", justifyContent: "center", width: "100%" }}>
             <div style={{ width: "100%", textAlign: "center" }}>
               <button
@@ -596,7 +634,8 @@ const Chat = () => {
                 Начать пользоваться&nbsp;
                 <span style={{ marginLeft: 8, display: "flex", alignItems: "center" }}>{ICONS.arrowRight}</span>
               </button>
-              <div style={{ fontSize: 13, color: "#7c8792", marginTop: 7 }}>
+              <div style={{ height: 13 }} />
+              <div style={{ fontSize: 13, color: "#7c8792" }}>
                 Попробуйте — это быстро и бесплатно
               </div>
             </div>
@@ -606,13 +645,209 @@ const Chat = () => {
           <WhyNoraBlock />
           <ReviewBlock />
           <Footer />
+          <FooterGap />
         </div>
       </div>
     );
   }
 
   // --- Чат-экран ---
-  // Оставляю чат, поле, панель — как в вашем втором коде (без изменений)
+  return (
+    <div
+      style={{
+        background: "#f8fdff",
+        width: "100vw",
+        minHeight: "100vh",
+        display: "flex",
+        flexDirection: "column"
+      }}
+    >
+      {/* Панель */}
+      <div style={{
+        width: `calc(100% - ${PANEL_SIDE_PADDING * 2}px)`,
+        maxWidth,
+        minHeight: panelHeight,
+        background: GRADIENT,
+        color: NORA_COLOR,
+        margin: "20px auto 0 auto",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        borderRadius: borderRadius,
+        paddingLeft: PANEL_SIDE_PADDING, paddingRight: PANEL_SIDE_PADDING, paddingTop: 5, paddingBottom: 5,
+        boxSizing: "border-box", zIndex: 1,
+        fontFamily: "'Manrope', Arial, Helvetica, sans-serif"
+      }}>
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", flex: 1, paddingLeft: 5 }}>
+          <span style={{
+            fontWeight: 800, fontSize: "19px", lineHeight: 1.06, whiteSpace: "nowrap", marginBottom: 7
+          }}>
+            Nora Plus
+          </span>
+          <span style={{
+            fontWeight: 400, fontSize: "13px", color: "#565656", lineHeight: 1.04, whiteSpace: "nowrap"
+          }}>
+            Ассистент для будущих мам
+          </span>
+        </div>
+        <div style={{ display: "flex", alignItems: "center", gap: 8, marginLeft: 16 }}>
+          <button style={{
+            background: "transparent", border: "none", cursor: "pointer",
+            width: 38, height: 38, borderRadius: 19,
+            display: "flex", alignItems: "center", justifyContent: "center"
+          }} onClick={handleShare}>
+            <img src={ICONS.share} alt="Share"
+              style={{ width: ICON_SIZE, height: ICON_SIZE, filter: filterNora }} />
+          </button>
+          <button style={{
+            background: "transparent", border: "none", cursor: "pointer",
+            width: 38, height: 38, borderRadius: 19,
+            display: "flex", alignItems: "center", justifyContent: "center"
+          }} onClick={() => window.open("https://t.me/norasmart", "_blank")}>
+            <img src={ICONS.telegram} alt="Telegram"
+              style={{ width: ICON_SIZE, height: ICON_SIZE, filter: filterNora }} />
+          </button>
+          <button style={{
+            background: "transparent", border: "none", cursor: "pointer",
+            width: 38, height: 38, borderRadius: 19,
+            display: "flex", alignItems: "center", justifyContent: "center"
+          }} onClick={clearChatAll}>
+            <img src={ICONS.trash} alt="Trash"
+              style={{ width: ICON_SIZE, height: ICON_SIZE, filter: filterNora }} />
+          </button>
+        </div>
+      </div>
+      <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "flex-end" }}>
+        <div style={{ width: "100%", maxWidth: maxWidth, margin: "0 auto", padding: "80px 0 110px 0" }}>
+          {chatHistory.map((msg, idx) => (
+            <div
+              key={idx}
+              style={{
+                textAlign: msg.sender === "user" ? "right" : "left",
+                margin: "8px 20px"
+              }}
+            >
+              {msg.sender === "user"
+                ? <span style={{
+                    background: GRADIENT,
+                    padding: 10,
+                    borderRadius: 16,
+                    fontSize: 16
+                  }}>{msg.text}</span>
+                : splitBotTextTwoBlocks(msg.text).map((part, sIdx) => (
+                  part.text && (
+                    <div
+                      key={sIdx}
+                      style={{
+                        background: "#f7fafd",
+                        borderRadius: 12,
+                        padding: "10px 15px",
+                        marginBottom: sIdx === 0 ? 18 : 30,
+                        color: NORA_COLOR,
+                        fontSize: 16,
+                        lineHeight: 1.7,
+                        fontWeight: part.bold ? "bold" : "normal"
+                      }}
+                    >
+                      {part.text}
+                    </div>
+                  )
+                ))
+              }
+            </div>
+          ))}
+          {botProgress &&
+            splitBotTextTwoBlocks(botProgress).map((part, sIdx) => (
+              part.text && (
+                <div
+                  key={sIdx}
+                  style={{
+                    background: "#f7fafd",
+                    borderRadius: 12,
+                    padding: "10px 15px",
+                    margin: "0 20px 10px 20px",
+                    color: NORA_COLOR,
+                    fontSize: 16,
+                    lineHeight: 1.7,
+                    fontWeight: part.bold ? "bold" : "normal"
+                  }}
+                >
+                  {part.text}
+                </div>
+              )
+            ))
+          }
+          <div ref={messagesEndRef} />
+        </div>
+      </div>
+      <div style={{
+        width: "calc(100% - 40px)",
+        margin: "0 20px",
+        display: "flex",
+        alignItems: "center",
+        boxSizing: "border-box",
+        maxWidth: maxWidth,
+        height: INPUT_BAR_HEIGHT,
+        position: "fixed",
+        left: 0,
+        bottom: 25,
+        background: "transparent",
+        borderRadius: borderRadius,
+        zIndex: 20,
+        boxShadow: "none"
+      }}>
+        <input
+          type="text"
+          value={message}
+          onFocus={() => setFocused(true)}
+          onBlur={() => setFocused(false)}
+          onChange={e => setMessage(e.target.value)}
+          placeholder="Введите сообщение..."
+          style={{
+            flex: 1,
+            height: 48,
+            fontSize: "16px",
+            borderRadius: borderRadius,
+            borderWidth: focused ? 2 : 1,
+            borderStyle: "solid",
+            borderColor: focused ? "transparent" : "#e5e8ed",
+            borderImage: focused ? GRADIENT + " 1" : undefined,
+            padding: "0 18px",
+            background: "#fff",
+            color: NORA_COLOR,
+            boxSizing: "border-box",
+            marginRight: 8,
+            transition: "border 0.22s"
+          }}
+          onKeyDown={e => { if (e.key === 'Enter') handleSendMessage(); }}
+          disabled={loading || !!botProgress}
+        />
+        <button
+          style={{
+            width: 48,
+            height: 48,
+            background: GRADIENT,
+            color: NORA_COLOR,
+            border: "none",
+            borderRadius: borderRadius,
+            fontWeight: 700,
+            fontSize: "17px",
+            cursor: (loading || !!botProgress) ? "not-allowed" : "pointer",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            boxShadow: "0 2px 14px 0 rgba(155,175,205,0.12)"
+          }}
+          onClick={handleSendMessage}
+          disabled={loading || !!botProgress}
+        >
+          <span style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+            {ICONS.arrowRight}
+          </span>
+        </button>
+      </div>
+    </div>
+  );
 };
 
 export default Chat;
