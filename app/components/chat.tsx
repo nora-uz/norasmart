@@ -1,67 +1,76 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
 
-// ... прежние константы (NORA_COLOR, ICONS, COLORS, BORDER, иконки, BENEFITS, REVIEWS) здесь не привожу ради чистоты. Используйте из последней вашей версии!
+const NORA_COLOR = "#2e2e2e";
+const ICON_SIZE = 23;
+const borderRadius = 22;
+const panelHeight = 62;
+const maxWidth = 560;
+const videoMaxWidth = 314;
+const GRADIENT = "linear-gradient(90deg, #eff5fe 0%, #e5e8ed 100%)";
+const BABY_GRADIENT = "linear-gradient(90deg, #e39290 0%, #efb1b6 100%)";
+const INPUT_BAR_HEIGHT = 68;
+const PANEL_SIDE_PADDING = 15;
+const BLOCK_SIDE_PADDING = 10;
+const CARD_GAP = 10;
 
-// Их вы уже видели выше — исправлять не нужно!
-
-// Минималистичная иконка (замок) для “Политика конфиденциальности”
-const IconLock = (
-  <svg width="16" height="16" viewBox="0 0 20 20" fill="none"><rect x="5" y="9" width="10" height="7" rx="2" stroke="#8a97a0" strokeWidth="1.6"/><path d="M7.8 9V7a2.2 2.2 0 1 1 4.4 0v2" stroke="#8a97a0" strokeWidth="1.6"/></svg>
+// Минималистичные иконки
+const IconPartner = (
+  <svg width="18" height="18" fill="none" viewBox="0 0 20 20">
+    <circle cx="10" cy="6.5" r="3.3" stroke="#5a6573" strokeWidth="1.5"/>
+    <path d="M2.8 16c.9-2.5 3.4-4.2 7.2-4.2s6.2 1.7 7.2 4.2" stroke="#5a6573" strokeWidth="1.5" strokeLinecap="round"/>
+  </svg>
 );
 
-// --- Готовые темы (советуемые вопросы)
+const IconContact = (
+  <svg width="18" height="18" fill="none" viewBox="0 0 20 20">
+    <rect x="2.8" y="3.5" width="14.4" height="11" rx="2.2" stroke="#5a6573" strokeWidth="1.5"/>
+    <path d="M3.5 4l6.5 6.1c.3.2.8.2 1.1 0L17 4" stroke="#5a6573" strokeWidth="1.5"/>
+  </svg>
+);
+
+const IconLock = (
+  <svg width="16" height="16" fill="none" viewBox="0 0 20 20"><rect x="5" y="9" width="10" height="7" rx="2" stroke="#8a97a0" strokeWidth="1.6"/><path d="M7.8 9V7a2.2 2.2 0 1 1 4.4 0v2" stroke="#8a97a0" strokeWidth="1.6"/></svg>
+);
+
+const ICONS = {
+  telegram: "https://cdn-icons-png.flaticon.com/512/1946/1946547.png",
+  trash: "https://cdn-icons-png.flaticon.com/512/1345/1345823.png",
+  share: "https://cdn-icons-png.flaticon.com/512/535/535285.png",
+  arrowRight: (
+    <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+      <path d="M6 11H16M16 11L12 7M16 11L12 15"
+        stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
+  ),
+};
+const filterNora = "invert(13%) sepia(4%) saturate(271%) hue-rotate(175deg) brightness(92%) contrast(93%)";
+
+// Готовые темы
 const TOPICS = [
-  {
-    icon: "🤢",
-    title: "Тошнота и токсикоз",
-    desc: "Что реально помогает на ранних сроках?"
-  },
-  {
-    icon: "🍏",
-    title: "Питание при беременности",
-    desc: "Какие продукты полезны, а чего избегать?"
-  },
-  {
-    icon: "🤸‍♀️",
-    title: "Фитнес и движение",
-    desc: "Можно ли беременным заниматься спортом?"
-  },
-  {
-    icon: "😔",
-    title: "Эмоции и тревожность",
-    desc: "Как справиться со страхами и стрессом?"
-  },
-  {
-    icon: "💊",
-    title: "Витамины",
-    desc: "Что принимать, а что нет?"
-  },
-  {
-    icon: "☕️",
-    title: "Кофе и напитки",
-    desc: "Можно ли пить кофе и чай?"
-  },
+  { icon: "🤢", title: "Тошнота и токсикоз", desc: "Что помогает на ранних сроках?" },
+  { icon: "🍏", title: "Питание при беременности", desc: "Какие продукты полезны?" },
+  { icon: "🤸‍♀️", title: "Фитнес и движение", desc: "Можно ли беременным спорт?" },
+  { icon: "😔", title: "Эмоции и тревожность", desc: "Как справиться со страхами?" },
+  { icon: "💊", title: "Витамины", desc: "Что принимать, а что нет?" },
+  { icon: "☕️", title: "Кофе и напитки", desc: "Можно ли кофе и чай?" },
 ];
 
 const TopicsBlock = ({ onTopicClick }) => (
-  <div
-    style={{
-      margin: "0 auto 24px auto",
-      maxWidth: 560,
-      width: "100%",
-      display: "flex",
-      flexWrap: "wrap",
-      gap: "16px",
-      justifyContent: "center"
-    }}
-  >
+  <div style={{
+    margin: "0 auto 24px auto",
+    maxWidth: 560,
+    display: "flex",
+    flexWrap: "wrap",
+    gap: "14px",
+    justifyContent: "center"
+  }}>
     {TOPICS.map((topic, idx) => (
       <button key={idx}
         style={{
           flex: "1 1 44%",
-          minWidth: 162,
-          maxWidth: 250,
+          minWidth: 155,
+          maxWidth: 230,
           background: "#fff",
           border: "none",
           borderRadius: "18px",
@@ -71,12 +80,11 @@ const TopicsBlock = ({ onTopicClick }) => (
           flexDirection: "column",
           alignItems: "flex-start",
           cursor: "pointer",
-          transition: "box-shadow .13s",
           fontFamily: "'Manrope', Arial, Helvetica, sans-serif"
         }}
         onClick={() => onTopicClick(`${topic.title}. ${topic.desc}`)}
       >
-        <div style={{fontSize: 24, marginBottom: 6}}>{topic.icon}</div>
+        <div style={{fontSize: 22, marginBottom: 4}}>{topic.icon}</div>
         <div style={{fontWeight: 700, fontSize: 15, color: "#2e2e2e", marginBottom: 2}}>{topic.title}</div>
         <div style={{fontSize: 13, color: "#6c7689"}}>{topic.desc}</div>
       </button>
@@ -84,12 +92,11 @@ const TopicsBlock = ({ onTopicClick }) => (
   </div>
 );
 
-// --- История чата (фэйковая демо, для реальных нужна интеграция с API/localStorage)
+// Истории чата
 const OLD_CHATS = [
   { id: 1, title: "1-й триместр — анализы", sub: "Рекомендации по обследованиям" },
   { id: 2, title: "Питание и витамины", sub: "Что принимать каждый день?" }
 ];
-
 const ChatsHistoryBlock = ({onSelect}) => (
   <div style={{
     margin: "0 auto 18px auto",
@@ -98,11 +105,7 @@ const ChatsHistoryBlock = ({onSelect}) => (
     padding: "0 6px"
   }}>
     <div style={{ fontSize: 14, color: "#818ca0", fontWeight: 600, marginBottom: 9, marginLeft: 5 }}>История чата</div>
-    <div style={{
-      display: "flex",
-      flexDirection: "column",
-      gap: 10
-    }}>
+    <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
       {OLD_CHATS.map(chat => (
         <button
           key={chat.id}
@@ -130,165 +133,50 @@ const ChatsHistoryBlock = ({onSelect}) => (
   </div>
 );
 
-// --- Новый блок "Что умеет Nora?" --- используйте из предыдущего ответа
+// ... ваши блоки WhyNoraBlock, ReviewBlock, Footer — используйте без изменений из вашего кода выше.
 
-// --- Footer (замок для политики)
-const Footer = () => (
-  <div
-    style={{
-      width: `calc(100% - 40px)`,
-      maxWidth,
-      margin: "0 auto",
-      background: GRADIENT,
-      borderRadius: "22px",
-      boxShadow: "0 -4px 14px 0 rgba(155,175,205,0.06)",
-      boxSizing: "border-box",
-      fontFamily: "'Manrope', Arial, Helvetica, sans-serif",
-      paddingLeft: 20,
-      paddingRight: 20,
-      paddingTop: 22,
-      paddingBottom: 22,
-      display: "flex",
-      flexDirection: "column",
-      gap: 18,
-      alignItems: "center"
-    }}
-  >
-    <div style={{
-      fontSize: 12,
-      color: "#263540",
-      fontWeight: 600,
-      textAlign: "center",
-      width: "100%"
-    }}>
-      Ташкент, Юнусабадский район, массив Кашгар 26
-    </div>
-    <div style={{
-      display: "flex",
-      gap: 11,
-      width: "100%",
-      justifyContent: "center"
-    }}>
-      <a href="#" style={{
-        background: "#fff",
-        width: "63%",
-        borderRadius: 13,
-        color: "#495062",
-        fontWeight: 400,
-        fontSize: 14,
-        padding: "9px 0",
-        textDecoration: "none",
-        textAlign: "center",
-        border: "1px solid #e1e9f5",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        gap: 7,
-        marginRight: 5
-      }}>{IconPartner} Стать партнёром</a>
-      <a href="#" style={{
-        background: "#fff",
-        width: "37%",
-        borderRadius: 13,
-        color: "#495062",
-        fontWeight: 400,
-        fontSize: 14,
-        padding: "9px 0",
-        textDecoration: "none",
-        textAlign: "center",
-        border: "1px solid #e1e9f5",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        gap: 7
-      }}>{IconContact} Контакты</a>
-    </div>
-    <a href="#" style={{
-      background: "#fff",
-      padding: "7px 0",
-      width: "100%",
-      borderRadius: 14,
-      color: "#556",
-      fontWeight: 400,
-      fontSize: 14,
-      textDecoration: "none",
-      border: "1px solid #e1e9f5",
-      textAlign: "center",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      gap: 7
-    }}>{IconLock} Политика конфиденциальности</a>
-    <div style={{
-      marginTop: 8,
-      fontSize: 12,
-      color: "#8a97a0",
-      textAlign: "center",
-      width: "100%"
-    }}>
-      © {new Date().getFullYear()} Nora Plus — забота и поддержка будущих мам
-    </div>
-  </div>
-);
-
-// --- Отступ после футера
-const FooterGap = () => <div style={{height: 20}} />;
-
-// ... splitBotTextTwoBlocks и основные переменные в точности как в ваших последних версиях
+// splitBotTextTwoBlocks — как раньше
 
 const Chat = () => {
-  // ... прежний набор useState/useEffect — наполнение истории не показано выше для краткости
+  // ... прежнее
 
-  // --- Для истории чата (выбор истории симулируется)
+  // Новое для тем/историй
+  const [showTopics, setShowTopics] = useState(true);
   const [selectedHistory, setSelectedHistory] = useState(null);
 
-  // --- Для активации тем — показываются только если чат пуст или новый, иначе исчезают
-  const [showTopics, setShowTopics] = useState(true);
-
-  // При выборе темы — чат сразу получает этот “вопрос”
   const handleTopicClick = (topic) => {
     setMessage(topic);
     setShowTopics(false);
   };
-
-  // При выборе истории чата — “имитируем возврат к истории” (в реальности замени на загрузку истории)
   const handleChatHistory = (chat) => {
     setSelectedHistory(chat.id);
-    setChatHistory([{text: chat.title + '. ' + chat.sub, sender: "user"}]);
+    setChatHistory([{text: chat.title + ". " + chat.sub, sender: "user"}]);
     setShowTopics(false);
   };
 
-  // --- Логика "скрытия" тем после первого сообщения отправленного
-  useEffect(() => {
-    if (chatHistory.length > 0) setShowTopics(false);
-  }, [chatHistory.length]);
+  useEffect(() => { if (chatHistory.length > 0) setShowTopics(false); }, [chatHistory.length]);
 
-  // ... остальная логика — sendMessageToGPT, handleSendMessage/handleShare и т.д.
+  // ... остальные хуки/handlers
 
   if (showWelcome) {
-    // ... прежний welcome-экран ...
-    // Оформлен фирменными стилями, как в вашем последнем коде
-    // description заканчивается: “и слежу за самочувствием.”
-    // WhatNoraDoesBlock (вместо WhyNoraBlock)
-    // Остальной блок-верстка не копирую здесь ради компактности
+    // ... ваш Welcome-экран полностью из кода выше!
   }
 
-  // --- ЧАТ-ЭКРАН ---
+  // -- ЧАТ ЭКРАН --
   return (
-    <div style={{
-      background: "#f8fdff",
-      width: "100vw",
-      minHeight: "100vh",
-      display: "flex",
-      flexDirection: "column"
-    }}>
-      {/* Панель как обычно */}
-      {/* ... */}
-      {/* История чатов */}
+    <div
+      style={{
+        background: "#f8fdff",
+        width: "100vw",
+        minHeight: "100vh",
+        display: "flex",
+        flexDirection: "column"
+      }}
+    >
+      {/* Панель */}
+      {/* ... как выше ... */}
       {showTopics && <ChatsHistoryBlock onSelect={handleChatHistory} />}
-      {/* Темы для обсуждения */}
       {showTopics && <TopicsBlock onTopicClick={handleTopicClick}/>}
-      {/* История сообщений */}
       <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "flex-end" }}>
         <div style={{ width: "100%", maxWidth: maxWidth, margin: "0 auto", padding: "80px 0 110px 0" }}>
           {chatHistory.map((msg, idx) => (
@@ -352,7 +240,6 @@ const Chat = () => {
           <div ref={messagesEndRef} />
         </div>
       </div>
-      {/* Поле input и кнопка */}
       <div style={{
         width: "calc(100% - 40px)",
         margin: "0 20px",
