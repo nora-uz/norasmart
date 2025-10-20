@@ -15,6 +15,8 @@ const PANEL_SIDE_PADDING = 15;
 const BLOCK_SIDE_PADDING = 10;
 const CARD_GAP = 10;
 
+const BABY_GRADIENT = "linear-gradient(90deg, #ffd6e1 0%, #bde3fb 100%)";
+
 const ICONS = {
   telegram: "https://cdn-icons-png.flaticon.com/512/1946/1946547.png",
   trash: "https://cdn-icons-png.flaticon.com/512/1345/1345823.png",
@@ -62,7 +64,8 @@ const WhyNoraBlock = () => (
       borderRadius: borderRadius,
       boxShadow: "0 6px 20px 0 rgba(150, 175, 205, 0.10)",
       boxSizing: "border-box",
-      padding: 0
+      padding: 0,
+      fontFamily: "'Manrope', Arial, Helvetica, sans-serif",
     }}
   >
     <div style={{ padding: `21px 0 20px 0` }}>
@@ -159,7 +162,43 @@ const REVIEWS = [
     badge: "5 месяц беременности",
     problem: "Тревожность",
     text: "Советы Nora Plus помогли мне больше отдыхать, заботиться о себе и избавили от лишних переживаний за малыша."
-  }
+  },
+  {
+    name: "Мария",
+    badge: "7 месяц беременности",
+    problem: "Бессонница",
+    text: "Благодаря советам Nora Plus я стала лучше спать и спокойно дожидаюсь рождения малыша."
+  },
+  {
+    name: "Виктория",
+    badge: "3 месяц беременности",
+    problem: "Страхи",
+    text: "Nora Plus помогла разобраться с тревогами и поддержала советами, теперь чувствую себя увереннее."
+  },
+  {
+    name: "Екатерина",
+    badge: "6 месяц беременности",
+    problem: "Питание",
+    text: "Ассистент напомнил про важные витамины и режим, теперь питаюсь правильно и чувствую себя энергичной."
+  },
+  {
+    name: "Gulnora",
+    badge: "Homiladorlik 2 oy",
+    problem: "Uyqu buzilishi",
+    text: "Nora bilan maslahatlashib, uyqum tiklandi va endi tongni yaxshi kutaman."
+  },
+  {
+    name: "Malika",
+    badge: "Homiladorlik 8 oy",
+    problem: "Asabiylik",
+    text: "Homiladorlikda asabiy bo‘lib qolgandim, Nora maslahatlari yordam berdi va kayfiyatim ko‘tarildi."
+  },
+  {
+    name: "Lola",
+    badge: "Homiladorlik 4 oy",
+    problem: "Oqsil yetishmaydi",
+    text: "To‘g‘ri ovqatlanish bo‘yicha maslahatlar judayam foydali bo‘ldi, endi o‘zimda kuch topyapman."
+  },
 ];
 
 const ReviewBlock = () => (
@@ -173,6 +212,7 @@ const ReviewBlock = () => (
       boxShadow: "0 6px 20px 0 rgba(150, 175, 205, 0.10)",
       boxSizing: "border-box",
       padding: 0,
+      fontFamily: "'Manrope', Arial, Helvetica, sans-serif",
     }}
   >
     <div style={{ padding: "21px 0 20px 0" }}>
@@ -246,6 +286,38 @@ const ReviewBlock = () => (
           </div>
         ))}
       </div>
+    </div>
+  </div>
+);
+
+const Footer = () => (
+  <div
+    style={{
+      width: `calc(100% - ${BLOCK_SIDE_PADDING * 2}px)`,
+      maxWidth,
+      margin: "0 auto 0 auto",
+      padding: "22px 0 22px 0",
+      background: GRADIENT,
+      borderRadius: "22px 22px 0 0",
+      boxShadow: "0 -4px 14px 0 rgba(155,175,205,0.06)",
+      boxSizing: "border-box",
+      fontFamily: "'Manrope', Arial, Helvetica, sans-serif",
+      display: "flex",
+      flexDirection: "column",
+      gap: 12,
+      alignItems: "flex-start"
+    }}
+  >
+    <div style={{ display: "flex", alignItems: "center", gap: 9, fontSize: 15 }}>
+      <span role="img" aria-label="address" style={{ fontSize: 19 }}>📍</span>
+      <span>Ташкент, Юнусабадский район, массив Кашгар 26</span>
+    </div>
+    <div style={{ display: "flex", alignItems: "center", gap: 9, fontSize: 15 }}>
+      <span role="img" aria-label="phone" style={{ fontSize: 19 }}>📞</span>
+      <a href="tel:+998501070124" style={{ color: "#1f5ca8", textDecoration: "none" }}>+998 50 107-01-24</a>
+    </div>
+    <div style={{ marginTop: 8, fontSize: 12, color: "#8a97a0" }}>
+      © {new Date().getFullYear()} Nora Plus — забота и поддержка будущих мам
     </div>
   </div>
 );
@@ -367,6 +439,7 @@ const Chat = () => {
   if (showWelcome) {
     return (
       <div style={{
+        fontFamily: "'Manrope', Arial, Helvetica, sans-serif",
         background: "#f8fdff",
         width: "100vw",
         minHeight: "100vh"
@@ -384,7 +457,8 @@ const Chat = () => {
           justifyContent: "space-between",
           borderRadius: borderRadius,
           paddingLeft: PANEL_SIDE_PADDING, paddingRight: PANEL_SIDE_PADDING, paddingTop: 5, paddingBottom: 5,
-          boxSizing: "border-box", zIndex: 1
+          boxSizing: "border-box", zIndex: 1,
+          fontFamily: "'Manrope', Arial, Helvetica, sans-serif",
         }}>
           <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", flex: 1, paddingLeft: 5 }}>
             <span style={{
@@ -479,15 +553,19 @@ const Chat = () => {
           <div style={{ display: "flex", justifyContent: "center", width: "100%" }}>
             <button
               style={{
-                width: "100%", maxWidth: 290, background: GRADIENT, color: NORA_COLOR,
-                border: "none", borderRadius: borderRadius, fontWeight: 700, fontSize: "17px",
+                width: "100%", maxWidth: 290, 
+                background: BABY_GRADIENT, // цвет “малыша”!
+                color: NORA_COLOR,
+                border: "none",
+                borderRadius: borderRadius, fontWeight: 700, fontSize: "17px",
                 padding: "15px 0", margin: `0 ${BLOCK_SIDE_PADDING}px`, cursor: "pointer",
-                display: "flex", alignItems: "center", justifyContent: "center"
+                display: "flex", alignItems: "center", justifyContent: "center",
+                boxShadow: "0 2px 18px 0 rgba(180, 90, 160, 0.08)"
               }}
               onClick={() => setShowWelcome(false)}
             >
               Начать пользоваться&nbsp;
-              <span style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <span style={{ marginLeft: 8, display: "flex", alignItems: "center" }}>
                 {ICONS.arrowRight}
               </span>
             </button>
@@ -496,6 +574,7 @@ const Chat = () => {
 
           <WhyNoraBlock />
           <ReviewBlock />
+          <Footer />
         </div>
       </div>
     );
@@ -505,6 +584,7 @@ const Chat = () => {
   return (
     <div
       style={{
+        fontFamily: "'Manrope', Arial, Helvetica, sans-serif",
         background: "#f8fdff",
         width: "100vw",
         minHeight: "100vh",
