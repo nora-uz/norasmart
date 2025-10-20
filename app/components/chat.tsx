@@ -2,7 +2,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import ReactMarkdown from "react-markdown";
 
-// ====== Основные константы ======
 const NORA_COLOR = "#2e2e2e";
 const ICON_SIZE = 23;
 const borderRadius = 22;
@@ -10,13 +9,12 @@ const panelHeight = 62;
 const maxWidth = 560;
 const videoMaxWidth = 314;
 const GRADIENT = "linear-gradient(90deg, #eff5fe 0%, #e5e8ed 100%)";
+const BABY_GRADIENT = "linear-gradient(90deg, #e39290 0%, #efb1b6 100%)";
 const INPUT_BAR_HEIGHT = 68;
 const PANEL_SIDE_PADDING = 15;
 const BLOCK_SIDE_PADDING = 10;
 const CARD_GAP = 10;
-const BABY_GRADIENT = "linear-gradient(90deg, #e39290 0%, #efb1b6 100%)";
 
-// ====== Иконки ======
 const ICONS = {
   telegram: "https://cdn-icons-png.flaticon.com/512/1946/1946547.png",
   trash: "https://cdn-icons-png.flaticon.com/512/1345/1345823.png",
@@ -30,24 +28,7 @@ const ICONS = {
 };
 const filterNora = "invert(13%) sepia(4%) saturate(271%) hue-rotate(175deg) brightness(92%) contrast(93%)";
 
-// ====== Вытяжка бот-текста ======
-function splitBotTextTwoBlocks(text) {
-  if (!text) return [];
-  let cleaned = text.replace(/[*_]/g, "");
-  const match = cleaned.match(/^([^.!?]+[.!?])\s*(.*)$/s);
-  if (match) {
-    const first = match[1].trim();
-    const rest = match[2].trim();
-    return [
-      { text: first, bold: true },
-      { text: rest, bold: false }
-    ];
-  } else {
-    return [{ text: cleaned, bold: true }];
-  }
-}
-
-// ====== Блок преимуществ ======
+// =============== Преимущества
 const BENEFITS = [
   { emoji: "🩺", title: "Медицинская точность", text: "Советы основаны на рекомендациях британской службы NHS и адаптированы под ваш регион." },
   { emoji: "🤝", title: "Поддержка 24/7", text: "Ассистент всегда на связи для заботы и помощи в любой ситуации." },
@@ -71,15 +52,13 @@ const WhyNoraBlock = () => (
     }}
   >
     <div style={{ padding: `21px 0 20px 0` }}>
-      <div
-        style={{
-          fontWeight: 700,
-          fontSize: "20px",
-          color: NORA_COLOR,
-          marginBottom: 20,
-          textAlign: "center"
-        }}
-      >
+      <div style={{
+        fontWeight: 700,
+        fontSize: "20px",
+        color: NORA_COLOR,
+        marginBottom: 20,
+        textAlign: "center"
+      }}>
         Почему Nora Plus?
       </div>
       <div style={{
@@ -133,7 +112,7 @@ const WhyNoraBlock = () => (
   </div>
 );
 
-// ====== Отзывы ======
+// =============== Отзывы
 const PREGNANT_EMOJI = "🤰";
 const REVIEWS = [
   {
@@ -293,7 +272,7 @@ const ReviewBlock = () => (
   </div>
 );
 
-// ====== Новый футер ======
+// =============== Новый футер
 const Footer = () => (
   <>
     <div
@@ -301,30 +280,32 @@ const Footer = () => (
         width: `calc(100% - ${BLOCK_SIDE_PADDING * 2}px)`,
         maxWidth,
         margin: "0 auto 0 auto",
-        padding: "22px 0 22px 0",
+        padding: "22px 16px 22px 16px",
         background: GRADIENT,
-        borderRadius: "22px 22px 0 0",
+        borderRadius: "0 0 22px 22px",
         boxShadow: "0 -4px 14px 0 rgba(155,175,205,0.06)",
         boxSizing: "border-box",
         fontFamily: "'Manrope', Arial, Helvetica, sans-serif",
         display: "flex",
         flexDirection: "column",
         gap: 18,
-        alignItems: "flex-start"
+        alignItems: "center"
       }}
     >
-      <div style={{ fontSize: 15, color: "#263540", fontWeight: 600 }}>
+      <div style={{
+        fontSize: 13,
+        color: "#263540",
+        fontWeight: 600,
+        textAlign: "center",
+        width: "100%"
+      }}>
         Ташкент, Юнусабадский район, массив Кашгар 26
       </div>
-      <a href="tel:+998501070124" style={{
-        color: "#1f5ca8",
-        textDecoration: "none",
-        fontSize: 15,
-        fontWeight: 600
+      <div style={{
+        display: "flex", gap: 11,
+        flexWrap: "wrap", justifyContent: "center",
+        width: "100%"
       }}>
-        +998 50 107-01-24
-      </a>
-      <div style={{ marginTop: 2, display: "flex", gap: 11, flexWrap: "wrap" }}>
         <a href="#" style={{
           background: BABY_GRADIENT,
           padding: "8px 16px",
@@ -332,8 +313,7 @@ const Footer = () => (
           color: "#fff",
           fontWeight: 600,
           fontSize: 14,
-          textDecoration: "none",
-          transition: "background 0.22s"
+          textDecoration: "none"
         }}>Стать партнёром</a>
         <a href="#" style={{
           background: BABY_GRADIENT,
@@ -342,8 +322,7 @@ const Footer = () => (
           color: "#fff",
           fontWeight: 600,
           fontSize: 14,
-          textDecoration: "none",
-          transition: "background 0.22s"
+          textDecoration: "none"
         }}>Связаться с менеджером</a>
         <a href="#" style={{
           background: "#ebf1ff",
@@ -356,7 +335,13 @@ const Footer = () => (
           border: "1px solid #e1e9f5"
         }}>Политика конфиденциальности</a>
       </div>
-      <div style={{ marginTop: 8, fontSize: 12, color: "#8a97a0" }}>
+      <div style={{
+        marginTop: 8,
+        fontSize: 12,
+        color: "#8a97a0",
+        textAlign: "center",
+        width: "100%"
+      }}>
         © {new Date().getFullYear()} Nora Plus — забота и поддержка будущих мам
       </div>
     </div>
@@ -364,7 +349,23 @@ const Footer = () => (
   </>
 );
 
+// =============== Логика/рендер
 const THREAD_KEY = "nora_thread_id";
+function splitBotTextTwoBlocks(text) {
+  if (!text) return [];
+  let cleaned = text.replace(/[*_]/g, "");
+  const match = cleaned.match(/^([^.!?]+[.!?])\s*(.*)$/s);
+  if (match) {
+    const first = match[1].trim();
+    const rest = match[2].trim();
+    return [
+      { text: first, bold: true },
+      { text: rest, bold: false }
+    ];
+  } else {
+    return [{ text: cleaned, bold: true }];
+  }
+}
 
 const Chat = () => {
   const [showWelcome, setShowWelcome] = useState(true);
@@ -500,7 +501,7 @@ const Chat = () => {
           borderRadius: borderRadius,
           paddingLeft: PANEL_SIDE_PADDING, paddingRight: PANEL_SIDE_PADDING, paddingTop: 5, paddingBottom: 5,
           boxSizing: "border-box", zIndex: 1,
-          fontFamily: "'Manrope', Arial, Helvetica, sans-serif",
+          fontFamily: "'Manrope', Arial, Helvetica, sans-serif"
         }}>
           <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", flex: 1, paddingLeft: 5 }}>
             <span style={{
@@ -597,7 +598,7 @@ const Chat = () => {
               style={{
                 width: "100%", maxWidth: 290,
                 background: BABY_GRADIENT,
-                color: NORA_COLOR,
+                color: "#fff", // белый текст!
                 border: "none",
                 borderRadius: borderRadius,
                 fontWeight: 700,
@@ -611,9 +612,7 @@ const Chat = () => {
               onClick={() => setShowWelcome(false)}
             >
               Начать пользоваться&nbsp;
-              <span style={{ marginLeft: 8, display: "flex", alignItems: "center" }}>
-                {ICONS.arrowRight}
-              </span>
+              <span style={{ marginLeft: 8, display: "flex", alignItems: "center" }}>{ICONS.arrowRight}</span>
             </button>
           </div>
           <div style={{ height: 40 }} />
@@ -626,7 +625,7 @@ const Chat = () => {
     );
   }
 
-  // --- Чат-экран ---
+  // ========== Чат-экран ===============
   return (
     <div
       style={{
