@@ -40,7 +40,43 @@ function splitBotTextTwoBlocks(text) {
   }
 }
 
-// Обычные отзывы, нет [translate:], всё просто текст!
+// Новый блок преимуществ
+const BENEFITS = [
+  { icon: "🩺", title: "Медицинская точность", text: "Советы основаны на рекомендациях британской службы NHS и адаптированы под локальные реалии." },
+  { icon: "🤝", title: "Поддержка 24/7", text: "Ваш личный ассистент всегда на связи: быстрые ответы на любые вопросы и помощь в любых ситуациях." },
+  { icon: "⏰", title: "Напоминания о важных делах", text: "Nora Plus подскажет, когда сдавать анализы, принимать витамины или идти на приём." },
+  { icon: "🔒", title: "Конфиденциальность", text: "Вся информация строго защищена и не передаётся третьим лицам." },
+  { icon: "⚡️", title: "Быстрые решения", text: "Реальные советы и полезные инструкции без лишних поисков." },
+];
+
+const WhyNoraBlock = () => (
+  <div style={{
+    width: "100%", maxWidth, margin: "0 auto 38px auto", padding: "0 22px", boxSizing: "border-box",
+  }}>
+    <div style={{
+      fontWeight: 700, fontSize: "18px", color: NORA_COLOR, marginBottom: 22, textAlign: "center",
+    }}>
+      Почему Nora Plus?
+    </div>
+    <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
+      {BENEFITS.map(({ icon, title, text }, idx) => (
+        <div key={idx} style={{
+          display: "flex", alignItems: "flex-start", background: GRADIENT,
+          borderRadius: 19, boxShadow: "0 2px 8px 0 rgba(150, 180, 220, 0.10)",
+          padding: "13px 18px"
+        }}>
+          <div style={{ fontSize: "21px", marginRight: 13 }}>{icon}</div>
+          <div>
+            <div style={{ fontWeight: 700, fontSize: 15, color: NORA_COLOR, marginBottom: 3 }}>{title}</div>
+            <div style={{ fontSize: 13, color: "#3a3a3a", lineHeight: "1.57" }}>{text}</div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+);
+
+// Обычные отзывы
 const REVIEWS = [
   { name: "Анна", pregnancy: "2 месяц", problem: "Токсикоз", text: "Nora Plus подсказала, как справиться с утренней тошнотой. Питание стало более сбалансированным и легче переносить симптомы." },
   { name: "Dilnoza", pregnancy: "3 oy", problem: "Ko'ngil aynishi", text: "Nora maslahatlari ko'ngil aynishi va ahvolni yengil o'tkazish uchun yordam berdi. O'z vaqtida maslahat olaman." },
@@ -389,6 +425,10 @@ const Chat = () => {
             </button>
           </div>
           <div style={{ height: 40 }} />
+
+          {/* ВСТАВКА БЛОКА ПРЕИМУЩЕСТВ */}
+          <WhyNoraBlock />
+
           <ReviewBlock />
         </div>
       </div>
