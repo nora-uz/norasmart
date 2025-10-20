@@ -14,7 +14,6 @@ const PANEL_SIDE_PADDING = 15;
 const BLOCK_SIDE_PADDING = 10;
 const CARD_GAP = 10;
 
-// Минималистичные иконки
 const IconPartner = (
   <svg width="18" height="18" fill="none" viewBox="0 0 20 20">
     <circle cx="10" cy="6.5" r="3.3" stroke="#5a6573" strokeWidth="1.5"/>
@@ -133,16 +132,68 @@ const ChatsHistoryBlock = ({onSelect}) => (
   </div>
 );
 
-// ... ваши блоки WhyNoraBlock, ReviewBlock, Footer — используйте без изменений из вашего кода выше.
-
-// splitBotTextTwoBlocks — как раньше
+const splitBotTextTwoBlocks = (text) => {
+  if (!text) return [];
+  let cleaned = text.replace(/[*_]/g, "");
+  const match = cleaned.match(/^([^.!?]+[.!?])\s*(.*)$/s);
+  if (match) {
+    const first = match[1].trim();
+    const rest = match[2].trim();
+    return [
+      { text: first, bold: true },
+      { text: rest, bold: false }
+    ];
+  } else {
+    return [{ text: cleaned, bold: true }];
+  }
+};
 
 const Chat = () => {
-  // ... прежнее
+  const [showWelcome, setShowWelcome] = useState(true);
+  const [preloading, setPreloading] = useState(true);
+  const [message, setMessage] = useState(""); // БЫЛО ДОБАВЛЕНО!
+  const [chatHistory, setChatHistory] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [threadId, setThreadId] = useState(null);
+  const [botProgress, setBotProgress] = useState("");
+  const [isMobile, setIsMobile] = useState(true);
+  const [focused, setFocused] = useState(false);
 
-  // Новое для тем/историй
   const [showTopics, setShowTopics] = useState(true);
   const [selectedHistory, setSelectedHistory] = useState(null);
+
+  const messagesEndRef = useRef(null);
+
+  useEffect(() => {
+    function checkScreen() {
+      if (typeof window !== "undefined") {
+        setIsMobile(window.innerWidth <= 640);
+      }
+    }
+    checkScreen();
+    window.addEventListener("resize", checkScreen);
+    return () => window.removeEventListener("resize", checkScreen);
+  }, []);
+  useEffect(() => {
+    const saved = window.localStorage.getItem("nora_thread_id");
+    if (saved) setThreadId(saved);
+  }, []);
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => { document.body.style.overflow = "auto"; };
+  }, []);
+  useEffect(() => {
+    const timer = setTimeout(() => setPreloading(false), 1000);
+    return () => clearTimeout(timer);
+  }, []);
+  useEffect(() => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [chatHistory, botProgress]);
+  useEffect(() => {
+    if (chatHistory.length > 0) setShowTopics(false);
+  }, [chatHistory.length]);
 
   const handleTopicClick = (topic) => {
     setMessage(topic);
@@ -154,15 +205,11 @@ const Chat = () => {
     setShowTopics(false);
   };
 
-  useEffect(() => { if (chatHistory.length > 0) setShowTopics(false); }, [chatHistory.length]);
+  // ... остальные функции handleShare, sendMessageToGPT, handleSendMessage, clearChatAll ...
 
-  // ... остальные хуки/handlers
+  // Далее полностью ваш блок welcome (как был),
+  // Чат экран ниже:
 
-  if (showWelcome) {
-    // ... ваш Welcome-экран полностью из кода выше!
-  }
-
-  // -- ЧАТ ЭКРАН --
   return (
     <div
       style={{
@@ -173,10 +220,10 @@ const Chat = () => {
         flexDirection: "column"
       }}
     >
-      {/* Панель */}
-      {/* ... как выше ... */}
+      {/* ... Панель ... */}
       {showTopics && <ChatsHistoryBlock onSelect={handleChatHistory} />}
       {showTopics && <TopicsBlock onTopicClick={handleTopicClick}/>}
+      {/* История сообщений */}
       <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "flex-end" }}>
         <div style={{ width: "100%", maxWidth: maxWidth, margin: "0 auto", padding: "80px 0 110px 0" }}>
           {chatHistory.map((msg, idx) => (
@@ -240,6 +287,7 @@ const Chat = () => {
           <div ref={messagesEndRef} />
         </div>
       </div>
+      {/* Поле input и кнопка */}
       <div style={{
         width: "calc(100% - 40px)",
         margin: "0 20px",
