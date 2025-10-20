@@ -14,7 +14,7 @@ const PANEL_SIDE_PADDING = 15;
 const BLOCK_SIDE_PADDING = 10;
 const CARD_GAP = 10;
 
-// Минималистичные иконки (SVG, монохромные)
+// Минималистичные SVG иконки
 const IconPartner = (
   <svg width="18" height="18" fill="none" viewBox="0 0 20 20">
     <circle cx="10" cy="6.5" r="3.3" stroke="#5a6573" strokeWidth="1.5"/>
@@ -50,19 +50,74 @@ const BENEFITS = [
   { emoji: "⚡️", title: "Быстрые решения", text: "Полезные советы и поддержка сразу, когда это нужно." },
 ];
 
-// Восстановленный большой массив отзывов
+// Все отзывы — исправлены, единая кириллица и грамотная орфография
 const REVIEWS = [
-  { name: "Анна", badge: "2 месяц беременности", problem: "Токсикоз", text: "Nora Plus подсказала, как справиться с утренней тошнотой. Благодаря рекомендациям по питанию и режиму дня симптомы стали гораздо легче." },
-  { name: "Dilnoza", badge: "Homiladorlik 3 oy", problem: "Ko'ngil aynishi", text: "Nora Plus maslahatlari yordam berdi va ko‘нгил aynишини енгиллaштирди. Hamma maslahatlar o‘z vaqtida etkaziladi." },
-  { name: "Елена", badge: "4 месяц беременности", problem: "Слабость и усталость", text: "Теперь я знаю, какие витамины нужны, сколько отдыхать и как строить день. Чувствую себя в разы лучше!" },
-  { name: "Shahnoza", badge: "Homiladorlik 5 oy", problem: "Kayfiyat pastligi", text: "Nora Plus motivatsion so‘zlari ва ijobiy maslahatлари orqali kayfiyatим анча яхшиланди." },
-  { name: "Ирина", badge: "5 месяц беременности", problem: "Тревожность", text: "Советы Nora Plus помогли мне больше отдыхать, заботиться о себе и избавили от лишних переживаний за малыша." },
-  { name: "Мария", badge: "7 месяц беременности", problem: "Бессонница", text: "Благодаря советам Nora Plus я стала лучше спать и спокойно дожидаюсь рождения малыша." },
-  { name: "Виктория", badge: "3 месяц беременности", problem: "Страхи", text: "Nora Plus помогла разобраться с тревогами и поддержала советами, теперь чувствую себя увереннее." },
-  { name: "Екатерина", badge: "6 месяц беременности", problem: "Питание", text: "Ассистент напомнил про важные витамины и режим, теперь питаюсь правильно и чувствую себя энергичной." },
-  { name: "Gulnora", badge: "Homiladorlik 2 oy", problem: "Uyqu buzilishi", text: "Nora билан maslahatlashib, uyqum tiklandi ва энди тонгни яхши куtаман." },
-  { name: "Malika", badge: "Homiladorlik 8 oy", problem: "Asabiylik", text: "Homiladorlikда asabiy bo‘lib qolgandим, Nora maslahatлари yordam berdi ва kayfiyatим ko‘tarildi." },
-  { name: "Lola", badge: "Homiladorlik 4 oy", problem: "Oqsil yetishmaydi", text: "To‘g‘ри ovqatланиш бўйича maslahatлар judayam foydali bo‘ldi, эндi o‘zimda kuch топяпман." }
+  {
+    name: "Анна",
+    badge: "2 месяц беременности",
+    problem: "Токсикоз",
+    text: "Nora Plus подсказала, как справиться с утренней тошнотой. Благодаря рекомендациям по питанию и режиму дня симптомы стали гораздо легче."
+  },
+  {
+    name: "Дилноза",
+    badge: "3 месяц беременности",
+    problem: "Тошнота",
+    text: "Советы Nora Plus помогли справиться с тошнотой и легче переносить беременность. Все подсказки приходят вовремя."
+  },
+  {
+    name: "Елена",
+    badge: "4 месяц беременности",
+    problem: "Слабость и усталость",
+    text: "Теперь я знаю, какие витамины нужно пить, сколько отдыхать и как выстроить день. Чувствую себя значительно лучше!"
+  },
+  {
+    name: "Шахноза",
+    badge: "5 месяц беременности",
+    problem: "Плохое настроение",
+    text: "Благодаря мотивационным словам и советам Nora Plus моё настроение заметно улучшилось."
+  },
+  {
+    name: "Ирина",
+    badge: "5 месяц беременности",
+    problem: "Тревожность",
+    text: "Советы Nora Plus помогли мне больше отдыхать, заботиться о себе и избавиться от лишних переживаний за малыша."
+  },
+  {
+    name: "Мария",
+    badge: "7 месяц беременности",
+    problem: "Бессонница",
+    text: "Благодаря советам Nora Plus я стала лучше спать и спокойно жду появления малыша."
+  },
+  {
+    name: "Виктория",
+    badge: "3 месяц беременности",
+    problem: "Страхи",
+    text: "Nora Plus помогла справиться с тревогами и поддержала советами, теперь я чувствую себя увереннее."
+  },
+  {
+    name: "Екатерина",
+    badge: "6 месяц беременности",
+    problem: "Питание",
+    text: "Ассистент напомнил о важных витаминах и правильном режиме, теперь питаюсь грамотно и чувствую себя энергичной."
+  },
+  {
+    name: "Гульнора",
+    badge: "2 месяц беременности",
+    problem: "Нарушение сна",
+    text: "Проконсультировавшись с Nora, я восстановила сон и теперь хорошо встречаю утро."
+  },
+  {
+    name: "Малика",
+    badge: "8 месяц беременности",
+    problem: "Раздражительность",
+    text: "Во время беременности стала нервной, но советы от Nora помогли и настроение улучшилось."
+  },
+  {
+    name: "Лола",
+    badge: "4 месяц беременности",
+    problem: "Недостаток белка",
+    text: "Советы по питанию очень полезные, теперь у меня больше энергии."
+  }
 ];
 
 const WhyNoraBlock = () => (
@@ -232,7 +287,7 @@ const Footer = () => (
     }}
   >
     <div style={{
-      fontSize: 13,
+      fontSize: 12, // уменьшено на 1px
       color: "#263540",
       fontWeight: 600,
       textAlign: "center",
@@ -240,7 +295,7 @@ const Footer = () => (
     }}>
       Ташкент, Юнусабадский район, массив Кашгар 26
     </div>
-    {/* Кнопки растянуты по ширине, иконки минималистичные слева */}
+    {/* Кнопки с пропорциями и без жирного шрифта */}
     <div style={{
       display: "flex",
       gap: 11,
@@ -249,10 +304,10 @@ const Footer = () => (
     }}>
       <a href="#" style={{
         background: "#fff",
-        width: "100%",
+        width: "68%",
         borderRadius: 13,
         color: "#495062",
-        fontWeight: 600,
+        fontWeight: 400,
         fontSize: 14,
         padding: "9px 0",
         textDecoration: "none",
@@ -261,14 +316,15 @@ const Footer = () => (
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        gap: 7
+        gap: 7,
+        marginRight: 5
       }}>{IconPartner} Стать партнёром</a>
       <a href="#" style={{
         background: "#fff",
-        width: "100%",
+        width: "32%",
         borderRadius: 13,
         color: "#495062",
-        fontWeight: 600,
+        fontWeight: 400,
         fontSize: 14,
         padding: "9px 0",
         textDecoration: "none",
@@ -608,7 +664,7 @@ const Chat = () => {
             padding: "0 18px",
             lineHeight: 1.75, color: NORA_COLOR, display: "inline-block"
           }}>
-            Я помогаю будущим мамам на каждом этапе беременности: отвечаю на вопросы, напоминаю о важных делах и слежу за самочувствием.
+            Я помогаю будущим мамам на каждом этапе беременности: отвечаю на вопросы, напоминаю о важных делах, слежу за самочувствием и даю советы, основанные на медицине Великобритании NHS.
           </div>
           <div style={{ height: 40 }} />
           {/* Кнопка и подпись */}
