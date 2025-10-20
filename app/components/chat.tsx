@@ -11,6 +11,7 @@ const videoMaxWidth = 314;
 const GRADIENT = "linear-gradient(90deg, #eff5fe 0%, #e5e8ed 100%)";
 const INPUT_BAR_HEIGHT = 68;
 
+// отступы — панель 15px, все блоки 10px, gap 10px
 const PANEL_SIDE_PADDING = 15;
 const BLOCK_SIDE_PADDING = 10;
 const CARD_GAP = 10;
@@ -72,8 +73,7 @@ const WhyNoraBlock = () => (
           fontSize: "20px",
           color: NORA_COLOR,
           marginBottom: 20,
-          textAlign: "center",
-          letterSpacing: "0.01em"
+          textAlign: "center"
         }}
       >
         Почему Nora Plus?
@@ -92,7 +92,7 @@ const WhyNoraBlock = () => (
               background: "#fff",
               borderRadius: 18,
               boxShadow: "0 2px 18px 0 rgba(150,180,220,0.07)",
-              padding: "19px 15px 19px 15px", // <-- ОТСТУП внутри карточки
+              padding: "19px 15px 19px 15px",
               overflow: "hidden",
               minHeight: 56,
               textAlign: "left"
@@ -129,51 +129,90 @@ const WhyNoraBlock = () => (
   </div>
 );
 
+const PREGNANT_EMOJI = "🤰";
 const REVIEWS = [
   { name: "Анна", pregnancy: "2 месяц", problem: "Токсикоз", text: "Nora Plus подсказала, как справиться с утренней тошнотой. Питание стало более сбалансированным и легче переносить симптомы." },
-  { name: "Dilnoza", pregnancy: "3 oy", problem: "Ko'ngil aynishi", text: "Nora maslahatlari ko'ngil aynиши va ahволни yengil o'tказиш учун ёрдам берди. O'z vaqtida maslahat olаман." },
+  { name: "Dilnoza", pregnancy: "3 oy", problem: "Ko'ngil aynиши", text: "Nora maslahatlari ko'ngil aynиши va ahволни yengil o'tказиш учун ёрдам берди. O'z vaqtida maslahat olаман." },
   { name: "Елена", pregnancy: "4 месяц", problem: "Слабость и усталость", text: "Рекомендации по витаминам и сну очень помогли, чувствую себя намного лучше!" },
   { name: "Shahnoza", pregnancy: "5 oy", problem: "Hafsalasi pastlik", text: "Nora Plus motivatsiya ва ижобий maslahatларни ўз вақтда беради. Ўзимни яхши хис қила бошладим." },
   { name: "Ирина", pregnancy: "5 месяц", problem: "Тревожность", text: "Советы от Nora Plus помогли мне расслабиться и больше отдыхать. Теперь спокойна за малыша." }
 ];
 
 const ReviewBlock = () => (
-  <div style={{
-    width: `calc(100% - ${BLOCK_SIDE_PADDING * 2}px)`,
-    maxWidth,
-    margin: "0 auto",
-    background: "none",
-    boxSizing: "border-box",
-    padding: 0
-  }}>
-    {REVIEWS.map((r, idx) => (
+  <div
+    style={{
+      width: `calc(100% - ${BLOCK_SIDE_PADDING * 2}px)`,
+      maxWidth,
+      margin: "0 auto 38px auto",
+      background: GRADIENT,
+      borderRadius: borderRadius,
+      boxShadow: "0 6px 20px 0 rgba(150, 175, 205, 0.10)",
+      boxSizing: "border-box",
+      padding: 0,
+    }}
+  >
+    <div style={{ padding: "21px 0 20px 0" }}>
       <div
-        key={r.name + idx}
         style={{
-          background: "linear-gradient(90deg, #eff5fe 0%, #e5e8ed 100%)",
-          borderRadius: 22,
-          marginBottom: idx < REVIEWS.length - 1 ? 15 : 0,
-          boxShadow: "0 2px 8px 0 rgba(150, 180, 220, 0.10)",
-          padding: "19px 10px 15px 10px"
-        }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8, padding: "0 3px" }}>
-          <div style={{ fontWeight: 700, fontSize: 15, color: "#222" }}>
-            {r.name} — {r.pregnancy}
-          </div>
-          <div style={{ fontWeight: 500, fontSize: 13, color: "#acb5bd", textAlign: "right" }}>
-            {r.problem}
-          </div>
-        </div>
-        <div style={{
-          fontSize: 13,
-          color: "#3a3a3a",
-          lineHeight: "1.67",
-          textAlign: "left",
-          padding: "0 3px"
-        }}>{r.text}</div>
+          fontWeight: 700,
+          fontSize: "20px",
+          color: NORA_COLOR,
+          marginBottom: 20,
+          textAlign: "center"
+        }}
+      >
+        Отзывы будущих мам
       </div>
-    ))}
-    <div style={{ height: 30 }} />
+      <div style={{
+        display: "flex",
+        flexDirection: "column",
+        gap: CARD_GAP,
+        padding: `0 ${BLOCK_SIDE_PADDING}px`
+      }}>
+        {REVIEWS.map(({ name, pregnancy, problem, text }, idx) => (
+          <div
+            key={idx}
+            style={{
+              position: "relative",
+              background: "#fff",
+              borderRadius: 18,
+              boxShadow: "0 2px 18px 0 rgba(150,180,220,0.07)",
+              padding: "19px 15px 19px 15px",
+              overflow: "hidden",
+              textAlign: "left"
+            }}
+          >
+            <span
+              style={{
+                position: "absolute",
+                right: 14,
+                top: 18,
+                fontSize: 62,
+                opacity: 0.14,
+                pointerEvents: "none",
+                userSelect: "none",
+                lineHeight: 1,
+                zIndex: 0,
+              }}
+              aria-hidden="true"
+            >
+              {PREGNANT_EMOJI}
+            </span>
+            <div style={{ position: "relative", zIndex: 1 }}>
+              <div style={{ fontWeight: 700, fontSize: 15, color: "#222", marginBottom: 7 }}>
+                {name} — {pregnancy}
+              </div>
+              <div style={{ fontWeight: 500, fontSize: 13, color: "#acb5bd", marginBottom: 9 }}>
+                {problem}
+              </div>
+              <div style={{ fontSize: 13, color: "#3a3a3a", lineHeight: "1.64" }}>
+                {text}
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
   </div>
 );
 
@@ -397,7 +436,7 @@ const Chat = () => {
           }}>Ждёте малыша? Я помогу!</div>
           <div style={{
             fontWeight: 400, fontSize: "15px", margin: "0 auto 0 auto", maxWidth: 400,
-            padding: "0 18px",         // ← новый больший отступ по бокам
+            padding: "0 18px",
             lineHeight: 1.75, color: NORA_COLOR, display: "inline-block"
           }}>
             Я помогаю будущим мамам на каждом этапе беременности: отвечаю на вопросы, напоминаю о важных делах, слежу за самочувствием и даю советы, основанные на медицине Великобритании NHS.
@@ -420,6 +459,7 @@ const Chat = () => {
             </button>
           </div>
           <div style={{ height: 40 }} />
+
           <WhyNoraBlock />
           <ReviewBlock />
         </div>
