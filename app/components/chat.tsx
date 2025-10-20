@@ -11,7 +11,6 @@ const videoMaxWidth = 314;
 const GRADIENT = "linear-gradient(90deg, #eff5fe 0%, #e5e8ed 100%)";
 const INPUT_BAR_HEIGHT = 68;
 
-// отступы — панель 15px, все блоки 10px, gap 10px
 const PANEL_SIDE_PADDING = 15;
 const BLOCK_SIDE_PADDING = 10;
 const CARD_GAP = 10;
@@ -131,11 +130,36 @@ const WhyNoraBlock = () => (
 
 const PREGNANT_EMOJI = "🤰";
 const REVIEWS = [
-  { name: "Анна", pregnancy: "2 месяц", problem: "Токсикоз", text: "Nora Plus подсказала, как справиться с утренней тошнотой. Питание стало более сбалансированным и легче переносить симптомы." },
-  { name: "Dilnoza", pregnancy: "3 oy", problem: "Ko'ngil aynиши", text: "Nora maslahatlari ko'ngil aynиши va ahволни yengil o'tказиш учун ёрдам берди. O'z vaqtida maslahat olаман." },
-  { name: "Елена", pregnancy: "4 месяц", problem: "Слабость и усталость", text: "Рекомендации по витаминам и сну очень помогли, чувствую себя намного лучше!" },
-  { name: "Shahnoza", pregnancy: "5 oy", problem: "Hafsalasi pastlik", text: "Nora Plus motivatsiya ва ижобий maslahatларни ўз вақтда беради. Ўзимни яхши хис қила бошладим." },
-  { name: "Ирина", pregnancy: "5 месяц", problem: "Тревожность", text: "Советы от Nora Plus помогли мне расслабиться и больше отдыхать. Теперь спокойна за малыша." }
+  {
+    name: "Анна",
+    badge: "2 месяц беременности",
+    problem: "Токсикоз",
+    text: "Nora Plus подсказала, как справиться с утренней тошнотой. Благодаря рекомендациям по питанию и режиму дня симптомы стали гораздо легче."
+  },
+  {
+    name: "Dilnoza",
+    badge: "Homiladorlik 3 oy",
+    problem: "Ko'ngil aynishi",
+    text: "Nora Plus maslahatlari yordam berdi va ko‘ngil aynishini yengillashtirdi. Hamma maslahatlar o‘z vaqtida etkaziladi."
+  },
+  {
+    name: "Елена",
+    badge: "4 месяц беременности",
+    problem: "Слабость и усталость",
+    text: "Теперь я знаю, какие витамины нужны, сколько отдыхать и как строить день. Чувствую себя в разы лучше!"
+  },
+  {
+    name: "Shahnoza",
+    badge: "Homiladorlik 5 oy",
+    problem: "Kayfiyat pastligi",
+    text: "Nora Plus motivatsion so‘zlari va ijobiy maslahatlari orqali kayfiyatim ancha yaxshilandi."
+  },
+  {
+    name: "Ирина",
+    badge: "5 месяц беременности",
+    problem: "Тревожность",
+    text: "Советы Nora Plus помогли мне больше отдыхать, заботиться о себе и избавили от лишних переживаний за малыша."
+  }
 ];
 
 const ReviewBlock = () => (
@@ -169,7 +193,7 @@ const ReviewBlock = () => (
         gap: CARD_GAP,
         padding: `0 ${BLOCK_SIDE_PADDING}px`
       }}>
-        {REVIEWS.map(({ name, pregnancy, problem, text }, idx) => (
+        {REVIEWS.map(({ name, badge, problem, text }, idx) => (
           <div
             key={idx}
             style={{
@@ -199,8 +223,18 @@ const ReviewBlock = () => (
               {PREGNANT_EMOJI}
             </span>
             <div style={{ position: "relative", zIndex: 1 }}>
-              <div style={{ fontWeight: 700, fontSize: 15, color: "#222", marginBottom: 7 }}>
-                {name} — {pregnancy}
+              <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 7 }}>
+                <span style={{
+                  fontWeight: 700, fontSize: 15, color: "#222"
+                }}>
+                  {name}
+                </span>
+                <span style={{
+                  fontWeight: 500, fontSize: 13, color: "#1681f5",
+                  padding: "4px 9px", borderRadius: 12, background: "#f3f7fe", whiteSpace: "nowrap"
+                }}>
+                  {badge}
+                </span>
               </div>
               <div style={{ fontWeight: 500, fontSize: 13, color: "#acb5bd", marginBottom: 9 }}>
                 {problem}
