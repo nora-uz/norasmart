@@ -45,6 +45,28 @@ const ICONS = {
 };
 const filterNora = "invert(13%) sepia(4%) saturate(271%) hue-rotate(175deg) brightness(92%) contrast(93%)";
 
+const BENEFITS = [
+  { emoji: "🩺", title: "Медицинская точность", text: "Советы основаны на рекомендациях британской службы NHS и адаптированы под ваш регион." },
+  { emoji: "🤝", title: "Поддержка 24/7", text: "Ассистент всегда на связи для заботы и помощи в любой ситуации." },
+  { emoji: "⏰", title: "Напоминания о важных делах", text: "Следим, чтобы вы ничего не забыли — анализы, витамины, визиты." },
+  { emoji: "🔒", title: "Конфиденциальность", text: "Личные данные остаются только у вас — никакой передачи сторонним." },
+  { emoji: "⚡️", title: "Быстрые решения", text: "Полезные советы и поддержка сразу, когда это нужно." },
+];
+
+const REVIEWS = [
+  { name: "Анна", badge: "2 месяц беременности", problem: "Токсикоз", text: "Nora Plus подсказала, как справиться с утренней тошнотой. Благодаря рекомендациям по питанию и режиму дня симптомы стали гораздо легче." },
+  { name: "Дилноза", badge: "3 месяц беременности", problem: "Тошнота", text: "Советы Nora Plus помогли справиться с тошнотой и легче переносить беременность. Все подсказки приходят вовремя." },
+  { name: "Елена", badge: "4 месяц беременности", problem: "Слабость и усталость", text: "Теперь я знаю, какие витамины нужно пить, сколько отдыхать и как выстроить день. Чувствую себя значительно лучше!" },
+  { name: "Шахноза", badge: "5 месяц беременности", problem: "Плохое настроение", text: "Благодаря мотивационным словам и советам Nora Plus моё настроение заметно улучшилось." },
+  { name: "Ирина", badge: "5 месяц беременности", problem: "Тревожность", text: "Советы Nora Plus помогли мне больше отдыхать, заботиться о себе и избавиться от лишних переживаний за малыша." },
+  { name: "Мария", badge: "7 месяц беременности", problem: "Бессонница", text: "Благодаря советам Nora Plus я стала лучше спать и спокойно жду появления малыша." },
+  { name: "Виктория", badge: "3 месяц беременности", problem: "Страхи", text: "Nora Plus помогла справиться с тревогами и поддержала советами, теперь я чувствую себя увереннее." },
+  { name: "Екатерина", badge: "6 месяц беременности", problem: "Питание", text: "Ассистент напомнил о важных витаминах и правильном режиме, теперь питаюсь грамотно и чувствую себя энергичной." },
+  { name: "Гульнора", badge: "2 месяц беременности", problem: "Нарушение сна", text: "Проконсультировавшись с Nora, я восстановила сон и теперь хорошо встречаю утро." },
+  { name: "Малика", badge: "8 месяц беременности", problem: "Раздражительность", text: "Во время беременности стала нервной, но советы от Nora помогли и настроение улучшилось." },
+  { name: "Лола", badge: "4 месяц беременности", problem: "Недостаток белка", text: "Советы по питанию очень полезные, теперь у меня больше энергии." }
+];
+
 // Готовые темы
 const TOPICS = [
   { icon: "🤢", title: "Тошнота и токсикоз", desc: "Что помогает на ранних сроках?" },
@@ -91,7 +113,6 @@ const TopicsBlock = ({ onTopicClick }) => (
   </div>
 );
 
-// Истории чата
 const OLD_CHATS = [
   { id: 1, title: "1-й триместр — анализы", sub: "Рекомендации по обследованиям" },
   { id: 2, title: "Питание и витамины", sub: "Что принимать каждый день?" }
@@ -148,10 +169,108 @@ const splitBotTextTwoBlocks = (text) => {
   }
 };
 
+const Footer = () => (
+  <div
+    style={{
+      width: `calc(100% - 40px)`,
+      maxWidth,
+      margin: "0 auto",
+      background: GRADIENT,
+      borderRadius: "22px",
+      boxShadow: "0 -4px 14px 0 rgba(155,175,205,0.06)",
+      boxSizing: "border-box",
+      fontFamily: "'Manrope', Arial, Helvetica, sans-serif",
+      paddingLeft: 20,
+      paddingRight: 20,
+      paddingTop: 22,
+      paddingBottom: 22,
+      display: "flex",
+      flexDirection: "column",
+      gap: 18,
+      alignItems: "center"
+    }}
+  >
+    <div style={{
+      fontSize: 12,
+      color: "#263540",
+      fontWeight: 600,
+      textAlign: "center",
+      width: "100%"
+    }}>
+      Ташкент, Юнусабадский район, массив Кашгар 26
+    </div>
+    <div style={{
+      display: "flex",
+      gap: 11,
+      width: "100%",
+      justifyContent: "center"
+    }}>
+      <a href="#" style={{
+        background: "#fff",
+        width: "63%",
+        borderRadius: 13,
+        color: "#495062",
+        fontWeight: 400,
+        fontSize: 14,
+        padding: "9px 0",
+        textDecoration: "none",
+        textAlign: "center",
+        border: "1px solid #e1e9f5",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: 7,
+        marginRight: 5
+      }}>{IconPartner} Стать партнёром</a>
+      <a href="#" style={{
+        background: "#fff",
+        width: "37%",
+        borderRadius: 13,
+        color: "#495062",
+        fontWeight: 400,
+        fontSize: 14,
+        padding: "9px 0",
+        textDecoration: "none",
+        textAlign: "center",
+        border: "1px solid #e1e9f5",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: 7
+      }}>{IconContact} Контакты</a>
+    </div>
+    <a href="#" style={{
+      background: "#fff",
+      padding: "7px 0",
+      width: "100%",
+      borderRadius: 14,
+      color: "#556",
+      fontWeight: 400,
+      fontSize: 14,
+      textDecoration: "none",
+      border: "1px solid #e1e9f5",
+      textAlign: "center",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      gap: 7
+    }}>{IconLock} Политика конфиденциальности</a>
+    <div style={{
+      marginTop: 8,
+      fontSize: 12,
+      color: "#8a97a0",
+      textAlign: "center",
+      width: "100%"
+    }}>
+      © {new Date().getFullYear()} Nora Plus — забота и поддержка будущих мам
+    </div>
+  </div>
+);
+
 const Chat = () => {
   const [showWelcome, setShowWelcome] = useState(true);
   const [preloading, setPreloading] = useState(true);
-  const [message, setMessage] = useState(""); // БЫЛО ДОБАВЛЕНО!
+  const [message, setMessage] = useState("");
   const [chatHistory, setChatHistory] = useState([]);
   const [loading, setLoading] = useState(false);
   const [threadId, setThreadId] = useState(null);
@@ -205,25 +324,29 @@ const Chat = () => {
     setShowTopics(false);
   };
 
-  // ... остальные функции handleShare, sendMessageToGPT, handleSendMessage, clearChatAll ...
+  const handleSendMessage = () => {
+    if (message.trim() && !loading && !botProgress) {
+      // здесь должен быть ваш sendMessageToGPT()
+      setChatHistory(prev => [...prev, {text: message, sender: "user"}]);
+      setMessage("");
+      setShowTopics(false);
+    }
+  };
 
-  // Далее полностью ваш блок welcome (как был),
-  // Чат экран ниже:
+  // Здесь добавьте welcome-экран как у вас был, и замените WhyNoraBlock на блок "Что умеет Nora?" если нужно
 
+  // --- ЧАТ-ЭКРАН ---
   return (
-    <div
-      style={{
-        background: "#f8fdff",
-        width: "100vw",
-        minHeight: "100vh",
-        display: "flex",
-        flexDirection: "column"
-      }}
-    >
+    <div style={{
+      background: "#f8fdff",
+      width: "100vw",
+      minHeight: "100vh",
+      display: "flex",
+      flexDirection: "column"
+    }}>
       {/* ... Панель ... */}
       {showTopics && <ChatsHistoryBlock onSelect={handleChatHistory} />}
       {showTopics && <TopicsBlock onTopicClick={handleTopicClick}/>}
-      {/* История сообщений */}
       <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "flex-end" }}>
         <div style={{ width: "100%", maxWidth: maxWidth, margin: "0 auto", padding: "80px 0 110px 0" }}>
           {chatHistory.map((msg, idx) => (
@@ -287,7 +410,6 @@ const Chat = () => {
           <div ref={messagesEndRef} />
         </div>
       </div>
-      {/* Поле input и кнопка */}
       <div style={{
         width: "calc(100% - 40px)",
         margin: "0 20px",
@@ -354,6 +476,7 @@ const Chat = () => {
           </span>
         </button>
       </div>
+      <Footer />
     </div>
   );
 };
