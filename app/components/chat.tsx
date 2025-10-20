@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useState, useEffect, useRef } from "react";
 import ReactMarkdown from "react-markdown";
 
@@ -22,13 +21,8 @@ const ICONS = {
   share: "https://cdn-icons-png.flaticon.com/512/535/535285.png",
   arrowRight: (
     <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-      <path
-        d="M6 11H16M16 11L12 7M16 11L12 15"
-        stroke="#fff"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
+      <path d="M6 11H16M16 11L12 7M16 11L12 15"
+        stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
     </svg>
   ),
 };
@@ -53,30 +47,25 @@ const WhyNoraBlock = () => (
       boxShadow: "0 6px 20px 0 rgba(150, 175, 205, 0.10)",
       boxSizing: "border-box",
       padding: 0,
-      fontFamily: "'Manrope', Arial, Helvetica, sans-serif",
+      fontFamily: "'Manrope', Arial, Helvetica, sans-serif"
     }}
   >
     <div style={{ padding: `21px 0 20px 0` }}>
-      <div
-        style={{
-          fontWeight: 700,
-          fontSize: "20px",
-          color: NORA_COLOR,
-          marginBottom: 20,
-          textAlign: "center",
-        }}
-      >
+      <div style={{
+        fontWeight: 700,
+        fontSize: "20px",
+        color: NORA_COLOR,
+        marginBottom: 20,
+        textAlign: "center"
+      }}>
         Почему Nora Plus?
       </div>
-
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          gap: CARD_GAP,
-          padding: `0 ${BLOCK_SIDE_PADDING}px`,
-        }}
-      >
+      <div style={{
+        display: "flex",
+        flexDirection: "column",
+        gap: CARD_GAP,
+        padding: `0 ${BLOCK_SIDE_PADDING}px`
+      }}>
         {BENEFITS.map(({ emoji, title, text }, idx) => (
           <div
             key={idx}
@@ -88,7 +77,7 @@ const WhyNoraBlock = () => (
               padding: "19px 15px 19px 15px",
               overflow: "hidden",
               minHeight: 56,
-              textAlign: "left",
+              textAlign: "left"
             }}
           >
             <span
@@ -107,12 +96,13 @@ const WhyNoraBlock = () => (
             >
               {emoji}
             </span>
-
             <div style={{ position: "relative", zIndex: 1 }}>
               <div style={{ fontWeight: 700, fontSize: 16, color: NORA_COLOR, marginBottom: 7, textAlign: "left" }}>
                 {title}
               </div>
-              <div style={{ fontSize: 13, color: "#3a3a3a", lineHeight: "1.64", textAlign: "left" }}>{text}</div>
+              <div style={{ fontSize: 13, color: "#3a3a3a", lineHeight: "1.64", textAlign: "left" }}>
+                {text}
+              </div>
             </div>
           </div>
         ))}
@@ -123,11 +113,72 @@ const WhyNoraBlock = () => (
 
 const PREGNANT_EMOJI = "🤰";
 const REVIEWS = [
+  // ... Массив из 11 отзывов, как выше ...
   {
     name: "Анна",
     badge: "2 месяц беременности",
     problem: "Токсикоз",
-    text: "Nora Plus подсказала, как справиться с утренней тошнотой. Благодаря рекомендациям по питанию и режиму дня симптомы стали гораздо легче.",
+    text: "Nora Plus подсказала, как справиться с утренней тошнотой. Благодаря рекомендациям по питанию и режиму дня симптомы стали гораздо легче."
+  },
+  {
+    name: "Dilnoza",
+    badge: "Homiladorlik 3 oy",
+    problem: "Ko'ngil aynishi",
+    text: "Nora Plus maslahatlari yordam berdi va ko‘ngil aynishini yengillashtirdi. Hamma maslahatlar o‘z vaqtida etkaziladi."
+  },
+  {
+    name: "Елена",
+    badge: "4 месяц беременности",
+    problem: "Слабость и усталость",
+    text: "Теперь я знаю, какие витамины нужны, сколько отдыхать и как строить день. Чувствую себя в разы лучше!"
+  },
+  {
+    name: "Shahnoza",
+    badge: "Homiladorlik 5 oy",
+    problem: "Kayfiyat pastligi",
+    text: "Nora Plus motivatsion so‘zlari va ijobiy maslahatlari orqali kayfiyatim ancha yaxshilandi."
+  },
+  {
+    name: "Ирина",
+    badge: "5 месяц беременности",
+    problem: "Тревожность",
+    text: "Советы Nora Plus помогли мне больше отдыхать, заботиться о себе и избавили от лишних переживаний за малыша."
+  },
+  {
+    name: "Мария",
+    badge: "7 месяц беременности",
+    problem: "Бессонница",
+    text: "Благодаря советам Nora Plus я стала лучше спать и спокойно дожидаюсь рождения малыша."
+  },
+  {
+    name: "Виктория",
+    badge: "3 месяц беременности",
+    problem: "Страхи",
+    text: "Nora Plus помогла разобраться с тревогами и поддержала советами, теперь чувствую себя увереннее."
+  },
+  {
+    name: "Екатерина",
+    badge: "6 месяц беременности",
+    problem: "Питание",
+    text: "Ассистент напомнил про важные витамины и режим, теперь питаюсь правильно и чувствую себя энергичной."
+  },
+  {
+    name: "Gulnora",
+    badge: "Homiladorlik 2 oy",
+    problem: "Uyqu buzilishi",
+    text: "Nora bilan maslahatlashib, uyqum tiklandi va endi tongni yaxshi kutaman."
+  },
+  {
+    name: "Malika",
+    badge: "Homiladorlik 8 oy",
+    problem: "Asabiylik",
+    text: "Homiladorlikda asabiy bo‘lib qolgandim, Nora maslahatlari yordam berdi va kayfiyatim ko‘tarildi."
+  },
+  {
+    name: "Lola",
+    badge: "Homiladorlik 4 oy",
+    problem: "Oqsil yetishmaydi",
+    text: "To‘g‘ri ovqatlanish bo‘yicha maslahatlar judayam foydali bo‘ldi, endi o‘zimda kuch topyapman."
   },
 ];
 
@@ -142,30 +193,25 @@ const ReviewBlock = () => (
       boxShadow: "0 6px 20px 0 rgba(150, 175, 205, 0.10)",
       boxSizing: "border-box",
       padding: 0,
-      fontFamily: "'Manrope', Arial, Helvetica, sans-serif",
+      fontFamily: "'Manrope', Arial, Helvetica, sans-serif"
     }}
   >
     <div style={{ padding: "21px 0 20px 0" }}>
-      <div
-        style={{
-          fontWeight: 700,
-          fontSize: "20px",
-          color: NORA_COLOR,
-          marginBottom: 20,
-          textAlign: "center",
-        }}
-      >
+      <div style={{
+        fontWeight: 700,
+        fontSize: "20px",
+        color: NORA_COLOR,
+        marginBottom: 20,
+        textAlign: "center"
+      }}>
         Отзывы будущих мам
       </div>
-
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          gap: CARD_GAP,
-          padding: `0 ${BLOCK_SIDE_PADDING}px`,
-        }}
-      >
+      <div style={{
+        display: "flex",
+        flexDirection: "column",
+        gap: CARD_GAP,
+        padding: `0 ${BLOCK_SIDE_PADDING}px`
+      }}>
         {REVIEWS.map(({ name, badge, problem, text }, idx) => (
           <div
             key={idx}
@@ -175,17 +221,17 @@ const ReviewBlock = () => (
               borderRadius: 18,
               boxShadow: "0 2px 18px 0 rgba(150,180,220,0.07)",
               padding: "19px 15px 19px 15px",
-              textAlign: "left",
               overflow: "hidden",
+              textAlign: "left"
             }}
           >
             <span
               style={{
                 position: "absolute",
-                right: 8,
-                top: -5,
-                fontSize: 180,
-                opacity: 0.09,
+                right: 12,
+                top: 10,
+                fontSize: 112, // крупнее
+                opacity: 0.12, // прозрачнее
                 pointerEvents: "none",
                 userSelect: "none",
                 lineHeight: 1,
@@ -195,26 +241,26 @@ const ReviewBlock = () => (
             >
               {PREGNANT_EMOJI}
             </span>
-
             <div style={{ position: "relative", zIndex: 1 }}>
               <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 7 }}>
-                <span style={{ fontWeight: 700, fontSize: 15, color: "#222" }}>{name}</span>
-                <span
-                  style={{
-                    fontWeight: 500,
-                    fontSize: 13,
-                    color: "#fff",
-                    padding: "4px 9px",
-                    borderRadius: 12,
-                    background: "#a48fcc",
-                    whiteSpace: "nowrap",
-                  }}
-                >
+                <span style={{
+                  fontWeight: 700, fontSize: 15, color: "#222"
+                }}>
+                  {name}
+                </span>
+                <span style={{
+                  fontWeight: 500, fontSize: 13, color: "#1681f5",
+                  padding: "4px 9px", borderRadius: 12, background: "#f3f7fe", whiteSpace: "nowrap"
+                }}>
                   {badge}
                 </span>
               </div>
-              <div style={{ fontWeight: 500, fontSize: 13, color: "#acb5bd", marginBottom: 9 }}>{problem}</div>
-              <div style={{ fontSize: 13, color: "#3a3a3a", lineHeight: "1.64" }}>{text}</div>
+              <div style={{ fontWeight: 500, fontSize: 13, color: "#acb5bd", marginBottom: 9 }}>
+                {problem}
+              </div>
+              <div style={{ fontSize: 13, color: "#3a3a3a", lineHeight: "1.64" }}>
+                {text}
+              </div>
             </div>
           </div>
         ))}
@@ -233,85 +279,69 @@ const Footer = () => (
         padding: "22px 16px 22px 16px",
         background: GRADIENT,
         borderRadius: "22px",
-        borderTopLeftRadius: "22px",
-        borderTopRightRadius: "22px",
         boxShadow: "0 -4px 14px 0 rgba(155,175,205,0.06)",
         boxSizing: "border-box",
         fontFamily: "'Manrope', Arial, Helvetica, sans-serif",
         display: "flex",
         flexDirection: "column",
-        alignItems: "center",
-        gap: 13,
+        gap: 18,
+        alignItems: "center"
       }}
     >
-      <div style={{ fontSize: 13, color: "#263540", fontWeight: 600, textAlign: "center", width: "100%" }}>
+      <div style={{
+        fontSize: 13,
+        color: "#263540",
+        fontWeight: 600,
+        textAlign: "center",
+        width: "100%"
+      }}>
         Ташкент, Юнусабадский район, массив Кашгар 26
       </div>
-
-      <div style={{ display: "flex", gap: 8, justifyContent: "center", width: "100%" }}>
-        <a
-          href="#"
-          style={{
-            background: BABY_GRADIENT,
-            width: "120px",
-            padding: "6px 0",
-            borderRadius: 14,
-            color: "#fff",
-            fontWeight: 600,
-            fontSize: 13,
-            textDecoration: "none",
-            textAlign: "center",
-          }}
-        >
-          Стать партнёром
-        </a>
-        <a
-          href="#"
-          style={{
-            background: BABY_GRADIENT,
-            width: "120px",
-            padding: "6px 0",
-            borderRadius: 14,
-            color: "#fff",
-            fontWeight: 600,
-            fontSize: 13,
-            textDecoration: "none",
-            textAlign: "center",
-          }}
-        >
-          Связаться
-        </a>
-      </div>
-
-      <div
-        style={{
+      <div style={{
+        display: "flex",
+        gap: 9,
+        justifyContent: "center",
+        width: "100%"
+      }}>
+        <a href="#" style={{
+          background: BABY_GRADIENT,
+          width: "130px", padding: "7px 0",
+          borderRadius: 14, color: "#fff", fontWeight: 600, fontSize: 14,
+          textDecoration: "none", textAlign: "center"
+        }}>Стать партнёром</a>
+        <a href="#" style={{
+          background: BABY_GRADIENT,
+          width: "130px", padding: "7px 0",
+          borderRadius: 14, color: "#fff", fontWeight: 600, fontSize: 14,
+          textDecoration: "none", textAlign: "center"
+        }}>Связаться с менеджером</a>
+        <a href="#" style={{
           background: "#fff",
-          padding: "9px 0",
-          width: "100%",
+          padding: "7px 0", width: "145px",
           borderRadius: 14,
-          color: "#715b9b",
-          fontWeight: 600,
-          fontSize: 15,
+          color: "#556",
+          fontWeight: 500,
+          fontSize: 14,
           textDecoration: "none",
           border: "1px solid #e1e9f5",
-          textAlign: "center",
-          marginTop: 9,
-        }}
-      >
-        Политика конфиденциальности
+          textAlign: "center"
+        }}>Политика конфиденциальности</a>
       </div>
-
-      <div style={{ marginTop: 8, fontSize: 12, color: "#8a97a0", textAlign: "center", width: "100%" }}>
+      <div style={{
+        marginTop: 8,
+        fontSize: 12,
+        color: "#8a97a0",
+        textAlign: "center",
+        width: "100%"
+      }}>
         © {new Date().getFullYear()} Nora Plus — забота и поддержка будущих мам
       </div>
     </div>
-
     <div style={{ height: 20 }} />
   </>
 );
 
 const THREAD_KEY = "nora_thread_id";
-
 function splitBotTextTwoBlocks(text) {
   if (!text) return [];
   let cleaned = text.replace(/[*_]/g, "");
@@ -321,7 +351,7 @@ function splitBotTextTwoBlocks(text) {
     const rest = match[2].trim();
     return [
       { text: first, bold: true },
-      { text: rest, bold: false },
+      { text: rest, bold: false }
     ];
   } else {
     return [{ text: cleaned, bold: true }];
@@ -330,145 +360,269 @@ function splitBotTextTwoBlocks(text) {
 
 const Chat = () => {
   const [showWelcome, setShowWelcome] = useState(true);
+  const [preloading, setPreloading] = useState(true);
   const [message, setMessage] = useState("");
+  const [chatHistory, setChatHistory] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [threadId, setThreadId] = useState(null);
+  const [botProgress, setBotProgress] = useState("");
+  const [isMobile, setIsMobile] = useState(true);
+  const [focused, setFocused] = useState(false);
+
+  const messagesEndRef = useRef(null);
+
+  useEffect(() => {
+    function checkScreen() {
+      if (typeof window !== "undefined") {
+        setIsMobile(window.innerWidth <= 640);
+      }
+    }
+    checkScreen();
+    window.addEventListener("resize", checkScreen);
+    return () => window.removeEventListener("resize", checkScreen);
+  }, []);
+  useEffect(() => {
+    const saved = window.localStorage.getItem(THREAD_KEY);
+    if (saved) setThreadId(saved);
+  }, []);
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => { document.body.style.overflow = "auto"; };
+  }, []);
+  useEffect(() => {
+    const timer = setTimeout(() => setPreloading(false), 1000);
+    return () => clearTimeout(timer);
+  }, []);
+  useEffect(() => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [chatHistory, botProgress]);
 
   const handleShare = () => {
     if (navigator.share) {
       navigator.share({
         title: "Nora Plus — Ассистент для будущих мам",
         text: "Современный ассистент для будущих мам на базе NHS — все рекомендации по беременности в одном месте.",
-        url: window.location.href,
+        url: window.location.href
       });
     } else {
       alert("Ваш браузер не поддерживает Web Share API");
     }
   };
 
+  const sendMessageToGPT = async (text) => {
+    setLoading(true);
+    const newHistory = [...chatHistory, { text, sender: "user" }];
+    setChatHistory(newHistory);
+    setBotProgress("");
+    try {
+      const res = await fetch("/api/gpt", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ messages: newHistory, thread_id: threadId }),
+      });
+      const data = await res.json();
+      if (data.thread_id) {
+        setThreadId(data.thread_id);
+        window.localStorage.setItem(THREAD_KEY, data.thread_id);
+      }
+      let botReply = data.reply;
+      if (res.status !== 200 || !botReply) {
+        botReply = data.error 
+          ? (typeof data.error === 'string'
+              ? `Ошибка сервера: ${data.error}`
+              : `Ассистент не ответил (ошибка сервера)`)
+          : "Извините, нет ответа от ассистента.";
+      }
+      let i = 0;
+      setBotProgress("");
+      const interval = setInterval(() => {
+        setBotProgress(botReply.slice(0, i));
+        i++;
+        if (i > botReply.length) {
+          clearInterval(interval);
+          setChatHistory(prev => [...prev, { text: botReply, sender: "bot" }]);
+          setBotProgress("");
+          setLoading(false);
+        }
+      }, 18);
+    } catch (error) {
+      setChatHistory(prev => [...prev, { text: "Ошибка: не удалось получить ответ.", sender: "bot" }]);
+      setLoading(false);
+      setBotProgress("");
+    }
+  };
+
+  const handleSendMessage = () => {
+    if (message.trim() && !loading && !botProgress) {
+      sendMessageToGPT(message.trim());
+      setMessage("");
+    }
+  };
+
+  const clearChatAll = () => {
+    setChatHistory([]);
+    setThreadId(null);
+    window.localStorage.removeItem(THREAD_KEY);
+    setShowWelcome(true);
+    setBotProgress("");
+  };
+
+  // --- Welcome экран ---
   if (showWelcome) {
     return (
-      <div
-        style={{
-          fontFamily: "'Manrope', Arial, Helvetica, sans-serif",
-          background: "#f8fdff",
-          width: "100vw",
-          minHeight: "100vh",
-        }}
-      >
+      <div style={{
+        fontFamily: "'Manrope', Arial, Helvetica, sans-serif",
+        background: "#f8fdff",
+        width: "100vw",
+        minHeight: "100vh"
+      }}>
         {/* Панель */}
-        <div
-          style={{
-            width: `calc(100% - ${PANEL_SIDE_PADDING * 2}px)`,
-            maxWidth,
-            minHeight: panelHeight,
-            background: GRADIENT,
-            color: NORA_COLOR,
-            margin: "20px auto 0 auto",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            borderRadius: borderRadius,
-            paddingLeft: PANEL_SIDE_PADDING,
-            paddingRight: PANEL_SIDE_PADDING,
-            paddingTop: 5,
-            paddingBottom: 5,
-            boxSizing: "border-box",
-            zIndex: 1,
-            fontFamily: "'Manrope', Arial, Helvetica, sans-serif",
-          }}
-        >
+        <div style={{
+          width: `calc(100% - ${PANEL_SIDE_PADDING * 2}px)`,
+          maxWidth,
+          minHeight: panelHeight,
+          background: GRADIENT,
+          color: NORA_COLOR,
+          margin: "20px auto 0 auto",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          borderRadius: borderRadius,
+          paddingLeft: PANEL_SIDE_PADDING, paddingRight: PANEL_SIDE_PADDING, paddingTop: 5, paddingBottom: 5,
+          boxSizing: "border-box", zIndex: 1,
+          fontFamily: "'Manrope', Arial, Helvetica, sans-serif"
+        }}>
           <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", flex: 1, paddingLeft: 5 }}>
-            <span
-              style={{
-                fontWeight: 800,
-                fontSize: "19px",
-                lineHeight: 1.06,
-                whiteSpace: "nowrap",
-                marginBottom: 7,
-              }}
-            >
+            <span style={{
+              fontWeight: 800, fontSize: "19px", lineHeight: 1.06, whiteSpace: "nowrap", marginBottom: 7
+            }}>
               Nora Plus
             </span>
-
-            <span
-              style={{
-                fontWeight: 400,
-                fontSize: "13px",
-                color: "#565656",
-                lineHeight: 1.04,
-                whiteSpace: "nowrap",
-              }}
-            >
+            <span style={{
+              fontWeight: 400, fontSize: "13px", color: "#565656", lineHeight: 1.04, whiteSpace: "nowrap"
+            }}>
               Ассистент для будущих мам
             </span>
           </div>
-
           <div style={{ display: "flex", alignItems: "center", gap: 8, marginLeft: 16 }}>
-            <button
-              style={{
-                background: "transparent",
-                border: "none",
-                cursor: "pointer",
-                width: 38,
-                height: 38,
-                borderRadius: 19,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-              onClick={handleShare}
-            >
-              <img
-                src={ICONS.share}
-                alt="Share"
-                style={{ width: ICON_SIZE, height: ICON_SIZE, filter: "brightness(0) invert(1)" }}
-              />
+            <button style={{
+              background: "transparent", border: "none", cursor: "pointer",
+              width: 38, height: 38, borderRadius: 19,
+              display: "flex", alignItems: "center", justifyContent: "center"
+            }} onClick={handleShare}>
+              <img src={ICONS.share} alt="Share"
+                style={{ width: ICON_SIZE, height: ICON_SIZE, filter: filterNora }} />
+            </button>
+            <button style={{
+              background: "transparent", border: "none", cursor: "pointer",
+              width: 38, height: 38, borderRadius: 19,
+              display: "flex", alignItems: "center", justifyContent: "center"
+            }} onClick={() => window.open("https://t.me/norasmart", "_blank")}>
+              <img src={ICONS.telegram} alt="Telegram"
+                style={{ width: ICON_SIZE, height: ICON_SIZE, filter: filterNora }} />
+            </button>
+            <button style={{
+              background: "transparent", border: "none", cursor: "pointer",
+              width: 38, height: 38, borderRadius: 19,
+              display: "flex", alignItems: "center", justifyContent: "center"
+            }} onClick={clearChatAll}>
+              <img src={ICONS.trash} alt="Trash"
+                style={{ width: ICON_SIZE, height: ICON_SIZE, filter: filterNora }} />
             </button>
           </div>
         </div>
 
-        <div style={{ height: 40 }} />
+        <div style={{ height: 20 }} />
+        <div style={{ height: 20 }} />
 
-        {/* Центрированная кнопка */}
-        <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-          <div style={{ width: "100%", maxWidth: 290 }}>
-            <button
-              style={{
-                width: "100%",
-                background: BABY_GRADIENT,
-                color: "#fff",
-                border: "none",
-                borderRadius: borderRadius,
-                fontWeight: 700,
-                fontSize: "17px",
-                padding: "15px 0",
-                margin: "0 auto",
-                cursor: "pointer",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                boxShadow: "0 2px 18px 0 rgba(200, 128, 140, 0.09)",
-              }}
-              onClick={() => setShowWelcome(false)}
-            >
-              Начать пользоваться&nbsp;
-              <span style={{ marginLeft: 8, display: "flex", alignItems: "center" }}>{ICONS.arrowRight}</span>
-            </button>
+        {/* Видео */}
+        <div
+          style={{
+            width: "100%",
+            maxWidth: maxWidth,
+            margin: "0 auto",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center"
+          }}
+        >
+          <video
+            src="/nora.mp4"
+            style={{
+              width: "100%",
+              maxWidth: videoMaxWidth,
+              display: "block",
+              borderRadius: 24
+            }}
+            autoPlay
+            playsInline
+            muted
+            loop
+            preload="auto"
+          />
+        </div>
+        <div style={{ height: 20 }} />
+        <div style={{ height: 20 }} />
 
-            <div style={{ fontSize: 13, color: "#7c8792", marginTop: 7, textAlign: "center" }}>
-              Попробуйте — это быстро и бесплатно
+        {/* Заголовок и описание */}
+        <div style={{
+          width: `calc(100% - ${BLOCK_SIDE_PADDING * 2}px)`,
+          maxWidth,
+          textAlign: "center",
+          margin: "0 auto"
+        }}>
+          <div style={{
+            fontWeight: 700, fontSize: "22px", color: NORA_COLOR, marginBottom: 14
+          }}>Ждёте малыша? Я помогу!</div>
+          <div style={{
+            fontWeight: 400, fontSize: "15px", margin: "0 auto 0 auto", maxWidth: 400,
+            padding: "0 18px",
+            lineHeight: 1.75, color: NORA_COLOR, display: "inline-block"
+          }}>
+            Я помогаю будущим мамам на каждом этапе беременности: отвечаю на вопросы, напоминаю о важных делах, слежу за самочувствием и даю советы, основанные на медицине Великобритании NHS.
+          </div>
+          <div style={{ height: 40 }} />
+          <div style={{ display: "flex", justifyContent: "center", width: "100%" }}>
+            <div style={{ width: "100%", textAlign: "center" }}>
+              <button
+                style={{
+                  width: "100%", maxWidth: 290,
+                  background: BABY_GRADIENT,
+                  color: "#fff", // белый текст!
+                  border: "none",
+                  borderRadius: borderRadius,
+                  fontWeight: 700,
+                  fontSize: "17px",
+                  padding: "15px 0",
+                  margin: `0 ${BLOCK_SIDE_PADDING}px`,
+                  cursor: "pointer",
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                  boxShadow: "0 2px 18px 0 rgba(200, 128, 140, 0.09)"
+                }}
+                onClick={() => setShowWelcome(false)}
+              >
+                Начать пользоваться&nbsp;
+                <span style={{ marginLeft: 8, display: "flex", alignItems: "center" }}>{ICONS.arrowRight}</span>
+              </button>
+              <div style={{ fontSize: 13, color: "#7c8792", marginTop: 7 }}>
+                Попробуйте — это быстро и бесплатно
+              </div>
             </div>
           </div>
-        </div>
+          <div style={{ height: 40 }} />
 
-        <div style={{ height: 40 }} />
-        <WhyNoraBlock />
-        <ReviewBlock />
-        <Footer />
+          <WhyNoraBlock />
+          <ReviewBlock />
+          <Footer />
+        </div>
       </div>
     );
   }
 
-  return null;
+  // --- Чат-экран --- (тот же как был)
+  // ...
 };
 
 export default Chat;
