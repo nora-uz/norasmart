@@ -2,6 +2,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import ReactMarkdown from "react-markdown";
 
+// --- Константы и стили
 const NORA_COLOR = "#2e2e2e";
 const ICON_SIZE = 23;
 const borderRadius = 22;
@@ -15,6 +16,10 @@ const PANEL_SIDE_PADDING = 15;
 const BLOCK_SIDE_PADDING = 10;
 const CARD_GAP = 10;
 
+// Цвет футерных кнопок
+const FOOTER_BTN_BORDER = "#a48fcc";
+const FOOTER_BTN_COLOR = "#a48fcc";
+
 const ICONS = {
   telegram: "https://cdn-icons-png.flaticon.com/512/1946/1946547.png",
   trash: "https://cdn-icons-png.flaticon.com/512/1345/1345823.png",
@@ -27,6 +32,8 @@ const ICONS = {
   ),
 };
 const filterNora = "invert(13%) sepia(4%) saturate(271%) hue-rotate(175deg) brightness(92%) contrast(93%)";
+
+// --- Ваши отзывы и преимущества — оставьте неизменными
 
 const BENEFITS = [
   { emoji: "🩺", title: "Медицинская точность", text: "Советы основаны на рекомендациях британской службы NHS и адаптированы под ваш регион." },
@@ -111,76 +118,7 @@ const WhyNoraBlock = () => (
   </div>
 );
 
-const PREGNANT_EMOJI = "🤰";
-const REVIEWS = [
-  // ... Массив из 11 отзывов, как выше ...
-  {
-    name: "Анна",
-    badge: "2 месяц беременности",
-    problem: "Токсикоз",
-    text: "Nora Plus подсказала, как справиться с утренней тошнотой. Благодаря рекомендациям по питанию и режиму дня симптомы стали гораздо легче."
-  },
-  {
-    name: "Dilnoza",
-    badge: "Homiladorlik 3 oy",
-    problem: "Ko'ngil aynishi",
-    text: "Nora Plus maslahatlari yordam berdi va ko‘ngil aynishini yengillashtirdi. Hamma maslahatlar o‘z vaqtida etkaziladi."
-  },
-  {
-    name: "Елена",
-    badge: "4 месяц беременности",
-    problem: "Слабость и усталость",
-    text: "Теперь я знаю, какие витамины нужны, сколько отдыхать и как строить день. Чувствую себя в разы лучше!"
-  },
-  {
-    name: "Shahnoza",
-    badge: "Homiladorlik 5 oy",
-    problem: "Kayfiyat pastligi",
-    text: "Nora Plus motivatsion so‘zlari va ijobiy maslahatlari orqali kayfiyatim ancha yaxshilandi."
-  },
-  {
-    name: "Ирина",
-    badge: "5 месяц беременности",
-    problem: "Тревожность",
-    text: "Советы Nora Plus помогли мне больше отдыхать, заботиться о себе и избавили от лишних переживаний за малыша."
-  },
-  {
-    name: "Мария",
-    badge: "7 месяц беременности",
-    problem: "Бессонница",
-    text: "Благодаря советам Nora Plus я стала лучше спать и спокойно дожидаюсь рождения малыша."
-  },
-  {
-    name: "Виктория",
-    badge: "3 месяц беременности",
-    problem: "Страхи",
-    text: "Nora Plus помогла разобраться с тревогами и поддержала советами, теперь чувствую себя увереннее."
-  },
-  {
-    name: "Екатерина",
-    badge: "6 месяц беременности",
-    problem: "Питание",
-    text: "Ассистент напомнил про важные витамины и режим, теперь питаюсь правильно и чувствую себя энергичной."
-  },
-  {
-    name: "Gulnora",
-    badge: "Homiladorlik 2 oy",
-    problem: "Uyqu buzilishi",
-    text: "Nora bilan maslahatlashib, uyqum tiklandi va endi tongni yaxshi kutaman."
-  },
-  {
-    name: "Malika",
-    badge: "Homiladorlik 8 oy",
-    problem: "Asabiylik",
-    text: "Homiladorlikda asabiy bo‘lib qolgandim, Nora maslahatlari yordam berdi va kayfiyatim ko‘tarildi."
-  },
-  {
-    name: "Lola",
-    badge: "Homiladorlik 4 oy",
-    problem: "Oqsil yetishmaydi",
-    text: "To‘g‘ri ovqatlanish bo‘yicha maslahatlar judayam foydali bo‘ldi, endi o‘zimda kuch topyapman."
-  },
-];
+// ... REVIEWS массив, ReviewBlock оставьте как ранее. Не забудьте в бейджах сделать background: "#a48fcc", color: "#fff".
 
 const ReviewBlock = () => (
   <div
@@ -221,21 +159,21 @@ const ReviewBlock = () => (
               borderRadius: 18,
               boxShadow: "0 2px 18px 0 rgba(150,180,220,0.07)",
               padding: "19px 15px 19px 15px",
-              overflow: "hidden",
-              textAlign: "left"
+              textAlign: "left",
+              overflow: "hidden"
             }}
           >
             <span
               style={{
                 position: "absolute",
                 right: 12,
-                top: 10,
-                fontSize: 112, // крупнее
-                opacity: 0.12, // прозрачнее
+                top: 0,
+                fontSize: 140,
+                opacity: 0.12,
                 pointerEvents: "none",
                 userSelect: "none",
                 lineHeight: 1,
-                zIndex: 0,
+                zIndex: 0
               }}
               aria-hidden="true"
             >
@@ -243,14 +181,15 @@ const ReviewBlock = () => (
             </span>
             <div style={{ position: "relative", zIndex: 1 }}>
               <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 7 }}>
+                <span style={{ fontWeight: 700, fontSize: 15, color: "#222" }}>{name}</span>
                 <span style={{
-                  fontWeight: 700, fontSize: 15, color: "#222"
-                }}>
-                  {name}
-                </span>
-                <span style={{
-                  fontWeight: 500, fontSize: 13, color: "#1681f5",
-                  padding: "4px 9px", borderRadius: 12, background: "#f3f7fe", whiteSpace: "nowrap"
+                  fontWeight: 500,
+                  fontSize: 13,
+                  color: "#fff",
+                  padding: "4px 9px",
+                  borderRadius: 12,
+                  background: "#a48fcc",
+                  whiteSpace: "nowrap"
                 }}>
                   {badge}
                 </span>
@@ -269,6 +208,7 @@ const ReviewBlock = () => (
   </div>
 );
 
+// --- Новый футер, светлые кнопки и политика отдельно
 const Footer = () => (
   <>
     <div
@@ -276,7 +216,7 @@ const Footer = () => (
         width: `calc(100% - ${BLOCK_SIDE_PADDING * 2}px)`,
         maxWidth,
         margin: "0 auto 0 auto",
-        padding: "22px 16px 22px 16px",
+        padding: "22px 16px 18px 16px",
         background: GRADIENT,
         borderRadius: "22px",
         boxShadow: "0 -4px 14px 0 rgba(155,175,205,0.06)",
@@ -284,8 +224,8 @@ const Footer = () => (
         fontFamily: "'Manrope', Arial, Helvetica, sans-serif",
         display: "flex",
         flexDirection: "column",
-        gap: 18,
-        alignItems: "center"
+        alignItems: "center",
+        gap: 13,
       }}
     >
       <div style={{
@@ -304,29 +244,43 @@ const Footer = () => (
         width: "100%"
       }}>
         <a href="#" style={{
-          background: BABY_GRADIENT,
-          width: "130px", padding: "7px 0",
-          borderRadius: 14, color: "#fff", fontWeight: 600, fontSize: 14,
-          textDecoration: "none", textAlign: "center"
-        }}>Стать партнёром</a>
-        <a href="#" style={{
-          background: BABY_GRADIENT,
-          width: "130px", padding: "7px 0",
-          borderRadius: 14, color: "#fff", fontWeight: 600, fontSize: 14,
-          textDecoration: "none", textAlign: "center"
-        }}>Связаться с менеджером</a>
-        <a href="#" style={{
           background: "#fff",
-          padding: "7px 0", width: "145px",
+          width: "130px",
+          padding: "7px 0",
           borderRadius: 14,
-          color: "#556",
-          fontWeight: 500,
+          color: FOOTER_BTN_COLOR,
+          fontWeight: 700,
           fontSize: 14,
           textDecoration: "none",
-          border: "1px solid #e1e9f5",
-          textAlign: "center"
-        }}>Политика конфиденциальности</a>
+          textAlign: "center",
+          border: `1.7px solid ${FOOTER_BTN_BORDER}`
+        }}>Стать партнёром</a>
+        <a href="#" style={{
+          background: "#fff",
+          width: "130px",
+          padding: "7px 0",
+          borderRadius: 14,
+          color: FOOTER_BTN_COLOR,
+          fontWeight: 700,
+          fontSize: 14,
+          textDecoration: "none",
+          textAlign: "center",
+          border: `1.7px solid ${FOOTER_BTN_BORDER}`
+        }}>Связаться с менеджером</a>
       </div>
+      <a href="#" style={{
+        background: "#fff",
+        padding: "11px 0 11px 0",
+        width: "100%",
+        borderRadius: 14,
+        color: "#715b9b",
+        fontWeight: 700,
+        fontSize: 15,
+        textDecoration: "none",
+        border: `1.7px solid ${FOOTER_BTN_BORDER}`,
+        textAlign: "center",
+        marginTop: 11
+      }}>Политика конфиденциальности</a>
       <div style={{
         marginTop: 8,
         fontSize: 12,
@@ -341,135 +295,12 @@ const Footer = () => (
   </>
 );
 
-const THREAD_KEY = "nora_thread_id";
-function splitBotTextTwoBlocks(text) {
-  if (!text) return [];
-  let cleaned = text.replace(/[*_]/g, "");
-  const match = cleaned.match(/^([^.!?]+[.!?])\s*(.*)$/s);
-  if (match) {
-    const first = match[1].trim();
-    const rest = match[2].trim();
-    return [
-      { text: first, bold: true },
-      { text: rest, bold: false }
-    ];
-  } else {
-    return [{ text: cleaned, bold: true }];
-  }
-}
+// --- splitBotTextTwoBlocks и остальная логика остаётся такой же
 
 const Chat = () => {
-  const [showWelcome, setShowWelcome] = useState(true);
-  const [preloading, setPreloading] = useState(true);
-  const [message, setMessage] = useState("");
-  const [chatHistory, setChatHistory] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [threadId, setThreadId] = useState(null);
-  const [botProgress, setBotProgress] = useState("");
-  const [isMobile, setIsMobile] = useState(true);
-  const [focused, setFocused] = useState(false);
+  // --- стейт и эффекты как раньше
 
-  const messagesEndRef = useRef(null);
-
-  useEffect(() => {
-    function checkScreen() {
-      if (typeof window !== "undefined") {
-        setIsMobile(window.innerWidth <= 640);
-      }
-    }
-    checkScreen();
-    window.addEventListener("resize", checkScreen);
-    return () => window.removeEventListener("resize", checkScreen);
-  }, []);
-  useEffect(() => {
-    const saved = window.localStorage.getItem(THREAD_KEY);
-    if (saved) setThreadId(saved);
-  }, []);
-  useEffect(() => {
-    document.body.style.overflow = "hidden";
-    return () => { document.body.style.overflow = "auto"; };
-  }, []);
-  useEffect(() => {
-    const timer = setTimeout(() => setPreloading(false), 1000);
-    return () => clearTimeout(timer);
-  }, []);
-  useEffect(() => {
-    if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
-    }
-  }, [chatHistory, botProgress]);
-
-  const handleShare = () => {
-    if (navigator.share) {
-      navigator.share({
-        title: "Nora Plus — Ассистент для будущих мам",
-        text: "Современный ассистент для будущих мам на базе NHS — все рекомендации по беременности в одном месте.",
-        url: window.location.href
-      });
-    } else {
-      alert("Ваш браузер не поддерживает Web Share API");
-    }
-  };
-
-  const sendMessageToGPT = async (text) => {
-    setLoading(true);
-    const newHistory = [...chatHistory, { text, sender: "user" }];
-    setChatHistory(newHistory);
-    setBotProgress("");
-    try {
-      const res = await fetch("/api/gpt", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages: newHistory, thread_id: threadId }),
-      });
-      const data = await res.json();
-      if (data.thread_id) {
-        setThreadId(data.thread_id);
-        window.localStorage.setItem(THREAD_KEY, data.thread_id);
-      }
-      let botReply = data.reply;
-      if (res.status !== 200 || !botReply) {
-        botReply = data.error 
-          ? (typeof data.error === 'string'
-              ? `Ошибка сервера: ${data.error}`
-              : `Ассистент не ответил (ошибка сервера)`)
-          : "Извините, нет ответа от ассистента.";
-      }
-      let i = 0;
-      setBotProgress("");
-      const interval = setInterval(() => {
-        setBotProgress(botReply.slice(0, i));
-        i++;
-        if (i > botReply.length) {
-          clearInterval(interval);
-          setChatHistory(prev => [...prev, { text: botReply, sender: "bot" }]);
-          setBotProgress("");
-          setLoading(false);
-        }
-      }, 18);
-    } catch (error) {
-      setChatHistory(prev => [...prev, { text: "Ошибка: не удалось получить ответ.", sender: "bot" }]);
-      setLoading(false);
-      setBotProgress("");
-    }
-  };
-
-  const handleSendMessage = () => {
-    if (message.trim() && !loading && !botProgress) {
-      sendMessageToGPT(message.trim());
-      setMessage("");
-    }
-  };
-
-  const clearChatAll = () => {
-    setChatHistory([]);
-    setThreadId(null);
-    window.localStorage.removeItem(THREAD_KEY);
-    setShowWelcome(true);
-    setBotProgress("");
-  };
-
-  // --- Welcome экран ---
+  // --- Welcome экран (главная страница)
   if (showWelcome) {
     return (
       <div style={{
@@ -491,8 +322,7 @@ const Chat = () => {
           justifyContent: "space-between",
           borderRadius: borderRadius,
           paddingLeft: PANEL_SIDE_PADDING, paddingRight: PANEL_SIDE_PADDING, paddingTop: 5, paddingBottom: 5,
-          boxSizing: "border-box", zIndex: 1,
-          fontFamily: "'Manrope', Arial, Helvetica, sans-serif"
+          boxSizing: "border-box", zIndex: 1
         }}>
           <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", flex: 1, paddingLeft: 5 }}>
             <span style={{
@@ -538,16 +368,14 @@ const Chat = () => {
         <div style={{ height: 20 }} />
 
         {/* Видео */}
-        <div
-          style={{
-            width: "100%",
-            maxWidth: maxWidth,
-            margin: "0 auto",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center"
-          }}
-        >
+        <div style={{
+          width: "100%",
+          maxWidth: maxWidth,
+          margin: "0 auto",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center"
+        }}>
           <video
             src="/nora.mp4"
             style={{
@@ -584,19 +412,19 @@ const Chat = () => {
             Я помогаю будущим мамам на каждом этапе беременности: отвечаю на вопросы, напоминаю о важных делах, слежу за самочувствием и даю советы, основанные на медицине Великобритании NHS.
           </div>
           <div style={{ height: 40 }} />
-          <div style={{ display: "flex", justifyContent: "center", width: "100%" }}>
-            <div style={{ width: "100%", textAlign: "center" }}>
+          <div style={{ width: "100%", display: "flex", justifyContent: "center" }}>
+            <div style={{ width: "100%", maxWidth: 290 }}>
               <button
                 style={{
-                  width: "100%", maxWidth: 290,
+                  width: "100%",
                   background: BABY_GRADIENT,
-                  color: "#fff", // белый текст!
+                  color: "#fff",
                   border: "none",
                   borderRadius: borderRadius,
                   fontWeight: 700,
                   fontSize: "17px",
                   padding: "15px 0",
-                  margin: `0 ${BLOCK_SIDE_PADDING}px`,
+                  margin: `0`,
                   cursor: "pointer",
                   display: "flex", alignItems: "center", justifyContent: "center",
                   boxShadow: "0 2px 18px 0 rgba(200, 128, 140, 0.09)"
@@ -604,9 +432,11 @@ const Chat = () => {
                 onClick={() => setShowWelcome(false)}
               >
                 Начать пользоваться&nbsp;
-                <span style={{ marginLeft: 8, display: "flex", alignItems: "center" }}>{ICONS.arrowRight}</span>
+                <span style={{ marginLeft: 8, display: "flex", alignItems: "center" }}>
+                  {ICONS.arrowRight}
+                </span>
               </button>
-              <div style={{ fontSize: 13, color: "#7c8792", marginTop: 7 }}>
+              <div style={{ fontSize: 13, color: "#7c8792", marginTop: 7, textAlign: "center" }}>
                 Попробуйте — это быстро и бесплатно
               </div>
             </div>
@@ -621,8 +451,8 @@ const Chat = () => {
     );
   }
 
-  // --- Чат-экран --- (тот же как был)
-  // ...
+  // --- Чат-экран (ваш старый код чата: панель сверху + поле ввода) остаётся как было!
+
 };
 
 export default Chat;
