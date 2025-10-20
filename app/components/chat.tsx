@@ -2,6 +2,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import ReactMarkdown from "react-markdown";
 
+// ====== Основные константы ======
 const NORA_COLOR = "#2e2e2e";
 const ICON_SIZE = 23;
 const borderRadius = 22;
@@ -10,13 +11,12 @@ const maxWidth = 560;
 const videoMaxWidth = 314;
 const GRADIENT = "linear-gradient(90deg, #eff5fe 0%, #e5e8ed 100%)";
 const INPUT_BAR_HEIGHT = 68;
-
 const PANEL_SIDE_PADDING = 15;
 const BLOCK_SIDE_PADDING = 10;
 const CARD_GAP = 10;
+const BABY_GRADIENT = "linear-gradient(90deg, #e39290 0%, #efb1b6 100%)";
 
-const BABY_GRADIENT = "linear-gradient(90deg, #ffd6e1 0%, #bde3fb 100%)";
-
+// ====== Иконки ======
 const ICONS = {
   telegram: "https://cdn-icons-png.flaticon.com/512/1946/1946547.png",
   trash: "https://cdn-icons-png.flaticon.com/512/1345/1345823.png",
@@ -30,6 +30,7 @@ const ICONS = {
 };
 const filterNora = "invert(13%) sepia(4%) saturate(271%) hue-rotate(175deg) brightness(92%) contrast(93%)";
 
+// ====== Вытяжка бот-текста ======
 function splitBotTextTwoBlocks(text) {
   if (!text) return [];
   let cleaned = text.replace(/[*_]/g, "");
@@ -46,6 +47,7 @@ function splitBotTextTwoBlocks(text) {
   }
 }
 
+// ====== Блок преимуществ ======
 const BENEFITS = [
   { emoji: "🩺", title: "Медицинская точность", text: "Советы основаны на рекомендациях британской службы NHS и адаптированы под ваш регион." },
   { emoji: "🤝", title: "Поддержка 24/7", text: "Ассистент всегда на связи для заботы и помощи в любой ситуации." },
@@ -65,7 +67,7 @@ const WhyNoraBlock = () => (
       boxShadow: "0 6px 20px 0 rgba(150, 175, 205, 0.10)",
       boxSizing: "border-box",
       padding: 0,
-      fontFamily: "'Manrope', Arial, Helvetica, sans-serif",
+      fontFamily: "'Manrope', Arial, Helvetica, sans-serif"
     }}
   >
     <div style={{ padding: `21px 0 20px 0` }}>
@@ -131,6 +133,7 @@ const WhyNoraBlock = () => (
   </div>
 );
 
+// ====== Отзывы ======
 const PREGNANT_EMOJI = "🤰";
 const REVIEWS = [
   {
@@ -212,7 +215,7 @@ const ReviewBlock = () => (
       boxShadow: "0 6px 20px 0 rgba(150, 175, 205, 0.10)",
       boxSizing: "border-box",
       padding: 0,
-      fontFamily: "'Manrope', Arial, Helvetica, sans-serif",
+      fontFamily: "'Manrope', Arial, Helvetica, sans-serif"
     }}
   >
     <div style={{ padding: "21px 0 20px 0" }}>
@@ -290,36 +293,75 @@ const ReviewBlock = () => (
   </div>
 );
 
+// ====== Новый футер ======
 const Footer = () => (
-  <div
-    style={{
-      width: `calc(100% - ${BLOCK_SIDE_PADDING * 2}px)`,
-      maxWidth,
-      margin: "0 auto 0 auto",
-      padding: "22px 0 22px 0",
-      background: GRADIENT,
-      borderRadius: "22px 22px 0 0",
-      boxShadow: "0 -4px 14px 0 rgba(155,175,205,0.06)",
-      boxSizing: "border-box",
-      fontFamily: "'Manrope', Arial, Helvetica, sans-serif",
-      display: "flex",
-      flexDirection: "column",
-      gap: 12,
-      alignItems: "flex-start"
-    }}
-  >
-    <div style={{ display: "flex", alignItems: "center", gap: 9, fontSize: 15 }}>
-      <span role="img" aria-label="address" style={{ fontSize: 19 }}>📍</span>
-      <span>Ташкент, Юнусабадский район, массив Кашгар 26</span>
+  <>
+    <div
+      style={{
+        width: `calc(100% - ${BLOCK_SIDE_PADDING * 2}px)`,
+        maxWidth,
+        margin: "0 auto 0 auto",
+        padding: "22px 0 22px 0",
+        background: GRADIENT,
+        borderRadius: "22px 22px 0 0",
+        boxShadow: "0 -4px 14px 0 rgba(155,175,205,0.06)",
+        boxSizing: "border-box",
+        fontFamily: "'Manrope', Arial, Helvetica, sans-serif",
+        display: "flex",
+        flexDirection: "column",
+        gap: 18,
+        alignItems: "flex-start"
+      }}
+    >
+      <div style={{ fontSize: 15, color: "#263540", fontWeight: 600 }}>
+        Ташкент, Юнусабадский район, массив Кашгар 26
+      </div>
+      <a href="tel:+998501070124" style={{
+        color: "#1f5ca8",
+        textDecoration: "none",
+        fontSize: 15,
+        fontWeight: 600
+      }}>
+        +998 50 107-01-24
+      </a>
+      <div style={{ marginTop: 2, display: "flex", gap: 11, flexWrap: "wrap" }}>
+        <a href="#" style={{
+          background: BABY_GRADIENT,
+          padding: "8px 16px",
+          borderRadius: 14,
+          color: "#fff",
+          fontWeight: 600,
+          fontSize: 14,
+          textDecoration: "none",
+          transition: "background 0.22s"
+        }}>Стать партнёром</a>
+        <a href="#" style={{
+          background: BABY_GRADIENT,
+          padding: "8px 16px",
+          borderRadius: 14,
+          color: "#fff",
+          fontWeight: 600,
+          fontSize: 14,
+          textDecoration: "none",
+          transition: "background 0.22s"
+        }}>Связаться с менеджером</a>
+        <a href="#" style={{
+          background: "#ebf1ff",
+          padding: "8px 16px",
+          borderRadius: 14,
+          color: "#556",
+          fontWeight: 500,
+          fontSize: 14,
+          textDecoration: "none",
+          border: "1px solid #e1e9f5"
+        }}>Политика конфиденциальности</a>
+      </div>
+      <div style={{ marginTop: 8, fontSize: 12, color: "#8a97a0" }}>
+        © {new Date().getFullYear()} Nora Plus — забота и поддержка будущих мам
+      </div>
     </div>
-    <div style={{ display: "flex", alignItems: "center", gap: 9, fontSize: 15 }}>
-      <span role="img" aria-label="phone" style={{ fontSize: 19 }}>📞</span>
-      <a href="tel:+998501070124" style={{ color: "#1f5ca8", textDecoration: "none" }}>+998 50 107-01-24</a>
-    </div>
-    <div style={{ marginTop: 8, fontSize: 12, color: "#8a97a0" }}>
-      © {new Date().getFullYear()} Nora Plus — забота и поддержка будущих мам
-    </div>
-  </div>
+    <div style={{ height: 20 }} />
+  </>
 );
 
 const THREAD_KEY = "nora_thread_id";
@@ -553,14 +595,18 @@ const Chat = () => {
           <div style={{ display: "flex", justifyContent: "center", width: "100%" }}>
             <button
               style={{
-                width: "100%", maxWidth: 290, 
-                background: BABY_GRADIENT, // цвет “малыша”!
+                width: "100%", maxWidth: 290,
+                background: BABY_GRADIENT,
                 color: NORA_COLOR,
                 border: "none",
-                borderRadius: borderRadius, fontWeight: 700, fontSize: "17px",
-                padding: "15px 0", margin: `0 ${BLOCK_SIDE_PADDING}px`, cursor: "pointer",
+                borderRadius: borderRadius,
+                fontWeight: 700,
+                fontSize: "17px",
+                padding: "15px 0",
+                margin: `0 ${BLOCK_SIDE_PADDING}px`,
+                cursor: "pointer",
                 display: "flex", alignItems: "center", justifyContent: "center",
-                boxShadow: "0 2px 18px 0 rgba(180, 90, 160, 0.08)"
+                boxShadow: "0 2px 18px 0 rgba(200, 128, 140, 0.09)"
               }}
               onClick={() => setShowWelcome(false)}
             >
