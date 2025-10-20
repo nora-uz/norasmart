@@ -10,7 +10,7 @@ const maxWidth = 560;
 const videoMaxWidth = 314;
 const GRADIENT = "linear-gradient(90deg, #eff5fe 0%, #e5e8ed 100%)";
 const INPUT_BAR_HEIGHT = 68;
-const SIDE_PADDING = 10; // по 10px для преимуществ и отзывов
+const SIDE_PADDING = 8;
 
 const ICONS = {
   telegram: "https://cdn-icons-png.flaticon.com/512/1946/1946547.png",
@@ -52,7 +52,7 @@ const BENEFITS = [
 const WhyNoraBlock = () => (
   <div
     style={{
-      width: "calc(100% - 20px)",
+      width: "calc(100% - 16px)",
       maxWidth,
       margin: "0 auto 38px auto",
       background: GRADIENT,
@@ -75,7 +75,7 @@ const WhyNoraBlock = () => (
       >
         Почему Nora Plus?
       </div>
-      <div style={{ display: "flex", flexDirection: "column", gap: 18, padding: "0 10px" }}>
+      <div style={{ display: "flex", flexDirection: "column", gap: 18, padding: "0 8px" }}>
         {BENEFITS.map(({ emoji, title, text }, idx) => (
           <div
             key={idx}
@@ -87,6 +87,7 @@ const WhyNoraBlock = () => (
               padding: "19px 16px 19px 16px",
               overflow: "hidden",
               minHeight: 56,
+              textAlign: "left"
             }}
           >
             <span
@@ -106,10 +107,10 @@ const WhyNoraBlock = () => (
               {emoji}
             </span>
             <div style={{ position: "relative", zIndex: 1 }}>
-              <div style={{ fontWeight: 700, fontSize: 16, color: NORA_COLOR, marginBottom: 7 }}>
+              <div style={{ fontWeight: 700, fontSize: 16, color: NORA_COLOR, marginBottom: 7, textAlign: "left" }}>
                 {title}
               </div>
-              <div style={{ fontSize: 13, color: "#3a3a3a", lineHeight: "1.57" }}>
+              <div style={{ fontSize: 13, color: "#3a3a3a", lineHeight: "1.57", textAlign: "left" }}>
                 {text}
               </div>
             </div>
@@ -122,15 +123,15 @@ const WhyNoraBlock = () => (
 
 const REVIEWS = [
   { name: "Анна", pregnancy: "2 месяц", problem: "Токсикоз", text: "Nora Plus подсказала, как справиться с утренней тошнотой. Питание стало более сбалансированным и легче переносить симптомы." },
-  { name: "Dilnoza", pregnancy: "3 oy", problem: "Ko'ngil aynishi", text: "Nora maslahatlari ko'ngil aynishi va ahvolni yengil o'tkazish uchun yordam berdi. O'z vaqtida maslahat olaman." },
+  { name: "Dilnoza", pregnancy: "3 oy", problem: "Ko'ngil aynиши", text: "Nora maslahatlari ko'ngil aynиши va ahволни yengil o'tkazиш учун ёрдам берди. O'z vaqtida maslahat olaman." },
   { name: "Елена", pregnancy: "4 месяц", problem: "Слабость и усталость", text: "Рекомендации по витаминам и сну очень помогли, чувствую себя намного лучше!" },
-  { name: "Shahnoza", pregnancy: "5 oy", problem: "Hafsalasi pastlik", text: "Nora Plus motivatsiya va ijobий maslahatlarni oʻz vaqtida beradi. Oʻzimни хорошо his qila boshlадим." },
+  { name: "Shahnoza", pregnancy: "5 oy", problem: "Hafsalasi pastlik", text: "Nora Plus motivatsiya va ijobий maslahatларни oʻz вақтда beradi. Oʻzimни хорошо his qила boshlадим." },
   { name: "Ирина", pregnancy: "5 месяц", problem: "Тревожность", text: "Советы от Nora Plus помогли мне расслабиться и больше отдыхать. Теперь спокойна за малыша." }
 ];
 
 const ReviewBlock = () => (
   <div style={{
-    width: "calc(100% - 20px)",
+    width: "calc(100% - 16px)",
     maxWidth,
     margin: "0 auto",
     background: "none",
@@ -147,7 +148,7 @@ const ReviewBlock = () => (
           boxShadow: "0 2px 8px 0 rgba(150, 180, 220, 0.10)",
           padding: "14px 0 11px 0"
         }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4, padding: "0 10px" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4, padding: "0 8px" }}>
           <div style={{ fontWeight: 700, fontSize: 15, color: "#222" }}>
             {r.name} — {r.pregnancy}
           </div>
@@ -155,7 +156,7 @@ const ReviewBlock = () => (
             {r.problem}
           </div>
         </div>
-        <div style={{ fontSize: 13, color: "#3a3a3a", lineHeight: "1.57", textAlign: "left", padding: "0 10px" }}>{r.text}</div>
+        <div style={{ fontSize: 13, color: "#3a3a3a", lineHeight: "1.57", textAlign: "left", padding: "0 8px" }}>{r.text}</div>
       </div>
     ))}
     <div style={{ height: 30 }} />
@@ -275,71 +276,7 @@ const Chat = () => {
     setBotProgress("");
   };
 
-  if (!isMobile) {
-    return (
-      <div style={{
-        width: "100vw",
-        height: "100vh",
-        background: "#f8fdff",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        position: "fixed",
-        left: 0,
-        top: 0,
-        zIndex: 10000
-      }}>
-        <div style={{
-          fontWeight: 700,
-          fontSize: "21px",
-          textAlign: "center",
-          color: NORA_COLOR,
-          background: "#fff",
-          borderRadius: 24,
-          padding: "35px 28px",
-          boxShadow: "0 6px 36px 0 rgba(155, 175, 205, 0.12)"
-        }}>
-          Nora Plus — доступна только <br /> на мобильных устройствах
-        </div>
-      </div>
-    );
-  }
-
-  if (preloading) {
-    return (
-      <div style={{
-        background: "#f8fdff",
-        width: "100vw",
-        height: "100vh",
-        minHeight: "100vh",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        position: "fixed",
-        top: 0,
-        left: 0,
-        zIndex: 10000,
-        margin: 0, padding: 0
-      }}>
-        <span style={{
-          fontWeight: 800,
-          fontSize: "38px",
-          color: NORA_COLOR,
-          letterSpacing: "0.07em",
-          animation: "noraPulse 1.4s infinite linear"
-        }}>Nora Plus</span>
-        <style>{`
-          @keyframes noraPulse {
-            0% { opacity: 0.30; }
-            50% { opacity: 1; }
-            100% { opacity: 0.30; }
-          }
-        `}</style>
-      </div>
-    );
-  }
-
+  // --- Welcome экран ---
   if (showWelcome) {
     return (
       <div style={{
@@ -349,7 +286,7 @@ const Chat = () => {
       }}>
         {/* Панель */}
         <div style={{
-          width: "calc(100% - 40px)",
+          width: "calc(100% - 16px)",
           maxWidth,
           minHeight: panelHeight,
           background: GRADIENT,
@@ -357,10 +294,10 @@ const Chat = () => {
           margin: "20px auto 0 auto",
           display: "flex", alignItems: "center", justifyContent: "space-between",
           borderRadius: borderRadius,
-          paddingLeft: 20, paddingRight: 20, paddingTop: 5, paddingBottom: 5,
+          paddingLeft: SIDE_PADDING, paddingRight: SIDE_PADDING, paddingTop: 5, paddingBottom: 5,
           boxSizing: "border-box", zIndex: 1
         }}>
-          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", flex: 1 }}>
+          <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", flex: 1 }}>
             <span style={{ fontWeight: 800, fontSize: "19px", lineHeight: 1.06, whiteSpace: "nowrap" }}>
               Nora Plus
             </span>
@@ -399,6 +336,7 @@ const Chat = () => {
         <div style={{ height: 20 }} />
         <div style={{ height: 20 }} />
 
+        {/* Видео */}
         <div
           style={{
             width: "100%",
@@ -429,7 +367,7 @@ const Chat = () => {
 
         {/* Заголовок и описание */}
         <div style={{
-          width: "calc(100% - 40px)",
+          width: "calc(100% - 16px)",
           maxWidth,
           textAlign: "center",
           margin: "0 auto"
@@ -439,7 +377,7 @@ const Chat = () => {
           </div>
           <div style={{
             fontWeight: 400, fontSize: "15px", margin: "0 auto 0 auto", maxWidth: 400,
-            padding: `0 20px`, lineHeight: 1.75, color: NORA_COLOR, display: "inline-block"
+            padding: `0 8px`, lineHeight: 1.75, color: NORA_COLOR, display: "inline-block"
           }}>
             Я помогаю будущим мамам на каждом этапе беременности: отвечаю на вопросы, напоминаю о важных делах, слежу за самочувствием и даю советы, основанные на медицине Великобритании NHS.
           </div>
@@ -449,7 +387,7 @@ const Chat = () => {
               style={{
                 width: "100%", maxWidth: 290, background: GRADIENT, color: NORA_COLOR,
                 border: "none", borderRadius: borderRadius, fontWeight: 700, fontSize: "17px",
-                padding: "15px 0", margin: `0 20px`, cursor: "pointer",
+                padding: "15px 0", margin: `0 8px`, cursor: "pointer",
                 display: "flex", alignItems: "center", justifyContent: "center"
               }}
               onClick={() => setShowWelcome(false)}
@@ -481,7 +419,7 @@ const Chat = () => {
     >
       {/* Панель */}
       <div style={{
-        width: "calc(100% - 40px)",
+        width: "calc(100% - 16px)",
         maxWidth,
         minHeight: panelHeight,
         background: GRADIENT,
@@ -489,10 +427,10 @@ const Chat = () => {
         margin: "20px auto 0 auto",
         display: "flex", alignItems: "center", justifyContent: "space-between",
         borderRadius: borderRadius,
-        paddingLeft: 20, paddingRight: 20, paddingTop: 5, paddingBottom: 5,
+        paddingLeft: SIDE_PADDING, paddingRight: SIDE_PADDING, paddingTop: 5, paddingBottom: 5,
         boxSizing: "border-box", zIndex: 1
       }}>
-        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", flex: 1 }}>
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", flex: 1 }}>
           <span style={{ fontWeight: 800, fontSize: "19px", lineHeight: 1.06, whiteSpace: "nowrap" }}>
             Nora Plus
           </span>
@@ -534,7 +472,7 @@ const Chat = () => {
               key={idx}
               style={{
                 textAlign: msg.sender === "user" ? "right" : "left",
-                margin: `8px 20px`
+                margin: `8px 8px`
               }}
             >
               {msg.sender === "user"
@@ -575,7 +513,7 @@ const Chat = () => {
                     background: "#f7fafd",
                     borderRadius: 12,
                     padding: "10px 15px",
-                    margin: `0 20px 10px 20px`,
+                    margin: `0 8px 10px 8px`,
                     color: NORA_COLOR,
                     fontSize: 16,
                     lineHeight: 1.7,
@@ -591,8 +529,8 @@ const Chat = () => {
         </div>
       </div>
       <div style={{
-        width: "calc(100% - 40px)",
-        margin: "0 20px",
+        width: "calc(100% - 16px)",
+        margin: "0 8px",
         display: "flex",
         alignItems: "center",
         boxSizing: "border-box",
