@@ -92,7 +92,7 @@ const WhyNoraBlock = () => (
               background: "#fff",
               borderRadius: 18,
               boxShadow: "0 2px 18px 0 rgba(150,180,220,0.07)",
-              padding: "19px 10px 19px 10px",
+              padding: "19px 15px 19px 15px", // <-- ОТСТУП внутри карточки
               overflow: "hidden",
               minHeight: 56,
               textAlign: "left"
@@ -131,7 +131,7 @@ const WhyNoraBlock = () => (
 
 const REVIEWS = [
   { name: "Анна", pregnancy: "2 месяц", problem: "Токсикоз", text: "Nora Plus подсказала, как справиться с утренней тошнотой. Питание стало более сбалансированным и легче переносить симптомы." },
-  { name: "Dilnoza", pregnancy: "3 oy", problem: "Ko'ngil aynиши", text: "Nora maslahatlari ko'ngil aynиши va ahволни yengil o'tkazиш учун ёрдам берди. O'z vaqtida maslahat olаман." },
+  { name: "Dilnoza", pregnancy: "3 oy", problem: "Ko'ngil aynishi", text: "Nora maslahatlari ko'ngil aynиши va ahволни yengil o'tказиш учун ёрдам берди. O'z vaqtida maslahat olаман." },
   { name: "Елена", pregnancy: "4 месяц", problem: "Слабость и усталость", text: "Рекомендации по витаминам и сну очень помогли, чувствую себя намного лучше!" },
   { name: "Shahnoza", pregnancy: "5 oy", problem: "Hafsalasi pastlik", text: "Nora Plus motivatsiya ва ижобий maslahatларни ўз вақтда беради. Ўзимни яхши хис қила бошладим." },
   { name: "Ирина", pregnancy: "5 месяц", problem: "Тревожность", text: "Советы от Nora Plus помогли мне расслабиться и больше отдыхать. Теперь спокойна за малыша." }
@@ -397,7 +397,8 @@ const Chat = () => {
           }}>Ждёте малыша? Я помогу!</div>
           <div style={{
             fontWeight: 400, fontSize: "15px", margin: "0 auto 0 auto", maxWidth: 400,
-            padding: `0 ${BLOCK_SIDE_PADDING}px`, lineHeight: 1.75, color: NORA_COLOR, display: "inline-block"
+            padding: "0 18px",         // ← новый больший отступ по бокам
+            lineHeight: 1.75, color: NORA_COLOR, display: "inline-block"
           }}>
             Я помогаю будущим мамам на каждом этапе беременности: отвечаю на вопросы, напоминаю о важных делах, слежу за самочувствием и даю советы, основанные на медицине Великобритании NHS.
           </div>
