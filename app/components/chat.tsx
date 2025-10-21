@@ -1,7 +1,25 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
 
-// ------ Глобальные константы ------
+// --- SVG-иконки для футера ---
+const IconPartner = (
+  <svg width="18" height="18" fill="none" viewBox="0 0 20 20">
+    <circle cx="10" cy="6.5" r="3.3" stroke="#5a6573" strokeWidth="1.5"/>
+    <path d="M2.8 16c.9-2.5 3.4-4.2 7.2-4.2s6.2 1.7 7.2 4.2" stroke="#5a6573" strokeWidth="1.5" strokeLinecap="round"/>
+  </svg>
+);
+const IconContact = (
+  <svg width="18" height="18" fill="none" viewBox="0 0 20 20">
+    <rect x="2.8" y="3.5" width="14.4" height="11" rx="2.2" stroke="#5a6573" strokeWidth="1.5"/>
+    <path d="M3.5 4l6.5 6.1c.3.2.8.2 1.1 0L17 4" stroke="#5a6573" strokeWidth="1.5"/>
+  </svg>
+);
+const IconPolicy = (
+  <svg width="16" height="16" fill="none" viewBox="0 0 20 20">
+    <path d="M4 4.5V10c0 5 7 6.5 7 6.5s7-1.5 7-6.5v-5.5l-7-2-7 2Z" stroke="#4d5762" strokeWidth="1.5" fill="none"/>
+  </svg>
+);
+
 const ICONS = {
   telegram: "https://cdn-icons-png.flaticon.com/512/1946/1946547.png",
   trash: "https://cdn-icons-png.flaticon.com/512/1345/1345823.png",
@@ -16,16 +34,16 @@ const ICONS = {
 const ICON_SIZE = 23;
 const NORA_COLOR = "#2e2e2e";
 const BORDER_RADIUS = 22;
-const PANEL_PADDING = 15; // Вернул старый отступ!
-const BLOCK_PADDING = 24; // Одинаковые для всех крупных блоков
-const INNER_CARD_PADDING = 10; // карточки в преимуществах + отзывах
+const PANEL_PADDING = 15;
+const BLOCK_PADDING = 24;
+const INNER_CARD_PADDING = 10;
 const MAX_WIDTH = 560;
 const GRADIENT = "linear-gradient(90deg, #eff5fe 0%, #e5e8ed 100%)";
 const BABY_GRADIENT = "linear-gradient(90deg, #e39290 0%, #efb1b6 100%)";
 const INPUT_HEIGHT = 68;
 const CARD_GAP = 10;
 
-// ------ Панель наверху ------
+// --- Панель ORIGINAL ---
 const HeaderPanel = ({ onClearChat }: { onClearChat?: () => void }) => (
   <div style={{
     width: `calc(100% - 30px)`,
@@ -36,22 +54,45 @@ const HeaderPanel = ({ onClearChat }: { onClearChat?: () => void }) => (
     display: "flex",
     alignItems: "center",
     justifyContent: "space-between",
-    padding: `5px ${PANEL_PADDING}px`,
+    padding: "5px 15px",
     fontFamily: "'Manrope', sans-serif"
   }}>
-    <div style={{ flex: 1 }}>
-      <span style={{ fontWeight: 800, fontSize: 19, marginBottom: 5 }}>Nora Plus</span>
-      <div style={{ fontSize: 13, color: "#555" }}>Ассистент для будущих мам</div>
+    <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'flex-start', paddingLeft: 5 }}>
+      <span style={{ fontWeight: 800, fontSize: 19, marginBottom: 7 }}>Nora Plus</span>
+      <span style={{ fontWeight: 400, fontSize: 13, color: "#565656", lineHeight: 1.04, whiteSpace: "nowrap" }}>
+        Ассистент для будущих мам
+      </span>
     </div>
-    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-      <img onClick={() => window?.navigator?.share?.({ title: "Nora Plus", url: window.location.href })} src={ICONS.share} style={{ width: ICON_SIZE, height: ICON_SIZE, cursor: "pointer" }} alt="Share" />
-      <img onClick={() => window.open("https://t.me/norasmart", "_blank")} src={ICONS.telegram} style={{ width: ICON_SIZE, height: ICON_SIZE, cursor: "pointer" }} alt="Telegram" />
-      <img onClick={onClearChat} src={ICONS.trash} style={{ width: ICON_SIZE, height: ICON_SIZE, cursor: "pointer" }} alt="Trash" />
+    <div style={{ display: "flex", alignItems: "center", gap: 8, marginLeft: 16 }}>
+      <button style={{
+        background: "transparent", border: "none", cursor: "pointer",
+        width: 38, height: 38, borderRadius: 19,
+        display: "flex", alignItems: "center", justifyContent: "center"
+      }} onClick={() => window?.navigator?.share?.({ title: "Nora Plus", url: window.location.href })}>
+        <img src={ICONS.share} alt="Share"
+          style={{ width: ICON_SIZE, height: ICON_SIZE, filter: "invert(13%) sepia(4%) saturate(271%) hue-rotate(175deg) brightness(92%) contrast(93%)" }} />
+      </button>
+      <button style={{
+        background: "transparent", border: "none", cursor: "pointer",
+        width: 38, height: 38, borderRadius: 19,
+        display: "flex", alignItems: "center", justifyContent: "center"
+      }} onClick={() => window.open("https://t.me/norasmart", "_blank")}>
+        <img src={ICONS.telegram} alt="Telegram"
+          style={{ width: ICON_SIZE, height: ICON_SIZE, filter: "invert(13%) sepia(4%) saturate(271%) hue-rotate(175deg) brightness(92%) contrast(93%)" }} />
+      </button>
+      <button style={{
+        background: "transparent", border: "none", cursor: "pointer",
+        width: 38, height: 38, borderRadius: 19,
+        display: "flex", alignItems: "center", justifyContent: "center"
+      }} onClick={onClearChat}>
+        <img src={ICONS.trash} alt="Trash"
+          style={{ width: ICON_SIZE, height: ICON_SIZE, filter: "invert(13%) sepia(4%) saturate(271%) hue-rotate(175deg) brightness(92%) contrast(93%)" }} />
+      </button>
     </div>
   </div>
 );
 
-// ------ Футер с кнопками ------
+// --- Footer со СТАРЫМИ SVG иконками! ---
 const Footer = () => (
   <div style={{
     width: "calc(100% - 56px)",
@@ -65,15 +106,15 @@ const Footer = () => (
   }}>
     <div style={{ fontSize: 12, textAlign: "center", color: "#263540", fontWeight: 600 }}>Ташкент, Юнусабадский район, массив Кашгар 26</div>
     <div style={{ display: "flex", gap: 11, justifyContent: "center", marginTop: 15 }}>
-      <a href="#" style={{ background: "#fff", border: "1px solid #e1e9f5", padding: "9px 0", borderRadius: 13, width: "63%", display: "flex", justifyContent: "center", alignItems: "center", fontSize: 14, gap: 7, color: "#495062" }}><span>🧑‍🤝‍🧑</span> Стать партнёром</a>
-      <a href="#" style={{ background: "#fff", border: "1px solid #e1e9f5", padding: "9px 0", borderRadius: 13, width: "37%", display: "flex", justifyContent: "center", alignItems: "center", fontSize: 14, gap: 7, color: "#495062" }}><span>✉️</span> Контакты</a>
+      <a href="#" style={{ background: "#fff", border: "1px solid #e1e9f5", padding: "9px 0", borderRadius: 13, width: "63%", display: "flex", justifyContent: "center", alignItems: "center", fontSize: 14, gap: 7, color: "#495062" }}>{IconPartner} Стать партнёром</a>
+      <a href="#" style={{ background: "#fff", border: "1px solid #e1e9f5", padding: "9px 0", borderRadius: 13, width: "37%", display: "flex", justifyContent: "center", alignItems: "center", fontSize: 14, gap: 7, color: "#495062" }}>{IconContact} Контакты</a>
     </div>
-    <a href="#" style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 6, background: "#fff", border: "1px solid #e1e9f5", borderRadius: 14, color: "#556", fontSize: 14, padding: "8px 0", marginTop: 16, textDecoration: "none" }}>🛡 Политика конфиденциальности</a>
+    <a href="#" style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 7, background: "#fff", border: "1px solid #e1e9f5", borderRadius: 14, color: "#556", fontSize: 14, padding: "8px 0", marginTop: 16, textDecoration: "none" }}>{IconPolicy} Политика конфиденциальности</a>
     <div style={{ fontSize: 12, color: "#8a97a0", textAlign: "center", marginTop: 10 }}>© {new Date().getFullYear()} Nora Plus — забота и поддержка будущих мам</div>
   </div>
 );
 
-// ------ Почему Nora ------
+// --- Почему Nora
 const BENEFITS = [
   { emoji: "🩺", title: "Медицинская точность", text: "Советы основаны на рекомендациях британской службы NHS и адаптированы под ваш регион." },
   { emoji: "🤝", title: "Поддержка 24/7", text: "Ассистент всегда на связи для заботы и помощи в любой ситуации." },
@@ -81,7 +122,6 @@ const BENEFITS = [
   { emoji: "🔒", title: "Конфиденциальность", text: "Личные данные остаются только у вас — никакой передачи сторонним." },
   { emoji: "⚡️", title: "Быстрые решения", text: "Полезные советы и поддержка сразу, когда это нужно." },
 ];
-
 const WhyNoraBlock = () => (
   <div style={{
     width: `calc(100% - ${BLOCK_PADDING * 2}px)`,
@@ -98,7 +138,6 @@ const WhyNoraBlock = () => (
       <div
         key={idx}
         style={{
-          position: "relative",
           background: "#fff",
           borderRadius: 18,
           boxShadow: "0 2px 14px rgba(160,180,210,0.07)",
@@ -122,7 +161,7 @@ const WhyNoraBlock = () => (
   </div>
 );
 
-// ------ Отзывы ------
+// --- Отзывы
 const REVIEWS = [
   { name: "Анна", badge: "2 месяц беременности", text: "Nora Plus подсказала, как справиться с утренней тошнотой, благодаря советам по питанию стало легче." },
   { name: "Елена", badge: "4 месяц беременности", text: "Теперь я знаю, когда сдавать анализы и какие витамины пить. Всё под контролем." },
@@ -165,7 +204,7 @@ const ReviewBlock = () => (
   </div>
 );
 
-// ------ Как работает Нора ------
+// --- Как работает Нора ---
 const bubbleStyle = (align = "right") => ({
   alignSelf: align === "right" ? 'flex-end' : 'flex-start',
   background: "#fff",
@@ -179,7 +218,6 @@ const bubbleStyle = (align = "right") => ({
   color: NORA_COLOR,
   fontSize: 15
 });
-
 const EXAMPLES = [
   { q: "Можно ли пить кофе во время беременности?", a: "☕ Конечно, но не больше 1-2 чашек в день и лучше без сахара." },
   { q: "Я часто переживаю без причины.", a: "🤗 Это естественно. Я помогу успокоиться и понять, что нормально, а когда лучше обратиться к врачу." },
@@ -188,7 +226,6 @@ const EXAMPLES = [
   { q: "Какие витамины принимать?", a: "💊 Помогу подобрать подходящие витамины и напомню, когда их принимать." },
   { q: "Можно ли летать?", a: "✈️ Если беременность протекает спокойно, перелёты до 30 недели безопасны, но уточните у врача." },
 ];
-
 const NoraHowItWorksBlock = () => {
   const [step, setStep] = useState(0);
   const [phase, setPhase] = useState("typeQ");
@@ -254,7 +291,7 @@ const NoraHowItWorksBlock = () => {
   );
 };
 
-// ------ Главный компонент ------
+// --- Главный компонент ---
 const Chat = () => {
   const [showWelcome, setShowWelcome] = useState(true);
   const [msg, setMsg] = useState("");
@@ -278,18 +315,19 @@ const Chat = () => {
             <video src="/nora.mp4" style={{ width: "100%", maxWidth: 320, borderRadius: 22 }} autoPlay muted loop playsInline preload="auto" />
           </div>
           <div style={{ marginTop: 24, textAlign: "center" }}>
-            <div style={{ fontSize: 22, color: NORA_COLOR, marginBottom: 12 }}>Ждёте малыша? Я помогу!</div>
+            {/* Жирный заголовок! */}
+            <div style={{ fontWeight: 700, fontSize: 22, color: NORA_COLOR, marginBottom: 12 }}>Ждёте малыша? Я помогу!</div>
             <div style={{
               color: NORA_COLOR,
               fontSize: 15,
               lineHeight: 1.75,
-              padding: "0 34px",
-              fontWeight: 400 // убран жирный!
+              padding: "0 34px"
             }}>
               Я помогаю будущим мамам: отвечаю на вопросы, напоминаю о важных делах, слежу за самочувствием и поддерживаю!
             </div>
           </div>
-          <div style={{ textAlign: "center", marginTop: 36 }}>
+          {/* Кнопка — по центру, все элементы выровнены 1 линией, отступ 13px */}
+          <div style={{ textAlign: "center", marginTop: 36, display: "flex", flexDirection: "column", alignItems: "center" }}>
             <button onClick={() => setShowWelcome(false)} style={{
               background: BABY_GRADIENT,
               border: "none",
@@ -297,14 +335,19 @@ const Chat = () => {
               color: "#fff",
               fontSize: 17,
               fontWeight: 700,
-              padding: "15px 40px",
-              cursor: "pointer"
+              padding: "15px 30px",
+              cursor: "pointer",
+              display: "inline-flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 10
             }}>
-              Начать пользоваться {ICONS.arrowRight}
+              <span>Начать пользоваться</span>
+              {ICONS.arrowRight}
             </button>
-          </div>
-          <div style={{ textAlign: "center", color: "#7c8792", fontSize: 13, marginTop: 10 }}>
-            Попробуйте — это быстро и бесплатно
+            <div style={{ fontSize: 13, color: "#7c8792", marginTop: 13 }}>
+              Попробуйте — это быстро и бесплатно
+            </div>
           </div>
           <div style={{ marginTop: 40 }} />
           <NoraHowItWorksBlock />
@@ -346,4 +389,5 @@ const Chat = () => {
     </div>
   );
 };
+
 export default Chat;
