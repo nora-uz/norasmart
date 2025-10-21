@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
+import NoraHowItWorksBlock from "./NoraHowItWorksBlock";
 
 const NORA_COLOR = "#2e2e2e";
 const ICON_SIZE = 23;
@@ -14,21 +15,19 @@ const PANEL_SIDE_PADDING = 15;
 const BLOCK_SIDE_PADDING = 10;
 const CARD_GAP = 10;
 
-// --- SVG-иконки ---
+// Иконки
 const IconPartner = (
   <svg width="18" height="18" fill="none" viewBox="0 0 20 20">
     <circle cx="10" cy="6.5" r="3.3" stroke="#5a6573" strokeWidth="1.5"/>
     <path d="M2.8 16c.9-2.5 3.4-4.2 7.2-4.2s6.2 1.7 7.2 4.2" stroke="#5a6573" strokeWidth="1.5" strokeLinecap="round"/>
   </svg>
 );
-
 const IconContact = (
   <svg width="18" height="18" fill="none" viewBox="0 0 20 20">
     <rect x="2.8" y="3.5" width="14.4" height="11" rx="2.2" stroke="#5a6573" strokeWidth="1.5"/>
     <path d="M3.5 4l6.5 6.1c.3.2.8.2 1.1 0L17 4" stroke="#5a6573" strokeWidth="1.5"/>
   </svg>
 );
-
 const ICONS = {
   telegram: "https://cdn-icons-png.flaticon.com/512/1946/1946547.png",
   trash: "https://cdn-icons-png.flaticon.com/512/1345/1345823.png",
@@ -47,7 +46,7 @@ const BENEFITS = [
   { emoji: "🤝", title: "Поддержка 24/7", text: "Ассистент всегда на связи для заботы и помощи в любой ситуации." },
   { emoji: "⏰", title: "Напоминания о важных делах", text: "Следим, чтобы вы ничего не забыли — анализы, витамины, визиты." },
   { emoji: "🔒", title: "Конфиденциальность", text: "Личные данные остаются только у вас — никакой передачи сторонним." },
-  { emoji: "⚡️", title: "Быстрые решения", text: "Полезные советы и поддержка сразу, когда это нужно." },
+  { emoji: "⚡️", title: "Быстрые решения", text: "Полезные советы и поддержка сразу, когда это нужно." }
 ];
 
 const REVIEWS = [
@@ -64,76 +63,21 @@ const REVIEWS = [
   { name: "Лола", badge: "4 месяц беременности", problem: "Недостаток белка", text: "Советы по питанию очень полезные, теперь у меня больше энергии." }
 ];
 
-// --- Как работает Нора ---
-const EXAMPLES = [
-  { q: "Можно ли пить кофе во время беременности?", a: "☕ Конечно, но не больше 1–2 чашек в день." },
-  { q: "Я часто волнуюсь без причины.", a: "🤗 Это естественно. Я помогу разобраться, когда стоит обратиться к врачу." },
-  { q: "Болит спина и поясница.", a: "🦵 Старайтесь больше отдыхать лёжа на боку и выбирайте удобную обувь." },
-  { q: "Плохо сплю.", a: "😴 Проветривайте комнату, делайте спокойные прогулки — всё наладится." },
-  { q: "Можно ли заниматься спортом?", a: "🏃 Конечно. Рекомендую йогу, плавание и прогулки, без перегрузок." },
-];
-const bubbleStyle = (align = "right") => ({
-  alignSelf: align === "right" ? ("flex-end" as const) : ("flex-start" as const),
-  background: "#fff",
-  borderRadius: 19,
-  padding: "15px 21px",
-  marginBottom: 16,
-  maxWidth: 370,
-  textAlign: "left" as const,
-  boxShadow: "0 1px 8px rgba(200,180,200,0.1)"
-});
-const NoraHowItWorksBlock = () => {
-  const [step, setStep] = useState(0);
-  const [phase, setPhase] = useState("typeQ");
-  const [question, setQuestion] = useState("");
-  const [answer, setAnswer] = useState("");
-  useEffect(() => {
-    if (phase === "typeQ") {
-      setQuestion("");
-      let i = 0;
-      const int = setInterval(() => {
-        setQuestion(EXAMPLES[step].q.slice(0, i + 1));
-        i++;
-        if (i > EXAMPLES[step].q.length) {
-          clearInterval(int);
-          setTimeout(() => setPhase("typeA"), 350);
-        }
-      }, 40);
-      return () => clearInterval(int);
-    }
-    if (phase === "typeA") {
-      setAnswer("");
-      let i = 0;
-      const int = setInterval(() => {
-        setAnswer(EXAMPLES[step].a.slice(0, i + 1));
-        i++;
-        if (i > EXAMPLES[step].a.length) {
-          clearInterval(int);
-          setTimeout(() => setPhase("next"), 6000);
-        }
-      }, 25);
-      return () => clearInterval(int);
-    }
-    if (phase === "next") {
-      const nextDelay = setTimeout(() => {
-        setStep((s) => (s + 1) % EXAMPLES.length);
-        setPhase("typeQ");
-      }, 500);
-      return () => clearTimeout(nextDelay);
-    }
-  }, [phase, step]);
-  return (
-    <div style={{
+const WhyNoraBlock = () => (
+  <div
+    style={{
       width: `calc(100% - ${BLOCK_SIDE_PADDING * 2}px)`,
       maxWidth,
       margin: "0 auto 38px auto",
       background: GRADIENT,
       borderRadius: borderRadius,
-      boxShadow: "0 6px 20px 0 rgba(150,175,205,0.10)",
+      boxShadow: "0 6px 20px 0 rgba(150, 175, 205, 0.10)",
       boxSizing: "border-box",
-      padding: `21px 0 20px 0`,
+      padding: 0,
       fontFamily: "'Manrope', Arial, Helvetica, sans-serif"
-    }}>
+    }}
+  >
+    <div style={{ padding: `21px 0 20px 0` }}>
       <div style={{
         fontWeight: 700,
         fontSize: "20px",
@@ -141,7 +85,7 @@ const NoraHowItWorksBlock = () => {
         marginBottom: 20,
         textAlign: "center"
       }}>
-        Как работает Nora?
+        Почему Nora Plus?
       </div>
       <div style={{
         display: "flex",
@@ -149,31 +93,268 @@ const NoraHowItWorksBlock = () => {
         gap: CARD_GAP,
         padding: `0 ${BLOCK_SIDE_PADDING}px`
       }}>
-        {question && <div style={bubbleStyle("right")}>{question}</div>}
-        {answer && <div style={bubbleStyle("left")}>{answer}</div>}
-      </div>
-      <div style={{ fontSize: 13, color: "#7b8590", textAlign: "center", marginTop: 8 }}>
-        Просто задайте вопрос — Нора найдёт ответ!
+        {BENEFITS.map(({ emoji, title, text }, idx) => (
+          <div
+            key={idx}
+            style={{
+              position: "relative",
+              background: "#fff",
+              borderRadius: 18,
+              boxShadow: "0 2px 18px 0 rgba(150,180,220,0.07)",
+              padding: "19px 15px 19px 15px",
+              overflow: "hidden",
+              minHeight: 56,
+              textAlign: "left"
+            }}
+          >
+            <span
+              style={{
+                position: "absolute",
+                right: 12,
+                top: 14,
+                fontSize: 62,
+                opacity: 0.14,
+                pointerEvents: "none",
+                userSelect: "none",
+                lineHeight: 1,
+                zIndex: 0,
+              }}
+              aria-hidden="true"
+            >
+              {emoji}
+            </span>
+            <div style={{ position: "relative", zIndex: 1 }}>
+              <div style={{ fontWeight: 700, fontSize: 16, color: NORA_COLOR, marginBottom: 7, textAlign: "left" }}>
+                {title}
+              </div>
+              <div style={{ fontSize: 13, color: "#3a3a3a", lineHeight: "1.64", textAlign: "left" }}>
+                {text}
+              </div>
+            </div>
+          </div>
+        ))}
       </div>
     </div>
-  );
-};
-
-const WhyNoraBlock = /* ... твоя часть ... */;
-const ReviewBlock = /* ... твоя часть ... */;
-const Footer = /* ... твоя часть ... */;
-const FooterGap = () => <div style={{height: 20}} />;
-
-const Chat = () => (
-  <div>
-    {/* ...твой header, welcome, секции... */}
-    {/* просто вставь после welcome-сценария вот так: */}
-    <NoraHowItWorksBlock />
-    <WhyNoraBlock />
-    <ReviewBlock />
-    <Footer />
-    <FooterGap />
   </div>
 );
+
+const ReviewBlock = () => (
+  <div
+    style={{
+      width: `calc(100% - ${BLOCK_SIDE_PADDING * 2}px)`,
+      maxWidth,
+      margin: "0 auto 38px auto",
+      background: GRADIENT,
+      borderRadius: borderRadius,
+      boxShadow: "0 6px 20px 0 rgba(150, 175, 205, 0.10)",
+      boxSizing: "border-box",
+      padding: 0,
+      fontFamily: "'Manrope', Arial, Helvetica, sans-serif"
+    }}
+  >
+    <div style={{ padding: "21px 0 20px 0" }}>
+      <div style={{
+        fontWeight: 700,
+        fontSize: "20px",
+        color: NORA_COLOR,
+        marginBottom: 20,
+        textAlign: "center"
+      }}>
+        Отзывы будущих мам
+      </div>
+      <div style={{
+        display: "flex",
+        flexDirection: "column",
+        gap: CARD_GAP,
+        padding: `0 ${BLOCK_SIDE_PADDING}px`
+      }}>
+        {REVIEWS.map(({ name, badge, problem, text }, idx) => (
+          <div
+            key={idx}
+            style={{
+              background: "#fff",
+              borderRadius: 18,
+              boxShadow: "0 2px 18px 0 rgba(150,180,220,0.07)",
+              padding: "19px 15px 19px 15px",
+              overflow: "hidden",
+              textAlign: "left"
+            }}
+          >
+            <div style={{ position: "relative", zIndex: 1 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 7 }}>
+                <span style={{
+                  fontWeight: 700, fontSize: 15, color: "#222"
+                }}>
+                  {name}
+                </span>
+                <span style={{
+                  fontWeight: 500, fontSize: 13, color: "#1681f5",
+                  padding: "4px 9px", borderRadius: 12, background: "#f3f7fe", whiteSpace: "nowrap"
+                }}>
+                  {badge}
+                </span>
+              </div>
+              <div style={{ fontWeight: 500, fontSize: 13, color: "#acb5bd", marginBottom: 9 }}>
+                {problem}
+              </div>
+              <div style={{ fontSize: 13, color: "#3a3a3a", lineHeight: "1.64" }}>
+                {text}
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+);
+
+const Footer = () => (
+  // ... Ваш Footer как в исходнике ...
+  <div>Footer</div>
+);
+
+const FooterGap = () => <div style={{height: 20}} />;
+
+const THREAD_KEY = "nora_thread_id";
+// splitBotTextTwoBlocks - без изменений
+
+const Chat = () => {
+  const [showWelcome, setShowWelcome] = useState(true);
+  // ... остальной useState, useEffect и функции, как в вашем исходном коде ...
+
+  if (showWelcome) {
+    return (
+      <div style={{
+        fontFamily: "'Manrope', Arial, Helvetica, sans-serif",
+        background: "#f8fdff",
+        width: "100vw",
+        minHeight: "100vh"
+      }}>
+        {/* Панель */}
+        <div style={{
+          width: `calc(100% - ${PANEL_SIDE_PADDING * 2}px)`,
+          maxWidth,
+          minHeight: panelHeight,
+          background: GRADIENT,
+          color: NORA_COLOR,
+          margin: "20px auto 0 auto",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          borderRadius: borderRadius,
+          paddingLeft: PANEL_SIDE_PADDING, paddingRight: PANEL_SIDE_PADDING, paddingTop: 5, paddingBottom: 5,
+          boxSizing: "border-box", zIndex: 1,
+          fontFamily: "'Manrope', Arial, Helvetica, sans-serif"
+        }}>
+          <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", flex: 1, paddingLeft: 5 }}>
+            <span style={{
+              fontWeight: 800, fontSize: "19px", lineHeight: 1.06, whiteSpace: "nowrap", marginBottom: 7
+            }}>
+              Nora Plus
+            </span>
+            <span style={{
+              fontWeight: 400, fontSize: "13px", color: "#565656", lineHeight: 1.04, whiteSpace: "nowrap"
+            }}>
+              Ассистент для будущих мам
+            </span>
+          </div>
+          {/* ... кнопки ... */}
+        </div>
+        <div style={{ height: 20 }} />
+        <div style={{ height: 20 }} />
+
+        <div
+          style={{
+            width: "100%",
+            maxWidth: maxWidth,
+            margin: "0 auto",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center"
+          }}
+        >
+          <video
+            src="/nora.mp4"
+            style={{
+              width: "100%",
+              maxWidth: videoMaxWidth,
+              display: "block",
+              borderRadius: 24
+            }}
+            autoPlay
+            playsInline
+            muted
+            loop
+            preload="auto"
+          />
+        </div>
+        <div style={{ height: 20 }} />
+        <div style={{ height: 20 }} />
+
+        <div style={{
+          width: `calc(100% - ${BLOCK_SIDE_PADDING * 2}px)`,
+          maxWidth,
+          textAlign: "center",
+          margin: "0 auto"
+        }}>
+          <div style={{
+            fontWeight: 700, fontSize: "22px", color: NORA_COLOR, marginBottom: 14
+          }}>Ждёте малыша? Я помогу!</div>
+          <div style={{
+            fontWeight: 400, fontSize: "15px", margin: "0 auto 0 auto", maxWidth: 400,
+            padding: "0 18px",
+            lineHeight: 1.75, color: NORA_COLOR, display: "inline-block"
+          }}>
+            Я помогаю будущим мамам на каждом этапе беременности: отвечаю на вопросы, напоминаю о важных делах, слежу за самочувствием и даю советы, основанные на медицине Великобритании NHS.
+          </div>
+          <div style={{ height: 40 }} />
+          {/* Кнопка и подпись */}
+          <div style={{ display: "flex", justifyContent: "center", width: "100%" }}>
+            <div style={{ width: "100%", textAlign: "center" }}>
+              <button
+                style={{
+                  width: "100%", maxWidth: 290,
+                  background: BABY_GRADIENT,
+                  color: "#fff",
+                  border: "none",
+                  borderRadius: borderRadius,
+                  fontWeight: 700,
+                  fontSize: "17px",
+                  padding: "15px 0",
+                  margin: "0 auto",
+                  cursor: "pointer",
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                  boxShadow: "0 2px 18px 0 rgba(200, 128, 140, 0.09)"
+                }}
+                onClick={() => setShowWelcome(false)}
+              >
+                Начать пользоваться&nbsp;
+                <span style={{ marginLeft: 8, display: "flex", alignItems: "center" }}>{ICONS.arrowRight}</span>
+              </button>
+              <div style={{ height: 13 }} />
+              <div style={{ fontSize: 13, color: "#7c8792" }}>
+                Попробуйте — это быстро и бесплатно
+              </div>
+            </div>
+          </div>
+          <div style={{ height: 40 }} />
+
+          {/* --- ДОБАВЛЕН БЛОК --- */}
+          <NoraHowItWorksBlock />
+          {/* --- ДАЛЬШЕ КАК БЫЛО --- */}
+          <WhyNoraBlock />
+          <ReviewBlock />
+          <Footer />
+          <FooterGap />
+        </div>
+      </div>
+    );
+  }
+
+  // --- Чат-экран ---
+  return (
+    // ... ваш старый чат JSX ...
+  );
+};
 
 export default Chat;
