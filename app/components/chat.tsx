@@ -17,8 +17,8 @@ const ICON_SIZE = 23;
 
 const NORA_COLOR = "#2e2e2e";
 const BORDER_RADIUS = 22;
-const PANEL_PADDING = 15;
-const BLOCK_PADDING = 15;
+const PANEL_PADDING = 28;
+const BLOCK_PADDING = 28;
 const MAX_WIDTH = 560;
 const GRADIENT = "linear-gradient(90deg, #eff5fe 0%, #e5e8ed 100%)";
 const BABY_GRADIENT = "linear-gradient(90deg, #e39290 0%, #efb1b6 100%)";
@@ -37,7 +37,7 @@ const HeaderPanel = ({ onClearChat }: { onClearChat?: () => void }) => (
     display: "flex",
     alignItems: "center",
     justifyContent: "space-between",
-    padding: "5px 15px",
+    padding: "5px 28px",
     boxSizing: "border-box",
     fontFamily: "'Manrope', sans-serif"
   }}>
@@ -73,13 +73,13 @@ const IconPolicy = (
 );
 const Footer = () => (
   <div style={{
-    width: "calc(100% - 40px)",
+    width: "calc(100% - 56px)",
     maxWidth: MAX_WIDTH,
     margin: "0 auto",
     background: GRADIENT,
     borderRadius: 22,
     boxShadow: "0 -4px 14px rgba(155,175,205,0.06)",
-    padding: 22,
+    padding: 28,
     fontFamily: "'Manrope', sans-serif"
   }}>
     <div style={{ fontSize: 12, textAlign: "center", color: "#263540", fontWeight: 600 }}>Ташкент, Юнусабадский район, массив Кашгар 26</div>
@@ -112,7 +112,7 @@ const WhyNoraBlock = () => (
     padding: 0,
     fontFamily: "'Manrope', Arial, Helvetica, sans-serif"
   }}>
-    <div style={{ padding: `21px 0 20px 0` }}>
+    <div style={{ padding: `21px ${BLOCK_PADDING}px 20px ${BLOCK_PADDING}px` }}>
       <div style={{
         fontWeight: 700,
         fontSize: "20px",
@@ -125,8 +125,7 @@ const WhyNoraBlock = () => (
       <div style={{
         display: "flex",
         flexDirection: "column",
-        gap: CARD_GAP,
-        padding: `0 ${BLOCK_PADDING}px`
+        gap: CARD_GAP
       }}>
         {BENEFITS.map(({ emoji, title, text }, idx) => (
           <div
@@ -137,7 +136,6 @@ const WhyNoraBlock = () => (
               borderRadius: 18,
               boxShadow: "0 2px 18px 0 rgba(150,180,220,0.07)",
               padding: "19px 15px 19px 15px",
-              overflow: "hidden",
               minHeight: 56,
               textAlign: "left"
             }}
@@ -193,7 +191,7 @@ const ReviewBlock = () => (
     padding: 0,
     fontFamily: "'Manrope', Arial, Helvetica, sans-serif"
   }}>
-    <div style={{ padding: "21px 0 20px 0" }}>
+    <div style={{ padding: `21px ${BLOCK_PADDING}px 20px ${BLOCK_PADDING}px` }}>
       <div style={{
         fontWeight: 700,
         fontSize: "20px",
@@ -206,8 +204,7 @@ const ReviewBlock = () => (
       <div style={{
         display: "flex",
         flexDirection: "column",
-        gap: CARD_GAP,
-        padding: `0 ${BLOCK_PADDING}px`
+        gap: CARD_GAP
       }}>
         {REVIEWS.map(({ name, badge, problem, text }, idx) => (
           <div
@@ -217,7 +214,7 @@ const ReviewBlock = () => (
               borderRadius: 18,
               boxShadow: "0 2px 18px 0 rgba(150,180,220,0.07)",
               padding: "19px 15px 19px 15px",
-              overflow: "hidden",
+              minHeight: 56,
               textAlign: "left"
             }}
           >
@@ -239,7 +236,7 @@ const ReviewBlock = () => (
   </div>
 );
 
-// --- Блок Как работает Нора (центр, отступы 15px) ---
+// --- Блок Как работает Нора (центр, боковые отступы 28px, цикличность!) ---
 const bubbleStyle = (align = "right") => ({
   position: 'relative' as const,
   alignSelf: align === "right" ? 'flex-end' as const : 'flex-start' as const,
@@ -258,20 +255,27 @@ const bubbleStyle = (align = "right") => ({
   boxShadow: "0 1px 8px rgba(200,180,200,0.1)"
 });
 
+const EXAMPLES = [
+  { q: "Можно ли пить кофе во время беременности?", a: "☕ Конечно! Только не больше 1-2 чашек в день — и лучше без сахара, чтобы не повысить давление." },
+  { q: "Я постоянно переживаю за малыша...", a: "🤗 Это нормально! Позвольте себе отдых, используйте дыхательные практики и отслеживайте свои эмоции." },
+  { q: "Часто болит спина и ноги, что делать?", a: "🦵 Очень частая жалоба. Носите удобную обувь, практикуйте лёгкую зарядку, отдыхайте чаще лёжа на боку." },
+  { q: "Плохо сплю по ночам, просыпаюсь часто.", a: "😴 Лёгкий перекус перед сном, прохладная проветренная комната и регулярный режим — всё это помогает с бессонницей." },
+  { q: "Не забыть бы витамины и анализы!", a: "💊 Я поставлю напоминания, сформирую календарь визитов и пришлю push-запрос за 2 дня!" },
+  { q: "Можно ли заниматься спортом?", a: "🏃 Спорт — отлично! Но выбирайте плавание, йогу, прогулки. Главное — никаких экстремальных нагрузок." },
+  { q: "У меня иногда тянет живот...", a: "👩‍⚕️ Незначительная боль допустима, но если усиливается или появляются новые симптомы — обязательно сообщите врачу!" },
+  { q: "Что взять с собой на первый прием к врачу?", a: "📄 Паспорт, страховой полис, результаты анализов (если есть), список принимаемых витаминов или лекарств." },
+  { q: "Можно ли летать на самолёте?", a: "✈️ Можно, если беременность протекает без осложнений и вы получили одобрение врача." },
+  { q: "Какие витамины нужны на первом триместре?", a: "🧡 Фолиевая кислота, йод, витамин D, по показаниям — железо. Я напомню, когда принимать и в каком виде!" },
+  { q: "Как питаться, чтобы снизить токсикоз?", a: "🍏 Ешьте часто, маленькими порциями, исключайте жареное и острое, полезны фрукты и вода." },
+  { q: "А если возникла головная боль?", a: "🟣 С осторожностью! Проверить давление, дать отдохнуть, можно привстать на свежем воздухе — советую не заниматься самолечением!" }
+];
+
 const NoraHowItWorksBlock = () => {
-  const DIALOGS = [
-    { q: "Можно ли пить кофе во время беременности?", a: "☕ Конечно! Только не больше 1-2 чашек в день — и лучше без сахара, чтобы не повысить давление." },
-    { q: "Я постоянно переживаю за малыша...", a: "🤗 Это нормально! Позвольте себе отдых, используйте дыхательные практики и отслеживайте свои эмоции." },
-    { q: "Часто болит спина и ноги, что делать?", a: "🦵 Очень частая жалоба. Носите удобную обувь, практикуйте лёгкую зарядку, отдыхайте чаще лёжа на боку." },
-    { q: "Плохо сплю по ночам, просыпаюсь часто.", a: "😴 Лёгкий перекус перед сном, прохладная проветренная комната и регулярный режим — всё это помогает с бессонницей." },
-    { q: "Не забыть бы витамины и анализы!", a: "💊 Я поставлю напоминания, сформирую календарь визитов и пришлю push-запрос за 2 дня!" },
-  ];
   const [step, setStep] = useState(0);
   const [phase, setPhase] = useState("typeQ");
   const [qText, setQText] = useState("");
   const [aText, setAText] = useState("");
 
-  // ⚙️ Замедленная печать
   const typingSpeedQ = 60;
   const typingSpeedA = 28;
 
@@ -280,9 +284,9 @@ const NoraHowItWorksBlock = () => {
       setQText("");
       let i = 0;
       const interval = setInterval(() => {
-        setQText(DIALOGS[step].q.slice(0, i + 1));
+        setQText(EXAMPLES[step].q.slice(0, i + 1));
         i++;
-        if (i > DIALOGS[step].q.length) {
+        if (i > EXAMPLES[step].q.length) {
           clearInterval(interval);
           setTimeout(() => setPhase("typeA"), 400);
         }
@@ -293,20 +297,20 @@ const NoraHowItWorksBlock = () => {
       setAText("");
       let i = 0;
       const interval = setInterval(() => {
-        setAText(DIALOGS[step].a.slice(0, i + 1));
+        setAText(EXAMPLES[step].a.slice(0, i + 1));
         i++;
-        if (i > DIALOGS[step].a.length) {
+        if (i > EXAMPLES[step].a.length) {
           clearInterval(interval);
           setTimeout(() => setPhase("waitNext"), 7000);
         }
       }, typingSpeedA);
       return () => clearInterval(interval);
     }
-    if (phase === "waitNext" && step < DIALOGS.length - 1) {
+    if (phase === "waitNext") {
       const timer = setTimeout(() => {
         setQText("");
         setAText("");
-        setStep(step + 1);
+        setStep((s) => (s + 1) % EXAMPLES.length); // БЕСЦИКЛИЧНО!!
         setPhase("typeQ");
       }, 400);
       return () => clearTimeout(timer);
@@ -315,13 +319,13 @@ const NoraHowItWorksBlock = () => {
 
   return (
     <div style={{
-      width: `calc(100% - 30px)`,
+      width: `calc(100% - 56px)`,
       maxWidth: MAX_WIDTH,
       margin: "0 auto 38px auto",
       background: GRADIENT,
       borderRadius: BORDER_RADIUS,
       boxShadow: "0 6px 20px rgba(150,175,205,0.1)",
-      padding: "22px 15px 20px 15px",
+      padding: "22px 28px 20px 28px",
       fontFamily: "'Manrope', sans-serif"
     }}>
       <div style={{ textAlign: "center", fontWeight: 700, fontSize: 20, color: NORA_COLOR }}>Как работает Nora?</div>
@@ -387,7 +391,7 @@ const Chat = () => {
               marginTop: 12,
               padding: "0 34px"
             }}>
-              Я помогаю будущим мамам: отвечаю на вопросы, напоминаю о важных делах, слежу за самочувствием.
+              Я помогаю будущим мамам: отвечаю на вопросы, напоминаю о важных делах, слежу за самочувствием и поддерживаю
             </div>
           </div>
           <div style={{ display: "flex", justifyContent: "center", marginTop: 38 }}>
@@ -410,11 +414,15 @@ const Chat = () => {
               Начать пользоваться {ICONS.arrowRight}
             </button>
           </div>
+          <div style={{ fontSize: 13, color: "#7c8792", textAlign: "center", marginTop: 13 }}>
+            Попробуйте — это быстро и бесплатно
+          </div>
           <div style={{ marginTop: 40 }} />
           <NoraHowItWorksBlock />
           <WhyNoraBlock />
           <ReviewBlock />
           <Footer />
+          <div style={{ height: 20 }} /> {/* --- внешний отступ после футера --- */}
         </>
       ) : (
         <>
@@ -438,8 +446,8 @@ const Chat = () => {
             <div ref={messagesEndRef} />
           </div>
           <div style={{
-            width: "calc(100% - 40px)",
-            margin: "0 20px",
+            width: "calc(100% - 56px)",
+            margin: "0 28px",
             display: "flex",
             alignItems: "center",
             maxWidth: MAX_WIDTH,
