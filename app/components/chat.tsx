@@ -403,7 +403,6 @@ const HowItWorks = () => {
         marginBottom: 20,
         textAlign: "center"
       }}>
-        Как работает Nora?
       </div>
       <div style={{
         display: "flex",
