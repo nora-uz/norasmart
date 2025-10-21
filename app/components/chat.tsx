@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
-import NoraHowItWorksBlock from "./NoraHowItWorksBlock"; // ОБЯЗАТЕЛЬНО добавить этот файл
+import NoraHowItWorksBlock from "./NoraHowItWorksBlock";
 
 const NORA_COLOR = "#2e2e2e";
 const ICON_SIZE = 23;
@@ -14,6 +14,21 @@ const INPUT_BAR_HEIGHT = 68;
 const PANEL_SIDE_PADDING = 15;
 const BLOCK_SIDE_PADDING = 10;
 const CARD_GAP = 10;
+
+// Минималистичные иконки SVG
+const IconPartner = (
+  <svg width="18" height="18" fill="none" viewBox="0 0 20 20">
+    <circle cx="10" cy="6.5" r="3.3" stroke="#5a6573" strokeWidth="1.5"/>
+    <path d="M2.8 16c.9-2.5 3.4-4.2 7.2-4.2s6.2 1.7 7.2 4.2" stroke="#5a6573" strokeWidth="1.5" strokeLinecap="round"/>
+  </svg>
+);
+
+const IconContact = (
+  <svg width="18" height="18" fill="none" viewBox="0 0 20 20">
+    <rect x="2.8" y="3.5" width="14.4" height="11" rx="2.2" stroke="#5a6573" strokeWidth="1.5"/>
+    <path d="M3.5 4l6.5 6.1c.3.2.8.2 1.1 0L17 4" stroke="#5a6573" strokeWidth="1.5"/>
+  </svg>
+);
 
 const ICONS = {
   telegram: "https://cdn-icons-png.flaticon.com/512/1946/1946547.png",
@@ -33,7 +48,7 @@ const BENEFITS = [
   { emoji: "🤝", title: "Поддержка 24/7", text: "Ассистент всегда на связи для заботы и помощи в любой ситуации." },
   { emoji: "⏰", title: "Напоминания о важных делах", text: "Следим, чтобы вы ничего не забыли — анализы, витамины, визиты." },
   { emoji: "🔒", title: "Конфиденциальность", text: "Личные данные остаются только у вас — никакой передачи сторонним." },
-  { emoji: "⚡️", title: "Быстрые решения", text: "Полезные советы и поддержка сразу, когда это нужно." }
+  { emoji: "⚡️", title: "Быстрые решения", text: "Полезные советы и поддержка сразу, когда это нужно." },
 ];
 
 const REVIEWS = [
@@ -170,7 +185,101 @@ const ReviewBlock = () => (
   </div>
 );
 
-// Footer и FooterGap - используйте ваши текущие версии, если они у вас большие.
+const Footer = () => (
+  <div
+    style={{
+      width: `calc(100% - 40px)`,
+      maxWidth,
+      margin: "0 auto",
+      background: GRADIENT,
+      borderRadius: "22px",
+      boxShadow: "0 -4px 14px 0 rgba(155,175,205,0.06)",
+      boxSizing: "border-box",
+      fontFamily: "'Manrope', Arial, Helvetica, sans-serif",
+      paddingLeft: 20,
+      paddingRight: 20,
+      paddingTop: 22,
+      paddingBottom: 22,
+      display: "flex",
+      flexDirection: "column",
+      gap: 18,
+      alignItems: "center"
+    }}
+  >
+    <div style={{
+      fontSize: 12,
+      color: "#263540",
+      fontWeight: 600,
+      textAlign: "center",
+      width: "100%"
+    }}>
+      Ташкент, Юнусабадский район, массив Кашгар 26
+    </div>
+    <div style={{
+      display: "flex",
+      gap: 11,
+      width: "100%",
+      justifyContent: "center"
+    }}>
+      <a href="#" style={{
+        background: "#fff",
+        width: "63%",
+        borderRadius: 13,
+        color: "#495062",
+        fontWeight: 400,
+        fontSize: 14,
+        padding: "9px 0",
+        textDecoration: "none",
+        textAlign: "center",
+        border: "1px solid #e1e9f5",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: 7,
+        marginRight: 5
+      }}>{IconPartner} Стать партнёром</a>
+      <a href="#" style={{
+        background: "#fff",
+        width: "37%",
+        borderRadius: 13,
+        color: "#495062",
+        fontWeight: 400,
+        fontSize: 14,
+        padding: "9px 0",
+        textDecoration: "none",
+        textAlign: "center",
+        border: "1px solid #e1e9f5",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: 7
+      }}>{IconContact} Контакты</a>
+    </div>
+    <a href="#" style={{
+      background: "#fff",
+      padding: "7px 0",
+      width: "100%",
+      borderRadius: 14,
+      color: "#556",
+      fontWeight: 500,
+      fontSize: 14,
+      textDecoration: "none",
+      border: "1px solid #e1e9f5",
+      textAlign: "center"
+    }}>Политика конфиденциальности</a>
+    <div style={{
+      marginTop: 8,
+      fontSize: 12,
+      color: "#8a97a0",
+      textAlign: "center",
+      width: "100%"
+    }}>
+      © {new Date().getFullYear()} Nora Plus — забота и поддержка будущих мам
+    </div>
+  </div>
+);
+
+const FooterGap = () => <div style={{height: 20}} />;
 
 const Chat = () => {
   const [showWelcome, setShowWelcome] = useState(true);
@@ -211,18 +320,21 @@ const Chat = () => {
               Ассистент для будущих мам
             </span>
           </div>
+          {/* Ваши кнопки */}
         </div>
         <div style={{ height: 20 }} />
         <div style={{ height: 20 }} />
-        <div style={{width: "100%", maxWidth: maxWidth, margin: "0 auto", display: "flex", justifyContent: "center", alignItems: "center"}}>
+        <div style={{
+          width: "100%",
+          maxWidth: maxWidth,
+          margin: "0 auto",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center"
+        }}>
           <video
             src="/nora.mp4"
-            style={{
-              width: "100%",
-              maxWidth: videoMaxWidth,
-              display: "block",
-              borderRadius: 24
-            }}
+            style={{ width: "100%", maxWidth: videoMaxWidth, display: "block", borderRadius: 24 }}
             autoPlay
             playsInline
             muted
@@ -251,7 +363,6 @@ const Chat = () => {
           </div>
           <div style={{ height: 40 }} />
 
-          {/* Ваша кнопка */}
           <div style={{ display: "flex", justifyContent: "center", width: "100%" }}>
             <div style={{ width: "100%", textAlign: "center" }}>
               <button
@@ -281,19 +392,19 @@ const Chat = () => {
             </div>
           </div>
           <div style={{ height: 40 }} />
-
-          {/* >>> ДОБАВЛЕННЫЙ БЛОК <<< */}
+          {/* ----- ДОБАВЛЕННЫЙ БЛОК ----- */}
           <NoraHowItWorksBlock />
-          {/* >>> ДАЛЬШЕ КАК БЫЛО <<< */}
+          {/* ----- СТАРЫЕ БЛОКИ ----- */}
           <WhyNoraBlock />
           <ReviewBlock />
-          {/* Footer и FooterGap ваши, если нужно */}
+          <Footer />
+          <FooterGap />
         </div>
       </div>
     );
   }
 
-  // --- Чат-экран: ОБЯЗАТЕЛЬНО НЕ ОСТАВЛЯЙТЕ RETURN ПУСТЫМ!!! ---
+  // --- ЧАТ экран (реализуйте тут вашу историю сообщений и логику) ---
   return (
     <div style={{
       background: "#f8fdff",
@@ -309,7 +420,7 @@ const Chat = () => {
         fontWeight: 600,
         textAlign: "center"
       }}>
-        Здесь будет чат-экран!
+        Здесь будет чат!
       </div>
     </div>
   );
