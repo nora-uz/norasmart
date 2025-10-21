@@ -14,7 +14,6 @@ const PANEL_SIDE_PADDING = 15;
 const BLOCK_SIDE_PADDING = 10;
 const CARD_GAP = 10;
 
-// Минималистичные иконки SVG
 const IconPartner = (
   <svg width="18" height="18" fill="none" viewBox="0 0 20 20">
     <circle cx="10" cy="6.5" r="3.3" stroke="#5a6573" strokeWidth="1.5"/>
@@ -26,6 +25,14 @@ const IconContact = (
   <svg width="18" height="18" fill="none" viewBox="0 0 20 20">
     <rect x="2.8" y="3.5" width="14.4" height="11" rx="2.2" stroke="#5a6573" strokeWidth="1.5"/>
     <path d="M3.5 4l6.5 6.1c.3.2.8.2 1.1 0L17 4" stroke="#5a6573" strokeWidth="1.5"/>
+  </svg>
+);
+
+// Минималистичная иконка для политики
+const iconPolicy = (
+  <svg width="17" height="17" fill="none" viewBox="0 0 20 20">
+    <rect x="4" y="7" width="12" height="9" rx="2.1" stroke="#5a6573" strokeWidth="1.4"/>
+    <path d="M7,7V5a3,3 0 0,1 6,0v2" stroke="#5a6573" strokeWidth="1.4" fill="none"/>
   </svg>
 );
 
@@ -50,7 +57,6 @@ const BENEFITS = [
   { emoji: "⚡️", title: "Быстрые решения", text: "Полезные советы и поддержка сразу, когда это нужно." },
 ];
 
-// Исправленные отзывы (орфография, стиль, кириллица)
 const REVIEWS = [
   { name: "Анна", badge: "2 месяц беременности", problem: "Токсикоз", text: "Nora Plus подсказала, как справиться с утренней тошнотой. Благодаря рекомендациям по питанию и режиму дня симптомы стали гораздо легче." },
   { name: "Дилноза", badge: "3 месяц беременности", problem: "Тошнота", text: "Советы Nora Plus помогли справиться с тошнотой и легче переносить беременность. Все подсказки приходят вовремя." },
@@ -286,12 +292,19 @@ const Footer = () => (
       width: "100%",
       borderRadius: 14,
       color: "#556",
-      fontWeight: 500,
+      fontWeight: 400,
       fontSize: 14,
       textDecoration: "none",
       border: "1px solid #e1e9f5",
-      textAlign: "center"
-    }}>Политика конфиденциальности</a>
+      textAlign: "center",
+      display: "flex",
+      alignItems: "center",
+      gap: 8,
+      justifyContent: "center"
+    }}>
+      {iconPolicy}
+      Политика конфиденциальности
+    </a>
     <div style={{
       marginTop: 8,
       fontSize: 12,
@@ -323,7 +336,8 @@ function splitBotTextTwoBlocks(text) {
   }
 }
 
-// --- Как работает Нора --- (отступы как почему нора)
+// --- Как работает Nora с обновлёнными пузырями ---
+
 const HowItWorks = () => {
   const EXAMPLES = [
     { q: "Можно ли пить кофе во время беременности?", a: "☕ Конечно, но не больше 1–2 чашек в день." },
@@ -372,17 +386,37 @@ const HowItWorks = () => {
     }
   }, [phase, step]);
 
-  const bubble = (text, side) => (
+  // bubble для пользователя — хвостик снизу справа
+  const bubbleUser = (text) => (
     <div
       style={{
-        alignSelf: side === "right" ? "flex-end" : "flex-start",
+        alignSelf: "flex-end",
         background: "#fff",
-        borderRadius: 19,
-        padding: "15px 21px",
-        marginBottom: 16,
+        borderRadius: "19px 19px 4px 19px",
+        padding: "18px 22px",
+        marginBottom: 28,
         maxWidth: 370,
         textAlign: "left",
-        boxShadow: "0 1px 8px rgba(200,180,200,0.1)"
+        boxShadow: "0 1px 8px rgba(200,180,200,0.1)",
+        marginRight: 4
+      }}
+    >
+      {text}
+    </div>
+  );
+  // bubble для бота — хвостик снизу слева
+  const bubbleBot = (text) => (
+    <div
+      style={{
+        alignSelf: "flex-start",
+        background: "#f7fafd",
+        borderRadius: "19px 19px 19px 4px",
+        padding: "18px 22px",
+        marginBottom: 28,
+        maxWidth: 370,
+        textAlign: "left",
+        boxShadow: "0 1px 8px rgba(200,180,200,0.1)",
+        marginLeft: 4
       }}
     >
       {text}
@@ -401,24 +435,13 @@ const HowItWorks = () => {
       padding: "21px 0 20px 0",
       fontFamily: "'Manrope', Arial, Helvetica, sans-serif"
     }}>
-      <div
-        style={{
-          fontWeight: 700,
-          fontSize: "20px",
-          color: "#2e2e2e",
-          marginBottom: 20,
-          textAlign: "center"
-        }}
-      >
-        Как работает Nora?
-      </div>
       <div style={{
         display: "flex",
         flexDirection: "column",
         padding: `0 ${BLOCK_SIDE_PADDING}px`
       }}>
-        {q && bubble(q, "right")}
-        {a && bubble(a, "left")}
+        {q && bubbleUser(q)}
+        {a && bubbleBot(a)}
       </div>
       <div style={{
         fontSize: 13,
@@ -937,7 +960,7 @@ const Chat = () => {
           style={{
             width: 48,
             height: 48,
-            background: BABY_GRADIENT, // основной цвет кнопки "начать"
+            background: BABY_GRADIENT,
             color: "#fff",
             border: "none",
             borderRadius: borderRadius,
