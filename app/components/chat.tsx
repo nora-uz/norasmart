@@ -323,6 +323,115 @@ function splitBotTextTwoBlocks(text) {
   }
 }
 
+// --- Как работает Нора --- (отступы как почему нора)
+const HowItWorks = () => {
+  const EXAMPLES = [
+    { q: "Можно ли пить кофе во время беременности?", a: "☕ Конечно, но не больше 1–2 чашек в день." },
+    { q: "Я часто волнуюсь без причины.", a: "🤗 Это естественно. Я помогу разобраться, когда стоит обратиться к врачу." },
+    { q: "Болит спина и поясница.", a: "🦵 Старайтесь больше отдыхать лёжа на боку и выбирайте удобную обувь." },
+    { q: "Плохо сплю.", a: "😴 Проветривайте комнату, делайте спокойные прогулки — всё наладится." },
+    { q: "Можно ли заниматься спортом?", a: "🏃 Конечно. Рекомендую йогу, плавание и прогулки, без перегрузок." }
+  ];
+
+  const [step, setStep] = useState(0);
+  const [phase, setPhase] = useState("q");
+  const [q, setQ] = useState("");
+  const [a, setA] = useState("");
+
+  useEffect(() => {
+    if (phase === "q") {
+      setQ("");
+      let i = 0;
+      const t = setInterval(() => {
+        setQ(EXAMPLES[step].q.slice(0, i + 1));
+        i++;
+        if (i > EXAMPLES[step].q.length) {
+          clearInterval(t);
+          setTimeout(() => setPhase("a"), 300);
+        }
+      }, 40);
+      return () => clearInterval(t);
+    } else if (phase === "a") {
+      setA("");
+      let i = 0;
+      const t = setInterval(() => {
+        setA(EXAMPLES[step].a.slice(0, i + 1));
+        i++;
+        if (i > EXAMPLES[step].a.length) {
+          clearInterval(t);
+          setTimeout(() => setPhase("next"), 5000);
+        }
+      }, 25);
+      return () => clearInterval(t);
+    } else if (phase === "next") {
+      const t = setTimeout(() => {
+        setStep((s) => (s + 1) % EXAMPLES.length);
+        setPhase("q");
+      }, 300);
+      return () => clearTimeout(t);
+    }
+  }, [phase, step]);
+
+  const bubble = (text, side) => (
+    <div
+      style={{
+        alignSelf: side === "right" ? "flex-end" : "flex-start",
+        background: "#fff",
+        borderRadius: 19,
+        padding: "15px 21px",
+        marginBottom: 16,
+        maxWidth: 370,
+        textAlign: "left",
+        boxShadow: "0 1px 8px rgba(200,180,200,0.1)"
+      }}
+    >
+      {text}
+    </div>
+  );
+
+  return (
+    <div style={{
+      width: `calc(100% - ${BLOCK_SIDE_PADDING * 2}px)`,
+      maxWidth: 560,
+      margin: "0 auto 38px auto",
+      background: "linear-gradient(90deg, #eff5fe 0%, #e5e8ed 100%)",
+      borderRadius: 22,
+      boxShadow: "0 6px 20px 0 rgba(150,175,205,0.10)",
+      boxSizing: "border-box",
+      padding: "21px 0 20px 0",
+      fontFamily: "'Manrope', Arial, Helvetica, sans-serif"
+    }}>
+      <div
+        style={{
+          fontWeight: 700,
+          fontSize: "20px",
+          color: "#2e2e2e",
+          marginBottom: 20,
+          textAlign: "center"
+        }}
+      >
+        Как работает Nora?
+      </div>
+      <div style={{
+        display: "flex",
+        flexDirection: "column",
+        padding: `0 ${BLOCK_SIDE_PADDING}px`
+      }}>
+        {q && bubble(q, "right")}
+        {a && bubble(a, "left")}
+      </div>
+      <div style={{
+        fontSize: 13,
+        color: "#7b8590",
+        textAlign: "center",
+        marginTop: 8
+      }}>
+        Просто задайте вопрос — Нора найдёт ответ!
+      </div>
+    </div>
+  );
+};
+
 const Chat = () => {
   const [showWelcome, setShowWelcome] = useState(true);
   const [preloading, setPreloading] = useState(true);
@@ -641,6 +750,9 @@ const Chat = () => {
           </div>
           <div style={{ height: 40 }} />
 
+          {/* Новый блок: Как работает нора */}
+          <HowItWorks />
+          {/* Почему нора ниже */}
           <WhyNoraBlock />
           <ReviewBlock />
           <Footer />
