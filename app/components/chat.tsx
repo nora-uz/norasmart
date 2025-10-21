@@ -1,7 +1,83 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
 
-// ... все твои константы и SVG иконки ...
+// -- Константы и иконки ---
+const NORA_COLOR = "#2e2e2e";
+const ICON_SIZE = 23;
+const borderRadius = 22;
+const panelHeight = 62;
+const maxWidth = 560;
+const videoMaxWidth = 314;
+const GRADIENT =
+  "linear-gradient(90deg, #eff5fe 0%, #e5e8ed 100%)";
+const BABY_GRADIENT =
+  "linear-gradient(90deg, #e39290 0%, #efb1b6 100%)";
+const INPUT_BAR_HEIGHT = 68;
+const PANEL_SIDE_PADDING = 15;
+const BLOCK_SIDE_PADDING = 10;
+const CARD_GAP = 10;
+
+const IconPartner = (
+  <svg width="18" height="18" fill="none" viewBox="0 0 20 20">
+    <circle cx="10" cy="6.5" r="3.3" stroke="#5a6573" strokeWidth="1.5" />
+    <path d="M2.8 16c.9-2.5 3.4-4.2 7.2-4.2s6.2 1.7 7.2 4.2"
+          stroke="#5a6573" strokeWidth="1.5" strokeLinecap="round" />
+  </svg>
+);
+
+const IconContact = (
+  <svg width="18" height="18" fill="none" viewBox="0 0 20 20">
+    <rect x="2.8" y="3.5" width="14.4" height="11" rx="2.2"
+          stroke="#5a6573" strokeWidth="1.5" />
+    <path d="M3.5 4l6.5 6.1c.3.2.8.2 1.1 0L17 4"
+          stroke="#5a6573" strokeWidth="1.5" />
+  </svg>
+);
+
+const IconPolicy = (
+  <svg width="16" height="16" fill="none" viewBox="0 0 20 20"
+       style={{ marginRight: 6 }}>
+    <path d="M4 4.5V10c0 5 7 6.5 7 6.5s7-1.5 7-6.5v-5.5l-7-2-7 2Z"
+          stroke="#4d5762" strokeWidth="1.5" fill="none" />
+  </svg>
+);
+
+const ICONS = {
+  telegram: "https://cdn-icons-png.flaticon.com/512/1946/1946547.png",
+  trash: "https://cdn-icons-png.flaticon.com/512/1345/1345823.png",
+  share: "https://cdn-icons-png.flaticon.com/512/535/535285.png",
+  arrowRight: (
+    <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+      <path d="M6 11H16M16 11L12 7M16 11L12 15"
+            stroke="#fff" strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"/>
+    </svg>
+  ),
+};
+const filterNora = "invert(13%) sepia(4%) saturate(271%) hue-rotate(175deg) brightness(92%) contrast(93%)";
+
+const BENEFITS = [
+  { emoji: "🩺", title: "Медицинская точность", text: "Советы основаны на рекомендациях британской службы NHS и адаптированы под ваш регион." },
+  { emoji: "🤝", title: "Поддержка 24/7", text: "Ассистент всегда на связи для заботы и помощи в любой ситуации." },
+  { emoji: "⏰", title: "Напоминания о важных делах", text: "Следим, чтобы вы ничего не забыли — анализы, витамины, визиты." },
+  { emoji: "🔒", title: "Конфиденциальность", text: "Личные данные остаются только у вас — никакой передачи сторонним." },
+  { emoji: "⚡️", title: "Быстрые решения", text: "Полезные советы и поддержка сразу, когда это нужно." },
+];
+
+const REVIEWS = [
+  { name: "Анна", badge: "2 месяц беременности", problem: "Токсикоз", text: "Nora Plus подсказала, как справиться с утренней тошнотой. Благодаря рекомендациям по питанию и режиму дня симптомы стали гораздо легче." },
+  { name: "Дилноза", badge: "3 месяц беременности", problem: "Тошнота", text: "Советы Nora Plus помогли справиться с тошнотой и легче переносить беременность. Все подсказки приходят вовремя." },
+  { name: "Елена", badge: "4 месяц беременности", problem: "Слабость и усталость", text: "Теперь я знаю, какие витамины нужно пить, сколько отдыхать и как выстроить день. Чувствую себя значительно лучше!" },
+  { name: "Шахноза", badge: "5 месяц беременности", problem: "Плохое настроение", text: "Благодаря мотивационным словам и советам Nora Plus моё настроение заметно улучшилось." },
+  { name: "Ирина", badge: "5 месяц беременности", problem: "Тревожность", text: "Советы Nora Plus помогли мне больше отдыхать, заботиться о себе и избавиться от лишних переживаний за малыша." },
+  { name: "Мария", badge: "7 месяц беременности", problem: "Бессонница", text: "Благодаря советам Nora Plus я стала лучше спать и спокойно жду появления малыша." },
+  { name: "Виктория", badge: "3 месяц беременности", problem: "Страхи", text: "Nora Plus помогла справиться с тревогами и поддержала советами, теперь я чувствую себя увереннее." },
+  { name: "Екатерина", badge: "6 месяц беременности", problem: "Питание", text: "Ассистент напомнил о важных витаминах и правильном режиме, теперь питаюсь грамотно и чувствую себя энергичной." },
+  { name: "Гульнора", badge: "2 месяц беременности", problem: "Нарушение сна", text: "Проконсультировавшись с Nora, я восстановила сон и теперь хорошо встречаю утро." },
+  { name: "Малика", badge: "8 месяц беременности", problem: "Раздражительность", text: "Во время беременности стала нервной, но советы от Nora помогли и настроение улучшилось." },
+  { name: "Лола", badge: "4 месяц беременности", problem: "Недостаток белка", text: "Советы по питанию очень полезные, теперь у меня больше энергии." }
+];
 
 // SVG хвостик для правого пузыря (вопрос)
 const BubbleTailRight = () => (
@@ -17,7 +93,7 @@ const BubbleTailLeft = () => (
   </svg>
 );
 
-// --- "Как работает Нора" с тайпингом, хвостиками и отступом ---
+// --- Блок "Как работает Нора?" с typing эффектом, отступом, хвостиками ---
 const NoraHowItWorksBlock = () => {
   const DIALOGS = [
     {
@@ -110,20 +186,20 @@ const NoraHowItWorksBlock = () => {
             boxShadow: "0 1px 8px 0 rgba(200,180,200,0.12)",
             padding: "12px 18px", marginBottom: 8, maxWidth: 340,
           }}>
-            {qText}<span style={{opacity:0.19}}>{phase==="typeQ"&&"_"}</span>
+            {qText}<span style={{opacity:0.19}}>{phase==="typeQ"&&"|"}</span>
             <BubbleTailRight />
           </div>
         )}
         {aText && (
           <div style={{
             position: "relative", alignSelf: "flex-start",
-            background: "#fff", color: NORA_COLOR, // пузырь для ответа — тоже белый, чтобы с хвостиком выглядело аккуратно
+            background: "#fff", color: NORA_COLOR,
             borderRadius: 19, fontSize: 15, fontWeight: 400,
             padding: "12px 18px", minHeight: 26,
             boxShadow: "0 1px 8px 0 rgba(200,180,200,0.09)",
             maxWidth: 340, letterSpacing: "0.015em"
           }}>
-            {aText}<span style={{opacity:0.19}}>{phase==="typeA"&&"_"}</span>
+            {aText}<span style={{opacity:0.19}}>{phase==="typeA"&&"|"}</span>
             <BubbleTailLeft />
           </div>
         )}
@@ -135,8 +211,10 @@ const NoraHowItWorksBlock = () => {
   );
 };
 
-// --- Функционал welcome-экрана: с панелью и новым блоком ---
-const WelcomePanel = ({setShowWelcome}) => (
+// --- WhyNoraBlock/ReviewBlock/Footer/FooterGap — скопируй из прошлого полного кода ---
+
+// ---- Панель ----
+const HeaderPanel = () => (
   <div style={{
     width: `calc(100% - ${PANEL_SIDE_PADDING * 2}px)`,
     maxWidth,
@@ -164,26 +242,40 @@ const WelcomePanel = ({setShowWelcome}) => (
         Ассистент для будущих мам
       </span>
     </div>
-    {/* Кнопка только для демонстрации (убери если не нужна) */}
     <div style={{ display: "flex", alignItems: "center", gap: 8, marginLeft: 16 }}>
       <button style={{
         background: "transparent", border: "none", cursor: "pointer",
         width: 38, height: 38, borderRadius: 19,
         display: "flex", alignItems: "center", justifyContent: "center"
-      }} onClick={() => setShowWelcome(false)}>
-        <span>→</span>
+      }}>
+        <img src={ICONS.share} alt="Share"
+          style={{ width: ICON_SIZE, height: ICON_SIZE, filter: filterNora }} />
+      </button>
+      <button style={{
+        background: "transparent", border: "none", cursor: "pointer",
+        width: 38, height: 38, borderRadius: 19,
+        display: "flex", alignItems: "center", justifyContent: "center"
+      }}>
+        <img src={ICONS.telegram} alt="Telegram"
+          style={{ width: ICON_SIZE, height: ICON_SIZE, filter: filterNora }} />
+      </button>
+      <button style={{
+        background: "transparent", border: "none", cursor: "pointer",
+        width: 38, height: 38, borderRadius: 19,
+        display: "flex", alignItems: "center", justifyContent: "center"
+      }}>
+        <img src={ICONS.trash} alt="Trash"
+          style={{ width: ICON_SIZE, height: ICON_SIZE, filter: filterNora }} />
       </button>
     </div>
   </div>
 );
 
-// ... WhyNoraBlock, ReviewBlock, Footer как раньше ...
-
-// --- основной компонент ---
+// ---- Основной компонент ----
 const Chat = () => {
   const [showWelcome, setShowWelcome] = useState(true);
 
-  // ... остальной код, как раньше ...
+  // ... остальной код чата и состояний как в примере выше ...
 
   if (showWelcome) {
     return (
@@ -193,9 +285,10 @@ const Chat = () => {
         width: "100vw",
         minHeight: "100vh"
       }}>
-        <WelcomePanel setShowWelcome={setShowWelcome} />
-        {/* остальной welcome-экран как раньше */}
-        {/* ... */}
+        <HeaderPanel />
+        <div style={{ height: 20 }} />
+        <div style={{ height: 20 }} />
+
         <div
           style={{
             width: "100%",
@@ -223,6 +316,7 @@ const Chat = () => {
         </div>
         <div style={{ height: 20 }} />
         <div style={{ height: 20 }} />
+
         <div style={{
           width: `calc(100% - ${BLOCK_SIDE_PADDING * 2}px)`,
           maxWidth,
@@ -240,7 +334,6 @@ const Chat = () => {
             Я помогаю будущим мамам: отвечаю на вопросы, напоминаю о важных делах, слежу за самочувствием.
           </div>
           <div style={{ height: 40 }} />
-          {/* Кнопка если нужна */}
           <div style={{ display: "flex", justifyContent: "center", width: "100%" }}>
             <div style={{ width: "100%", textAlign: "center" }}>
               <button
@@ -263,17 +356,29 @@ const Chat = () => {
                 Начать пользоваться&nbsp;
                 <span style={{ marginLeft: 8, display: "flex", alignItems: "center" }}>{ICONS.arrowRight}</span>
               </button>
+              <div style={{ height: 13 }} />
+              <div style={{ fontSize: 13, color: "#7c8792" }}>
+                Попробуйте — это быстро и бесплатно
+              </div>
             </div>
           </div>
           <div style={{ height: 40 }} />
           <NoraHowItWorksBlock />
-          {/* ... WhyNoraBlock, ReviewBlock, Footer ... */}
+          {/* вставь ниже свои WhyNoraBlock, ReviewBlock, Footer, FooterGap */}
         </div>
       </div>
     );
   }
 
-  // ... основной чат-экран как раньше ...
+  // ---- чат после нажатия "начать пользоваться" ----
+  // вставь сюда панель, чат-историю и input аналогично твоей прошлой версии
+
+  return (
+    <div>
+      <HeaderPanel />
+      {/* ...код твоего чата и футеры... */}
+    </div>
+  );
 };
 
 export default Chat;
