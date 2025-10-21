@@ -1,15 +1,24 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
 
-// SVG хвостики для пузырей
-const BubbleTailRight = () => (
-  <svg viewBox="0 0 14 28" width="15" height="30" style={{position:'absolute', right:-14, bottom:0}}>
-    <path d="M0 28 Q9 10 14 0 V28 Z" fill="#fff"/>
+// SVG иконки для футера
+const IconPartner = (
+  <svg width="18" height="18" fill="none" viewBox="0 0 20 20">
+    <circle cx="10" cy="6.5" r="3.3" stroke="#5a6573" strokeWidth="1.5"/>
+    <path d="M2.8 16c.9-2.5 3.4-4.2 7.2-4.2s6.2 1.7 7.2 4.2" stroke="#5a6573" strokeWidth="1.5" strokeLinecap="round"/>
   </svg>
 );
-const BubbleTailLeft = () => (
-  <svg viewBox="0 0 14 28" width="15" height="30" style={{position:'absolute', left:-14, bottom:0}}>
-    <path d="M14 28 Q5 10 0 0 V28 Z" fill="#fff"/>
+
+const IconContact = (
+  <svg width="18" height="18" fill="none" viewBox="0 0 20 20">
+    <rect x="2.8" y="3.5" width="14.4" height="11" rx="2.2" stroke="#5a6573" strokeWidth="1.5"/>
+    <path d="M3.5 4l6.5 6.1c.3.2.8.2 1.1 0L17 4" stroke="#5a6573" strokeWidth="1.5"/>
+  </svg>
+);
+
+const IconPolicy = (
+  <svg width="16" height="16" fill="none" viewBox="0 0 20 20" style={{marginRight: 6}}>
+    <path d="M4 4.5V10c0 5 7 6.5 7 6.5s7-1.5 7-6.5v-5.5l-7-2-7 2Z" stroke="#4d5762" strokeWidth="1.5" fill="none"/>
   </svg>
 );
 
@@ -26,7 +35,7 @@ const PANEL_SIDE_PADDING = 15;
 const BLOCK_SIDE_PADDING = 10;
 const CARD_GAP = 10;
 
-// --- Панель сверху на всех экранах ---
+// --- Панель вверху ---
 const HeaderPanel = () => (
   <div style={{
     width: `calc(100% - ${PANEL_SIDE_PADDING * 2}px)`,
@@ -58,304 +67,7 @@ const HeaderPanel = () => (
   </div>
 );
 
-// --- Блок Как работает Нора ---
-const NoraHowItWorksBlock = () => {
-  const DIALOGS = [
-    {
-      q: "Почему постоянно тревожусь за малыша?",
-      a: "Это естественно! Я помогу отличить «нормальные» тревоги от опасных, дам упражнения для успокоения и подскажу, когда стоит обратиться к врачу."
-    },
-    {
-      q: "Просыпаюсь по ночам и не могу уснуть...",
-      a: "Нарушение сна — частая проблема! Я соберу ваши симптомы и подскажу, какие техники помогут лучше засыпать и что важно обсудить с врачом."
-    },
-    {
-      q: "Болят спина и ноги, как облегчить боль?",
-      a: "Я дам рекомендации по разгрузке, упражнениям, подскажу, когда обращаться к доктору и помогу отслеживать новые симптомы."
-    },
-    {
-      q: "Какие витамины и анализы нужны?",
-      a: "Подскажу персональный список, график напоминаний и объясню, зачем каждый анализ — вы не пропустите важное!"
-    }
-  ];
-  const [step, setStep] = useState(0);
-  const [phase, setPhase] = useState("typeQ");
-  const [qText, setQText] = useState("");
-  const [aText, setAText] = useState("");
-
-  useEffect(() => {
-    if (phase === "typeQ") {
-      setQText("");
-      let i = 0;
-      const interval = setInterval(() => {
-        setQText(DIALOGS[step].q.slice(0, i+1));
-        i++;
-        if (i > DIALOGS[step].q.length) {
-          clearInterval(interval);
-          setTimeout(() => setPhase("typeA"), 300);
-        }
-      }, 34);
-      return () => clearInterval(interval);
-    }
-    if (phase === "typeA") {
-      setAText("");
-      let i = 0;
-      const interval = setInterval(() => {
-        setAText(DIALOGS[step].a.slice(0, i+1));
-        i++;
-        if (i > DIALOGS[step].a.length) {
-          clearInterval(interval);
-          setTimeout(() => setPhase("waitNext"), 5000);
-        }
-      }, 16);
-      return () => clearInterval(interval);
-    }
-    if (phase === "waitNext" && step < DIALOGS.length-1) {
-      const timer = setTimeout(() => {
-        setQText("");
-        setAText("");
-        setPhase("typeQ");
-        setStep(s => s+1);
-      }, 200);
-      return () => clearTimeout(timer);
-    }
-  }, [phase, step]);
-
-  return (
-    <div style={{
-      width: `calc(100% - ${BLOCK_SIDE_PADDING * 2}px)`,
-      maxWidth,
-      margin: "0 auto 38px auto",
-      background: GRADIENT,
-      borderRadius: borderRadius,
-      boxShadow: "0 6px 20px 0 rgba(150,175,205,0.11)",
-      padding: `22px ${BLOCK_SIDE_PADDING}px`,
-      fontFamily: "'Manrope', Arial, Helvetica, sans-serif",
-      minHeight: 210,
-    }}>
-      <div style={{
-        fontWeight: 700,
-        fontSize: 20,
-        color: NORA_COLOR,
-        textAlign: "center"
-      }}>
-        Как работает Nora?
-      </div>
-      <div style={{ height: 28 }} />
-      <div style={{
-        width: "100%",
-        minHeight: 90,
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "flex-end",
-        justifyContent: "center"
-      }}>
-        {qText && (
-          <div style={{
-            position: "relative",
-            alignSelf: "flex-end",
-            background: "#fff",
-            color: NORA_COLOR,
-            borderTopLeftRadius: 19,
-            borderTopRightRadius: 19,
-            borderBottomLeftRadius: 19,
-            borderBottomRightRadius: 2,
-            fontSize: 15,
-            fontWeight: 500,
-            boxShadow: "0 1px 8px 0 rgba(200,180,200,0.13)",
-            padding: "15px 21px",
-            marginBottom: 16,
-            maxWidth: 340,
-            lineHeight: "1.65",
-          }}>
-            {qText}<span style={{ opacity: 0.19 }}>{phase === "typeQ" && "|"}</span>
-            <BubbleTailRight />
-          </div>
-        )}
-        {aText && (
-          <div style={{
-            position: "relative",
-            alignSelf: "flex-start",
-            background: "#fff",
-            color: NORA_COLOR,
-            borderTopLeftRadius: 19,
-            borderTopRightRadius: 19,
-            borderBottomRightRadius: 19,
-            borderBottomLeftRadius: 2,
-            fontSize: 15,
-            fontWeight: 400,
-            padding: "21px 26px",
-            minHeight: 35,
-            boxShadow: "0 1px 8px 0 rgba(200,180,200,0.09)",
-            maxWidth: 370,
-            marginBottom: 8,
-            lineHeight: "1.72"
-          }}>
-            {aText}<span style={{ opacity: 0.19 }}>{phase === "typeA" && "|"}</span>
-            <BubbleTailLeft />
-          </div>
-        )}
-      </div>
-      <div style={{ fontSize: 13, color: "#6e7c85", textAlign: "center", marginTop: 8 }}>
-        Просто задайте вопрос — Нора найдёт ответ!
-      </div>
-    </div>
-  );
-};
-
-// --- Преимущества ---
-const BENEFITS = [
-  { emoji: "🩺", title: "Медицинская точность", text: "Советы основаны на рекомендациях британской службы NHS и адаптированы под ваш регион." },
-  { emoji: "🤝", title: "Поддержка 24/7", text: "Ассистент всегда на связи для заботы и помощи в любой ситуации." },
-  { emoji: "⏰", title: "Напоминания о важных делах", text: "Следим, чтобы вы ничего не забыли — анализы, витамины, визиты." },
-  { emoji: "🔒", title: "Конфиденциальность", text: "Личные данные остаются только у вас — никакой передачи сторонним." },
-  { emoji: "⚡️", title: "Быстрые решения", text: "Полезные советы и поддержка сразу, когда это нужно." },
-];
-const WhyNoraBlock = () => (
-    <div
-      style={{
-        width: `calc(100% - ${BLOCK_SIDE_PADDING * 2}px)`,
-        maxWidth,
-        margin: "0 auto 38px auto",
-        background: GRADIENT,
-        borderRadius: borderRadius,
-        boxShadow: "0 6px 20px 0 rgba(150, 175, 205, 0.10)",
-        boxSizing: "border-box",
-        padding: 0,
-        fontFamily: "'Manrope', Arial, Helvetica, sans-serif"
-      }}
-    >
-      <div style={{ padding: `21px 0 20px 0` }}>
-        <div style={{
-          fontWeight: 700,
-          fontSize: "20px",
-          color: NORA_COLOR,
-          marginBottom: 20,
-          textAlign: "center"
-        }}>
-          Почему Nora Plus?
-        </div>
-        <div style={{
-          display: "flex",
-          flexDirection: "column",
-          gap: CARD_GAP,
-          padding: `0 ${BLOCK_SIDE_PADDING}px`
-        }}>
-          {BENEFITS.map(({ emoji, title, text }, idx) => (
-            <div
-              key={idx}
-              style={{
-                position: "relative",
-                background: "#fff",
-                borderRadius: 18,
-                boxShadow: "0 2px 18px 0 rgba(150,180,220,0.07)",
-                padding: "19px 15px 19px 15px",
-                overflow: "hidden",
-                minHeight: 56,
-                textAlign: "left"
-              }}
-            >
-              <span
-                style={{
-                  position: "absolute",
-                  right: 12,
-                  top: 14,
-                  fontSize: 62,
-                  opacity: 0.14,
-                  pointerEvents: "none",
-                  userSelect: "none",
-                  lineHeight: 1,
-                  zIndex: 0,
-                }}
-                aria-hidden="true"
-              >
-                {emoji}
-              </span>
-              <div style={{ position: "relative", zIndex: 1 }}>
-                <div style={{ fontWeight: 700, fontSize: 16, color: NORA_COLOR, marginBottom: 7, textAlign: "left" }}>
-                  {title}
-                </div>
-                <div style={{ fontSize: 13, color: "#3a3a3a", lineHeight: "1.64", textAlign: "left" }}>
-                  {text}
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-);
-
-// --- Отзывы ---
-const REVIEWS = [
-  { name: "Анна", badge: "2 месяц беременности", problem: "Токсикоз", text: "Nora Plus подсказала, как справиться с утренней тошнотой. Благодаря рекомендациям по питанию и режиму дня симптомы стали гораздо легче." },
-  { name: "Дилноза", badge: "3 месяц беременности", problem: "Тошнота", text: "Советы Nora Plus помогли справиться с тошнотой и легче переносить беременность. Все подсказки приходят вовремя." },
-  { name: "Елена", badge: "4 месяц беременности", problem: "Слабость и усталость", text: "Теперь я знаю, какие витамины нужно пить, сколько отдыхать и как выстроить день. Чувствую себя значительно лучше!" },
-  { name: "Шахноза", badge: "5 месяц беременности", problem: "Плохое настроение", text: "Благодаря мотивационным словам и советам Nora Plus моё настроение заметно улучшилось." },
-  { name: "Ирина", badge: "5 месяц беременности", problem: "Тревожность", text: "Советы Nora Plus помогли мне больше отдыхать, заботиться о себе и избавиться от лишних переживаний за малыша." },
-  { name: "Мария", badge: "7 месяц беременности", problem: "Бессонница", text: "Благодаря советам Nora Plus я стала лучше спать и спокойно жду появления малыша." },
-];
-const ReviewBlock = () => (
-    <div
-      style={{
-        width: `calc(100% - ${BLOCK_SIDE_PADDING * 2}px)`,
-        maxWidth,
-        margin: "0 auto 38px auto",
-        background: GRADIENT,
-        borderRadius: borderRadius,
-        boxShadow: "0 6px 20px 0 rgba(150, 175, 205, 0.10)",
-        boxSizing: "border-box",
-        padding: 0,
-        fontFamily: "'Manrope', Arial, Helvetica, sans-serif"
-      }}
-    >
-      <div style={{ padding: "21px 0 20px 0" }}>
-        <div style={{
-          fontWeight: 700,
-          fontSize: "20px",
-          color: NORA_COLOR,
-          marginBottom: 20,
-          textAlign: "center"
-        }}>
-          Отзывы будущих мам
-        </div>
-        <div style={{
-          display: "flex",
-          flexDirection: "column",
-          gap: CARD_GAP,
-          padding: `0 ${BLOCK_SIDE_PADDING}px`
-        }}>
-          {REVIEWS.map(({ name, badge, problem, text }, idx) => (
-            <div
-              key={idx}
-              style={{
-                background: "#fff",
-                borderRadius: 18,
-                boxShadow: "0 2px 18px 0 rgba(150,180,220,0.07)",
-                padding: "19px 15px 19px 15px",
-                overflow: "hidden",
-                textAlign: "left"
-              }}
-            >
-              <div style={{ position: "relative", zIndex: 1 }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 7 }}>
-                  <span style={{ fontWeight: 700, fontSize: 15, color: "#222" }}>{name}</span>
-                  <span style={{
-                    fontWeight: 500, fontSize: 13, color: "#1681f5",
-                    padding: "4px 9px", borderRadius: 12, background: "#f3f7fe", whiteSpace: "nowrap"
-                  }}>{badge}</span>
-                </div>
-                <div style={{ fontWeight: 500, fontSize: 13, color: "#acb5bd", marginBottom: 9 }}>{problem}</div>
-                <div style={{ fontSize: 13, color: "#3a3a3a", lineHeight: "1.64" }}>{text}</div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-);
-
-// --- Футер ---
+// --- КНОПОЧНЫЙ Футер, только на welcome! ---
 const Footer = () => (
   <div
     style={{
@@ -387,6 +99,62 @@ const Footer = () => (
       Ташкент, Юнусабадский район, массив Кашгар 26
     </div>
     <div style={{
+      display: "flex",
+      gap: 11,
+      width: "100%",
+      justifyContent: "center"
+    }}>
+      <a href="#" style={{
+        background: "#fff",
+        width: "63%",
+        borderRadius: 13,
+        color: "#495062",
+        fontWeight: 400,
+        fontSize: 14,
+        padding: "9px 0",
+        textDecoration: "none",
+        textAlign: "center",
+        border: "1px solid #e1e9f5",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: 7,
+        marginRight: 5
+      }}>{IconPartner} Стать партнёром</a>
+      <a href="#" style={{
+        background: "#fff",
+        width: "37%",
+        borderRadius: 13,
+        color: "#495062",
+        fontWeight: 400,
+        fontSize: 14,
+        padding: "9px 0",
+        textDecoration: "none",
+        textAlign: "center",
+        border: "1px solid #e1e9f5",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: 7
+      }}>{IconContact} Контакты</a>
+    </div>
+    <a href="#" style={{
+      background: "#fff",
+      padding: "7px 0",
+      width: "100%",
+      borderRadius: 14,
+      color: "#556",
+      fontWeight: 400,
+      fontSize: 14,
+      textDecoration: "none",
+      border: "1px solid #e1e9f5",
+      textAlign: "center",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      gap: 7
+    }}>{IconPolicy} Политика конфиденциальности</a>
+    <div style={{
       marginTop: 8,
       fontSize: 12,
       color: "#8a97a0",
@@ -398,9 +166,281 @@ const Footer = () => (
   </div>
 );
 
-const FooterGap = () => <div style={{height: 20}} />;
+// --- Преимущества, отзывы ---
+const BENEFITS = [
+  { emoji: "🩺", title: "Медицинская точность", text: "Советы основаны на рекомендациях британской службы NHS и адаптированы под ваш регион." },
+  { emoji: "🤝", title: "Поддержка 24/7", text: "Ассистент всегда на связи для заботы и помощи в любой ситуации." },
+  { emoji: "⏰", title: "Напоминания о важных делах", text: "Следим, чтобы вы ничего не забыли — анализы, витамины, визиты." },
+  { emoji: "🔒", title: "Конфиденциальность", text: "Личные данные остаются только у вас — никакой передачи сторонним." },
+  { emoji: "⚡️", title: "Быстрые решения", text: "Полезные советы и поддержка сразу, когда это нужно." },
+];
+const WhyNoraBlock = () => (
+  <div style={{
+    width: `calc(100% - ${BLOCK_SIDE_PADDING * 2}px)`,
+    maxWidth,
+    margin: "0 auto 38px auto",
+    background: GRADIENT,
+    borderRadius: borderRadius,
+    boxShadow: "0 6px 20px 0 rgba(150, 175, 205, 0.10)",
+    boxSizing: "border-box",
+    padding: 0,
+    fontFamily: "'Manrope', Arial, Helvetica, sans-serif"
+  }}>
+    <div style={{ padding: `21px 0 20px 0` }}>
+      <div style={{
+        fontWeight: 700,
+        fontSize: "20px",
+        color: NORA_COLOR,
+        marginBottom: 20,
+        textAlign: "center"
+      }}>
+        Почему Nora Plus?
+      </div>
+      <div style={{
+        display: "flex",
+        flexDirection: "column",
+        gap: CARD_GAP,
+        padding: `0 ${BLOCK_SIDE_PADDING}px`
+      }}>
+        {BENEFITS.map(({ emoji, title, text }, idx) => (
+          <div
+            key={idx}
+            style={{
+              position: "relative",
+              background: "#fff",
+              borderRadius: 18,
+              boxShadow: "0 2px 18px 0 rgba(150,180,220,0.07)",
+              padding: "19px 15px 19px 15px",
+              overflow: "hidden",
+              minHeight: 56,
+              textAlign: "left"
+            }}
+          >
+            <span
+              style={{
+                position: "absolute",
+                right: 12,
+                top: 14,
+                fontSize: 62,
+                opacity: 0.14,
+                pointerEvents: "none",
+                userSelect: "none",
+                lineHeight: 1,
+                zIndex: 0,
+              }}
+              aria-hidden="true"
+            >
+              {emoji}
+            </span>
+            <div style={{ position: "relative", zIndex: 1 }}>
+              <div style={{ fontWeight: 700, fontSize: 16, color: NORA_COLOR, marginBottom: 7, textAlign: "left" }}>
+                {title}
+              </div>
+              <div style={{ fontSize: 13, color: "#3a3a3a", lineHeight: "1.64", textAlign: "left" }}>
+                {text}
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+);
 
-// --- ОСНОВНОЙ КОМПОНЕНТ ---
+const REVIEWS = [
+  { name: "Анна", badge: "2 месяц беременности", problem: "Токсикоз", text: "Nora Plus подсказала, как справиться с утренней тошнотой. Благодаря рекомендациям по питанию и режиму дня симптомы стали гораздо легче." },
+  { name: "Дилноза", badge: "3 месяц беременности", problem: "Тошнота", text: "Советы Nora Plus помогли справиться с тошнотой и легче переносить беременность. Все подсказки приходят вовремя." },
+  { name: "Елена", badge: "4 месяц беременности", problem: "Слабость и усталость", text: "Теперь я знаю, какие витамины нужно пить, сколько отдыхать и как выстроить день. Чувствую себя значительно лучше!" },
+  { name: "Шахноза", badge: "5 месяц беременности", problem: "Плохое настроение", text: "Благодаря мотивационным словам и советам Nora Plus моё настроение заметно улучшилось." },
+  { name: "Ирина", badge: "5 месяц беременности", problem: "Тревожность", text: "Советы Nora Plus помогли мне больше отдыхать, заботиться о себе и избавиться от лишних переживаний за малыша." },
+  { name: "Мария", badge: "7 месяц беременности", problem: "Бессонница", text: "Благодаря советам Nora Plus я стала лучше спать и спокойно жду появления малыша." },
+];
+
+const ReviewBlock = () => (
+  <div style={{
+    width: `calc(100% - ${BLOCK_SIDE_PADDING * 2}px)`,
+    maxWidth,
+    margin: "0 auto 38px auto",
+    background: GRADIENT,
+    borderRadius: borderRadius,
+    boxShadow: "0 6px 20px 0 rgba(150, 175, 205, 0.10)",
+    boxSizing: "border-box",
+    padding: 0,
+    fontFamily: "'Manrope', Arial, Helvetica, sans-serif"
+  }}>
+    <div style={{ padding: "21px 0 20px 0" }}>
+      <div style={{
+        fontWeight: 700,
+        fontSize: "20px",
+        color: NORA_COLOR,
+        marginBottom: 20,
+        textAlign: "center"
+      }}>
+        Отзывы будущих мам
+      </div>
+      <div style={{
+        display: "flex",
+        flexDirection: "column",
+        gap: CARD_GAP,
+        padding: `0 ${BLOCK_SIDE_PADDING}px`
+      }}>
+        {REVIEWS.map(({ name, badge, problem, text }, idx) => (
+          <div
+            key={idx}
+            style={{
+              background: "#fff",
+              borderRadius: 18,
+              boxShadow: "0 2px 18px 0 rgba(150,180,220,0.07)",
+              padding: "19px 15px 19px 15px",
+              overflow: "hidden",
+              textAlign: "left"
+            }}
+          >
+            <div style={{ position: "relative", zIndex: 1 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 7 }}>
+                <span style={{ fontWeight: 700, fontSize: 15, color: "#222" }}>{name}</span>
+                <span style={{
+                  fontWeight: 500, fontSize: 13, color: "#1681f5",
+                  padding: "4px 9px", borderRadius: 12, background: "#f3f7fe", whiteSpace: "nowrap"
+                }}>{badge}</span>
+              </div>
+              <div style={{ fontWeight: 500, fontSize: 13, color: "#acb5bd", marginBottom: 9 }}>{problem}</div>
+              <div style={{ fontSize: 13, color: "#3a3a3a", lineHeight: "1.64" }}>{text}</div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+);
+
+// --- Блок Как работает Нора ---
+const bubbleStyle = (align = "right") => ({
+  position: "relative",
+  alignSelf: align === "right" ? "flex-end" : "flex-start",
+  background: "#fff",
+  color: NORA_COLOR,
+  borderTopLeftRadius: 19,
+  borderTopRightRadius: 19,
+  borderBottomLeftRadius: align === "left" ? 2 : 19,
+  borderBottomRightRadius: align === "right" ? 2 : 19,
+  fontSize: 15,
+  padding: align === "right" ? "15px 20px" : "20px 21px",
+  marginBottom: 16,
+  maxWidth: 370,
+  minWidth: 120,
+  textAlign: "left",
+  fontWeight: align === "right" ? 500 : 400,
+  lineHeight: align === "right" ? "1.55" : "1.7",
+  boxShadow: "0 1px 8px 0 rgba(200,180,200,0.1)",
+  display: "block",
+  whiteSpace: "pre-line",
+});
+const NoraHowItWorksBlock = () => {
+  const DIALOGS = [
+    { q: "Можно ли пить кофе во время беременности?", a: "☕ Конечно! Только не больше 1-2 чашек в день — и лучше без сахара, чтобы не повысить давление." },
+    { q: "Я постоянно переживаю за малыша...", a: "🤗 Это нормально! Позвольте себе отдых, используйте дыхательные практики и отслеживайте свои эмоции." },
+    { q: "Часто болит спина и ноги, что делать?", a: "🦵 Очень частая жалоба. Носите удобную обувь, практикуйте легкую зарядку, отдыхайте чаще лёжа на боку." },
+    { q: "Плохо сплю по ночам, просыпаюсь часто.", a: "😴 Лёгкий перекус перед сном, прохладная проветренная комната и регулярный режим — всё это поможет с бессонницей." },
+    { q: "Не забыть бы витамины и анализы!", a: "💊 Я поставлю напоминания, сформирую календарь визитов и отправлю push за 2 дня!" },
+    { q: "Можно ли заниматься спортом?", a: "🏃 Спорт — отлично! Но выбирайте плавание, йогу, прогулки. Главное — никаких экстремальных нагрузок." },
+    { q: "У меня иногда тянет живот...", a: "👩‍⚕️ Незначительная боль допустима, но если усиливается или появляются новые симптомы — обязательно сообщите врачу!" },
+    { q: "Что взять с собой на первый прием к врачу?", a: "📄 Паспорт, страховой полис, результаты анализов (если есть), список принимаемых витаминов или лекарств." }
+  ];
+  const [step, setStep] = useState(0);
+  const [phase, setPhase] = useState("typeQ");
+  const [qText, setQText] = useState("");
+  const [aText, setAText] = useState("");
+
+  useEffect(() => {
+    if (phase === "typeQ") {
+      setQText("");
+      let i = 0;
+      const interval = setInterval(() => {
+        setQText(DIALOGS[step].q.slice(0, i + 1));
+        i++;
+        if (i > DIALOGS[step].q.length) {
+          clearInterval(interval);
+          setTimeout(() => setPhase("typeA"), 300);
+        }
+      }, 30);
+      return () => clearInterval(interval);
+    }
+    if (phase === "typeA") {
+      setAText("");
+      let i = 0;
+      const interval = setInterval(() => {
+        setAText(DIALOGS[step].a.slice(0, i + 1));
+        i++;
+        if (i > DIALOGS[step].a.length) {
+          clearInterval(interval);
+          setTimeout(() => setPhase("waitNext"), 7000);
+        }
+      }, 14);
+      return () => clearInterval(interval);
+    }
+    if (phase === "waitNext" && step < DIALOGS.length - 1) {
+      const timer = setTimeout(() => {
+        setQText("");
+        setAText("");
+        setPhase("typeQ");
+        setStep((s) => s + 1);
+      }, 200);
+      return () => clearTimeout(timer);
+    }
+  }, [phase, step]);
+
+  return (
+    <div style={{
+      width: `calc(100% - ${BLOCK_SIDE_PADDING * 2}px)`,
+      maxWidth,
+      height: 390,
+      minHeight: 390,
+      background: GRADIENT,
+      borderRadius: borderRadius,
+      boxShadow: "0 6px 20px 0 rgba(150,175,205,0.11)",
+      padding: `22px ${BLOCK_SIDE_PADDING}px`,
+      fontFamily: "'Manrope', Arial, Helvetica, sans-serif",
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "flex-start"
+    }}>
+      <div style={{
+        fontWeight: 700,
+        fontSize: 20,
+        color: NORA_COLOR,
+        textAlign: "center"
+      }}>
+        Как работает Nora?
+      </div>
+      <div style={{ height: 28 }} />
+      <div style={{
+        width: "100%",
+        height: "255px",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "stretch",
+        justifyContent: "flex-start"
+      }}>
+        {qText && (
+          <div style={bubbleStyle("right")}>
+            {qText}<span style={{ opacity: 0.19 }}>{phase === "typeQ" && "|"}</span>
+          </div>
+        )}
+        {aText && (
+          <div style={bubbleStyle("left")}>
+            {aText}<span style={{ opacity: 0.19 }}>{phase === "typeA" && "|"}</span>
+          </div>
+        )}
+      </div>
+      <div style={{ fontSize: 13, color: "#6e7c85", textAlign: "center", marginTop: 8 }}>
+        Просто задайте вопрос — Нора найдёт ответ!
+      </div>
+    </div>
+  );
+};
+
+// --- Основной компонент ---
 const Chat = () => {
   const [showWelcome, setShowWelcome] = useState(true);
   const [message, setMessage] = useState("");
@@ -424,9 +464,9 @@ const Chat = () => {
 
   return (
     <div style={{ background: "#f8fdff", minHeight: "100vh" }}>
-      {showWelcome && (
+      <HeaderPanel />
+      {showWelcome ? (
         <>
-          <HeaderPanel />
           <div style={{ height: 20 }} />
           <div style={{ height: 20 }} />
           <div style={{
@@ -511,13 +551,10 @@ const Chat = () => {
             <WhyNoraBlock />
             <ReviewBlock />
             <Footer />
-            <FooterGap />
           </div>
         </>
-      )}
-      {!showWelcome && (
+      ) : (
         <>
-          <HeaderPanel />
           <div style={{
             width: "100%",
             maxWidth: maxWidth,
@@ -602,7 +639,6 @@ const Chat = () => {
               ➤
             </button>
           </div>
-          <Footer />
         </>
       )}
     </div>
