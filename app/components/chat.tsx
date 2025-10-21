@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
 
+// ------ Глобальные константы ------
 const ICONS = {
   telegram: "https://cdn-icons-png.flaticon.com/512/1946/1946547.png",
   trash: "https://cdn-icons-png.flaticon.com/512/1345/1345823.png",
@@ -13,17 +14,18 @@ const ICONS = {
   ),
 };
 const ICON_SIZE = 23;
-
 const NORA_COLOR = "#2e2e2e";
 const BORDER_RADIUS = 22;
-const BLOCK_PADDING = 24; // новый общий отступ по бокам (равный для всех блоков!)
+const PANEL_PADDING = 15; // Вернул старый отступ!
+const BLOCK_PADDING = 24; // Одинаковые для всех крупных блоков
+const INNER_CARD_PADDING = 10; // карточки в преимуществах + отзывах
 const MAX_WIDTH = 560;
 const GRADIENT = "linear-gradient(90deg, #eff5fe 0%, #e5e8ed 100%)";
 const BABY_GRADIENT = "linear-gradient(90deg, #e39290 0%, #efb1b6 100%)";
 const INPUT_HEIGHT = 68;
 const CARD_GAP = 10;
 
-// --- Панель с кнопками ---
+// ------ Панель наверху ------
 const HeaderPanel = ({ onClearChat }: { onClearChat?: () => void }) => (
   <div style={{
     width: `calc(100% - 30px)`,
@@ -34,11 +36,11 @@ const HeaderPanel = ({ onClearChat }: { onClearChat?: () => void }) => (
     display: "flex",
     alignItems: "center",
     justifyContent: "space-between",
-    padding: "5px 15px", // старый отступ возвращён!
+    padding: `5px ${PANEL_PADDING}px`,
     fontFamily: "'Manrope', sans-serif"
   }}>
     <div style={{ flex: 1 }}>
-      <div style={{ fontWeight: 800, fontSize: 19, marginBottom: 5 }}>Nora Plus</div>
+      <span style={{ fontWeight: 800, fontSize: 19, marginBottom: 5 }}>Nora Plus</span>
       <div style={{ fontSize: 13, color: "#555" }}>Ассистент для будущих мам</div>
     </div>
     <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
@@ -49,26 +51,29 @@ const HeaderPanel = ({ onClearChat }: { onClearChat?: () => void }) => (
   </div>
 );
 
-// --- Footer с кнопками ---
-const IconPartner = (
-  <svg width="18" height="18" fill="none" viewBox="0 0 20 20">
-    <circle cx="10" cy="6.5" r="3.3" stroke="#5a6573" strokeWidth="1.5"/>
-    <path d="M2.8 16c.9-2.5 3.4-4.2 7.2-4.2s6.2 1.7 7.2 4.2" stroke="#5a6573" strokeWidth="1.5" strokeLinecap="round"/>
-  </svg>
-);
-const IconContact = (
-  <svg width="18" height="18" fill="none" viewBox="0 0 20 20">
-    <rect x="2.8" y="3.5" width="14.4" height="11" rx="2.2" stroke="#5a6573" strokeWidth="1.5"/>
-    <path d="M3.5 4l6.5 6.1c.3.2.8.2 1.1 0L17 4" stroke="#5a6573" strokeWidth="1.5"/>
-  </svg>
-);
-const IconPolicy = (
-  <svg width="16" height="16" fill="none" viewBox="0 0 20 20" style={{marginRight: 6}}>
-    <path d="M4 4.5V10c0 5 7 6.5 7 6.5s7-1.5 7-6.5v-5.5л-7-2-7 2Z" stroke="#4d5762" strokeWidth="1.5" fill="none"/>
-  </svg>
+// ------ Футер с кнопками ------
+const Footer = () => (
+  <div style={{
+    width: "calc(100% - 56px)",
+    maxWidth: MAX_WIDTH,
+    margin: "0 auto",
+    background: GRADIENT,
+    borderRadius: BORDER_RADIUS,
+    boxShadow: "0 -4px 14px rgba(155,175,205,0.06)",
+    padding: 28,
+    fontFamily: "'Manrope', sans-serif"
+  }}>
+    <div style={{ fontSize: 12, textAlign: "center", color: "#263540", fontWeight: 600 }}>Ташкент, Юнусабадский район, массив Кашгар 26</div>
+    <div style={{ display: "flex", gap: 11, justifyContent: "center", marginTop: 15 }}>
+      <a href="#" style={{ background: "#fff", border: "1px solid #e1e9f5", padding: "9px 0", borderRadius: 13, width: "63%", display: "flex", justifyContent: "center", alignItems: "center", fontSize: 14, gap: 7, color: "#495062" }}><span>🧑‍🤝‍🧑</span> Стать партнёром</a>
+      <a href="#" style={{ background: "#fff", border: "1px solid #e1e9f5", padding: "9px 0", borderRadius: 13, width: "37%", display: "flex", justifyContent: "center", alignItems: "center", fontSize: 14, gap: 7, color: "#495062" }}><span>✉️</span> Контакты</a>
+    </div>
+    <a href="#" style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 6, background: "#fff", border: "1px solid #e1e9f5", borderRadius: 14, color: "#556", fontSize: 14, padding: "8px 0", marginTop: 16, textDecoration: "none" }}>🛡 Политика конфиденциальности</a>
+    <div style={{ fontSize: 12, color: "#8a97a0", textAlign: "center", marginTop: 10 }}>© {new Date().getFullYear()} Nora Plus — забота и поддержка будущих мам</div>
+  </div>
 );
 
-// --- Почему Нора ---
+// ------ Почему Nora ------
 const BENEFITS = [
   { emoji: "🩺", title: "Медицинская точность", text: "Советы основаны на рекомендациях британской службы NHS и адаптированы под ваш регион." },
   { emoji: "🤝", title: "Поддержка 24/7", text: "Ассистент всегда на связи для заботы и помощи в любой ситуации." },
@@ -88,7 +93,7 @@ const WhyNoraBlock = () => (
     padding: `22px ${BLOCK_PADDING}px 20px ${BLOCK_PADDING}px`,
     fontFamily: "'Manrope', sans-serif"
   }}>
-    <h3 style={{ textAlign: "center", fontSize: 20, color: NORA_COLOR, marginBottom: 20 }}>Почему Nora Plus?</h3>
+    <div style={{ textAlign: "center", fontSize: 20, color: NORA_COLOR, marginBottom: 20, fontWeight: 700 }}>Почему Nora Plus?</div>
     {BENEFITS.map(({ emoji, title, text }, idx) => (
       <div
         key={idx}
@@ -97,7 +102,7 @@ const WhyNoraBlock = () => (
           background: "#fff",
           borderRadius: 18,
           boxShadow: "0 2px 14px rgba(160,180,210,0.07)",
-          padding: "15px 10px", // внутренние отступы уменьшены!
+          padding: `15px ${INNER_CARD_PADDING}px`,
           marginBottom: 10
         }}
       >
@@ -117,7 +122,7 @@ const WhyNoraBlock = () => (
   </div>
 );
 
-// --- Отзывы ---
+// ------ Отзывы ------
 const REVIEWS = [
   { name: "Анна", badge: "2 месяц беременности", text: "Nora Plus подсказала, как справиться с утренней тошнотой, благодаря советам по питанию стало легче." },
   { name: "Елена", badge: "4 месяц беременности", text: "Теперь я знаю, когда сдавать анализы и какие витамины пить. Всё под контролем." },
@@ -135,13 +140,13 @@ const ReviewBlock = () => (
     padding: `22px ${BLOCK_PADDING}px 20px ${BLOCK_PADDING}px`,
     fontFamily: "'Manrope', sans-serif"
   }}>
-    <h3 style={{ textAlign: "center", fontSize: 20, color: NORA_COLOR, marginBottom: 20 }}>Отзывы будущих мам</h3>
+    <div style={{ textAlign: "center", fontSize: 20, color: NORA_COLOR, marginBottom: 20, fontWeight: 700 }}>Отзывы будущих мам</div>
     {REVIEWS.map(({ name, badge, text }, idx) => (
       <div key={idx} style={{
         background: "#fff",
         borderRadius: 16,
         boxShadow: "0 2px 14px rgba(160,180,210,0.07)",
-        padding: "15px 10px", // уменьшены внутренние отступы
+        padding: `15px ${INNER_CARD_PADDING}px`,
         marginBottom: 10
       }}>
         <div style={{ display: "flex", alignItems: "center", gap: 9, marginBottom: 7 }}>
@@ -160,7 +165,7 @@ const ReviewBlock = () => (
   </div>
 );
 
-// --- Как работает Нора (легче, бесконечно) ---
+// ------ Как работает Нора ------
 const bubbleStyle = (align = "right") => ({
   alignSelf: align === "right" ? 'flex-end' : 'flex-start',
   background: "#fff",
@@ -175,15 +180,16 @@ const bubbleStyle = (align = "right") => ({
   fontSize: 15
 });
 
+const EXAMPLES = [
+  { q: "Можно ли пить кофе во время беременности?", a: "☕ Конечно, но не больше 1-2 чашек в день и лучше без сахара." },
+  { q: "Я часто переживаю без причины.", a: "🤗 Это естественно. Я помогу успокоиться и понять, что нормально, а когда лучше обратиться к врачу." },
+  { q: "Болят ноги и поясница.", a: "🦵 Это распространено! Покажу упражнения и советы для облегчения." },
+  { q: "Плохо сплю.", a: "😴 Попробуйте лёгкий перекус перед сном, дыхательные техники и комфортную позу на боку." },
+  { q: "Какие витамины принимать?", a: "💊 Помогу подобрать подходящие витамины и напомню, когда их принимать." },
+  { q: "Можно ли летать?", a: "✈️ Если беременность протекает спокойно, перелёты до 30 недели безопасны, но уточните у врача." },
+];
+
 const NoraHowItWorksBlock = () => {
-  const EXAMPLES = [
-    { q: "Можно ли пить кофе во время беременности?", a: "☕ Конечно, но не больше 1-2 чашек в день и лучше без сахара." },
-    { q: "Я часто переживаю без причины.", a: "🤗 Это естественно. Я помогу успокоиться и понять, что нормально, а когда лучше обратиться к врачу." },
-    { q: "Болят ноги и поясница.", a: "🦵 Это распространено! Покажу упражнения и советы для облегчения." },
-    { q: "Плохо сплю.", a: "😴 Попробуйте лёгкий перекус перед сном, дыхательные техники и комфортную позу на боку." },
-    { q: "Какие витамины принимать?", a: "💊 Помогу подобрать подходящие витамины и напомню, когда их принимать." },
-    { q: "Можно ли летать?", a: "✈️ Если беременность протекает спокойно, перелёты до 30 недели безопасны, но уточните у врача." },
-  ];
   const [step, setStep] = useState(0);
   const [phase, setPhase] = useState("typeQ");
   const [q, setQ] = useState("");
@@ -237,7 +243,7 @@ const NoraHowItWorksBlock = () => {
       boxShadow: "0 6px 20px rgba(150,175,205,0.1)",
       padding: `22px ${BLOCK_PADDING}px 20px ${BLOCK_PADDING}px`
     }}>
-      <h3 style={{ textAlign: "center", fontSize: 20, color: NORA_COLOR }}>Как работает Nora?</h3>
+      <div style={{ textAlign: "center", fontSize: 20, color: NORA_COLOR, fontWeight: 700 }}>Как работает Nora?</div>
       <div style={{ height: 25 }} />
       <div style={{ display: "flex", flexDirection: "column" }}>
         {q && <div style={bubbleStyle("right")}>{q}<span style={{ opacity: 0.2 }}>{phase === "typeQ" && "|"}</span></div>}
@@ -248,7 +254,7 @@ const NoraHowItWorksBlock = () => {
   );
 };
 
-// --- Главный компонент ---
+// ------ Главный компонент ------
 const Chat = () => {
   const [showWelcome, setShowWelcome] = useState(true);
   const [msg, setMsg] = useState("");
@@ -273,7 +279,13 @@ const Chat = () => {
           </div>
           <div style={{ marginTop: 24, textAlign: "center" }}>
             <div style={{ fontSize: 22, color: NORA_COLOR, marginBottom: 12 }}>Ждёте малыша? Я помогу!</div>
-            <div style={{ fontWeight: 400, color: NORA_COLOR, fontSize: 15, lineHeight: 1.75, padding: "0 34px" }}>
+            <div style={{
+              color: NORA_COLOR,
+              fontSize: 15,
+              lineHeight: 1.75,
+              padding: "0 34px",
+              fontWeight: 400 // убран жирный!
+            }}>
               Я помогаю будущим мамам: отвечаю на вопросы, напоминаю о важных делах, слежу за самочувствием и поддерживаю!
             </div>
           </div>
@@ -291,7 +303,9 @@ const Chat = () => {
               Начать пользоваться {ICONS.arrowRight}
             </button>
           </div>
-          <div style={{ textAlign: "center", color: "#7c8792", fontSize: 13, marginTop: 10 }}>Попробуйте — это быстро и бесплатно</div>
+          <div style={{ textAlign: "center", color: "#7c8792", fontSize: 13, marginTop: 10 }}>
+            Попробуйте — это быстро и бесплатно
+          </div>
           <div style={{ marginTop: 40 }} />
           <NoraHowItWorksBlock />
           <WhyNoraBlock />
