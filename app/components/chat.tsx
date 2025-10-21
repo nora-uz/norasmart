@@ -1,7 +1,6 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
 
-// --- константы и SVG-иконки ---
 const NORA_COLOR = "#2e2e2e";
 const ICON_SIZE = 23;
 const borderRadius = 22;
@@ -70,72 +69,110 @@ const REVIEWS = [
   { name: "Лола", badge: "4 месяц беременности", problem: "Недостаток белка", text: "Советы по питанию очень полезные, теперь у меня больше энергии." }
 ];
 
-// --- новый блок "Как работает Nora" ---
+// --- НОВЫЙ БЛОК Как работает Нора ---
 const NoraHowItWorksBlock = () => {
+  const DIALOGS = [
+    {
+      q: "Почему постоянно тревожусь за малыша?",
+      a: "Это естественно! Я помогу отличить «нормальные» тревоги от опасных, дам упражнения для успокоения и подскажу, когда стоит обратиться к врачу."
+    },
+    {
+      q: "Просыпаюсь по ночам и не могу уснуть...",
+      a: "Нарушение сна — частая проблема! Я соберу ваши симптомы и подскажу, какие техники помогут лучше засыпать и что важно обсудить с врачом."
+    },
+    {
+      q: "Болят спина и ноги, как облегчить боль?",
+      a: "Я дам рекомендации по разгрузке, упражнениям, подскажу, когда обращаться к доктору и помогу отслеживать новые симптомы."
+    },
+    {
+      q: "Какие витамины и анализы нужны?",
+      a: "Подскажу персональный список, график напоминаний и объясню, зачем каждый анализ — вы не пропустите важное!"
+    },
+    {
+      q: "Боюсь пропустить визит к врачу...",
+      a: "Я настрою календарь визитов и пришлю уведомления заранее, чтобы ничего не забыть!"
+    }
+  ];
   const [step, setStep] = useState(0);
+  const [showTyping, setShowTyping] = useState(true);
+
   useEffect(() => {
-    if (step < QA.length-1) {
-      const timer = setTimeout(() => setStep(step+1), 1700);
+    if (showTyping) {
+      const timer = setTimeout(() => setShowTyping(false), 1300 + DIALOGS[step].a.length * 18);
       return () => clearTimeout(timer);
     }
-  }, [step]);
-  const QA = [
-    { q: "Что делать при тошноте на ранних сроках?", a: "Nora: Спокойно! Вот простые советы, чтобы стало легче: отдых, вода и дробное питание." },
-    { q: "Когда сдавать анализы?", a: "Nora: Я напомню! Введи ПДР — и подарю персональный календарь важного." },
-    { q: "Не хочу забыть про витамины!", a: "Nora: Сделаю расписание и буду напоминать вовремя!" }
-  ];
+    if (!showTyping && step < DIALOGS.length - 1) {
+      const timer = setTimeout(() => {
+        setStep(s => s + 1);
+        setShowTyping(true);
+      }, 1700);
+      return () => clearTimeout(timer);
+    }
+  }, [showTyping, step]);
+
   return (
     <div style={{
       width: `calc(100% - ${BLOCK_SIDE_PADDING * 2}px)`,
       maxWidth,
       margin: "0 auto 38px auto",
-      background: "#fff",
+      background: GRADIENT,
       borderRadius: borderRadius,
-      boxShadow: "0 3px 16px 0 rgba(150,175,205,0.10)",
+      boxShadow: "0 6px 20px 0 rgba(150,175,205,0.11)",
       padding: `22px ${BLOCK_SIDE_PADDING}px`,
-      fontFamily: "'Manrope', Arial, Helvetica, sans-serif"
+      fontFamily: "'Manrope', Arial, Helvetica, sans-serif",
+      minHeight: 180,
     }}>
-      <div style={{fontWeight: 700, fontSize: 20, color: NORA_COLOR, textAlign: "center", marginBottom: 13}}>
+      <div style={{ fontWeight: 700, fontSize: 20, color: NORA_COLOR, textAlign: "center", marginBottom: 13 }}>
         Как работает Nora?
       </div>
-      <div>
-        {QA.map((item, idx) => idx <= step &&
-          <div key={idx} style={{marginBottom: 19, opacity: idx === step ? 1 : 0.8, transition: "opacity 0.4s"}}>
-            <div style={{
-              background: "#eef7ff",
-              color: "#147bdd",
-              padding: "13px 14px",
-              borderRadius: 15,
-              maxWidth: 340,
-              fontWeight: 500,
-              display: "inline-block"
-            }}>
-              Вы: {item.q}
-            </div>
-            <div style={{
-              marginTop: 7,
-              background: "#fffde4",
-              color: "#9d5a7a",
-              padding: "13px 14px",
-              borderRadius: 15,
-              maxWidth: 340,
-              fontWeight: 500,
-              display: "inline-block",
-              boxShadow: "0 2px 8px 0 rgba(220,180,215,0.06)"
-            }}>
-              {item.a}
-            </div>
-          </div>
-        )}
+      <div style={{
+        width: "100%",
+        minHeight: 90,
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "flex-end",
+        justifyContent: "center"
+      }}>
+        <div style={{
+          alignSelf: "flex-end",
+          background: "#fff",
+          color: NORA_COLOR,
+          borderRadius: 19,
+          fontSize: 15,
+          fontWeight: 500,
+          boxShadow: "0 1px 8px 0 rgba(200,180,200,0.12)",
+          padding: "12px 18px",
+          marginBottom: 8,
+          maxWidth: 340,
+        }}>
+          {DIALOGS[step].q}
+        </div>
+        <div style={{
+          alignSelf: "flex-start",
+          background: "rgba(255,255,255,0.06)",
+          color: NORA_COLOR,
+          borderRadius: 19,
+          fontSize: 15,
+          fontWeight: 400,
+          padding: "12px 18px",
+          minHeight: 26,
+          boxShadow: "none",
+          maxWidth: 340,
+          letterSpacing: "0.015em",
+        }}>
+          {showTyping
+            ? <span>
+                <span style={{fontStyle:"italic", opacity:0.33}}>&nbsp;печатаю...</span>
+              </span>
+            : DIALOGS[step].a}
+        </div>
       </div>
-      <div style={{fontSize: 13, color: "#6e7c85", textAlign: "center"}}>
-        Просто задайте вопрос — Нора найдёт решение!
+      <div style={{fontSize: 13, color: "#6e7c85", textAlign: "center", marginTop: 8}}>
+        Просто задайте вопрос — Нора найдёт ответ!
       </div>
     </div>
   );
 };
-
-// --- остальные блоки ---
 
 const WhyNoraBlock = () => (
   <div style={{
@@ -313,12 +350,67 @@ const Footer = () => (
 
 const FooterGap = () => <div style={{height: 20}} />;
 
-// --- основной компонент ---
+// ---------- ОСНОВНОЙ КОМПОНЕНТ ----------
 const Chat = () => {
   const [showWelcome, setShowWelcome] = useState(true);
-  // ...остальные состояния и логику не меняем...
+  const [message, setMessage] = useState("");
+  const [chatHistory, setChatHistory] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [botProgress, setBotProgress] = useState("");
+  const [threadId, setThreadId] = useState(null);
+  const [isMobile, setIsMobile] = useState(true);
+  const [focused, setFocused] = useState(false);
+  const messagesEndRef = useRef(null);
 
-  // Welcome-экран
+  useEffect(() => {
+    function checkScreen() {
+      if (typeof window !== "undefined") {
+        setIsMobile(window.innerWidth <= 640);
+      }
+    }
+    checkScreen();
+    window.addEventListener("resize", checkScreen);
+    return () => window.removeEventListener("resize", checkScreen);
+  }, []);
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => { document.body.style.overflow = "auto"; };
+  }, []);
+  useEffect(() => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [chatHistory, botProgress]);
+
+  // --- Заглушка функции чата, можно заменить твоей реальной ---
+  const handleSendMessage = () => {
+    if (!message.trim()) return;
+    setLoading(true);
+    setChatHistory([...chatHistory, { text: message.trim(), sender: "user" }]);
+    setTimeout(() => {
+      setChatHistory(prev => [...prev, { text: "Nora отвечает на ваш вопрос!", sender: "bot" }]);
+      setLoading(false);
+      setMessage("");
+    }, 1200);
+  };
+
+  if (!isMobile) {
+    return (
+      <div style={{
+        width: "100vw", height: "100vh", background: "#f8fdff",
+        display: "flex", alignItems: "center", justifyContent: "center", position: "fixed", left: 0, top: 0, zIndex: 10000
+      }}>
+        <div style={{
+          fontWeight: 700, fontSize: "21px", textAlign: "center", color: NORA_COLOR, background: "#fff",
+          borderRadius: 24, padding: "35px 28px", boxShadow: "0 6px 36px 0 rgba(155, 175, 205, 0.12)"
+        }}>
+          Nora Plus — доступна только <br /> на мобильных устройствах
+        </div>
+      </div>
+    );
+  }
+
+  // ------------- WELCOME ЭКРАН -------------
   if (showWelcome) {
     return (
       <div style={{
@@ -327,7 +419,6 @@ const Chat = () => {
         width: "100vw",
         minHeight: "100vh"
       }}>
-        {/* ... Панель приветствия ... */}
         <div style={{ height: 20 }} />
         <div style={{ height: 20 }} />
 
@@ -374,7 +465,6 @@ const Chat = () => {
             Я помогаю будущим мамам: отвечаю на вопросы, напоминаю о важных делах, слежу за самочувствием.
           </div>
           <div style={{ height: 40 }} />
-          {/* Кнопка и подпись */}
           <div style={{ display: "flex", justifyContent: "center", width: "100%" }}>
             <div style={{ width: "100%", textAlign: "center" }}>
               <button
@@ -403,9 +493,7 @@ const Chat = () => {
               </div>
             </div>
           </div>
-
           <div style={{ height: 40 }} />
-          {/* --- ТВОЙ НОВЫЙ БЛОК --- */}
           <NoraHowItWorksBlock />
           <WhyNoraBlock />
           <ReviewBlock />
@@ -416,8 +504,160 @@ const Chat = () => {
     );
   }
 
-  // ...остальной код без изменений...
-
+  // -------------- ЧАТ ПАНЕЛЬ --------------
+  return (
+    <div
+      style={{
+        background: "#f8fdff",
+        width: "100vw",
+        minHeight: "100vh",
+        display: "flex",
+        flexDirection: "column"
+      }}
+    >
+      <div style={{
+        width: `calc(100% - ${PANEL_SIDE_PADDING * 2}px)`,
+        maxWidth,
+        minHeight: panelHeight,
+        background: GRADIENT,
+        color: NORA_COLOR,
+        margin: "20px auto 0 auto",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        borderRadius: borderRadius,
+        paddingLeft: PANEL_SIDE_PADDING, paddingRight: PANEL_SIDE_PADDING, paddingTop: 5, paddingBottom: 5,
+        boxSizing: "border-box", zIndex: 1,
+        fontFamily: "'Manrope', Arial, Helvetica, sans-serif"
+      }}>
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", flex: 1, paddingLeft: 5 }}>
+          <span style={{
+            fontWeight: 800, fontSize: "19px", lineHeight: 1.06, whiteSpace: "nowrap", marginBottom: 7
+          }}>
+            Nora Plus
+          </span>
+          <span style={{
+            fontWeight: 400, fontSize: "13px", color: "#565656", lineHeight: 1.04, whiteSpace: "nowrap"
+          }}>
+            Ассистент для будущих мам
+          </span>
+        </div>
+        <div style={{ display: "flex", alignItems: "center", gap: 8, marginLeft: 16 }}>
+          <button style={{
+            background: "transparent", border: "none", cursor: "pointer",
+            width: 38, height: 38, borderRadius: 19,
+            display: "flex", alignItems: "center", justifyContent: "center"
+          }} onClick={() => alert('Поделиться')}>
+            <img src={ICONS.share} alt="Share"
+              style={{ width: ICON_SIZE, height: ICON_SIZE, filter: filterNora }} />
+          </button>
+          <button style={{
+            background: "transparent", border: "none", cursor: "pointer",
+            width: 38, height: 38, borderRadius: 19,
+            display: "flex", alignItems: "center", justifyContent: "center"
+          }} onClick={() => window.open("https://t.me/norasmart", "_blank")}>
+            <img src={ICONS.telegram} alt="Telegram"
+              style={{ width: ICON_SIZE, height: ICON_SIZE, filter: filterNora }} />
+          </button>
+          <button style={{
+            background: "transparent", border: "none", cursor: "pointer",
+            width: 38, height: 38, borderRadius: 19,
+            display: "flex", alignItems: "center", justifyContent: "center"
+          }} onClick={() => setChatHistory([])}>
+            <img src={ICONS.trash} alt="Trash"
+              style={{ width: ICON_SIZE, height: ICON_SIZE, filter: filterNora }} />
+          </button>
+        </div>
+      </div>
+      <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "flex-end" }}>
+        <div style={{ width: "100%", maxWidth: maxWidth, margin: "0 auto", padding: "80px 0 110px 0" }}>
+          {chatHistory.map((msg, idx) => (
+            <div
+              key={idx}
+              style={{
+                textAlign: msg.sender === "user" ? "right" : "left",
+                margin: "8px 20px"
+              }}
+            >
+              <span style={{
+                background: msg.sender === "user" ? "#fff" : "#f7fafd",
+                padding: 10,
+                borderRadius: 16,
+                fontSize: 16
+              }}>{msg.text}</span>
+            </div>
+          ))}
+          <div ref={messagesEndRef} />
+        </div>
+      </div>
+      <div style={{
+        width: "calc(100% - 40px)",
+        margin: "0 20px",
+        display: "flex",
+        alignItems: "center",
+        boxSizing: "border-box",
+        maxWidth: maxWidth,
+        height: INPUT_BAR_HEIGHT,
+        position: "fixed",
+        left: 0,
+        bottom: 25,
+        background: "transparent",
+        borderRadius: borderRadius,
+        zIndex: 20,
+        boxShadow: "none"
+      }}>
+        <input
+          type="text"
+          value={message}
+          onFocus={() => setFocused(true)}
+          onBlur={() => setFocused(false)}
+          onChange={e => setMessage(e.target.value)}
+          placeholder="Введите сообщение..."
+          style={{
+            flex: 1,
+            height: 48,
+            fontSize: 16,
+            borderRadius: borderRadius,
+            borderWidth: focused ? 2 : 1,
+            borderStyle: "solid",
+            borderColor: focused ? "transparent" : "#e5e8ed",
+            borderImage: focused ? GRADIENT + " 1" : undefined,
+            padding: "0 18px",
+            background: "#fff",
+            color: NORA_COLOR,
+            boxSizing: "border-box",
+            marginRight: 8,
+            transition: "border 0.22s"
+          }}
+          onKeyDown={e => { if (e.key === 'Enter') handleSendMessage(); }}
+          disabled={loading}
+        />
+        <button
+          style={{
+            width: 48,
+            height: 48,
+            background: BABY_GRADIENT,
+            color: "#fff",
+            border: "none",
+            borderRadius: borderRadius,
+            fontWeight: 700,
+            fontSize: 17,
+            cursor: loading ? "not-allowed" : "pointer",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            boxShadow: "0 2px 14px 0 rgba(155,175,205,0.12)"
+          }}
+          onClick={handleSendMessage}
+          disabled={loading}
+        >
+          <span style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+            {ICONS.arrowRight}
+          </span>
+        </button>
+      </div>
+    </div>
+  );
 };
 
 export default Chat;
