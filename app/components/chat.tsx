@@ -51,7 +51,16 @@ const BENEFITS = [
 ];
 const REVIEWS = [
   { name: "Анна", badge: "2 месяц беременности", problem: "Токсикоз", text: "Nora Plus подсказала, как справиться с утренней тошнотой. Благодаря рекомендациям по питанию и режиму дня симптомы стали гораздо легче." },
-  // ...остальные отзывы...
+  { name: "Дилноза", badge: "3 месяц беременности", problem: "Тошнота", text: "Советы Nora Plus помогли справиться с тошнотой и легче переносить беременность. Все подсказки приходят вовремя." },
+  { name: "Елена", badge: "4 месяц беременности", problem: "Слабость и усталость", text: "Теперь я знаю, какие витамины нужно пить, сколько отдыхать и как выстроить день. Чувствую себя значительно лучше!" },
+  { name: "Шахноза", badge: "5 месяц беременности", problem: "Плохое настроение", text: "Благодаря мотивационным словам и советам Nora Plus моё настроение заметно улучшилось." },
+  { name: "Ирина", badge: "5 месяц беременности", problem: "Тревожность", text: "Советы Nora Plus помогли мне больше отдыхать, заботиться о себе и избавиться от лишних переживаний за малыша." },
+  { name: "Мария", badge: "7 месяц беременности", problem: "Бессонница", text: "Благодаря советам Nora Plus я стала лучше спать и спокойно жду появления малыша." },
+  { name: "Виктория", badge: "3 месяц беременности", problem: "Страхи", text: "Nora Plus помогла справиться с тревогами и поддержала советами, теперь я чувствую себя увереннее." },
+  { name: "Екатерина", badge: "6 месяц беременности", problem: "Питание", text: "Ассистент напомнил о важных витаминах и правильном режиме, теперь питаюсь грамотно и чувствую себя энергичной." },
+  { name: "Гульнора", badge: "2 месяц беременности", problem: "Нарушение сна", text: "Проконсультировавшись с Nora, я восстановила сон и теперь хорошо встречаю утро." },
+  { name: "Малика", badge: "8 месяц беременности", problem: "Раздражительность", text: "Во время беременности стала нервной, но советы от Nora помогли и настроение улучшилось." },
+  { name: "Лола", badge: "4 месяц беременности", problem: "Недостаток белка", text: "Советы по питанию очень полезные, теперь у меня больше энергии." }
 ];
 
 const WhyNoraBlock = () => (
@@ -273,7 +282,6 @@ const Footer = () => (
     </div>
   </div>
 );
-
 const FooterGap = () => <div style={{height: 20}} />;
 
 const THREAD_KEY = "nora_thread_id";
@@ -293,18 +301,114 @@ function splitBotTextTwoBlocks(text) {
   }
 }
 
+// --- КАК РАБОТАЕТ НОРА ---
 const HowItWorks = () => {
-  // ...остальной компонент HowItWorks оставьте как был!...
-  // Я опустил ради краткости, но вам нужно оставить всё как сейчас.
+  const EXAMPLES = [
+    {
+      q: "Можно ли пить кофе во время беременности?",
+      a: "☕ Да, можно, но не больше 1–2 чашек в день и только при отсутствии противопоказаний. Лучше чередовать с напитками без кофеина или травяными чаями. Если чувствуете дискомфорт, сократите дозу."
+    },
+    // ... остальные ответы ...
+  ];
+  const [step, setStep] = useState(0);
+  const [phase, setPhase] = useState("q");
+  const [q, setQ] = useState("");
+  const [a, setA] = useState("");
+  useEffect(() => {
+    let t;
+    if (phase === "q") {
+      setQ("");
+      let i = 0;
+      t = setInterval(() => {
+        setQ(EXAMPLES[step].q.slice(0, i + 1));
+        i++;
+        if (i > EXAMPLES[step].q.length) { clearInterval(t); setTimeout(() => setPhase("a"), 350); }
+      }, 35);
+    } else if (phase === "a") {
+      setA(""); let i = 0;
+      t = setInterval(() => {
+        setA(EXAMPLES[step].a.slice(0, i + 1));
+        i++;
+        if (i > EXAMPLES[step].a.length) { clearInterval(t); setTimeout(() => setPhase("next"), 6900); }
+      }, 17);
+    } else if (phase === "next") {
+      t = setTimeout(() => { setStep((s) => (s + 1) % EXAMPLES.length); setPhase("q"); }, 350);
+    }
+    return () => clearInterval(t);
+  }, [phase, step]);
+
+  // ...bubbleUser, bubbleBot, return JSX — как и раньше!
+  return (
+    <div style={{
+      width: `calc(100% - ${BLOCK_SIDE_PADDING * 2}px)`,
+      maxWidth,
+      margin: "0 auto 38px auto",
+      background: GRADIENT,
+      borderRadius: 22,
+      boxShadow: "0 6px 20px rgba(150,175,205,0.1)",
+      padding: "21px 0 20px 0",
+      fontFamily: "'Manrope', Arial, Helvetica, sans-serif"
+    }}>
+      <div style={{
+        fontWeight: 700,
+        fontSize: "20px",
+        color: "#2e2e2e",
+        marginBottom: 20,
+        textAlign: "center"
+      }}>
+      </div>
+      <div style={{
+        display: "flex",
+        flexDirection: "column",
+        padding: `0 ${BLOCK_SIDE_PADDING}px`
+      }}>
+        {q && (
+          <div style={{
+            alignSelf: "flex-end",
+            background: "#fff",
+            borderRadius: "19px 19px 4px 19px",
+            padding: "20px 22px",
+            marginBottom: 26,
+            maxWidth: 400,
+            textAlign: "right",
+            fontSize: 15.5,
+            lineHeight: 1.7,
+            boxShadow: "0 1px 8px rgba(200,180,200,0.12)"
+          }}>{q}</div>
+        )}
+        {a && (
+          <div style={{
+            alignSelf: "flex-start",
+            background: "#f7fafd",
+            borderRadius: "19px 19px 19px 4px",
+            padding: "22px 24px",
+            marginBottom: 26,
+            maxWidth: 420,
+            textAlign: "left",
+            fontSize: 15.5,
+            lineHeight: 1.7,
+            boxShadow: "0 1px 8px rgba(200,180,200,0.12)"
+          }}>{a}</div>
+        )}
+      </div>
+      <div style={{
+        fontSize: 13,
+        color: "#7b8590",
+        textAlign: "center",
+        marginTop: 8
+      }}>
+        Просто задайте вопрос — Нора найдёт ответ!
+      </div>
+    </div>
+  );
 };
 
-/* ----------------------- Вкладки -------------------------- */
+/* ---------- ВКЛАДКИ ---------------- */
 const TABS = [
   { key: "how", label: "Как это работает" },
   { key: "why", label: "Почему Nora?" },
   { key: "reviews", label: "Отзывы" },
 ];
-
 const TabPanel = () => {
   const [activeTab, setActiveTab] = useState("how");
   const tabBtnStyle = (isActive) => ({
@@ -340,7 +444,6 @@ const TabPanel = () => {
             key={tab.key}
             style={tabBtnStyle(activeTab === tab.key)}
             onClick={() => setActiveTab(tab.key)}
-            type="button"
           >
             {tab.label}
           </button>
@@ -354,40 +457,35 @@ const TabPanel = () => {
     </div>
   );
 };
-/*----------------------------------------------------------*/
+/* ---------- КОНЕЦ ВКЛАДОК ---------------- */
 
 const Chat = () => {
-  // ...весь useState, useEffect, и хэндлеры без изменений...
+  // ...ваша логика полностью...
 
   if (!isMobile) {
-    // ...ваш экран для десктопа...
+    // ...как у вас...
   }
 
   if (preloading) {
-    // ...прелоадер...
+    // ...как у вас...
   }
 
   if (showWelcome) {
     return (
-      <div style={{
-        fontFamily: "'Manrope', Arial, Helvetica, sans-serif",
-        background: "#f8fdff",
-        width: "100vw",
-        minHeight: "100vh"
-      }}>
-      {/* ...верхняя панель и видео как обычно... */}
-      {/* ...описание, кнопка... */}
-
-      {/* --- ВМЕСТО <HowItWorks /> <WhyNoraBlock /> <ReviewBlock /> --- */}
-      <TabPanel />
-      <Footer />
-      <FooterGap />
+      <div style={{ fontFamily: "'Manrope', Arial, Helvetica, sans-serif", background: "#f8fdff", width: "100vw", minHeight: "100vh" }}>
+        {/* Панель */}
+        {/* ...панель и видео... */}
+        {/* ...описание, кнопка... */}
+        <div style={{ height: 40 }} />
+        {/* --- Замените три блока на TabPanel --- */}
+        <TabPanel />
+        <Footer />
+        <FooterGap />
       </div>
     );
   }
 
-  // ...чат-экран без изменений...
-
+  // --- Чат-экран --- ...без изменений...
 };
 
 export default Chat;
