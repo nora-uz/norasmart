@@ -1,7 +1,6 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
 
-// --- Константы и иконки ---
 const NORA_COLOR = "#2e2e2e";
 const ICON_SIZE = 23;
 const borderRadius = 22;
@@ -192,12 +191,127 @@ const ReviewBlock = () => (
   </div>
 );
 
-// --- TabPanel ---
+const HowItWorks = () => {
+  const EXAMPLES = [
+    {
+      q: "Я часто волнуюсь без причины.",
+      a: "🤗 Это очень распространено у беременных! Эмоции усиливаются из-за гормонов. Прогулки на свежем воздухе, дыхательные упражнения и доверительные разговоры с близкими — хорошие помощники. Сильно беспокоит — расскажу, как снизить тревожность."
+    },
+    {
+      q: "Болит спина и поясница.",
+      a: "💆 Чаще всего это нормальная реакция организма на изменение центра тяжести. Помогает отдых на боку с подушкой между ног, отказ от тяжелых сумок и плавные растяжки. Если боли сильные — скажи, подскажу, что ещё важно проверить."
+    },
+    {
+      q: "Плохо сплю последние дни.",
+      a: "😴 Лёгкие вечерние прогулки, проветривание комнаты и комфортная подушка часто решают проблему. Если проблемы с засыпанием затяжные, обсуди это со мной — найдем подходящий ритуал отдыха!"
+    },
+    {
+      q: "Можно ли заниматься спортом?",
+      a: "🏃‍♀️ Движение всегда полезно, если нет противопоказаний. Лучше остановиться на специальных занятиях для беременных: йога, плавание, пешие прогулки. Хочешь — предложу простой комплекс легких упражнений."
+    }
+  ];
+  const [step, setStep] = useState(0);
+  const [phase, setPhase] = useState("q");
+  const [q, setQ] = useState("");
+  const [a, setA] = useState("");
+
+  useEffect(() => {
+    let t;
+    if (phase === "q") {
+      setQ("");
+      let i = 0;
+      t = setInterval(() => {
+        setQ(EXAMPLES[step].q.slice(0, i + 1));
+        i++;
+        if (i > EXAMPLES[step].q.length) { clearInterval(t); setTimeout(() => setPhase("a"), 350); }
+      }, 35);
+    } else if (phase === "a") {
+      setA(""); let i = 0;
+      t = setInterval(() => {
+        setA(EXAMPLES[step].a.slice(0, i + 1));
+        i++;
+        if (i > EXAMPLES[step].a.length) { clearInterval(t); setTimeout(() => setPhase("next"), 6900); }
+      }, 17);
+    } else if (phase === "next") {
+      t = setTimeout(() => { setStep((s) => (s + 1) % EXAMPLES.length); setPhase("q"); }, 350);
+    }
+    return () => clearInterval(t);
+  }, [phase, step]);
+
+  const bubbleUser = (text) => (
+    <div style={{
+      alignSelf: "flex-end",
+      background: "#fff",
+      borderRadius: "19px 19px 4px 19px",
+      padding: "20px 22px",
+      marginBottom: 26,
+      maxWidth: 400,
+      textAlign: "right",
+      fontSize: 15.5,
+      lineHeight: 1.7,
+      boxShadow: "0 1px 8px rgba(200,180,200,0.12)"
+    }}>{text}</div>
+  );
+  const bubbleBot = (text) => (
+    <div style={{
+      alignSelf: "flex-start",
+      background: "#f7fafd",
+      borderRadius: "19px 19px 19px 4px",
+      padding: "22px 24px",
+      marginBottom: 26,
+      maxWidth: 420,
+      textAlign: "left",
+      fontSize: 15.5,
+      lineHeight: 1.7,
+      boxShadow: "0 1px 8px rgba(200,180,200,0.12)"
+    }}>{text}</div>
+  );
+
+  return (
+    <div style={{
+      width: `calc(100% - ${BLOCK_SIDE_PADDING * 2}px)`,
+      maxWidth,
+      margin: "0 auto 38px auto",
+      background: GRADIENT,
+      borderRadius: 22,
+      boxShadow: "0 6px 20px rgba(150,175,205,0.1)",
+      padding: "21px 0 20px 0",
+      fontFamily: "'Manrope', Arial, Helvetica, sans-serif"
+    }}>
+      <div style={{
+        fontWeight: 700,
+        fontSize: "20px",
+        color: "#2e2e2e",
+        marginBottom: 20,
+        textAlign: "center"
+      }}>
+      </div>
+      <div style={{
+        display: "flex",
+        flexDirection: "column",
+        padding: `0 ${BLOCK_SIDE_PADDING}px`
+      }}>
+        {q && bubbleUser(q)}
+        {a && bubbleBot(a)}
+      </div>
+      <div style={{
+        fontSize: 13,
+        color: "#7b8590",
+        textAlign: "center",
+        marginTop: 8
+      }}>
+        Просто задайте вопрос — Нора найдёт ответ!
+      </div>
+    </div>
+  );
+};
+
 const TABS = [
   { key: "how", label: "Пример" },
   { key: "why", label: "Почему Nora?" },
   { key: "reviews", label: "Отзывы" },
 ];
+
 const TabPanel = () => {
   const [activeTab, setActiveTab] = useState("how");
   const tabBtnStyle = (isActive) => ({
@@ -215,6 +329,7 @@ const TabPanel = () => {
     boxShadow: isActive ? "0 2px 14px 0 rgba(200,128,140,0.09)" : "none",
     outline: "none"
   });
+
   return (
     <div
       style={{
@@ -253,12 +368,10 @@ const TabPanel = () => {
   );
 };
 
-// --- Остальные твои компоненты: Footer, FooterGap, splitBotTextTwoBlocks, HowItWorks, и вся логика чата ---
-// Без изменений – просто оставь твои старые функции и useEffects.
+// ... твои дополнительные компоненты (Footer, FooterGap, splitBotTextTwoBlocks, остальные) ...
 
-// --- Вставь TabPanel в экран приветствия ---
 const Chat = () => {
-  // ... твои стейты/effects ...
+  // ... твои useState, useEffect, функции ...
   if (showWelcome) {
     return (
       <div style={{
@@ -267,7 +380,8 @@ const Chat = () => {
         width: "100vw",
         minHeight: "100vh"
       }}>
-        {/* Панель ... */}
+        {/* Панель */}
+        {/* ... */}
         <div style={{
           width: `calc(100% - ${BLOCK_SIDE_PADDING * 2}px)`,
           maxWidth,
@@ -299,18 +413,16 @@ const Chat = () => {
           <div style={{ fontSize: 13, color: "#7c8792" }}>
             Попробуйте — это быстро и бесплатно
           </div>
-          {/* --- ДОБАВЛЕНО --- */}
           <div style={{ height: 40 }} />
           <TabPanel />
           <div style={{ height: 40 }} />
-          {/* Footer и всё остальное */}
           <Footer />
           <FooterGap />
         </div>
       </div>
     );
   }
-  // ... остальной чат без изменений ...
+  // ... остальной чат ...
 };
 
 export default Chat;
