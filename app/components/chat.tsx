@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
 
+// --- Константы и иконки ---
 const NORA_COLOR = "#2e2e2e";
 const ICON_SIZE = 23;
 const borderRadius = 22;
@@ -368,10 +369,12 @@ const TabPanel = () => {
   );
 };
 
-// ... твои дополнительные компоненты (Footer, FooterGap, splitBotTextTwoBlocks, остальные) ...
+// ... Footer, FooterGap и прочие твои блоки оставь из своего файла ...
 
 const Chat = () => {
-  // ... твои useState, useEffect, функции ...
+  const [showWelcome, setShowWelcome] = useState(true);
+  // остальные useState/функции, как у тебя в исходном коде
+
   if (showWelcome) {
     return (
       <div style={{
@@ -380,8 +383,7 @@ const Chat = () => {
         width: "100vw",
         minHeight: "100vh"
       }}>
-        {/* Панель */}
-        {/* ... */}
+        {/* Панель ... */}
         <div style={{
           width: `calc(100% - ${BLOCK_SIDE_PADDING * 2}px)`,
           maxWidth,
@@ -422,7 +424,7 @@ const Chat = () => {
       </div>
     );
   }
-  // ... остальной чат ...
+  // ... остальной чат (оставь всё как в исходном файле) ...
 };
 
 export default Chat;
