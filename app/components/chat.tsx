@@ -1,7 +1,6 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
 
-// ------ Константы ------
 const NORA_COLOR = "#2e2e2e";
 const ICON_SIZE = 23;
 const borderRadius = 22;
@@ -14,9 +13,20 @@ const INPUT_BAR_HEIGHT = 68;
 const PANEL_SIDE_PADDING = 15;
 const BLOCK_SIDE_PADDING = 10;
 const CARD_GAP = 10;
-const THREAD_KEY = "nora_thread_id";
 
-// ------ SVG иконки ------
+// --- ICONS ---
+const ICONS = {
+  telegram: "https://cdn-icons-png.flaticon.com/512/1946/1946547.png",
+  trash: "https://cdn-icons-png.flaticon.com/512/1345/1345823.png",
+  share: "https://cdn-icons-png.flaticon.com/512/535/535285.png",
+  arrowRight: (
+    <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+      <path d="M6 11H16M16 11L12 7M16 11L12 15"
+        stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
+  ),
+};
+const filterNora = "invert(13%) sepia(4%) saturate(271%) hue-rotate(175deg) brightness(92%) contrast(93%)";
 const IconPartner = (
   <svg width="18" height="18" fill="none" viewBox="0 0 20 20">
     <circle cx="10" cy="6.5" r="3.3" stroke="#5a6573" strokeWidth="1.5"/>
@@ -32,20 +42,8 @@ const IconContact = (
       stroke="#5a6573" strokeWidth="1.5"/>
   </svg>
 );
-const ICONS = {
-  telegram: "https://cdn-icons-png.flaticon.com/512/1946/1946547.png",
-  trash: "https://cdn-icons-png.flaticon.com/512/1345/1345823.png",
-  share: "https://cdn-icons-png.flaticon.com/512/535/535285.png",
-  arrowRight: (
-    <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-      <path d="M6 11H16M16 11L12 7M16 11L12 15"
-        stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-    </svg>
-  ),
-};
-const filterNora = "invert(13%) sepia(4%) saturate(271%) hue-rotate(175deg) brightness(92%) contrast(93%)";
 
-// ------ Данные ------
+// --- DATA ---
 const BENEFITS = [
   { emoji: "🩺", title: "Медицинская точность", text: "Советы основаны на рекомендациях британской службы NHS и адаптированы под ваш регион." },
   { emoji: "🤝", title: "Поддержка 24/7", text: "Ассистент всегда на связи для заботы и помощи в любой ситуации." },
@@ -58,7 +56,7 @@ const REVIEWS = [
   // ... остальные отзывы ...
 ];
 
-// ------ Footer ------
+// --- FOOTER ---
 const Footer = () => (
   <div style={{
     width: `calc(100% - 40px)`,
@@ -150,9 +148,10 @@ const Footer = () => (
     </div>
   </div>
 );
+
 const FooterGap = () => <div style={{height: 20}} />;
 
-// ------ WhyNoraBlock ------
+// --- WhyNoraBlock ---
 const WhyNoraBlock = () => (
   <div style={{
     width: `calc(100% - ${BLOCK_SIDE_PADDING * 2}px)`,
@@ -220,7 +219,7 @@ const WhyNoraBlock = () => (
   </div>
 );
 
-// ------ ReviewBlock ------
+// --- ReviewBlock ---
 const ReviewBlock = () => (
   <div style={{
     width: `calc(100% - ${BLOCK_SIDE_PADDING * 2}px)`,
@@ -282,7 +281,7 @@ const ReviewBlock = () => (
   </div>
 );
 
-// ------ HowItWorks ------
+// --- HowItWorks (Пример) ---
 const HowItWorks = () => {
   const EXAMPLES = [
     {
@@ -299,7 +298,7 @@ const HowItWorks = () => {
     },
     {
       q: "Можно ли заниматься спортом?",
-      a: "🏃‍♀️ Движение всегда полезно, если нет противопоказаний. Лучше остановиться на специальных занятиях для беременных: йога, плавание, пешие прогулки. Хочешь — предложу простой комплекс легких упражнений."
+      a: "🏃‍♀️ Движение всегда полезно, если нет противопоказаний. Лучше остановиться на специализированных занятиях для беременных: йога, плавание, пешие прогулки."
     }
   ];
 
@@ -391,7 +390,7 @@ const HowItWorks = () => {
   );
 };
 
-// ------ TabPanel ------
+// --- ТАБЫ ---
 const TABS = [
   { key: "how", label: "Пример" },
   { key: "why", label: "Почему Nora?" },
@@ -433,7 +432,6 @@ const TabPanel = () => {
             key={tab.key}
             style={tabBtnStyle(activeTab === tab.key)}
             onClick={() => setActiveTab(tab.key)}
-            type="button"
           >
             {tab.label}
           </button>
@@ -448,40 +446,10 @@ const TabPanel = () => {
   );
 };
 
-// ------ splitBotTextTwoBlocks (как у вас) ------
-function splitBotTextTwoBlocks(text) {
-  if (!text) return [];
-  let cleaned = text.replace(/[*_]/g, "");
-  const match = cleaned.match(/^([^.!?]+[.!?])\s*(.*)$/s);
-  if (match) {
-    const first = match[1].trim();
-    const rest = match[2].trim();
-    return [
-      { text: first, bold: true },
-      { text: rest, bold: false }
-    ];
-  } else {
-    return [{ text: cleaned, bold: true }];
-  }
-}
-
-// ------ Chat ------
+// --- ОСНОВНОЙ КОМПОНЕНТ ---
 const Chat = () => {
   const [showWelcome, setShowWelcome] = useState(true);
-  const [preloading, setPreloading] = useState(true);
-  const [message, setMessage] = useState("");
-  const [chatHistory, setChatHistory] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [threadId, setThreadId] = useState(null);
-  const [botProgress, setBotProgress] = useState("");
-  const [isMobile, setIsMobile] = useState(true);
-  const [focused, setFocused] = useState(false);
-  const messagesEndRef = useRef(null);
 
-  // ... ваш useEffect, функции, sendMessageToGPT, handleSendMessage и пр. ...
-  // Оставьте как у вас!
-
-  // Ниже — обязательно return JSX!
   return (
     <div>
       {showWelcome ? (
@@ -491,7 +459,7 @@ const Chat = () => {
           width: "100vw",
           minHeight: "100vh"
         }}>
-          {/* Панель и видео, описание, кнопка */}
+          {/* Панель иконок не меняем! */}
           <div style={{
             width: `calc(100% - ${PANEL_SIDE_PADDING * 2}px)`,
             maxWidth,
@@ -520,36 +488,51 @@ const Chat = () => {
               </span>
             </div>
             <div style={{ display: "flex", alignItems: "center", gap: 8, marginLeft: 16 }}>
-              {/* ...ваши кнопки Share/Telegram/Trash... */}
+              <button style={{
+                background: "transparent", border: "none", cursor: "pointer",
+                width: 38, height: 38, borderRadius: 19,
+                display: "flex", alignItems: "center", justifyContent: "center"
+              }}>
+                <img src={ICONS.share} alt="Share" style={{ width: ICON_SIZE, height: ICON_SIZE, filter: filterNora }} />
+              </button>
+              <button style={{
+                background: "transparent", border: "none", cursor: "pointer",
+                width: 38, height: 38, borderRadius: 19,
+                display: "flex", alignItems: "center", justifyContent: "center"
+              }}>
+                <img src={ICONS.telegram} alt="Telegram" style={{ width: ICON_SIZE, height: ICON_SIZE, filter: filterNora }} />
+              </button>
+              <button style={{
+                background: "transparent", border: "none", cursor: "pointer",
+                width: 38, height: 38, borderRadius: 19,
+                display: "flex", alignItems: "center", justifyContent: "center"
+              }}>
+                <img src={ICONS.trash} alt="Trash" style={{ width: ICON_SIZE, height: ICON_SIZE, filter: filterNora }} />
+              </button>
             </div>
           </div>
+          {/* Видео, описание, кнопка... */}
           <div style={{ height: 20 }} />
-          <div
-            style={{
-              width: "100%",
-              maxWidth: maxWidth,
-              margin: "0 auto",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center"
-            }}
-          >
-            <video
-              src="/nora.mp4"
+          <div style={{
+            width: "100%",
+            maxWidth: maxWidth,
+            margin: "0 auto",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center"
+          }}>
+            <video src="/nora.mp4"
               style={{
                 width: "100%",
                 maxWidth: videoMaxWidth,
                 display: "block",
                 borderRadius: 24
               }}
-              autoPlay
-              playsInline
-              muted
-              loop
-              preload="auto"
+              autoPlay playsInline muted loop preload="auto"
             />
           </div>
-          {/* Описание, кнопка, вкладки, футер */}
+          <div style={{ height: 20 }} />
+          <div style={{ height: 20 }} />
           <div style={{
             width: `calc(100% - ${BLOCK_SIDE_PADDING * 2}px)`,
             maxWidth,
@@ -557,7 +540,8 @@ const Chat = () => {
             margin: "0 auto"
           }}>
             <div style={{
-              fontWeight: 700, fontSize: "22px", color: NORA_COLOR, marginBottom: 14
+              fontWeight: 700, fontSize: "22px", color: NORA_COLOR,
+              marginBottom: 14
             }}>Ждёте малыша? Я помогу!</div>
             <div style={{
               fontWeight: 400, fontSize: "15px", margin: "0 auto 0 auto", maxWidth: 400,
@@ -594,6 +578,8 @@ const Chat = () => {
               </div>
             </div>
             <div style={{ height: 40 }} />
+            {/* --- вот тут, ПОСЛЕ кнопки, появляются вкладки --- */}
+            {!showWelcome && <TabPanel />}
             <Footer />
             <FooterGap />
           </div>
