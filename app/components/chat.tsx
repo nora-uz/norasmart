@@ -86,7 +86,7 @@ const WhyNoraBlock = () => (
     background: GRADIENT,
     borderRadius: borderRadius,
     boxShadow: "0 6px 20px 0 rgba(150, 175, 205, 0.10)",
-    boxSizing: "border-box",
+    boxSizing: 'border-box' as const,
     padding: 0,
     fontFamily: "'Manrope', Arial, Helvetica, sans-serif"
   }}>
@@ -153,7 +153,7 @@ const ReviewBlock = () => (
     background: GRADIENT,
     borderRadius: borderRadius,
     boxShadow: "0 6px 20px 0 rgba(150, 175, 205, 0.10)",
-    boxSizing: "border-box",
+    boxSizing: 'border-box' as const,
     padding: 0,
     fontFamily: "'Manrope', Arial, Helvetica, sans-serif"
   }}>
@@ -214,7 +214,7 @@ const Footer = () => (
     background: GRADIENT,
     borderRadius: "22px",
     boxShadow: "0 -4px 14px 0 rgba(155,175,205,0.06)",
-    boxSizing: "border-box",
+    boxSizing: 'border-box' as const,
     fontFamily: "'Manrope', Arial, Helvetica, sans-serif",
     paddingLeft: 20,
     paddingRight: 20,
@@ -301,7 +301,7 @@ const Footer = () => (
 const FooterGap = () => <div style={{height: 20}} />;
 
 const THREAD_KEY = "nora_thread_id";
-function splitBotTextTwoBlocks(text) {
+function splitBotTextTwoBlocks(text: string) {
   if (!text) return [];
   let cleaned = text.replace(/[*_]/g, "");
   const match = cleaned.match(/^([^.!?]+[.!?])\s*(.*)$/s);
@@ -317,7 +317,6 @@ function splitBotTextTwoBlocks(text) {
   }
 }
 
-// КАК РАБОТАЕТ НОРА (убран кофе)
 const HowItWorks = () => {
   const EXAMPLES = [
     {
@@ -343,7 +342,7 @@ const HowItWorks = () => {
   const [a, setA] = useState("");
 
   useEffect(() => {
-    let t;
+    let t: any;
     if (phase === "q") {
       setQ("");
       let i = 0;
@@ -365,7 +364,7 @@ const HowItWorks = () => {
     return () => clearInterval(t);
   }, [phase, step]);
 
-  const bubbleUser = (text) => (
+  const bubbleUser = (text: string) => (
     <div style={{
       alignSelf: "flex-end",
       background: "#fff",
@@ -379,7 +378,7 @@ const HowItWorks = () => {
       boxShadow: "0 1px 8px rgba(200,180,200,0.12)"
     }}>{text}</div>
   );
-  const bubbleBot = (text) => (
+  const bubbleBot = (text: string) => (
     <div style={{
       alignSelf: "flex-start",
       background: "#f7fafd",
@@ -433,14 +432,14 @@ const HowItWorks = () => {
   );
 };
 
-const PremadeQuestionsPanel = ({ onSelect }) => (
+const PremadeQuestionsPanel = ({ onSelect }: { onSelect: (q: string) => void }) => (
   <div style={{
     width: `calc(100% - ${BLOCK_SIDE_PADDING * 2}px)`,
     maxWidth,
     margin: "24px auto 10px auto",
     background: GRADIENT,
     borderRadius: borderRadius,
-    boxSizing: "border-box",
+    boxSizing: 'border-box' as const,
     fontFamily: "'Manrope', Arial, Helvetica, sans-serif",
     padding: "18px 0 18px 0"
   }}>
@@ -484,14 +483,14 @@ const Chat = () => {
   const [showWelcome, setShowWelcome] = useState(true);
   const [preloading, setPreloading] = useState(true);
   const [message, setMessage] = useState("");
-  const [chatHistory, setChatHistory] = useState([]);
+  const [chatHistory, setChatHistory] = useState<{ text: string, sender: string }[]>([]);
   const [loading, setLoading] = useState(false);
-  const [threadId, setThreadId] = useState(null);
+  const [threadId, setThreadId] = useState<string|null>(null);
   const [botProgress, setBotProgress] = useState("");
   const [isMobile, setIsMobile] = useState(true);
   const [focused, setFocused] = useState(false);
 
-  const messagesEndRef = useRef(null);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     function checkScreen() {
@@ -533,7 +532,7 @@ const Chat = () => {
     }
   };
 
-  const sendMessageToGPT = async (text) => {
+  const sendMessageToGPT = async (text: string) => {
     setLoading(true);
     const newHistory = [...chatHistory, { text, sender: "user" }];
     setChatHistory(newHistory);
@@ -591,7 +590,7 @@ const Chat = () => {
     setBotProgress("");
   };
 
-  const userMessageStyle = {
+  const userMessageStyle: React.CSSProperties = {
     background: GRADIENT,
     padding: "13px 14px",
     borderRadius: 16,
@@ -602,7 +601,7 @@ const Chat = () => {
     overflowWrap: "anywhere",
     marginBottom: 18,
     marginTop: 2,
-    boxSizing: "border-box",
+    boxSizing: 'border-box',
     lineHeight: "1.77",
     minWidth: 60,
     textAlign: "right",
@@ -682,7 +681,6 @@ const Chat = () => {
         width: "100vw",
         minHeight: "100vh"
       }}>
-        {/* Панель */}
         <div style={{
           width: `calc(100% - ${PANEL_SIDE_PADDING * 2}px)`,
           maxWidth,
@@ -695,7 +693,7 @@ const Chat = () => {
           justifyContent: "space-between",
           borderRadius: borderRadius,
           paddingLeft: PANEL_SIDE_PADDING, paddingRight: PANEL_SIDE_PADDING, paddingTop: 5, paddingBottom: 5,
-          boxSizing: "border-box", zIndex: 1,
+          boxSizing: 'border-box' as const, zIndex: 1,
           fontFamily: "'Manrope', Arial, Helvetica, sans-serif"
         }}>
           <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", flex: 1, paddingLeft: 5 }}>
@@ -785,7 +783,6 @@ const Chat = () => {
             Я помогаю будущим мамам на каждом этапе беременности: отвечаю на вопросы, напоминаю о важных делах, слежу за самочувствием и даю советы, основанные на медицине Великобритании NHS.
           </div>
           <div style={{ height: 40 }} />
-          {/* Кнопка и подпись */}
           <div style={{ display: "flex", justifyContent: "center", width: "100%" }}>
             <div style={{ width: "100%", textAlign: "center" }}>
               <button
@@ -826,7 +823,6 @@ const Chat = () => {
     );
   }
 
-  // --- Чат-экран ---
   return (
     <div
       style={{
@@ -849,7 +845,7 @@ const Chat = () => {
         justifyContent: "space-between",
         borderRadius: borderRadius,
         paddingLeft: PANEL_SIDE_PADDING, paddingRight: PANEL_SIDE_PADDING, paddingTop: 5, paddingBottom: 5,
-        boxSizing: "border-box", zIndex: 1,
+        boxSizing: 'border-box' as const, zIndex: 1,
         fontFamily: "'Manrope', Arial, Helvetica, sans-serif"
       }}>
         <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", flex: 1, paddingLeft: 5 }}>
@@ -959,7 +955,7 @@ const Chat = () => {
         margin: "0 20px",
         display: "flex",
         alignItems: "center",
-        boxSizing: "border-box",
+        boxSizing: 'border-box',
         maxWidth: maxWidth,
         height: INPUT_BAR_HEIGHT,
         position: "fixed",
@@ -989,7 +985,7 @@ const Chat = () => {
             padding: "0 18px",
             background: "#fff",
             color: NORA_COLOR,
-            boxSizing: "border-box",
+            boxSizing: 'border-box',
             marginRight: 8,
             transition: "border 0.22s"
           }}
