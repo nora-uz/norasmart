@@ -14,6 +14,12 @@ const PANEL_SIDE_PADDING = 15;
 const BLOCK_SIDE_PADDING = 10;
 const CARD_GAP = 10;
 
+const IconShield = (
+  <svg width="17" height="17" fill="none" viewBox="0 0 22 22">
+    <path d="M11 3.3C7.1 5 4.6 5.5 3.7 5.7c-.1 0-.2 0-.2.2 0 6.8 2.6 11.2 7.1 12.7.2.1.4.1.6 0 4.5-1.5 7.1-5.8 7.1-12.7 0-.2-.1-.2-.2-.2-.9-.2-3.4-.7-7.1-2.4Z" stroke="#5a6573" strokeWidth="1.35" fill="#f2f7fe"/>
+  </svg>
+);
+
 const IconPartner = (
   <svg width="18" height="18" fill="none" viewBox="0 0 20 20">
     <circle cx="10" cy="6.5" r="3.3" stroke="#5a6573" strokeWidth="1.5"/>
@@ -42,6 +48,7 @@ const ICONS = {
 };
 const filterNora = "invert(13%) sepia(4%) saturate(271%) hue-rotate(175deg) brightness(92%) contrast(93%)";
 
+
 const BENEFITS = [
   { emoji: "🩺", title: "Медицинская точность", text: "Советы основаны на рекомендациях британской службы NHS и адаптированы под ваш регион." },
   { emoji: "🤝", title: "Поддержка 24/7", text: "Ассистент всегда на связи для заботы и помощи в любой ситуации." },
@@ -63,20 +70,46 @@ const REVIEWS = [
   { name: "Лола", badge: "4 месяц беременности", problem: "Недостаток белка", text: "Советы по питанию очень полезные, теперь у меня больше энергии." }
 ];
 
-const PREMADE_QUESTIONS = [
-  "Что принимать от токсикоза?",
-  "Можно ли пить кофе во время беременности?",
-  "Какие витамины нужны беременной?",
-  "Можно ли заниматься спортом?",
-  "Помогите с бессонницей.",
-  "Как справиться с тревогой?",
-  "Что делать, если болит спина?",
-  "Разрешён ли имбирь при беременности?",
-  "Как повысить настроение?",
-  "Что делать при усталости?",
-  "Как наладить сон?",
-  "Какая диета лучше на 3 месяце?",
+// 6 готовых шаблонных тем – каждая (emoji, title, desc, question)
+const PREMADE_THEMES = [
+  {
+    emoji: "🤢",
+    title: "Как справиться с токсикозом?",
+    desc: "Подскажу способы и витамины для уменьшения тошноты.",
+    question: "Что делать при токсикозе?"
+  },
+  {
+    emoji: "🩺",
+    title: "Обязательные анализы",
+    desc: "Какие обследования пройти и когда сдавать анализы.",
+    question: "Какие анализы надо сдать в начале беременности?"
+  },
+  {
+    emoji: "🥗",
+    title: "Питание и витамины",
+    desc: "Лучшие рекомендации для рациона будущей мамы.",
+    question: "Какие витамины и продукты полезны беременной?"
+  },
+  {
+    emoji: "😴",
+    title: "Борьба с бессонницей",
+    desc: "Ритуалы, советы и продукты для спокойного сна.",
+    question: "Что поможет мне лучше спать во время беременности?"
+  },
+  {
+    emoji: "🏃‍♀️",
+    title: "Физическая активность",
+    desc: "Можно ли спорт, какие упражнения безопасны.",
+    question: "Какие упражнения подходят беременным?"
+  },
+  {
+    emoji: "😌",
+    title: "Контроль тревожности",
+    desc: "Как снизить тревоги и справиться с волнениями.",
+    question: "Как побороть тревогу во время беременности?"
+  },
 ];
+
 
 const WhyNoraBlock = () => (
   <div style={{
@@ -86,7 +119,7 @@ const WhyNoraBlock = () => (
     background: GRADIENT,
     borderRadius: borderRadius,
     boxShadow: "0 6px 20px 0 rgba(150, 175, 205, 0.10)",
-    boxSizing: 'border-box' as const,
+    boxSizing: 'border-box',
     padding: 0,
     fontFamily: "'Manrope', Arial, Helvetica, sans-serif"
   }}>
@@ -153,7 +186,7 @@ const ReviewBlock = () => (
     background: GRADIENT,
     borderRadius: borderRadius,
     boxShadow: "0 6px 20px 0 rgba(150, 175, 205, 0.10)",
-    boxSizing: 'border-box' as const,
+    boxSizing: 'border-box',
     padding: 0,
     fontFamily: "'Manrope', Arial, Helvetica, sans-serif"
   }}>
@@ -214,7 +247,7 @@ const Footer = () => (
     background: GRADIENT,
     borderRadius: "22px",
     boxShadow: "0 -4px 14px 0 rgba(155,175,205,0.06)",
-    boxSizing: 'border-box' as const,
+    boxSizing: 'border-box',
     fontFamily: "'Manrope', Arial, Helvetica, sans-serif",
     paddingLeft: 20,
     paddingRight: 20,
@@ -276,16 +309,22 @@ const Footer = () => (
     </div>
     <a href="#" style={{
       background: "#fff",
-      padding: "7px 0",
+      padding: "9px 0",
       width: "100%",
       borderRadius: 14,
       color: "#556",
-      fontWeight: 500,
+      fontWeight: 400,
       fontSize: 14,
       textDecoration: "none",
       border: "1px solid #e1e9f5",
-      textAlign: "center"
-    }}>Политика конфиденциальности</a>
+      textAlign: "center",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      gap: 8
+    }}>
+      {IconShield} Политика конфиденциальности
+    </a>
     <div style={{
       marginTop: 8,
       fontSize: 12,
@@ -301,7 +340,7 @@ const Footer = () => (
 const FooterGap = () => <div style={{height: 20}} />;
 
 const THREAD_KEY = "nora_thread_id";
-function splitBotTextTwoBlocks(text: string) {
+function splitBotTextTwoBlocks(text) {
   if (!text) return [];
   let cleaned = text.replace(/[*_]/g, "");
   const match = cleaned.match(/^([^.!?]+[.!?])\s*(.*)$/s);
@@ -317,6 +356,7 @@ function splitBotTextTwoBlocks(text: string) {
   }
 }
 
+// --- КАК РАБОТАЕТ НОРА --- (убран кофе!)
 const HowItWorks = () => {
   const EXAMPLES = [
     {
@@ -342,7 +382,7 @@ const HowItWorks = () => {
   const [a, setA] = useState("");
 
   useEffect(() => {
-    let t: any;
+    let t;
     if (phase === "q") {
       setQ("");
       let i = 0;
@@ -364,7 +404,7 @@ const HowItWorks = () => {
     return () => clearInterval(t);
   }, [phase, step]);
 
-  const bubbleUser = (text: string) => (
+  const bubbleUser = (text) => (
     <div style={{
       alignSelf: "flex-end",
       background: "#fff",
@@ -378,7 +418,7 @@ const HowItWorks = () => {
       boxShadow: "0 1px 8px rgba(200,180,200,0.12)"
     }}>{text}</div>
   );
-  const bubbleBot = (text: string) => (
+  const bubbleBot = (text) => (
     <div style={{
       alignSelf: "flex-start",
       background: "#f7fafd",
@@ -432,49 +472,63 @@ const HowItWorks = () => {
   );
 };
 
-const PremadeQuestionsPanel = ({ onSelect }: { onSelect: (q: string) => void }) => (
+const PremadeThemesPanel = ({ disabled, onSend }) => (
   <div style={{
-    width: `calc(100% - ${BLOCK_SIDE_PADDING * 2}px)`,
-    maxWidth,
-    margin: "24px auto 10px auto",
-    background: GRADIENT,
-    borderRadius: borderRadius,
-    boxSizing: 'border-box' as const,
-    fontFamily: "'Manrope', Arial, Helvetica, sans-serif",
-    padding: "18px 0 18px 0"
+    width: "100%",
+    maxWidth: maxWidth,
+    margin: "0 auto 20px auto",
+    padding: "0",
+    boxSizing: 'border-box',
+    display: "flex",
+    justifyContent: "center"
   }}>
-    <div style={{ fontWeight: 700, fontSize: "17px", color: NORA_COLOR, marginBottom: 13, textAlign: "center" }}>
-      Часто задаваемые вопросы
-    </div>
-    <div style={{
-      display: "flex",
-      flexWrap: "wrap",
-      gap: 10,
-      justifyContent: "center",
-      padding: `0 ${BLOCK_SIDE_PADDING}px`
-    }}>
-      {PREMADE_QUESTIONS.map((q, idx) => (
-        <button key={idx}
-          style={{
-            background: "#fff",
-            color: NORA_COLOR,
-            borderRadius: 14,
-            border: "1px solid #e1e9f5",
-            fontSize: 15,
-            padding: "10px 16px",
-            margin: "0 2px",
-            marginBottom: 7,
-            cursor: "pointer",
-            boxShadow: "0 1px 10px rgba(155,155,175,0.06)",
-            fontWeight: 500,
-            whiteSpace: "nowrap",
-            transition: "background 0.17s"
-          }}
-          onClick={() => onSelect(q)}
-        >
-          {q}
-        </button>
-      ))}
+    <div
+      style={{
+        width: `calc(100% - 2 * ${BLOCK_SIDE_PADDING}px)`,
+        boxSizing: 'border-box',
+        display: "flex",
+        flexDirection: "column",
+        gap: 15
+      }}>
+      <div style={{ fontWeight: 700, fontSize: "17px", color: NORA_COLOR, marginBottom: 10, textAlign: "center" }}>
+        Часто задаваемые темы
+      </div>
+      <div style={{
+        display: "flex",
+        flexDirection: "column",
+        gap: 11,
+      }}>
+        {PREMADE_THEMES.map(({ emoji, title, desc, question }, idx) => (
+          <button
+            key={idx}
+            style={{
+              background: "#fff",
+              borderRadius: 19,
+              border: "1px solid #e1e9f5",
+              boxShadow: "0 1px 10px rgba(155,155,175,0.06)",
+              padding: "16px 14px",
+              display: "flex",
+              alignItems: "center",
+              gap: 16,
+              cursor: disabled ? "not-allowed" : "pointer",
+              opacity: disabled ? 0.55 : 1,
+              transition: "opacity 0.13s"
+            }}
+            disabled={disabled}
+            onClick={() => onSend(question)}
+          >
+            <span style={{ fontSize: 29, marginRight: 2, flexShrink: 0 }}>{emoji}</span>
+            <div style={{ textAlign: "left", flex: 1 }}>
+              <div style={{ fontWeight: 700, fontSize: 15, color: NORA_COLOR, marginBottom: 2 }}>
+                {title}
+              </div>
+              <div style={{ fontWeight: 400, fontSize: 13, color: "#7c8792" }}>
+                {desc}
+              </div>
+            </div>
+          </button>
+        ))}
+      </div>
     </div>
   </div>
 );
@@ -483,14 +537,14 @@ const Chat = () => {
   const [showWelcome, setShowWelcome] = useState(true);
   const [preloading, setPreloading] = useState(true);
   const [message, setMessage] = useState("");
-  const [chatHistory, setChatHistory] = useState<{ text: string, sender: string }[]>([]);
+  const [chatHistory, setChatHistory] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [threadId, setThreadId] = useState<string|null>(null);
+  const [threadId, setThreadId] = useState(null);
   const [botProgress, setBotProgress] = useState("");
   const [isMobile, setIsMobile] = useState(true);
   const [focused, setFocused] = useState(false);
 
-  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const messagesEndRef = useRef(null);
 
   useEffect(() => {
     function checkScreen() {
@@ -532,7 +586,7 @@ const Chat = () => {
     }
   };
 
-  const sendMessageToGPT = async (text: string) => {
+  const sendMessageToGPT = async (text) => {
     setLoading(true);
     const newHistory = [...chatHistory, { text, sender: "user" }];
     setChatHistory(newHistory);
@@ -590,7 +644,7 @@ const Chat = () => {
     setBotProgress("");
   };
 
-  const userMessageStyle: React.CSSProperties = {
+  const userMessageStyle = {
     background: GRADIENT,
     padding: "13px 14px",
     borderRadius: 16,
@@ -693,7 +747,7 @@ const Chat = () => {
           justifyContent: "space-between",
           borderRadius: borderRadius,
           paddingLeft: PANEL_SIDE_PADDING, paddingRight: PANEL_SIDE_PADDING, paddingTop: 5, paddingBottom: 5,
-          boxSizing: 'border-box' as const, zIndex: 1,
+          boxSizing: 'border-box', zIndex: 1,
           fontFamily: "'Manrope', Arial, Helvetica, sans-serif"
         }}>
           <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", flex: 1, paddingLeft: 5 }}>
@@ -823,6 +877,7 @@ const Chat = () => {
     );
   }
 
+  // --- Чат-экран ---
   return (
     <div
       style={{
@@ -845,7 +900,7 @@ const Chat = () => {
         justifyContent: "space-between",
         borderRadius: borderRadius,
         paddingLeft: PANEL_SIDE_PADDING, paddingRight: PANEL_SIDE_PADDING, paddingTop: 5, paddingBottom: 5,
-        boxSizing: 'border-box' as const, zIndex: 1,
+        boxSizing: 'border-box', zIndex: 1,
         fontFamily: "'Manrope', Arial, Helvetica, sans-serif"
       }}>
         <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", flex: 1, paddingLeft: 5 }}>
@@ -887,7 +942,16 @@ const Chat = () => {
           </button>
         </div>
       </div>
-      <PremadeQuestionsPanel onSelect={q => setMessage(q)} />
+
+      <PremadeThemesPanel
+        disabled={loading || !!botProgress}
+        onSend={q => {
+          if (!loading && !botProgress) {
+            sendMessageToGPT(q);
+          }
+        }}
+      />
+
       <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "flex-end" }}>
         <div style={{ width: "100%", maxWidth: maxWidth, margin: "0 auto", padding: "24px 0 110px 0" }}>
           {chatHistory.map((msg, idx) => (
