@@ -48,7 +48,6 @@ const ICONS = {
 };
 const filterNora = "invert(13%) sepia(4%) saturate(271%) hue-rotate(175deg) brightness(92%) contrast(93%)";
 
-
 const BENEFITS = [
   { emoji: "🩺", title: "Медицинская точность", text: "Советы основаны на рекомендациях британской службы NHS и адаптированы под ваш регион." },
   { emoji: "🤝", title: "Поддержка 24/7", text: "Ассистент всегда на связи для заботы и помощи в любой ситуации." },
@@ -70,7 +69,6 @@ const REVIEWS = [
   { name: "Лола", badge: "4 месяц беременности", problem: "Недостаток белка", text: "Советы по питанию очень полезные, теперь у меня больше энергии." }
 ];
 
-// 6 готовых шаблонных тем – каждая (emoji, title, desc, question)
 const PREMADE_THEMES = [
   {
     emoji: "🤢",
@@ -110,7 +108,6 @@ const PREMADE_THEMES = [
   },
 ];
 
-
 const WhyNoraBlock = () => (
   <div style={{
     width: `calc(100% - ${BLOCK_SIDE_PADDING * 2}px)`,
@@ -119,7 +116,7 @@ const WhyNoraBlock = () => (
     background: GRADIENT,
     borderRadius: borderRadius,
     boxShadow: "0 6px 20px 0 rgba(150, 175, 205, 0.10)",
-    boxSizing: 'border-box',
+    boxSizing: 'border-box' as const,
     padding: 0,
     fontFamily: "'Manrope', Arial, Helvetica, sans-serif"
   }}>
@@ -186,7 +183,7 @@ const ReviewBlock = () => (
     background: GRADIENT,
     borderRadius: borderRadius,
     boxShadow: "0 6px 20px 0 rgba(150, 175, 205, 0.10)",
-    boxSizing: 'border-box',
+    boxSizing: 'border-box' as const,
     padding: 0,
     fontFamily: "'Manrope', Arial, Helvetica, sans-serif"
   }}>
@@ -247,7 +244,7 @@ const Footer = () => (
     background: GRADIENT,
     borderRadius: "22px",
     boxShadow: "0 -4px 14px 0 rgba(155,175,205,0.06)",
-    boxSizing: 'border-box',
+    boxSizing: 'border-box' as const,
     fontFamily: "'Manrope', Arial, Helvetica, sans-serif",
     paddingLeft: 20,
     paddingRight: 20,
@@ -340,7 +337,7 @@ const Footer = () => (
 const FooterGap = () => <div style={{height: 20}} />;
 
 const THREAD_KEY = "nora_thread_id";
-function splitBotTextTwoBlocks(text) {
+function splitBotTextTwoBlocks(text: string) {
   if (!text) return [];
   let cleaned = text.replace(/[*_]/g, "");
   const match = cleaned.match(/^([^.!?]+[.!?])\s*(.*)$/s);
@@ -356,7 +353,6 @@ function splitBotTextTwoBlocks(text) {
   }
 }
 
-// --- КАК РАБОТАЕТ НОРА --- (убран кофе!)
 const HowItWorks = () => {
   const EXAMPLES = [
     {
@@ -381,8 +377,8 @@ const HowItWorks = () => {
   const [q, setQ] = useState("");
   const [a, setA] = useState("");
 
-  useEffect(() => {
-    let t;
+  useEffect(() => {  
+    let t: NodeJS.Timeout;
     if (phase === "q") {
       setQ("");
       let i = 0;
@@ -404,7 +400,7 @@ const HowItWorks = () => {
     return () => clearInterval(t);
   }, [phase, step]);
 
-  const bubbleUser = (text) => (
+  const bubbleUser = (text: string) => (
     <div style={{
       alignSelf: "flex-end",
       background: "#fff",
@@ -418,7 +414,7 @@ const HowItWorks = () => {
       boxShadow: "0 1px 8px rgba(200,180,200,0.12)"
     }}>{text}</div>
   );
-  const bubbleBot = (text) => (
+  const bubbleBot = (text: string) => (
     <div style={{
       alignSelf: "flex-start",
       background: "#f7fafd",
@@ -472,20 +468,20 @@ const HowItWorks = () => {
   );
 };
 
-const PremadeThemesPanel = ({ disabled, onSend }) => (
+const PremadeThemesPanel = ({ disabled, onSend }: { disabled: boolean, onSend: (q: string) => void }) => (
   <div style={{
     width: "100%",
     maxWidth: maxWidth,
     margin: "0 auto 20px auto",
     padding: "0",
-    boxSizing: 'border-box',
+    boxSizing: 'border-box' as const,
     display: "flex",
     justifyContent: "center"
   }}>
     <div
       style={{
         width: `calc(100% - 2 * ${BLOCK_SIDE_PADDING}px)`,
-        boxSizing: 'border-box',
+        boxSizing: 'border-box' as const,
         display: "flex",
         flexDirection: "column",
         gap: 15
@@ -537,14 +533,14 @@ const Chat = () => {
   const [showWelcome, setShowWelcome] = useState(true);
   const [preloading, setPreloading] = useState(true);
   const [message, setMessage] = useState("");
-  const [chatHistory, setChatHistory] = useState([]);
+  const [chatHistory, setChatHistory] = useState<{ text: string, sender: string }[]>([]);
   const [loading, setLoading] = useState(false);
-  const [threadId, setThreadId] = useState(null);
+  const [threadId, setThreadId] = useState<string|null>(null);
   const [botProgress, setBotProgress] = useState("");
   const [isMobile, setIsMobile] = useState(true);
   const [focused, setFocused] = useState(false);
 
-  const messagesEndRef = useRef(null);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     function checkScreen() {
@@ -586,7 +582,7 @@ const Chat = () => {
     }
   };
 
-  const sendMessageToGPT = async (text) => {
+  const sendMessageToGPT = async (text: string) => {
     setLoading(true);
     const newHistory = [...chatHistory, { text, sender: "user" }];
     setChatHistory(newHistory);
@@ -644,7 +640,7 @@ const Chat = () => {
     setBotProgress("");
   };
 
-  const userMessageStyle = {
+  const userMessageStyle: React.CSSProperties = {
     background: GRADIENT,
     padding: "13px 14px",
     borderRadius: 16,
@@ -747,7 +743,7 @@ const Chat = () => {
           justifyContent: "space-between",
           borderRadius: borderRadius,
           paddingLeft: PANEL_SIDE_PADDING, paddingRight: PANEL_SIDE_PADDING, paddingTop: 5, paddingBottom: 5,
-          boxSizing: 'border-box', zIndex: 1,
+          boxSizing: 'border-box' as const, zIndex: 1,
           fontFamily: "'Manrope', Arial, Helvetica, sans-serif"
         }}>
           <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", flex: 1, paddingLeft: 5 }}>
@@ -877,7 +873,6 @@ const Chat = () => {
     );
   }
 
-  // --- Чат-экран ---
   return (
     <div
       style={{
@@ -900,7 +895,7 @@ const Chat = () => {
         justifyContent: "space-between",
         borderRadius: borderRadius,
         paddingLeft: PANEL_SIDE_PADDING, paddingRight: PANEL_SIDE_PADDING, paddingTop: 5, paddingBottom: 5,
-        boxSizing: 'border-box', zIndex: 1,
+        boxSizing: 'border-box' as const, zIndex: 1,
         fontFamily: "'Manrope', Arial, Helvetica, sans-serif"
       }}>
         <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", flex: 1, paddingLeft: 5 }}>
@@ -945,7 +940,7 @@ const Chat = () => {
 
       <PremadeThemesPanel
         disabled={loading || !!botProgress}
-        onSend={q => {
+        onSend={(q) => {
           if (!loading && !botProgress) {
             sendMessageToGPT(q);
           }
@@ -1019,7 +1014,7 @@ const Chat = () => {
         margin: "0 20px",
         display: "flex",
         alignItems: "center",
-        boxSizing: 'border-box',
+        boxSizing: 'border-box' as const,
         maxWidth: maxWidth,
         height: INPUT_BAR_HEIGHT,
         position: "fixed",
@@ -1049,7 +1044,7 @@ const Chat = () => {
             padding: "0 18px",
             background: "#fff",
             color: NORA_COLOR,
-            boxSizing: 'border-box',
+            boxSizing: 'border-box' as const,
             marginRight: 8,
             transition: "border 0.22s"
           }}
