@@ -15,7 +15,7 @@ const BLOCK_SIDE_PADDING = 10;
 const CARD_GAP = 10;
 
 // круглые кнопки-иконки
-const ICON_BUTTON_SIZE = 38;
+const ICON_BUTTON_SIZE = 42; // чуть больше под палец
 const ICON_BG = "#ffffff";
 const ICON_BORDER = "#e1e9f5";
 const ICON_DARK = "#5a6573";
@@ -270,7 +270,7 @@ const WhyNoraBlock = () => (
     style={{
       width: `calc(100% - ${BLOCK_SIDE_PADDING * 2}px)`,
       maxWidth,
-      margin: "0 auto 38px auto",
+      margin: "0 auto 0 auto",
       background: GRADIENT,
       borderRadius: borderRadius,
       boxShadow: "0 6px 20px 0 rgba(150, 175, 205, 0.10)",
@@ -279,13 +279,13 @@ const WhyNoraBlock = () => (
       fontFamily: "'Manrope', Arial, Helvetica, sans-serif",
     }}
   >
-    <div style={{ padding: `21px 0 20px 0` }}>
+    <div style={{ padding: `18px 0 18px 0` }}>
       <div
         style={{
           fontWeight: 700,
           fontSize: "20px",
           color: NORA_COLOR,
-          marginBottom: 20,
+          marginBottom: 18,
           textAlign: "center",
         }}
       >
@@ -362,7 +362,7 @@ const ReviewBlock = () => (
     style={{
       width: `calc(100% - ${BLOCK_SIDE_PADDING * 2}px)`,
       maxWidth,
-      margin: "0 auto 38px auto",
+      margin: "0 auto 0 auto",
       background: GRADIENT,
       borderRadius: borderRadius,
       boxShadow: "0 6px 20px 0 rgba(150, 175, 205, 0.10)",
@@ -371,13 +371,13 @@ const ReviewBlock = () => (
       fontFamily: "'Manrope', Arial, Helvetica, sans-serif",
     }}
   >
-    <div style={{ padding: "21px 0 20px 0" }}>
+    <div style={{ padding: "18px 0 18px 0" }}>
       <div
         style={{
           fontWeight: 700,
           fontSize: "20px",
           color: NORA_COLOR,
-          marginBottom: 20,
+          marginBottom: 18,
           textAlign: "center",
         }}
       >
@@ -462,20 +462,20 @@ const ReviewBlock = () => (
   </div>
 );
 
-// футер (для модалки Контакты)
+// контакты для модалки
 const ContactsBlock = () => (
   <div style={{ textAlign: "left", fontSize: 14, color: "#263540", lineHeight: 1.6 }}>
     <div style={{ marginBottom: 10 }}>
       <strong>Адрес:</strong> Ташкент, Юнусабадский район, массив Кашгар 26
     </div>
     <div style={{ marginBottom: 6 }}>
-      <strong>Партнёрство:</strong> напишите нам в Telegram&nbsp;
+      <strong>Партнёрство:</strong> напишите в Telegram&nbsp;
       <a href="https://t.me/norasmart" target="_blank" rel="noreferrer">
         @norasmart
       </a>
     </div>
     <div style={{ marginBottom: 6 }}>
-      <strong>Политика конфиденциальности</strong> доступна по запросу.
+      <strong>Контакты:</strong> будут указаны здесь.
     </div>
   </div>
 );
@@ -590,7 +590,6 @@ const PremadeThemesPanel = ({
   </div>
 );
 
-// ГЛАВНЫЙ КОМПОНЕНТ
 type MenuSection = "how" | "what" | "reviews" | "contacts" | null;
 
 const Chat = () => {
@@ -609,7 +608,6 @@ const Chat = () => {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // меню/модалка
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState<MenuSection>(null);
 
@@ -659,9 +657,13 @@ const Chat = () => {
     }
   };
 
-  const openMenuSection = (section: MenuSection) => {
-    setActiveSection(section);
+  const openMenu = () => {
     setMenuOpen(true);
+    setActiveSection(null);
+  };
+
+  const openSection = (section: MenuSection) => {
+    setActiveSection(section);
   };
 
   const sendMessageToGPT = async (text: string) => {
@@ -715,14 +717,6 @@ const Chat = () => {
       sendMessageToGPT(message.trim());
       setMessage("");
     }
-  };
-
-  const clearChatAll = () => {
-    setChatHistory([]);
-    setThreadId(null);
-    window.localStorage.removeItem(THREAD_KEY);
-    setShowWelcome(true);
-    setBotProgress("");
   };
 
   const startListening = () => {
@@ -845,25 +839,50 @@ const Chat = () => {
   const ModalContent = () => {
     if (!menuOpen) return null;
 
-    let title = "";
     let body: React.ReactNode = null;
 
-    if (activeSection === "how") {
-      title = "Как работает Нора";
+    if (!activeSection) {
+      // экран выбора раздела
+      body = (
+        <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+          <button
+            style={menuButtonStyle}
+            onClick={() => openSection("how")}
+          >
+            Как работает Нора
+          </button>
+          <button
+            style={menuButtonStyle}
+            onClick={() => openSection("what")}
+          >
+            Что умеет Нора
+          </button>
+          <button
+            style={menuButtonStyle}
+            onClick={() => openSection("reviews")}
+          >
+            Отзывы
+          </button>
+          <button
+            style={menuButtonStyle}
+            onClick={() => openSection("contacts")}
+          >
+            Контакты
+          </button>
+        </div>
+      );
+    } else if (activeSection === "how") {
       body = (
         <div style={{ fontSize: 14, lineHeight: 1.7, color: "#263540" }}>
-          Нора задаёт уточняющие вопросы, учитывает срок беременности и опирается на клинические
-          рекомендации, чтобы объяснить, что происходит с вашим организмом и что делать дальше.
+          Нора задаёт уточняющие вопросы, учитывает ваш срок, жалобы и историю, а затем опирается
+          на клинические рекомендации, чтобы объяснить, что происходит и какие шаги можно предпринять.
         </div>
       );
     } else if (activeSection === "what") {
-      title = "Что умеет Nora Plus";
       body = <WhyNoraBlock />;
     } else if (activeSection === "reviews") {
-      title = "Отзывы будущих мам";
       body = <ReviewBlock />;
     } else if (activeSection === "contacts") {
-      title = "Контакты и партнёрство";
       body = <ContactsBlock />;
     }
 
@@ -915,7 +934,15 @@ const Chat = () => {
                   color: "#1e2933",
                 }}
               >
-                {title}
+                {activeSection === "how"
+                  ? "Как работает Нора"
+                  : activeSection === "what"
+                  ? "Что умеет Nora Plus"
+                  : activeSection === "reviews"
+                  ? "Отзывы"
+                  : activeSection === "contacts"
+                  ? "Контакты и партнёрство"
+                  : "Меню"}
               </div>
               <button
                 onClick={() => setMenuOpen(false)}
@@ -936,6 +963,19 @@ const Chat = () => {
         </div>
       </div>
     );
+  };
+
+  const menuButtonStyle: React.CSSProperties = {
+    width: "100%",
+    borderRadius: 16,
+    border: "1px solid #e1e9f5",
+    padding: "11px 14px",
+    background: "#fff",
+    textAlign: "left",
+    fontSize: 15,
+    fontWeight: 500,
+    color: "#1f2933",
+    cursor: "pointer",
   };
 
   if (!isMobile) {
@@ -1014,7 +1054,7 @@ const Chat = () => {
     );
   }
 
-  // WELCOME-ЭКРАН (упрощённый, без блоков возможностей/отзывов)
+  // WELCOME-ЭКРАН
   if (showWelcome) {
     return (
       <div
@@ -1089,12 +1129,12 @@ const Chat = () => {
           >
             <button
               style={{
-                background: "transparent",
-                border: "none",
+                background: ICON_BG,
+                border: `1px solid ${ICON_BORDER}`,
                 cursor: "pointer",
-                width: 38,
-                height: 38,
-                borderRadius: 19,
+                width: ICON_BUTTON_SIZE,
+                height: ICON_BUTTON_SIZE,
+                borderRadius: ICON_BUTTON_SIZE / 2,
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
@@ -1109,12 +1149,12 @@ const Chat = () => {
             </button>
             <button
               style={{
-                background: "transparent",
-                border: "none",
+                background: ICON_BG,
+                border: `1px solid ${ICON_BORDER}`,
                 cursor: "pointer",
-                width: 38,
-                height: 38,
-                borderRadius: 19,
+                width: ICON_BUTTON_SIZE,
+                height: ICON_BUTTON_SIZE,
+                borderRadius: ICON_BUTTON_SIZE / 2,
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
@@ -1129,29 +1169,28 @@ const Chat = () => {
             </button>
             <button
               style={{
-                background: "transparent",
-                border: "none",
+                background: ICON_BG,
+                border: `1px solid ${ICON_BORDER}`,
                 cursor: "pointer",
-                width: 38,
-                height: 38,
-                borderRadius: 19,
+                width: ICON_BUTTON_SIZE,
+                height: ICON_BUTTON_SIZE,
+                borderRadius: ICON_BUTTON_SIZE / 2,
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
               }}
-              onClick={() => openMenuSection("what")}
+              onClick={openMenu}
             >
               {IconMenu}
             </button>
           </div>
         </div>
 
-        {/* модалка меню поверх */}
         <ModalOverlay />
         <ModalContent />
 
-        <div style={{ height: 20 }} />
-        <div style={{ height: 20 }} />
+        {/* отступ над видео */}
+        <div style={{ height: 28 }} />
 
         {/* видео Норы */}
         <div
@@ -1180,7 +1219,8 @@ const Chat = () => {
           />
         </div>
 
-        <div style={{ height: 24 }} />
+        {/* отступ под видео */}
+        <div style={{ height: 28 }} />
 
         {/* главный текст и CTA */}
         <div
@@ -1196,7 +1236,7 @@ const Chat = () => {
               fontWeight: 800,
               fontSize: "22px",
               color: NORA_COLOR,
-              marginBottom: 10,
+              marginBottom: 12,
               padding: "0 18px",
               lineHeight: 1.35,
             }}
@@ -1220,8 +1260,8 @@ const Chat = () => {
             просто спросите Нору.
           </div>
 
-          {/* равные отступы сверху/снизу вокруг кнопки */}
-          <div style={{ height: 24 }} />
+          {/* симметричные отступы вокруг кнопки */}
+          <div style={{ height: 26 }} />
 
           <div style={{ display: "flex", justifyContent: "center", width: "100%" }}>
             <div style={{ width: "100%", textAlign: "center" }}>
@@ -1259,7 +1299,7 @@ const Chat = () => {
             </div>
           </div>
 
-          <div style={{ height: 24 }} />
+          <div style={{ height: 26 }} />
 
           <div
             style={{
@@ -1351,12 +1391,12 @@ const Chat = () => {
         >
           <button
             style={{
-              background: "transparent",
-              border: "none",
+              background: ICON_BG,
+              border: `1px solid ${ICON_BORDER}`,
               cursor: "pointer",
-              width: 38,
-              height: 38,
-              borderRadius: 19,
+              width: ICON_BUTTON_SIZE,
+              height: ICON_BUTTON_SIZE,
+              borderRadius: ICON_BUTTON_SIZE / 2,
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
@@ -1371,12 +1411,12 @@ const Chat = () => {
           </button>
           <button
             style={{
-              background: "transparent",
-              border: "none",
+              background: ICON_BG,
+              border: `1px solid ${ICON_BORDER}`,
               cursor: "pointer",
-              width: 38,
-              height: 38,
-              borderRadius: 19,
+              width: ICON_BUTTON_SIZE,
+              height: ICON_BUTTON_SIZE,
+              borderRadius: ICON_BUTTON_SIZE / 2,
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
@@ -1391,24 +1431,23 @@ const Chat = () => {
           </button>
           <button
             style={{
-              background: "transparent",
-              border: "none",
+              background: ICON_BG,
+              border: `1px solid ${ICON_BORDER}`,
               cursor: "pointer",
-              width: 38,
-              height: 38,
-              borderRadius: 19,
+              width: ICON_BUTTON_SIZE,
+              height: ICON_BUTTON_SIZE,
+              borderRadius: ICON_BUTTON_SIZE / 2,
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
             }}
-            onClick={() => openMenuSection("what")}
+            onClick={openMenu}
           >
             {IconMenu}
           </button>
         </div>
       </div>
 
-      {/* модалка меню поверх */}
       <ModalOverlay />
       <ModalContent />
 
