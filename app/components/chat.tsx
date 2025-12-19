@@ -649,7 +649,7 @@ const Chat = () => {
     setBotProgress("");
   };
 
-  /** Голосовой ввод: без строгого SpeechRecognitionEvent[web:20][web:32] */
+  /** Голосовой ввод (Web Speech API)[web:50] */
   const startListening = () => {
     if (typeof window === "undefined") return;
     const SpeechRecognition =
@@ -681,7 +681,7 @@ const Chat = () => {
     recognition.start();
   };
 
-  /** Работа с файлами */
+  /** Работа с файлами (через скрытый input и FormData)[web:45] */
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const selected = e.target.files?.[0];
     if (!selected) return;
@@ -737,6 +737,26 @@ const Chat = () => {
     textAlign: "right",
     whiteSpace: "pre-line"
   };
+
+  // глобальная анимация для микрофона (пульсация)[web:49][web:51]
+  const MicPulseStyle = () => (
+    <style jsx global>{`
+      @keyframes micPulseNora {
+        0% {
+          transform: scale(1);
+          box-shadow: 0 0 0 0 rgba(255,152,0,0.45);
+        }
+        70% {
+          transform: scale(1.06);
+          box-shadow: 0 0 0 10px rgba(255,152,0,0);
+        }
+        100% {
+          transform: scale(1);
+          box-shadow: 0 0 0 0 rgba(255,152,0,0);
+        }
+      }
+    `}</style>
+  );
 
   if (!isMobile) {
     return (
@@ -811,6 +831,7 @@ const Chat = () => {
         width: "100vw",
         minHeight: "100vh"
       }}>
+        <MicPulseStyle />
         <div style={{
           width: `calc(100% - ${PANEL_SIDE_PADDING * 2}px)`,
           maxWidth,
@@ -963,6 +984,8 @@ const Chat = () => {
         flexDirection: "column"
       }}
     >
+      <MicPulseStyle />
+
       <div style={{
         width: `calc(100% - ${PANEL_SIDE_PADDING * 2}px)`,
         maxWidth,
@@ -1090,121 +1113,145 @@ const Chat = () => {
         </div>
       </div>
 
-      {/* INPUT BAR: файл + голос + текст + отправка */}
-      <div style={{
-        width: "calc(100% - 40px)",
-        margin: "0 20px",
-        display: "flex",
-        alignItems: "center",
-        boxSizing: 'border-box' as const,
-        maxWidth: maxWidth,
-        height: INPUT_BAR_HEIGHT,
-        position: "fixed",
-        left: 0,
-        bottom: 25,
-        background: "transparent",
-        borderRadius: borderRadius,
-        zIndex: 20,
-        boxShadow: "none",
-        gap: 8
-      }}>
-        <input
-          type="file"
-          ref={fileInputRef}
-          style={{ display: "none" }}
-          onChange={handleFileChange}
-        />
-
-        <button
-          onClick={openFileDialog}
-          disabled={loading || !!botProgress}
+      {/* INPUT BAR: всё внутри одного поля */}
+      <div
+        style={{
+          width: "calc(100% - 40px)",
+          margin: "0 20px",
+          boxSizing: "border-box",
+          maxWidth: maxWidth,
+          height: INPUT_BAR_HEIGHT,
+          position: "fixed",
+          left: 0,
+          bottom: 25,
+          background: "transparent",
+          borderRadius: borderRadius,
+          zIndex: 20,
+          boxShadow: "none",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <div
           style={{
-            width: 44,
-            height: 44,
-            background: "#4caf50",
-            color: "#fff",
-            border: "none",
-            borderRadius: borderRadius,
-            cursor: (loading || !!botProgress) ? "not-allowed" : "pointer",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            boxShadow: "0 2px 14px 0 rgba(155,175,205,0.12)",
-            fontSize: 20,
-          }}
-        >
-          📎
-        </button>
-
-        <button
-          onClick={startListening}
-          disabled={loading || !!botProgress}
-          style={{
-            width: 44,
-            height: 44,
-            background: isListening ? "#ff5252" : "#ff9800",
-            color: "#fff",
-            border: "none",
-            borderRadius: borderRadius,
-            cursor: (loading || !!botProgress) ? "not-allowed" : "pointer",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            boxShadow: "0 2px 14px 0 rgba(155,175,205,0.12)",
-            fontSize: 20,
-          }}
-        >
-          🎤
-        </button>
-
-        <input
-          type="text"
-          value={message}
-          onFocus={() => setFocused(true)}
-          onBlur={() => setFocused(false)}
-          onChange={e => setMessage(e.target.value)}
-          placeholder="Введите сообщение..."
-          style={{
-            flex: 1,
-            height: 48,
-            fontSize: "16px",
+            width: "100%",
+            background: "#fff",
             borderRadius: borderRadius,
             borderWidth: focused ? 2 : 1,
             borderStyle: "solid",
             borderColor: focused ? "transparent" : "#e5e8ed",
             borderImage: focused ? GRADIENT + " 1" : undefined,
-            padding: "0 18px",
-            background: "#fff",
-            color: NORA_COLOR,
-            boxSizing: 'border-box' as const,
-            transition: "border 0.22s"
-          }}
-          onKeyDown={e => { if (e.key === 'Enter') handleSendMessage(); }}
-          disabled={loading || !!botProgress}
-        />
-        <button
-          style={{
-            width: 48,
-            height: 48,
-            background: BABY_GRADIENT,
-            color: "#fff",
-            border: "none",
-            borderRadius: borderRadius,
-            fontWeight: 700,
-            fontSize: "17px",
-            cursor: (loading || !!botProgress) ? "not-allowed" : "pointer",
             display: "flex",
             alignItems: "center",
-            justifyContent: "center",
-            boxShadow: "0 2px 14px 0 rgba(155,175,205,0.12)"
+            paddingLeft: 14,
+            paddingRight: 6,
+            boxSizing: "border-box",
+            boxShadow: "0 2px 14px 0 rgba(155,175,205,0.10)",
           }}
-          onClick={handleSendMessage}
-          disabled={loading || !!botProgress}
         >
-          <span style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
-            {ICONS.arrowRight}
-          </span>
-        </button>
+          {/* скрытый input для файла */}
+          <input
+            type="file"
+            ref={fileInputRef}
+            style={{ display: "none" }}
+            onChange={handleFileChange}
+          />
+
+          {/* текстовое поле */}
+          <input
+            type="text"
+            value={message}
+            onFocus={() => setFocused(true)}
+            onBlur={() => setFocused(false)}
+            onChange={e => setMessage(e.target.value)}
+            placeholder="Введите сообщение..."
+            style={{
+              flex: 1,
+              height: 44,
+              fontSize: "16px",
+              border: "none",
+              outline: "none",
+              background: "transparent",
+              color: NORA_COLOR,
+              boxSizing: "border-box",
+            }}
+            onKeyDown={e => { if (e.key === "Enter") handleSendMessage(); }}
+            disabled={loading || !!botProgress}
+          />
+
+          {/* иконка файла */}
+          <button
+            onClick={openFileDialog}
+            disabled={loading || !!botProgress}
+            style={{
+              width: 34,
+              height: 34,
+              borderRadius: "50%",
+              border: "none",
+              background: "transparent",
+              cursor: (loading || !!botProgress) ? "not-allowed" : "pointer",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              fontSize: 18,
+              marginRight: 2,
+            }}
+            title="Прикрепить файл"
+          >
+            📎
+          </button>
+
+          {/* иконка микрофона с пульсацией при записи */}
+          <button
+            onClick={startListening}
+            disabled={loading || !!botProgress}
+            style={{
+              width: 34,
+              height: 34,
+              borderRadius: "50%",
+              border: "none",
+              marginRight: 4,
+              cursor: (loading || !!botProgress) ? "not-allowed" : "pointer",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              fontSize: 18,
+              color: "#fff",
+              background: isListening ? "#ff9800" : "#c9d1e3",
+              animation: isListening ? "micPulseNora 1.1s infinite ease-out" : "none",
+            }}
+            title={isListening ? "Идёт запись..." : "Голосовой ввод"}
+          >
+            🎤
+          </button>
+
+          {/* отправка */}
+          <button
+            style={{
+              width: 38,
+              height: 38,
+              background: BABY_GRADIENT,
+              color: "#fff",
+              border: "none",
+              borderRadius: borderRadius,
+              fontWeight: 700,
+              fontSize: "17px",
+              cursor: (loading || !!botProgress) ? "not-allowed" : "pointer",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              boxShadow: "0 2px 14px 0 rgba(155,175,205,0.12)",
+              marginLeft: 2,
+            }}
+            onClick={handleSendMessage}
+            disabled={loading || !!botProgress}
+          >
+            <span style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+              {ICONS.arrowRight}
+            </span>
+          </button>
+        </div>
       </div>
     </div>
   );
