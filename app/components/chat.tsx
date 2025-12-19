@@ -9,15 +9,17 @@ const maxWidth = 560;
 const videoMaxWidth = 314;
 const GRADIENT = "linear-gradient(90deg, #eff5fe 0%, #e5e8ed 100%)";
 const BABY_GRADIENT = "linear-gradient(90deg, #e39290 0%, #efb1b6 100%)";
-// увеличено
+// увеличенное поле ввода
 const INPUT_BAR_HEIGHT = 80;
 const PANEL_SIDE_PADDING = 15;
 const BLOCK_SIDE_PADDING = 10;
 const CARD_GAP = 10;
 
-// минималистичные размеры кнопок-иконок
-const ICON_BUTTON_SIZE = 30;
-const ICON_FONT_SIZE = 16;
+// круглые кнопки-иконки, фон и бордер как в панели
+const ICON_BUTTON_SIZE = 38;
+const ICON_BG = "#ffffff";
+const ICON_BORDER = "#e1e9f5";
+const ICON_DARK = "#5a6573";
 
 const IconShield = (
   <svg width="17" height="17" fill="none" viewBox="0 0 22 22">
@@ -74,7 +76,7 @@ const REVIEWS = [
   { name: "Лола", badge: "4 месяц беременности", problem: "Недостаток белка", text: "Советы по питанию очень полезные, теперь у меня больше энергии." }
 ];
 
-// убрана тема «Контроль тревожности»
+// без блока «Контроль тревожности»
 const PREMADE_THEMES = [
   {
     emoji: "🤢",
@@ -738,7 +740,7 @@ const Chat = () => {
     whiteSpace: "pre-line"
   };
 
-  // глобальная анимация (оставлена, но сама кнопка теперь без пульсации)
+  // глобальная анимация (используется микрофоном)
   const MicPulseStyle = () => (
     <style jsx global>{`
       @keyframes micPulseNora {
@@ -1122,7 +1124,7 @@ const Chat = () => {
           height: INPUT_BAR_HEIGHT,
           position: "fixed",
           left: 0,
-          bottom: 30, // чуть выше
+          bottom: 30,
           background: "transparent",
           borderRadius: borderRadius,
           zIndex: 20,
@@ -1179,62 +1181,62 @@ const Chat = () => {
             disabled={loading || !!botProgress}
           />
 
-          {/* иконка файла — минимализм */}
+          {/* круглая минималистичная иконка файла */}
           <button
             onClick={openFileDialog}
             disabled={loading || !!botProgress}
             style={{
               width: ICON_BUTTON_SIZE,
               height: ICON_BUTTON_SIZE,
-              borderRadius: 999,
-              border: "none",
-              background: "transparent",
+              borderRadius: ICON_BUTTON_SIZE / 2,
+              border: `1px solid ${ICON_BORDER}`,
+              background: ICON_BG,
               cursor: (loading || !!botProgress) ? "not-allowed" : "pointer",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              fontSize: ICON_FONT_SIZE,
-              marginRight: 4,
-              color: "#7c8792",
+              fontSize: 17,
+              marginRight: 6,
+              color: ICON_DARK,
             }}
             title="Прикрепить файл"
           >
             📎
           </button>
 
-          {/* микрофон — минималистичный, без пульсации */}
+          {/* круглая иконка микрофона с анимацией при записи */}
           <button
             onClick={startListening}
             disabled={loading || !!botProgress}
             style={{
               width: ICON_BUTTON_SIZE,
               height: ICON_BUTTON_SIZE,
-              borderRadius: 999,
-              border: "none",
-              marginRight: 4,
+              borderRadius: ICON_BUTTON_SIZE / 2,
+              border: `1px solid ${ICON_BORDER}`,
+              background: ICON_BG,
               cursor: (loading || !!botProgress) ? "not-allowed" : "pointer",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              fontSize: ICON_FONT_SIZE,
-              color: isListening ? "#ff9800" : "#7c8792",
-              background: "transparent",
-              animation: "none",
+              fontSize: 17,
+              marginRight: 6,
+              color: ICON_DARK,
+              animation: isListening ? "micPulseNora 1.1s infinite ease-out" : "none",
             }}
             title={isListening ? "Идёт запись..." : "Голосовой ввод"}
           >
             🎤
           </button>
 
-          {/* отправка */}
+          {/* отправка — тоже круглая для консистентности */}
           <button
             style={{
-              width: 38,
-              height: 38,
+              width: ICON_BUTTON_SIZE,
+              height: ICON_BUTTON_SIZE,
               background: BABY_GRADIENT,
               color: "#fff",
               border: "none",
-              borderRadius: borderRadius,
+              borderRadius: ICON_BUTTON_SIZE / 2,
               fontWeight: 700,
               fontSize: "17px",
               cursor: (loading || !!botProgress) ? "not-allowed" : "pointer",
