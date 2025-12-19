@@ -530,7 +530,7 @@ const PremadeThemesPanel = ({ disabled, onSend }: { disabled: boolean, onSend: (
   </div>
 );
 
-/** ГЛАВНЫЙ КОМПОНЕНТ ЧАТА С ГОЛОСОМ И ФАЙЛАМИ */
+/** ГЛАВНЫЙ КОМПОНЕНТ ЧАТА */
 const Chat = () => {
   const [showWelcome, setShowWelcome] = useState(true);
   const [preloading, setPreloading] = useState(true);
@@ -542,10 +542,10 @@ const Chat = () => {
   const [isMobile, setIsMobile] = useState(true);
   const [focused, setFocused] = useState(false);
 
-  // для голосового ввода
+  // голос
   const [isListening, setIsListening] = useState(false);
 
-  // для файлов
+  // файлы
   const [file, setFile] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -649,11 +649,12 @@ const Chat = () => {
     setBotProgress("");
   };
 
-  /** Голосовой ввод */
+  /** Голосовой ввод: без строгого SpeechRecognitionEvent[web:20][web:32] */
   const startListening = () => {
     if (typeof window === "undefined") return;
-    // Web Speech API (Chrome/Android): webkitSpeechRecognition[web:8][web:10]
-    const SpeechRecognition = (window as any).webkitSpeechRecognition || (window as any).SpeechRecognition;
+    const SpeechRecognition =
+      (window as any).webkitSpeechRecognition ||
+      (window as any).SpeechRecognition;
     if (!SpeechRecognition) {
       alert("Ваш браузер не поддерживает голосовой ввод (Web Speech API).");
       return;
@@ -666,7 +667,7 @@ const Chat = () => {
     recognition.onstart = () => {
       setIsListening(true);
     };
-    recognition.onresult = (event: SpeechRecognitionEvent) => {
+    recognition.onresult = (event: any) => {
       const text = event.results[0][0].transcript;
       setMessage(text);
     };
@@ -686,7 +687,6 @@ const Chat = () => {
     if (!selected) return;
     setFile(selected);
 
-    // Пример: сразу отправляем файл на сервер[web:6][web:14][web:17]
     const formData = new FormData();
     formData.append("file", selected);
 
@@ -696,12 +696,11 @@ const Chat = () => {
         body: formData,
       });
       const data = await res.json();
-      // Можно добавить сообщение в чат, что файл отправлен
       setChatHistory(prev => [
         ...prev,
         { text: `Файл "${selected.name}" отправлен ассистенту.`, sender: "user" },
       ]);
-      // При необходимости можно использовать data.url / id файла
+      // data можно использовать для ссылки/ID файла
     } catch (err) {
       setChatHistory(prev => [
         ...prev,
@@ -1091,7 +1090,7 @@ const Chat = () => {
         </div>
       </div>
 
-      {/* INPUT BAR С ГОЛОСОМ И ФАЙЛАМИ */}
+      {/* INPUT BAR: файл + голос + текст + отправка */}
       <div style={{
         width: "calc(100% - 40px)",
         margin: "0 20px",
@@ -1109,7 +1108,6 @@ const Chat = () => {
         boxShadow: "none",
         gap: 8
       }}>
-        {/* скрытый input для файла */}
         <input
           type="file"
           ref={fileInputRef}
@@ -1117,7 +1115,6 @@ const Chat = () => {
           onChange={handleFileChange}
         />
 
-        {/* кнопка файл */}
         <button
           onClick={openFileDialog}
           disabled={loading || !!botProgress}
@@ -1139,7 +1136,6 @@ const Chat = () => {
           📎
         </button>
 
-        {/* кнопка голос */}
         <button
           onClick={startListening}
           disabled={loading || !!botProgress}
