@@ -14,10 +14,10 @@ const PANEL_SIDE_PADDING = 15;
 const BLOCK_SIDE_PADDING = 10;
 const CARD_GAP = 10;
 
-// круглые кнопки-иконки
-const ICON_BUTTON_SIZE = 42; // чуть больше под палец
-const ICON_BG = "#ffffff";
-const ICON_BORDER = "#e1e9f5";
+// круглые кнопки-иконки (крупнее и в цвет Telegram)
+const ICON_BUTTON_SIZE = 46;
+const ICON_BG = "#27A7E7";
+const ICON_BORDER = "#27A7E7";
 const ICON_DARK = "#5a6573";
 
 const IconShield = (
@@ -64,9 +64,9 @@ const IconContact = (
 // иконка меню (3 полоски)
 const IconMenu = (
   <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-    <path d="M4 7h16" stroke={ICON_DARK} strokeWidth="1.8" strokeLinecap="round" />
-    <path d="M4 12h16" stroke={ICON_DARK} strokeWidth="1.8" strokeLinecap="round" />
-    <path d="M4 17h16" stroke={ICON_DARK} strokeWidth="1.8" strokeLinecap="round" />
+    <path d="M4 7h16" stroke="#ffffff" strokeWidth="1.8" strokeLinecap="round" />
+    <path d="M4 12h16" stroke="#ffffff" strokeWidth="1.8" strokeLinecap="round" />
+    <path d="M4 17h16" stroke="#ffffff" strokeWidth="1.8" strokeLinecap="round" />
   </svg>
 );
 
@@ -249,7 +249,7 @@ const PREMADE_THEMES = [
     emoji: "🥗",
     title: "Питание и витамины",
     desc: "Что можно, что нельзя и какие витамины важны.",
-    question: "Что можно есть при беременности и какие витамины важны?",
+    question: "Что можно eat при беременности и какие витамины важны?",
   },
   {
     emoji: "🩺",
@@ -836,37 +836,37 @@ const Chat = () => {
       />
     );
 
+  const menuButtonStyle: React.CSSProperties = {
+    width: "100%",
+    borderRadius: 16,
+    border: "1px solid #e1e9f5",
+    padding: "11px 14px",
+    background: "#fff",
+    textAlign: "left",
+    fontSize: 15,
+    fontWeight: 500,
+    color: "#1f2933",
+    cursor: "pointer",
+  };
+
   const ModalContent = () => {
     if (!menuOpen) return null;
 
     let body: React.ReactNode = null;
 
     if (!activeSection) {
-      // экран выбора раздела
       body = (
         <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-          <button
-            style={menuButtonStyle}
-            onClick={() => openSection("how")}
-          >
+          <button style={menuButtonStyle} onClick={() => openSection("how")}>
             Как работает Нора
           </button>
-          <button
-            style={menuButtonStyle}
-            onClick={() => openSection("what")}
-          >
+          <button style={menuButtonStyle} onClick={() => openSection("what")}>
             Что умеет Нора
           </button>
-          <button
-            style={menuButtonStyle}
-            onClick={() => openSection("reviews")}
-          >
+          <button style={menuButtonStyle} onClick={() => openSection("reviews")}>
             Отзывы
           </button>
-          <button
-            style={menuButtonStyle}
-            onClick={() => openSection("contacts")}
-          >
+          <button style={menuButtonStyle} onClick={() => openSection("contacts")}>
             Контакты
           </button>
         </div>
@@ -875,7 +875,8 @@ const Chat = () => {
       body = (
         <div style={{ fontSize: 14, lineHeight: 1.7, color: "#263540" }}>
           Нора задаёт уточняющие вопросы, учитывает ваш срок, жалобы и историю, а затем опирается
-          на клинические рекомендации, чтобы объяснить, что происходит и какие шаги можно предпринять.
+          на клинические рекомендации, чтобы объяснить, что происходит и какие шаги можно
+          предпринять.
         </div>
       );
     } else if (activeSection === "what") {
@@ -965,19 +966,6 @@ const Chat = () => {
     );
   };
 
-  const menuButtonStyle: React.CSSProperties = {
-    width: "100%",
-    borderRadius: 16,
-    border: "1px solid #e1e9f5",
-    padding: "11px 14px",
-    background: "#fff",
-    textAlign: "left",
-    fontSize: 15,
-    fontWeight: 500,
-    color: "#1f2933",
-    cursor: "pointer",
-  };
-
   if (!isMobile) {
     return (
       <div
@@ -1054,6 +1042,128 @@ const Chat = () => {
     );
   }
 
+  // общая шапка (используется и на welcome, и на чате)
+  const HeaderBar = () => (
+    <div
+      style={{
+        width: `calc(100% - ${PANEL_SIDE_PADDING * 2}px)`,
+        maxWidth,
+        minHeight: panelHeight,
+        background: GRADIENT,
+        color: NORA_COLOR,
+        margin: "20px auto 0 auto",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        borderRadius: borderRadius,
+        paddingLeft: PANEL_SIDE_PADDING,
+        paddingRight: PANEL_SIDE_PADDING,
+        paddingTop: 5,
+        paddingBottom: 5,
+        boxSizing: "border-box" as const,
+        zIndex: 1,
+      }}
+    >
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "flex-start",
+          flex: 1,
+          paddingLeft: 5,
+        }}
+      >
+        <span
+          style={{
+            fontWeight: 800,
+            fontSize: "19px",
+            lineHeight: 1.06,
+            whiteSpace: "nowrap",
+            marginBottom: 7,
+          }}
+        >
+          Nora Plus
+        </span>
+        <span
+          style={{
+            fontWeight: 400,
+            fontSize: "13px",
+            color: "#565656",
+            lineHeight: 1.04,
+            whiteSpace: "nowrap",
+          }}
+        >
+          Ассистент для будущих мам
+        </span>
+      </div>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: 8,
+          marginLeft: 16,
+        }}
+      >
+        <button
+          style={{
+            background: ICON_BG,
+            border: `1px solid ${ICON_BORDER}`,
+            cursor: "pointer",
+            width: ICON_BUTTON_SIZE,
+            height: ICON_BUTTON_SIZE,
+            borderRadius: ICON_BUTTON_SIZE / 2,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+          onClick={handleShare}
+        >
+          <img
+            src={ICONS.share}
+            alt="Share"
+            style={{ width: ICON_SIZE, height: ICON_SIZE, filter: filterNora }}
+          />
+        </button>
+        <button
+          style={{
+            background: ICON_BG,
+            border: `1px solid ${ICON_BORDER}`,
+            cursor: "pointer",
+            width: ICON_BUTTON_SIZE,
+            height: ICON_BUTTON_SIZE,
+            borderRadius: ICON_BUTTON_SIZE / 2,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+          onClick={() => window.open("https://t.me/norasmart", "_blank")}
+        >
+          <img
+            src={ICONS.telegram}
+            alt="Telegram"
+            style={{ width: ICON_SIZE, height: ICON_SIZE, filter: filterNora }}
+          />
+        </button>
+        <button
+          style={{
+            background: ICON_BG,
+            border: `1px solid ${ICON_BORDER}`,
+            cursor: "pointer",
+            width: ICON_BUTTON_SIZE,
+            height: ICON_BUTTON_SIZE,
+            borderRadius: ICON_BUTTON_SIZE / 2,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+          onClick={openMenu}
+        >
+          {IconMenu}
+        </button>
+      </div>
+    </div>
+  );
+
   // WELCOME-ЭКРАН
   if (showWelcome) {
     return (
@@ -1066,131 +1176,13 @@ const Chat = () => {
         }}
       >
         <MicPulseStyle />
-        {/* верхняя панель */}
-        <div
-          style={{
-            width: `calc(100% - ${PANEL_SIDE_PADDING * 2}px)`,
-            maxWidth,
-            minHeight: panelHeight,
-            background: GRADIENT,
-            color: NORA_COLOR,
-            margin: "20px auto 0 auto",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            borderRadius: borderRadius,
-            paddingLeft: PANEL_SIDE_PADDING,
-            paddingRight: PANEL_SIDE_PADDING,
-            paddingTop: 5,
-            paddingBottom: 5,
-            boxSizing: "border-box" as const,
-            zIndex: 1,
-          }}
-        >
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "flex-start",
-              flex: 1,
-              paddingLeft: 5,
-            }}
-          >
-            <span
-              style={{
-                fontWeight: 800,
-                fontSize: "19px",
-                lineHeight: 1.06,
-                whiteSpace: "nowrap",
-                marginBottom: 7,
-              }}
-            >
-              Nora Plus
-            </span>
-            <span
-              style={{
-                fontWeight: 400,
-                fontSize: "13px",
-                color: "#565656",
-                lineHeight: 1.04,
-                whiteSpace: "nowrap",
-              }}
-            >
-              Ассистент для будущих мам
-            </span>
-          </div>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 8,
-              marginLeft: 16,
-            }}
-          >
-            <button
-              style={{
-                background: ICON_BG,
-                border: `1px solid ${ICON_BORDER}`,
-                cursor: "pointer",
-                width: ICON_BUTTON_SIZE,
-                height: ICON_BUTTON_SIZE,
-                borderRadius: ICON_BUTTON_SIZE / 2,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-              onClick={handleShare}
-            >
-              <img
-                src={ICONS.share}
-                alt="Share"
-                style={{ width: ICON_SIZE, height: ICON_SIZE, filter: filterNora }}
-              />
-            </button>
-            <button
-              style={{
-                background: ICON_BG,
-                border: `1px solid ${ICON_BORDER}`,
-                cursor: "pointer",
-                width: ICON_BUTTON_SIZE,
-                height: ICON_BUTTON_SIZE,
-                borderRadius: ICON_BUTTON_SIZE / 2,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-              onClick={() => window.open("https://t.me/norasmart", "_blank")}
-            >
-              <img
-                src={ICONS.telegram}
-                alt="Telegram"
-                style={{ width: ICON_SIZE, height: ICON_SIZE, filter: filterNora }}
-              />
-            </button>
-            <button
-              style={{
-                background: ICON_BG,
-                border: `1px solid ${ICON_BORDER}`,
-                cursor: "pointer",
-                width: ICON_BUTTON_SIZE,
-                height: ICON_BUTTON_SIZE,
-                borderRadius: ICON_BUTTON_SIZE / 2,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-              onClick={openMenu}
-            >
-              {IconMenu}
-            </button>
-          </div>
-        </div>
+        <HeaderBar />
 
         <ModalOverlay />
         <ModalContent />
 
         {/* отступ над видео */}
-        <div style={{ height: 28 }} />
+        <div style={{ height: 36 }} />
 
         {/* видео Норы */}
         <div
@@ -1220,7 +1212,7 @@ const Chat = () => {
         </div>
 
         {/* отступ под видео */}
-        <div style={{ height: 28 }} />
+        <div style={{ height: 36 }} />
 
         {/* главный текст и CTA */}
         <div
@@ -1261,7 +1253,7 @@ const Chat = () => {
           </div>
 
           {/* симметричные отступы вокруг кнопки */}
-          <div style={{ height: 26 }} />
+          <div style={{ height: 32 }} />
 
           <div style={{ display: "flex", justifyContent: "center", width: "100%" }}>
             <div style={{ width: "100%", textAlign: "center" }}>
@@ -1299,7 +1291,7 @@ const Chat = () => {
             </div>
           </div>
 
-          <div style={{ height: 26 }} />
+          <div style={{ height: 32 }} />
 
           <div
             style={{
@@ -1308,7 +1300,7 @@ const Chat = () => {
               marginBottom: 0,
             }}
           >
-            Уже более 1&nbsp;000 будущих мам задают вопросы Норе.
+            Уже более 1&nbsp;000 будущих мам пользуются Норой 🩷
           </div>
         </div>
       </div>
@@ -1327,126 +1319,7 @@ const Chat = () => {
       }}
     >
       <MicPulseStyle />
-
-      {/* верхняя панель */}
-      <div
-        style={{
-          width: `calc(100% - ${PANEL_SIDE_PADDING * 2}px)`,
-          maxWidth,
-          minHeight: panelHeight,
-          background: GRADIENT,
-          color: NORA_COLOR,
-          margin: "20px auto 0 auto",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          borderRadius: borderRadius,
-          paddingLeft: PANEL_SIDE_PADDING,
-          paddingRight: PANEL_SIDE_PADDING,
-          paddingTop: 5,
-          paddingBottom: 5,
-          boxSizing: "border-box" as const,
-          zIndex: 1,
-        }}
-      >
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "flex-start",
-            flex: 1,
-            paddingLeft: 5,
-          }}
-        >
-          <span
-            style={{
-              fontWeight: 800,
-              fontSize: "19px",
-              lineHeight: 1.06,
-              whiteSpace: "nowrap",
-              marginBottom: 7,
-            }}
-          >
-            Nora Plus
-          </span>
-          <span
-            style={{
-              fontWeight: 400,
-              fontSize: "13px",
-              color: "#565656",
-              lineHeight: 1.04,
-              whiteSpace: "nowrap",
-            }}
-          >
-            Ассистент для будущих мам
-          </span>
-        </div>
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: 8,
-            marginLeft: 16,
-          }}
-        >
-          <button
-            style={{
-              background: ICON_BG,
-              border: `1px solid ${ICON_BORDER}`,
-              cursor: "pointer",
-              width: ICON_BUTTON_SIZE,
-              height: ICON_BUTTON_SIZE,
-              borderRadius: ICON_BUTTON_SIZE / 2,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-            onClick={handleShare}
-          >
-            <img
-              src={ICONS.share}
-              alt="Share"
-              style={{ width: ICON_SIZE, height: ICON_SIZE, filter: filterNora }}
-            />
-          </button>
-          <button
-            style={{
-              background: ICON_BG,
-              border: `1px solid ${ICON_BORDER}`,
-              cursor: "pointer",
-              width: ICON_BUTTON_SIZE,
-              height: ICON_BUTTON_SIZE,
-              borderRadius: ICON_BUTTON_SIZE / 2,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-            onClick={() => window.open("https://t.me/norasmart", "_blank")}
-          >
-            <img
-              src={ICONS.telegram}
-              alt="Telegram"
-              style={{ width: ICON_SIZE, height: ICON_SIZE, filter: filterNora }}
-            />
-          </button>
-          <button
-            style={{
-              background: ICON_BG,
-              border: `1px solid ${ICON_BORDER}`,
-              cursor: "pointer",
-              width: ICON_BUTTON_SIZE,
-              height: ICON_BUTTON_SIZE,
-              borderRadius: ICON_BUTTON_SIZE / 2,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-            onClick={openMenu}
-          >
-            {IconMenu}
-          </button>
-        </div>
-      </div>
+      <HeaderBar />
 
       <ModalOverlay />
       <ModalContent />
@@ -1461,18 +1334,19 @@ const Chat = () => {
         }}
       />
 
-      {/* текст-подсказка между темами и историей */}
+      {/* текст-подсказка между темами и историей (подробный старый вариант) */}
       {chatHistory.length === 0 && !botProgress && (
         <div
           style={{
             fontSize: 14,
             color: "#7c8792",
             textAlign: "center",
-            margin: "4px 24px 6px 24px",
+            margin: "8px 24px 10px 24px",
             lineHeight: 1.6,
           }}
         >
-          Напишите Норе, как вы себя чувствуете.
+          Расскажите Норе о своём самочувствии, сроке беременности или вопросе, который вас
+          волнует — она подскажет, что делать дальше.
         </div>
       )}
 
@@ -1629,7 +1503,7 @@ const Chat = () => {
               height: ICON_BUTTON_SIZE,
               borderRadius: ICON_BUTTON_SIZE / 2,
               border: `1px solid ${ICON_BORDER}`,
-              background: ICON_BG,
+              background: "#ffffff",
               cursor: loading || !!botProgress ? "not-allowed" : "pointer",
               display: "flex",
               alignItems: "center",
@@ -1650,7 +1524,7 @@ const Chat = () => {
               height: ICON_BUTTON_SIZE,
               borderRadius: ICON_BUTTON_SIZE / 2,
               border: `1px solid ${ICON_BORDER}`,
-              background: ICON_BG,
+              background: "#ffffff",
               cursor: loading || !!botProgress ? "not-allowed" : "pointer",
               display: "flex",
               alignItems: "center",
