@@ -467,8 +467,8 @@ const Footer = () => (
       boxShadow: "0 -4px 14px 0 rgba(155,175,205,0.06)",
       boxSizing: "border-box" as const,
       fontFamily: "'Manrope', Arial, Helvetica, sans-serif",
-      paddingLeft: 15, // было 20
-      paddingRight: 15, // было 20
+      paddingLeft: 15,
+      paddingRight: 15,
       paddingTop: 22,
       paddingBottom: 22,
       display: "flex",
@@ -595,7 +595,7 @@ function splitBotTextTwoBlocks(text: string) {
   }
 }
 
-// блок "как работает Нора"
+// блок "как работает Нора" — без заголовка, просто пример
 const HowItWorks = () => {
   const EXAMPLES = [
     {
@@ -705,17 +705,6 @@ const HowItWorks = () => {
     >
       <div
         style={{
-          fontWeight: 700,
-          fontSize: "20px",
-          color: "#2e2e2e",
-          marginBottom: 20,
-          textAlign: "center",
-        }}
-      >
-        Как Нора отвечает на вопросы
-      </div>
-      <div
-        style={{
           display: "flex",
           flexDirection: "column",
           padding: `0 ${BLOCK_SIDE_PADDING}px`,
@@ -738,6 +727,7 @@ const HowItWorks = () => {
   );
 };
 
+// панель тем без текста "не знаете, с чего начать"
 const PremadeThemesPanel = ({
   disabled,
   onSend,
@@ -766,17 +756,6 @@ const PremadeThemesPanel = ({
         gap: 15,
       }}
     >
-      <div
-        style={{
-          fontWeight: 700,
-          fontSize: "17px",
-          color: NORA_COLOR,
-          marginBottom: 10,
-          textAlign: "center",
-        }}
-      >
-        Не знаете, с чего начать? Выберите тему:
-      </div>
       <div
         style={{
           display: "flex",
@@ -1330,7 +1309,7 @@ const Chat = () => {
               lineHeight: 1.35,
             }}
           >
-            Ждёте малыша? Я знаю всё о беременности!
+            Ждёте малыша? Я помогу!
           </div>
           <div
             style={{
@@ -1695,7 +1674,7 @@ const Chat = () => {
             onFocus={() => setFocused(true)}
             onBlur={() => setFocused(false)}
             onChange={(e) => setMessage(e.target.value)}
-            placeholder="Опишите, что вас беспокоит..."
+            placeholder="Задайте вопрос..."
             style={{
               flex: 1,
               height: 52,
