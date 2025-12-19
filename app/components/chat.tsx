@@ -9,10 +9,15 @@ const maxWidth = 560;
 const videoMaxWidth = 314;
 const GRADIENT = "linear-gradient(90deg, #eff5fe 0%, #e5e8ed 100%)";
 const BABY_GRADIENT = "linear-gradient(90deg, #e39290 0%, #efb1b6 100%)";
-const INPUT_BAR_HEIGHT = 68;
+// увеличено
+const INPUT_BAR_HEIGHT = 80;
 const PANEL_SIDE_PADDING = 15;
 const BLOCK_SIDE_PADDING = 10;
 const CARD_GAP = 10;
+
+// минималистичные размеры кнопок-иконок
+const ICON_BUTTON_SIZE = 30;
+const ICON_FONT_SIZE = 16;
 
 const IconShield = (
   <svg width="17" height="17" fill="none" viewBox="0 0 22 22">
@@ -69,6 +74,7 @@ const REVIEWS = [
   { name: "Лола", badge: "4 месяц беременности", problem: "Недостаток белка", text: "Советы по питанию очень полезные, теперь у меня больше энергии." }
 ];
 
+// убрана тема «Контроль тревожности»
 const PREMADE_THEMES = [
   {
     emoji: "🤢",
@@ -99,12 +105,6 @@ const PREMADE_THEMES = [
     title: "Физическая активность",
     desc: "Можно ли спорт, какие упражнения безопасны.",
     question: "Какие упражнения подходят беременным?"
-  },
-  {
-    emoji: "😌",
-    title: "Контроль тревожности",
-    desc: "Как снизить тревоги и справиться с волнениями.",
-    question: "Как побороть тревогу во время беременности?"
   },
 ];
 
@@ -649,7 +649,7 @@ const Chat = () => {
     setBotProgress("");
   };
 
-  /** Голосовой ввод (Web Speech API)[web:50] */
+  /** Голосовой ввод (Web Speech API) */
   const startListening = () => {
     if (typeof window === "undefined") return;
     const SpeechRecognition =
@@ -681,7 +681,7 @@ const Chat = () => {
     recognition.start();
   };
 
-  /** Работа с файлами (через скрытый input и FormData)[web:45] */
+  /** Работа с файлами (через скрытый input и FormData) */
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const selected = e.target.files?.[0];
     if (!selected) return;
@@ -738,7 +738,7 @@ const Chat = () => {
     whiteSpace: "pre-line"
   };
 
-  // глобальная анимация для микрофона (пульсация)[web:49][web:51]
+  // глобальная анимация (оставлена, но сама кнопка теперь без пульсации)
   const MicPulseStyle = () => (
     <style jsx global>{`
       @keyframes micPulseNora {
@@ -985,7 +985,6 @@ const Chat = () => {
       }}
     >
       <MicPulseStyle />
-
       <div style={{
         width: `calc(100% - ${PANEL_SIDE_PADDING * 2}px)`,
         maxWidth,
@@ -1113,7 +1112,7 @@ const Chat = () => {
         </div>
       </div>
 
-      {/* INPUT BAR: всё внутри одного поля */}
+      {/* INPUT BAR */}
       <div
         style={{
           width: "calc(100% - 40px)",
@@ -1123,7 +1122,7 @@ const Chat = () => {
           height: INPUT_BAR_HEIGHT,
           position: "fixed",
           left: 0,
-          bottom: 25,
+          bottom: 30, // чуть выше
           background: "transparent",
           borderRadius: borderRadius,
           zIndex: 20,
@@ -1158,7 +1157,7 @@ const Chat = () => {
             onChange={handleFileChange}
           />
 
-          {/* текстовое поле */}
+          {/* текстовое поле — выше и крупнее */}
           <input
             type="text"
             value={message}
@@ -1168,8 +1167,8 @@ const Chat = () => {
             placeholder="Введите сообщение..."
             style={{
               flex: 1,
-              height: 44,
-              fontSize: "16px",
+              height: 52,
+              fontSize: "17px",
               border: "none",
               outline: "none",
               background: "transparent",
@@ -1180,46 +1179,47 @@ const Chat = () => {
             disabled={loading || !!botProgress}
           />
 
-          {/* иконка файла */}
+          {/* иконка файла — минимализм */}
           <button
             onClick={openFileDialog}
             disabled={loading || !!botProgress}
             style={{
-              width: 34,
-              height: 34,
-              borderRadius: "50%",
+              width: ICON_BUTTON_SIZE,
+              height: ICON_BUTTON_SIZE,
+              borderRadius: 999,
               border: "none",
               background: "transparent",
               cursor: (loading || !!botProgress) ? "not-allowed" : "pointer",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              fontSize: 18,
-              marginRight: 2,
+              fontSize: ICON_FONT_SIZE,
+              marginRight: 4,
+              color: "#7c8792",
             }}
             title="Прикрепить файл"
           >
             📎
           </button>
 
-          {/* иконка микрофона с пульсацией при записи */}
+          {/* микрофон — минималистичный, без пульсации */}
           <button
             onClick={startListening}
             disabled={loading || !!botProgress}
             style={{
-              width: 34,
-              height: 34,
-              borderRadius: "50%",
+              width: ICON_BUTTON_SIZE,
+              height: ICON_BUTTON_SIZE,
+              borderRadius: 999,
               border: "none",
               marginRight: 4,
               cursor: (loading || !!botProgress) ? "not-allowed" : "pointer",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              fontSize: 18,
-              color: "#fff",
-              background: isListening ? "#ff9800" : "#c9d1e3",
-              animation: isListening ? "micPulseNora 1.1s infinite ease-out" : "none",
+              fontSize: ICON_FONT_SIZE,
+              color: isListening ? "#ff9800" : "#7c8792",
+              background: "transparent",
+              animation: "none",
             }}
             title={isListening ? "Идёт запись..." : "Голосовой ввод"}
           >
