@@ -14,10 +14,10 @@ const PANEL_SIDE_PADDING = 15;
 const BLOCK_SIDE_PADDING = 10;
 const CARD_GAP = 10;
 
-// круглые кнопки-иконки (крупнее и в цвет Telegram)
-const ICON_BUTTON_SIZE = 46;
-const ICON_BG = "#27A7E7";
-const ICON_BORDER = "#27A7E7";
+// круглые кнопки-иконки внизу (для файла/мика/отправки)
+const ICON_BUTTON_SIZE = 44;
+const ICON_BG = "#ffffff";
+const ICON_BORDER = "#e1e9f5";
 const ICON_DARK = "#5a6573";
 
 const IconShield = (
@@ -64,9 +64,9 @@ const IconContact = (
 // иконка меню (3 полоски)
 const IconMenu = (
   <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-    <path d="M4 7h16" stroke="#ffffff" strokeWidth="1.8" strokeLinecap="round" />
-    <path d="M4 12h16" stroke="#ffffff" strokeWidth="1.8" strokeLinecap="round" />
-    <path d="M4 17h16" stroke="#ffffff" strokeWidth="1.8" strokeLinecap="round" />
+    <path d="M4 7h16" stroke={ICON_DARK} strokeWidth="1.8" strokeLinecap="round" />
+    <path d="M4 12h16" stroke={ICON_DARK} strokeWidth="1.8" strokeLinecap="round" />
+    <path d="M4 17h16" stroke={ICON_DARK} strokeWidth="1.8" strokeLinecap="round" />
   </svg>
 );
 
@@ -88,9 +88,9 @@ const ICONS = {
 const filterNora =
   "invert(13%) sepia(4%) saturate(271%) hue-rotate(175deg) brightness(92%) contrast(93%)";
 
-// контурные иконки для файла и микрофона
+// контурные иконки для файла и микрофона (увеличены)
 const IconPaperclip = (
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
     <path
       d="M8.5 12.5L14 7C15.1 5.9 16.9 5.9 18 7C19.1 8.1 19.1 9.9 18 11L11 18C9.3 19.7 6.5 19.7 4.8 18C3.1 16.3 3.1 13.5 4.8 11.8L11.5 5"
       stroke={ICON_DARK}
@@ -102,7 +102,7 @@ const IconPaperclip = (
 );
 
 const IconMic = (
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
     <rect
       x="9"
       y="4"
@@ -231,7 +231,7 @@ const REVIEWS = [
   },
 ];
 
-// темы (чипы) для старта диалога
+// темы (чипы)
 const PREMADE_THEMES = [
   {
     emoji: "🤢",
@@ -249,7 +249,7 @@ const PREMADE_THEMES = [
     emoji: "🥗",
     title: "Питание и витамины",
     desc: "Что можно, что нельзя и какие витамины важны.",
-    question: "Что можно eat при беременности и какие витамины важны?",
+    question: "Что можно есть при беременности и какие витамины важны?",
   },
   {
     emoji: "🩺",
@@ -462,7 +462,7 @@ const ReviewBlock = () => (
   </div>
 );
 
-// контакты для модалки
+// контакты
 const ContactsBlock = () => (
   <div style={{ textAlign: "left", fontSize: 14, color: "#263540", lineHeight: 1.6 }}>
     <div style={{ marginBottom: 10 }}>
@@ -498,7 +498,7 @@ function splitBotTextTwoBlocks(text: string) {
   }
 }
 
-// панель готовых тем
+// панель тем
 const PremadeThemesPanel = ({
   disabled,
   onSend,
@@ -702,7 +702,7 @@ const Chat = () => {
           setLoading(false);
         }
       }, 18);
-    } catch (error) {
+    } catch {
       setChatHistory((prev) => [
         ...prev,
         { text: "Ошибка: не удалось получить ответ.", sender: "bot" },
@@ -767,7 +767,7 @@ const Chat = () => {
         ...prev,
         { text: `Файл "${selected.name}" отправлен ассистенту.`, sender: "user" },
       ]);
-    } catch (err) {
+    } catch {
       setChatHistory((prev) => [
         ...prev,
         { text: "Не удалось загрузить файл. Попробуйте ещё раз.", sender: "bot" },
@@ -1042,7 +1042,7 @@ const Chat = () => {
     );
   }
 
-  // общая шапка (используется и на welcome, и на чате)
+  // общая шапка (одинаковая на обоих экранах, без фона под иконками)
   const HeaderBar = () => (
     <div
       style={{
@@ -1106,12 +1106,12 @@ const Chat = () => {
       >
         <button
           style={{
-            background: ICON_BG,
-            border: `1px solid ${ICON_BORDER}`,
+            background: "transparent",
+            border: "none",
             cursor: "pointer",
-            width: ICON_BUTTON_SIZE,
-            height: ICON_BUTTON_SIZE,
-            borderRadius: ICON_BUTTON_SIZE / 2,
+            width: 38,
+            height: 38,
+            borderRadius: 19,
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -1126,12 +1126,12 @@ const Chat = () => {
         </button>
         <button
           style={{
-            background: ICON_BG,
-            border: `1px solid ${ICON_BORDER}`,
+            background: "transparent",
+            border: "none",
             cursor: "pointer",
-            width: ICON_BUTTON_SIZE,
-            height: ICON_BUTTON_SIZE,
-            borderRadius: ICON_BUTTON_SIZE / 2,
+            width: 38,
+            height: 38,
+            borderRadius: 19,
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -1146,12 +1146,12 @@ const Chat = () => {
         </button>
         <button
           style={{
-            background: ICON_BG,
-            border: `1px solid ${ICON_BORDER}`,
+            background: "transparent",
+            border: "none",
             cursor: "pointer",
-            width: ICON_BUTTON_SIZE,
-            height: ICON_BUTTON_SIZE,
-            borderRadius: ICON_BUTTON_SIZE / 2,
+            width: 38,
+            height: 38,
+            borderRadius: 19,
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -1214,7 +1214,7 @@ const Chat = () => {
         {/* отступ под видео */}
         <div style={{ height: 36 }} />
 
-        {/* главный текст и CTA */}
+        {/* текст и CTA */}
         <div
           style={{
             width: `calc(100% - ${BLOCK_SIDE_PADDING * 2}px)`,
@@ -1252,7 +1252,7 @@ const Chat = () => {
             просто спросите Нору.
           </div>
 
-          {/* симметричные отступы вокруг кнопки */}
+          {/* отступ над кнопкой */}
           <div style={{ height: 32 }} />
 
           <div style={{ display: "flex", justifyContent: "center", width: "100%" }}>
@@ -1291,6 +1291,7 @@ const Chat = () => {
             </div>
           </div>
 
+          {/* отступ под кнопкой */}
           <div style={{ height: 32 }} />
 
           <div
@@ -1324,7 +1325,6 @@ const Chat = () => {
       <ModalOverlay />
       <ModalContent />
 
-      {/* темы для быстрого старта */}
       <PremadeThemesPanel
         disabled={loading || !!botProgress}
         onSend={(q) => {
@@ -1334,7 +1334,6 @@ const Chat = () => {
         }}
       />
 
-      {/* текст-подсказка между темами и историей (подробный старый вариант) */}
       {chatHistory.length === 0 && !botProgress && (
         <div
           style={{
@@ -1350,7 +1349,6 @@ const Chat = () => {
         </div>
       )}
 
-      {/* история чата */}
       <div
         style={{
           flex: 1,
@@ -1502,13 +1500,13 @@ const Chat = () => {
               width: ICON_BUTTON_SIZE,
               height: ICON_BUTTON_SIZE,
               borderRadius: ICON_BUTTON_SIZE / 2,
-              border: `1px solid ${ICON_BORDER}`,
-              background: "#ffffff",
+              border: "none",
+              background: "transparent",
               cursor: loading || !!botProgress ? "not-allowed" : "pointer",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              marginRight: 6,
+              marginRight: 4,
             }}
             title="Прикрепить файл"
           >
@@ -1523,13 +1521,13 @@ const Chat = () => {
               width: ICON_BUTTON_SIZE,
               height: ICON_BUTTON_SIZE,
               borderRadius: ICON_BUTTON_SIZE / 2,
-              border: `1px solid ${ICON_BORDER}`,
-              background: "#ffffff",
+              border: "none",
+              background: "transparent",
               cursor: loading || !!botProgress ? "not-allowed" : "pointer",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              marginRight: 6,
+              marginRight: 4,
               animation: isListening ? "micPulseNora 1.1s infinite ease-out" : "none",
             }}
             title={isListening ? "Идёт запись..." : "Голосовой ввод"}
