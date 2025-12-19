@@ -280,7 +280,7 @@ const WhyNoraBlock = () => (
           textAlign: "center",
         }}
       >
-        Почему Nora Plus?
+        Что умеет Nora Plus
       </div>
       <div
         style={{
@@ -455,7 +455,7 @@ const ReviewBlock = () => (
   </div>
 );
 
-// футер с уменьшенными боковыми отступами
+// футер
 const Footer = () => (
   <div
     style={{
@@ -595,139 +595,7 @@ function splitBotTextTwoBlocks(text: string) {
   }
 }
 
-// блок "как работает Нора" — без заголовка, просто пример
-const HowItWorks = () => {
-  const EXAMPLES = [
-    {
-      q: "Я часто волнуюсь без причины.",
-      a: "🤗 Это очень распространено у беременных! Эмоции усиливаются из-за гормонов. Прогулки на свежем воздухе, дыхательные упражнения и доверительные разговоры с близкими — хорошие помощники. Сильно беспокоит — расскажу, как снизить тревожность.",
-    },
-    {
-      q: "Болит спина и поясница.",
-      a: "💆 Чаще всего это нормальная реакция организма на изменение центра тяжести. Помогает отдых на боку с подушкой между ног, отказ от тяжелых сумок и плавные растяжки. Если боли сильные — скажи, подскажу, что ещё важно проверить.",
-    },
-    {
-      q: "Плохо сплю последние дни.",
-      a: "😴 Лёгкие вечерние прогулки, проветривание комнаты и комфортная подушка часто решают проблему. Если проблемы с засыпанием затяжные, обсуди это со мной — найдём подходящий ритуал отдыха.",
-    },
-    {
-      q: "Можно ли заниматься спортом?",
-      a: "🏃‍♀️ Движение обычно полезно, если нет противопоказаний. Лучше остановиться на специальных занятиях для беременных: йога, плавание, пешие прогулки. Хочешь — предложу простой комплекс лёгких упражнений.",
-    },
-  ];
-  const [step, setStep] = useState(0);
-  const [phase, setPhase] = useState<"q" | "a" | "next">("q");
-  const [q, setQ] = useState("");
-  const [a, setA] = useState("");
-
-  useEffect(() => {
-    let t: NodeJS.Timeout;
-    if (phase === "q") {
-      setQ("");
-      let i = 0;
-      t = setInterval(() => {
-        setQ(EXAMPLES[step].q.slice(0, i + 1));
-        i++;
-        if (i > EXAMPLES[step].q.length) {
-          clearInterval(t);
-          setTimeout(() => setPhase("a"), 350);
-        }
-      }, 35);
-    } else if (phase === "a") {
-      setA("");
-      let i = 0;
-      t = setInterval(() => {
-        setA(EXAMPLES[step].a.slice(0, i + 1));
-        i++;
-        if (i > EXAMPLES[step].a.length) {
-          clearInterval(t);
-          setTimeout(() => setPhase("next"), 6900);
-        }
-      }, 17);
-    } else if (phase === "next") {
-      t = setTimeout(() => {
-        setStep((s) => (s + 1) % EXAMPLES.length);
-        setPhase("q");
-      }, 350);
-    }
-    return () => clearInterval(t);
-  }, [phase, step]);
-
-  const bubbleUser = (text: string) => (
-    <div
-      style={{
-        alignSelf: "flex-end",
-        background: "#fff",
-        borderRadius: "19px 19px 4px 19px",
-        padding: "20px 22px",
-        marginBottom: 26,
-        maxWidth: 400,
-        textAlign: "right",
-        fontSize: 15.5,
-        lineHeight: 1.7,
-        boxShadow: "0 1px 8px rgba(200,180,200,0.12)",
-      }}
-    >
-      {text}
-    </div>
-  );
-  const bubbleBot = (text: string) => (
-    <div
-      style={{
-        alignSelf: "flex-start",
-        background: "#f7fafd",
-        borderRadius: "19px 19px 19px 4px",
-        padding: "22px 24px",
-        marginBottom: 26,
-        maxWidth: 420,
-        textAlign: "left",
-        fontSize: 15.5,
-        lineHeight: 1.7,
-        boxShadow: "0 1px 8px rgba(200,180,200,0.12)",
-      }}
-    >
-      {text}
-    </div>
-  );
-
-  return (
-    <div
-      style={{
-        width: `calc(100% - ${BLOCK_SIDE_PADDING * 2}px)`,
-        maxWidth,
-        margin: "0 auto 38px auto",
-        background: GRADIENT,
-        borderRadius: 22,
-        boxShadow: "0 6px 20px rgba(150,175,205,0.1)",
-        padding: "21px 0 20px 0",
-        fontFamily: "'Manrope', Arial, Helvetica, sans-serif",
-      }}
-    >
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          padding: `0 ${BLOCK_SIDE_PADDING}px`,
-        }}
-      >
-        {q && bubbleUser(q)}
-        {a && bubbleBot(a)}
-      </div>
-      <div
-        style={{
-          fontSize: 13,
-          color: "#7b8590",
-          textAlign: "center",
-          marginTop: 8,
-        }}
-      >
-        Просто задайте вопрос — Нора найдёт ответ.
-      </div>
-    </div>
-  );
-};
-
-// панель тем без текста "не знаете, с чего начать"
+// панель тем без заголовка
 const PremadeThemesPanel = ({
   disabled,
   onSend,
@@ -739,7 +607,7 @@ const PremadeThemesPanel = ({
     style={{
       width: "100%",
       maxWidth: maxWidth,
-      margin: "18px auto 18px auto",
+      margin: "18px auto 8px auto",
       padding: "0 15px",
       boxSizing: "border-box" as const,
       display: "flex",
@@ -1152,7 +1020,6 @@ const Chat = () => {
             paddingBottom: 5,
             boxSizing: "border-box" as const,
             zIndex: 1,
-            fontFamily: "'Manrope', Arial, Helvetica, sans-serif",
           }}
         >
           <div
@@ -1327,17 +1194,9 @@ const Chat = () => {
             и делится рекомендациями на основе медицины Великобритании NHS. Не гуглите в панике —
             просто спросите Нору.
           </div>
+
           <div style={{ height: 24 }} />
-          <div
-            style={{
-              fontSize: 13,
-              color: "#7c8792",
-              marginBottom: 16,
-            }}
-          >
-            Уже более 1 000 будущих мам задавали вопросы Норе.
-          </div>
-          <div style={{ height: 8 }} />
+
           <div style={{ display: "flex", justifyContent: "center", width: "100%" }}>
             <div style={{ width: "100%", textAlign: "center" }}>
               <button
@@ -1373,9 +1232,19 @@ const Chat = () => {
               </button>
             </div>
           </div>
-          <div style={{ height: 40 }} />
 
-          <HowItWorks />
+          {/* текст под кнопкой */}
+          <div style={{ height: 16 }} />
+          <div
+            style={{
+              fontSize: 13,
+              color: "#7c8792",
+              marginBottom: 24,
+            }}
+          >
+            Уже более 1&nbsp;000 будущих мам задают вопросы Норе.
+          </div>
+
           <WhyNoraBlock />
           <ReviewBlock />
           <Footer />
@@ -1416,7 +1285,6 @@ const Chat = () => {
           paddingBottom: 5,
           boxSizing: "border-box" as const,
           zIndex: 1,
-          fontFamily: "'Manrope', Arial, Helvetica, sans-serif",
         }}
       >
         <div
@@ -1532,6 +1400,21 @@ const Chat = () => {
         }}
       />
 
+      {/* текст-подсказка между темами и историей */}
+      {chatHistory.length === 0 && !botProgress && (
+        <div
+          style={{
+            fontSize: 14,
+            color: "#7c8792",
+            textAlign: "center",
+            margin: "4px 24px 6px 24px",
+            lineHeight: 1.6,
+          }}
+        >
+          Напишите Норе, как вы себя чувствуете.
+        </div>
+      )}
+
       {/* история чата */}
       <div
         style={{
@@ -1549,21 +1432,6 @@ const Chat = () => {
             padding: "8px 0 110px 0",
           }}
         >
-          {chatHistory.length === 0 && (
-            <div
-              style={{
-                fontSize: 14,
-                color: "#7c8792",
-                textAlign: "center",
-                margin: "8px 24px 18px 24px",
-                lineHeight: 1.6,
-              }}
-            >
-              Напишите Норе, как вы себя чувствуете, или выберите тему выше — она ответит и поможет
-              разобраться.
-            </div>
-          )}
-
           {chatHistory.map((msg, idx) => (
             <div
               key={idx}
