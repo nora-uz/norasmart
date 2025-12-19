@@ -60,9 +60,18 @@ const IconContact = (
     />
   </svg>
 );
+
+// иконка меню (3 полоски)
+const IconMenu = (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+    <path d="M4 7h16" stroke={ICON_DARK} strokeWidth="1.8" strokeLinecap="round" />
+    <path d="M4 12h16" stroke={ICON_DARK} strokeWidth="1.8" strokeLinecap="round" />
+    <path d="M4 17h16" stroke={ICON_DARK} strokeWidth="1.8" strokeLinecap="round" />
+  </svg>
+);
+
 const ICONS = {
   telegram: "https://cdn-icons-png.flaticon.com/512/1946/1946547.png",
-  trash: "https://cdn-icons-png.flaticon.com/512/1345/1345823.png",
   share: "https://cdn-icons-png.flaticon.com/512/535/535285.png",
   arrowRight: (
     <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
@@ -327,7 +336,6 @@ const WhyNoraBlock = () => (
                   fontSize: 16,
                   color: NORA_COLOR,
                   marginBottom: 7,
-                  textAlign: "left",
                 }}
               >
                 {title}
@@ -337,7 +345,6 @@ const WhyNoraBlock = () => (
                   fontSize: 13,
                   color: "#3a3a3a",
                   lineHeight: "1.64",
-                  textAlign: "left",
                 }}
               >
                 {text}
@@ -455,127 +462,23 @@ const ReviewBlock = () => (
   </div>
 );
 
-// футер
-const Footer = () => (
-  <div
-    style={{
-      width: `calc(100% - 40px)`,
-      maxWidth,
-      margin: "0 auto",
-      background: GRADIENT,
-      borderRadius: "22px",
-      boxShadow: "0 -4px 14px 0 rgba(155,175,205,0.06)",
-      boxSizing: "border-box" as const,
-      fontFamily: "'Manrope', Arial, Helvetica, sans-serif",
-      paddingLeft: 15,
-      paddingRight: 15,
-      paddingTop: 22,
-      paddingBottom: 22,
-      display: "flex",
-      flexDirection: "column",
-      gap: 18,
-      alignItems: "center",
-    }}
-  >
-    <div
-      style={{
-        fontSize: 12,
-        color: "#263540",
-        fontWeight: 600,
-        textAlign: "center",
-        width: "100%",
-      }}
-    >
-      Ташкент, Юнусабадский район, массив Кашгар 26
+// футер (для модалки Контакты)
+const ContactsBlock = () => (
+  <div style={{ textAlign: "left", fontSize: 14, color: "#263540", lineHeight: 1.6 }}>
+    <div style={{ marginBottom: 10 }}>
+      <strong>Адрес:</strong> Ташкент, Юнусабадский район, массив Кашгар 26
     </div>
-    <div
-      style={{
-        display: "flex",
-        gap: 11,
-        width: "100%",
-        justifyContent: "center",
-      }}
-    >
-      <a
-        href="#"
-        style={{
-          background: "#fff",
-          width: "63%",
-          borderRadius: 13,
-          color: "#495062",
-          fontWeight: 400,
-          fontSize: 14,
-          padding: "9px 0",
-          textDecoration: "none",
-          textAlign: "center",
-          border: "1px solid #e1e9f5",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          gap: 7,
-          marginRight: 5,
-        }}
-      >
-        {IconPartner} Стать партнёром
-      </a>
-      <a
-        href="#"
-        style={{
-          background: "#fff",
-          width: "37%",
-          borderRadius: 13,
-          color: "#495062",
-          fontWeight: 400,
-          fontSize: 14,
-          padding: "9px 0",
-          textDecoration: "none",
-          textAlign: "center",
-          border: "1px solid #e1e9f5",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          gap: 7,
-        }}
-      >
-        {IconContact} Контакты
+    <div style={{ marginBottom: 6 }}>
+      <strong>Партнёрство:</strong> напишите нам в Telegram&nbsp;
+      <a href="https://t.me/norasmart" target="_blank" rel="noreferrer">
+        @norasmart
       </a>
     </div>
-    <a
-      href="#"
-      style={{
-        background: "#fff",
-        padding: "9px 0",
-        width: "100%",
-        borderRadius: 14,
-        color: "#556",
-        fontWeight: 400,
-        fontSize: 14,
-        textDecoration: "none",
-        border: "1px solid #e1e9f5",
-        textAlign: "center",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        gap: 8,
-      }}
-    >
-      {IconShield} Политика конфиденциальности
-    </a>
-    <div
-      style={{
-        marginTop: 8,
-        fontSize: 12,
-        color: "#8a97a0",
-        textAlign: "center",
-        width: "100%",
-      }}
-    >
-      © {new Date().getFullYear()} Nora Plus — забота и поддержка будущих мам
+    <div style={{ marginBottom: 6 }}>
+      <strong>Политика конфиденциальности</strong> доступна по запросу.
     </div>
   </div>
 );
-
-const FooterGap = () => <div style={{ height: 20 }} />;
 
 const THREAD_KEY = "nora_thread_id";
 
@@ -595,7 +498,7 @@ function splitBotTextTwoBlocks(text: string) {
   }
 }
 
-// панель тем без заголовка
+// панель готовых тем
 const PremadeThemesPanel = ({
   disabled,
   onSend,
@@ -687,7 +590,9 @@ const PremadeThemesPanel = ({
   </div>
 );
 
-// ГЛАВНЫЙ КОМПОНЕНТ ЧАТА
+// ГЛАВНЫЙ КОМПОНЕНТ
+type MenuSection = "how" | "what" | "reviews" | "contacts" | null;
+
 const Chat = () => {
   const [showWelcome, setShowWelcome] = useState(true);
   const [preloading, setPreloading] = useState(true);
@@ -698,13 +603,15 @@ const Chat = () => {
   const [botProgress, setBotProgress] = useState("");
   const [isMobile, setIsMobile] = useState(true);
   const [focused, setFocused] = useState(false);
-
   const [isListening, setIsListening] = useState(false);
 
   const [file, setFile] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
-
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // меню/модалка
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState<MenuSection>(null);
 
   useEffect(() => {
     function checkScreen() {
@@ -716,20 +623,24 @@ const Chat = () => {
     window.addEventListener("resize", checkScreen);
     return () => window.removeEventListener("resize", checkScreen);
   }, []);
+
   useEffect(() => {
     const saved = window.localStorage.getItem(THREAD_KEY);
     if (saved) setThreadId(saved);
   }, []);
+
   useEffect(() => {
     document.body.style.overflow = "hidden";
     return () => {
       document.body.style.overflow = "auto";
     };
   }, []);
+
   useEffect(() => {
     const timer = setTimeout(() => setPreloading(false), 1000);
     return () => clearTimeout(timer);
   }, []);
+
   useEffect(() => {
     if (messagesEndRef.current) {
       messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
@@ -746,6 +657,11 @@ const Chat = () => {
     } else {
       alert("Ваш браузер не поддерживает Web Share API");
     }
+  };
+
+  const openMenuSection = (section: MenuSection) => {
+    setActiveSection(section);
+    setMenuOpen(true);
   };
 
   const sendMessageToGPT = async (text: string) => {
@@ -913,6 +829,115 @@ const Chat = () => {
     `}</style>
   );
 
+  const ModalOverlay = () =>
+    !menuOpen ? null : (
+      <div
+        onClick={() => setMenuOpen(false)}
+        style={{
+          position: "fixed",
+          inset: 0,
+          background: "rgba(10,20,35,0.45)",
+          zIndex: 200,
+        }}
+      />
+    );
+
+  const ModalContent = () => {
+    if (!menuOpen) return null;
+
+    let title = "";
+    let body: React.ReactNode = null;
+
+    if (activeSection === "how") {
+      title = "Как работает Нора";
+      body = (
+        <div style={{ fontSize: 14, lineHeight: 1.7, color: "#263540" }}>
+          Нора задаёт уточняющие вопросы, учитывает срок беременности и опирается на клинические
+          рекомендации, чтобы объяснить, что происходит с вашим организмом и что делать дальше.
+        </div>
+      );
+    } else if (activeSection === "what") {
+      title = "Что умеет Nora Plus";
+      body = <WhyNoraBlock />;
+    } else if (activeSection === "reviews") {
+      title = "Отзывы будущих мам";
+      body = <ReviewBlock />;
+    } else if (activeSection === "contacts") {
+      title = "Контакты и партнёрство";
+      body = <ContactsBlock />;
+    }
+
+    return (
+      <div
+        style={{
+          position: "fixed",
+          inset: 0,
+          zIndex: 210,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          pointerEvents: "none",
+        }}
+      >
+        <div
+          style={{
+            width: "100%",
+            maxWidth,
+            margin: "0 auto",
+            padding: "0 18px",
+            boxSizing: "border-box",
+            pointerEvents: "none",
+          }}
+        >
+          <div
+            style={{
+              background: "#f8fdff",
+              borderRadius: 22,
+              padding: 18,
+              maxHeight: "80vh",
+              overflowY: "auto",
+              boxShadow: "0 10px 40px rgba(0,0,0,0.18)",
+              pointerEvents: "auto",
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                marginBottom: 14,
+              }}
+            >
+              <div
+                style={{
+                  fontWeight: 700,
+                  fontSize: 18,
+                  color: "#1e2933",
+                }}
+              >
+                {title}
+              </div>
+              <button
+                onClick={() => setMenuOpen(false)}
+                style={{
+                  border: "none",
+                  background: "transparent",
+                  fontSize: 20,
+                  cursor: "pointer",
+                  padding: 4,
+                  lineHeight: 1,
+                }}
+              >
+                ×
+              </button>
+            </div>
+            {body}
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   if (!isMobile) {
     return (
       <div
@@ -989,7 +1014,7 @@ const Chat = () => {
     );
   }
 
-  // WELCOME-ЭКРАН
+  // WELCOME-ЭКРАН (упрощённый, без блоков возможностей/отзывов)
   if (showWelcome) {
     return (
       <div
@@ -1114,16 +1139,16 @@ const Chat = () => {
                 alignItems: "center",
                 justifyContent: "center",
               }}
-              onClick={clearChatAll}
+              onClick={() => openMenuSection("what")}
             >
-              <img
-                src={ICONS.trash}
-                alt="Trash"
-                style={{ width: ICON_SIZE, height: ICON_SIZE, filter: filterNora }}
-              />
+              {IconMenu}
             </button>
           </div>
         </div>
+
+        {/* модалка меню поверх */}
+        <ModalOverlay />
+        <ModalContent />
 
         <div style={{ height: 20 }} />
         <div style={{ height: 20 }} />
@@ -1154,8 +1179,8 @@ const Chat = () => {
             preload="auto"
           />
         </div>
-        <div style={{ height: 20 }} />
-        <div style={{ height: 20 }} />
+
+        <div style={{ height: 24 }} />
 
         {/* главный текст и CTA */}
         <div
@@ -1182,7 +1207,7 @@ const Chat = () => {
             style={{
               fontWeight: 400,
               fontSize: "15px",
-              margin: "0 auto 0 auto",
+              margin: "0 auto",
               maxWidth: 400,
               padding: "0 18px",
               lineHeight: 1.75,
@@ -1195,6 +1220,7 @@ const Chat = () => {
             просто спросите Нору.
           </div>
 
+          {/* равные отступы сверху/снизу вокруг кнопки */}
           <div style={{ height: 24 }} />
 
           <div style={{ display: "flex", justifyContent: "center", width: "100%" }}>
@@ -1233,22 +1259,17 @@ const Chat = () => {
             </div>
           </div>
 
-          {/* текст под кнопкой */}
-          <div style={{ height: 16 }} />
+          <div style={{ height: 24 }} />
+
           <div
             style={{
               fontSize: 13,
               color: "#7c8792",
-              marginBottom: 24,
+              marginBottom: 0,
             }}
           >
             Уже более 1&nbsp;000 будущих мам задают вопросы Норе.
           </div>
-
-          <WhyNoraBlock />
-          <ReviewBlock />
-          <Footer />
-          <FooterGap />
         </div>
       </div>
     );
@@ -1266,7 +1287,8 @@ const Chat = () => {
       }}
     >
       <MicPulseStyle />
-      {/* панель сверху */}
+
+      {/* верхняя панель */}
       <div
         style={{
           width: `calc(100% - ${PANEL_SIDE_PADDING * 2}px)`,
@@ -1379,16 +1401,16 @@ const Chat = () => {
               alignItems: "center",
               justifyContent: "center",
             }}
-            onClick={clearChatAll}
+            onClick={() => openMenuSection("what")}
           >
-            <img
-              src={ICONS.trash}
-              alt="Trash"
-              style={{ width: ICON_SIZE, height: ICON_SIZE, filter: filterNora }}
-            />
+            {IconMenu}
           </button>
         </div>
       </div>
+
+      {/* модалка меню поверх */}
+      <ModalOverlay />
+      <ModalContent />
 
       {/* темы для быстрого старта */}
       <PremadeThemesPanel
