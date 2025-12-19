@@ -9,13 +9,12 @@ const maxWidth = 560;
 const videoMaxWidth = 314;
 const GRADIENT = "linear-gradient(90deg, #eff5fe 0%, #e5e8ed 100%)";
 const BABY_GRADIENT = "linear-gradient(90deg, #e39290 0%, #efb1b6 100%)";
-// увеличенное поле ввода
 const INPUT_BAR_HEIGHT = 80;
 const PANEL_SIDE_PADDING = 15;
 const BLOCK_SIDE_PADDING = 10;
 const CARD_GAP = 10;
 
-// круглые кнопки-иконки, фон и бордер как в панели
+// круглые кнопки-иконки
 const ICON_BUTTON_SIZE = 38;
 const ICON_BG = "#ffffff";
 const ICON_BORDER = "#e1e9f5";
@@ -55,6 +54,51 @@ const ICONS = {
 };
 const filterNora = "invert(13%) sepia(4%) saturate(271%) hue-rotate(175deg) brightness(92%) contrast(93%)";
 
+// контурные иконки для файла и микрофона
+const IconPaperclip = (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+    <path
+      d="M8.5 12.5L14 7C15.1 5.9 16.9 5.9 18 7C19.1 8.1 19.1 9.9 18 11L11 18C9.3 19.7 6.5 19.7 4.8 18C3.1 16.3 3.1 13.5 4.8 11.8L11.5 5"
+      stroke={ICON_DARK}
+      strokeWidth="1.6"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
+
+const IconMic = (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+    <rect
+      x="9"
+      y="4"
+      width="6"
+      height="10"
+      rx="3"
+      stroke={ICON_DARK}
+      strokeWidth="1.6"
+    />
+    <path
+      d="M7 11C7 13.2 8.8 15 11 15H13C15.2 15 17 13.2 17 11"
+      stroke={ICON_DARK}
+      strokeWidth="1.6"
+      strokeLinecap="round"
+    />
+    <path
+      d="M12 15V19"
+      stroke={ICON_DARK}
+      strokeWidth="1.6"
+      strokeLinecap="round"
+    />
+    <path
+      d="M9.5 19H14.5"
+      stroke={ICON_DARK}
+      strokeWidth="1.6"
+      strokeLinecap="round"
+    />
+  </svg>
+);
+
 const BENEFITS = [
   { emoji: "🩺", title: "Медицинская точность", text: "Советы основаны на рекомендациях британской службы NHS и адаптированы под ваш регион." },
   { emoji: "🤝", title: "Поддержка 24/7", text: "Ассистент всегда на связи для заботы и помощи в любой ситуации." },
@@ -76,7 +120,7 @@ const REVIEWS = [
   { name: "Лола", badge: "4 месяц беременности", problem: "Недостаток белка", text: "Советы по питанию очень полезные, теперь у меня больше энергии." }
 ];
 
-// без блока «Контроль тревожности»
+// без темы контроля тревожности
 const PREMADE_THEMES = [
   {
     emoji: "🤢",
@@ -544,10 +588,8 @@ const Chat = () => {
   const [isMobile, setIsMobile] = useState(true);
   const [focused, setFocused] = useState(false);
 
-  // голос
   const [isListening, setIsListening] = useState(false);
 
-  // файлы
   const [file, setFile] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -651,7 +693,6 @@ const Chat = () => {
     setBotProgress("");
   };
 
-  /** Голосовой ввод (Web Speech API) */
   const startListening = () => {
     if (typeof window === "undefined") return;
     const SpeechRecognition =
@@ -683,7 +724,6 @@ const Chat = () => {
     recognition.start();
   };
 
-  /** Работа с файлами (через скрытый input и FormData) */
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const selected = e.target.files?.[0];
     if (!selected) return;
@@ -702,7 +742,6 @@ const Chat = () => {
         ...prev,
         { text: `Файл "${selected.name}" отправлен ассистенту.`, sender: "user" },
       ]);
-      // data можно использовать для ссылки/ID файла
     } catch (err) {
       setChatHistory(prev => [
         ...prev,
@@ -740,7 +779,6 @@ const Chat = () => {
     whiteSpace: "pre-line"
   };
 
-  // глобальная анимация (используется микрофоном)
   const MicPulseStyle = () => (
     <style jsx global>{`
       @keyframes micPulseNora {
@@ -1151,7 +1189,6 @@ const Chat = () => {
             boxShadow: "0 2px 14px 0 rgba(155,175,205,0.10)",
           }}
         >
-          {/* скрытый input для файла */}
           <input
             type="file"
             ref={fileInputRef}
@@ -1159,7 +1196,6 @@ const Chat = () => {
             onChange={handleFileChange}
           />
 
-          {/* текстовое поле — выше и крупнее */}
           <input
             type="text"
             value={message}
@@ -1181,7 +1217,7 @@ const Chat = () => {
             disabled={loading || !!botProgress}
           />
 
-          {/* круглая минималистичная иконка файла */}
+          {/* файл — круглая подложка, контурная иконка */}
           <button
             onClick={openFileDialog}
             disabled={loading || !!botProgress}
@@ -1195,16 +1231,14 @@ const Chat = () => {
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              fontSize: 17,
               marginRight: 6,
-              color: ICON_DARK,
             }}
             title="Прикрепить файл"
           >
-            📎
+            {IconPaperclip}
           </button>
 
-          {/* круглая иконка микрофона с анимацией при записи */}
+          {/* микрофон — контурный, с пульсацией при записи */}
           <button
             onClick={startListening}
             disabled={loading || !!botProgress}
@@ -1218,17 +1252,15 @@ const Chat = () => {
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              fontSize: 17,
               marginRight: 6,
-              color: ICON_DARK,
               animation: isListening ? "micPulseNora 1.1s infinite ease-out" : "none",
             }}
             title={isListening ? "Идёт запись..." : "Голосовой ввод"}
           >
-            🎤
+            {IconMic}
           </button>
 
-          {/* отправка — тоже круглая для консистентности */}
+          {/* отправка */}
           <button
             style={{
               width: ICON_BUTTON_SIZE,
