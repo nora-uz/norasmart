@@ -455,6 +455,7 @@ const ReviewBlock = () => (
   </div>
 );
 
+// футер с уменьшенными боковыми отступами
 const Footer = () => (
   <div
     style={{
@@ -466,8 +467,8 @@ const Footer = () => (
       boxShadow: "0 -4px 14px 0 rgba(155,175,205,0.06)",
       boxSizing: "border-box" as const,
       fontFamily: "'Manrope', Arial, Helvetica, sans-serif",
-      paddingLeft: 20,
-      paddingRight: 20,
+      paddingLeft: 15, // было 20
+      paddingRight: 15, // было 20
       paddingTop: 22,
       paddingBottom: 22,
       display: "flex",
@@ -594,7 +595,7 @@ function splitBotTextTwoBlocks(text: string) {
   }
 }
 
-// блок "как работает Нора" — живой диалог
+// блок "как работает Нора"
 const HowItWorks = () => {
   const EXAMPLES = [
     {
@@ -1141,7 +1142,7 @@ const Chat = () => {
     );
   }
 
-  // WELCOME-ЭКРАН: делаем максимально залипательным
+  // WELCOME-ЭКРАН
   if (showWelcome) {
     return (
       <div
@@ -1321,13 +1322,15 @@ const Chat = () => {
         >
           <div
             style={{
-              fontWeight: 700,
+              fontWeight: 800,
               fontSize: "22px",
               color: NORA_COLOR,
               marginBottom: 10,
+              padding: "0 18px",
+              lineHeight: 1.35,
             }}
           >
-            Ждёте малыша и переживаете, всё ли делаете правильно?
+            Ждёте малыша? Я знаю всё о беременности!
           </div>
           <div
             style={{
@@ -1341,9 +1344,9 @@ const Chat = () => {
               display: "inline-block",
             }}
           >
-            Нора — ассистент, который отвечает на вопросы, успокаивает, напоминает о важных делах и
-            делится рекомендациями на основе медицины Великобритании NHS. Не гуглите в панике — просто
-            спросите Нору.
+            Нора — ассистент, который отвечает на вопросы, успокаивает, напоминает о важных делах
+            и делится рекомендациями на основе медицины Великобритании NHS. Не гуглите в панике —
+            просто спросите Нору.
           </div>
           <div style={{ height: 24 }} />
           <div
@@ -1389,10 +1392,6 @@ const Chat = () => {
                   {ICONS.arrowRight}
                 </span>
               </button>
-              <div style={{ height: 13 }} />
-              <div style={{ fontSize: 13, color: "#7c8792" }}>
-                Бесплатно, без регистрации. Всегда можно вернуться к чату позже.
-              </div>
             </div>
           </div>
           <div style={{ height: 40 }} />
