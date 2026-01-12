@@ -1718,4 +1718,526 @@ const Chat = () => {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          justifyCon
+          justifyContent: "center",
+          position: "fixed",
+          top: 0,
+          left: 0,
+          zIndex: 10000,
+          margin: 0,
+          padding: 0,
+        }}
+      >
+        <span
+          style={{
+            fontWeight: 800,
+            fontSize: "38px",
+            color: NORA_COLOR,
+            letterSpacing: "0.07em",
+            animation: "noraPulse 1.4s infinite linear",
+          }}
+        >
+          {TEXTS[lang].appName}
+        </span>
+        <style>{`
+          @keyframes noraPulse {
+            0% { opacity: 0.30; }
+            50% { opacity: 1; }
+            100% { opacity: 0.30; }
+          }
+        `}</style>
+      </div>
+    );
+  }
+
+  // WELCOME экран
+  if (showWelcome) {
+    return (
+      <div
+        style={{
+          fontFamily: "'Manrope', Arial, Helvetica, sans-serif",
+          background: "#f8fdff",
+          width: "100vw",
+          minHeight: "100vh",
+          paddingBottom: 90,
+        }}
+      >
+        <MicPulseStyle />
+        <HeaderBar />
+
+        <ModalOverlay />
+        <ModalContent />
+
+        <div style={{ height: 46 }} />
+
+        <div
+          style={{
+            width: "100%",
+            maxWidth: maxWidth,
+            margin: "0 auto",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <video
+            src="/nora.mp4"
+            style={{
+              width: "100%",
+              maxWidth: videoMaxWidth,
+              display: "block",
+              borderRadius: 24,
+            }}
+            autoPlay
+            playsInline
+            muted
+            loop
+            preload="auto"
+          />
+        </div>
+
+        <div style={{ height: 36 }} />
+
+        <div
+          style={{
+            width: `calc(100% - ${BLOCK_SIDE_PADDING * 2}px)`,
+            maxWidth,
+            textAlign: "center",
+            margin: "0 auto",
+          }}
+        >
+          <div
+            style={{
+              fontWeight: 800,
+              fontSize: "22px",
+              color: NORA_COLOR,
+              marginBottom: 12,
+              padding: "0 18px",
+              lineHeight: 1.35,
+            }}
+          >
+            {TEXTS[lang].heroTitle}
+          </div>
+          <div
+            style={{
+              fontWeight: 400,
+              fontSize: "15px",
+              margin: "0 auto",
+              maxWidth: 400,
+              padding: "0 18px",
+              lineHeight: 1.75,
+              color: NORA_COLOR,
+              display: "inline-block",
+            }}
+          >
+            {TEXTS[lang].heroBody}
+          </div>
+
+          <div style={{ height: 32 }} />
+
+          <div
+            style={{
+              fontSize: 13,
+              color: "#7c8792",
+              marginBottom: 12,
+            }}
+          >
+            {TEXTS[lang].welcomeStat}
+          </div>
+
+          <div
+            style={{
+              width: "100%",
+              maxWidth,
+              margin: "0 auto",
+              paddingBottom: 16,
+            }}
+          >
+            <WhyNoraBlockContent lang={lang} />
+          </div>
+        </div>
+
+        {/* блок скачивания приложений */}
+        <div
+          style={{
+            width: "100%",
+            maxWidth,
+            margin: "10px auto 90px auto",
+            padding: "0 18px",
+            boxSizing: "border-box",
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: 10,
+            }}
+          >
+            <button
+              onClick={() => {
+                window.location.href =
+                  "https://webtoapp.design/apps/download_android_apk/IjE2NDExMSI.MJqUM633YvZ5PgIowcEHc8S6EJE";
+              }}
+              style={{
+                border: "none",
+                borderRadius: 26,
+                padding: "18px 22px",
+                background: "#111827",
+                color: "#ffffff",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontSize: 17,
+                fontWeight: 700,
+                cursor: "pointer",
+                gap: 14,
+              }}
+            >
+              {IconAndroidMini}
+              <span>{TEXTS[lang].androidBtn}</span>
+            </button>
+            <button
+              onClick={() => {
+                alert(TEXTS[lang].iosSoon);
+              }}
+              style={{
+                border: "1px solid #d1d5db",
+                borderRadius: 26,
+                padding: "18px 22px",
+                background: "#ffffff",
+                color: "#111827",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontSize: 17,
+                fontWeight: 700,
+                cursor: "pointer",
+                gap: 14,
+              }}
+            >
+              {IconAppleMini}
+              <span>{TEXTS[lang].iosBtn}</span>
+            </button>
+          </div>
+        </div>
+
+        <BottomNavBar
+          lang={lang}
+          onOpenHow={() => {
+            openSection("how");
+          }}
+          onOpenReviews={() => {
+            openSection("reviews");
+          }}
+          onOpenContacts={() => {
+            openSection("contacts");
+          }}
+          onStartChat={() => {
+            setShowWelcome(false);
+          }}
+        />
+      </div>
+    );
+  }
+
+  // ЧАТ экран
+  return (
+    <div
+      style={{
+        background: "#f8fdff",
+        width: "100vw",
+        minHeight: "100vh",
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
+      <MicPulseStyle />
+      <HeaderBar />
+
+      <ModalOverlay />
+      <ModalContent />
+
+      <PremadeThemesPanel
+        lang={lang}
+        disabled={loading || !!botProgress}
+        onSend={(q) => {
+          if (!loading && !botProgress) {
+            sendMessageToGPT(q);
+          }
+        }}
+      />
+
+      {chatHistory.length === 0 && !botProgress && (
+        <div
+          style={{
+            fontSize: 14,
+            color: "#7c8792",
+            textAlign: "center",
+            margin: "8px 24px 10px 24px",
+            lineHeight: 1.6,
+          }}
+        >
+          {TEXTS[lang].bottomHint}
+        </div>
+      )}
+
+      <div
+        style={{
+          flex: 1,
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "flex-end",
+        }}
+      >
+        <div
+          style={{
+            width: "100%",
+            maxWidth: maxWidth,
+            margin: "0 auto",
+            padding: "8px 0 110px 0",
+          }}
+        >
+          {chatHistory.map((msg, idx) => (
+            <div
+              key={idx}
+              style={{
+                textAlign: msg.sender === "user" ? "right" : "left",
+                margin: "8px 20px",
+              }}
+            >
+              {msg.sender === "user" ? (
+                <>
+                  <span style={userMessageStyle}>{msg.text}</span>
+                  <div
+                    style={{
+                      fontSize: 11,
+                      color: "#9aa3ad",
+                      marginTop: -4,
+                    }}
+                  >
+                    {TEXTS[lang].userLabel}
+                  </div>
+                </>
+              ) : (
+                <>
+                  {splitBotTextTwoBlocks(msg.text).map((part, sIdx) =>
+                    part.text ? (
+                      <div
+                        key={sIdx}
+                        style={{
+                          background: "#f7fafd",
+                          borderRadius: 12,
+                          padding: "10px 15px",
+                          marginBottom: sIdx === 0 ? 18 : 30,
+                          color: NORA_COLOR,
+                          fontSize: 16,
+                          lineHeight: 1.7,
+                          fontWeight: part.bold ? "bold" : "normal",
+                          wordBreak: "break-word",
+                          overflowWrap: "anywhere",
+                        }}
+                      >
+                        {part.text}
+                      </div>
+                    ) : null
+                  )}
+                  <div
+                    style={{
+                      fontSize: 11,
+                      color: "#9aa3ad",
+                      marginTop: -6,
+                    }}
+                  >
+                    {TEXTS[lang].noraLabel}
+                  </div>
+                </>
+              )}
+            </div>
+          ))}
+
+          {botProgress &&
+            splitBotTextTwoBlocks(botProgress).map((part, sIdx) =>
+              part.text ? (
+                <div
+                  key={sIdx}
+                  style={{
+                    background: "#f7fafd",
+                    borderRadius: 12,
+                    padding: "10px 15px",
+                    margin: "0 20px 10px 20px",
+                    color: NORA_COLOR,
+                    fontSize: 16,
+                    lineHeight: 1.7,
+                    fontWeight: part.bold ? "bold" : "normal",
+                    wordBreak: "break-word",
+                    overflowWrap: "anywhere",
+                  }}
+                >
+                  {part.text}
+                </div>
+              ) : null
+            )}
+
+          {botProgress && (
+            <div
+              style={{
+                fontSize: 11,
+                color: "#9aa3ad",
+                margin: "0 20px 6px 20px",
+              }}
+            >
+              {TEXTS[lang].noraTyping}
+            </div>
+          )}
+
+          <div ref={messagesEndRef} />
+        </div>
+      </div>
+
+      {/* панель ввода – иконки крупные, отправка круглая */}
+      <div
+        style={{
+          width: "calc(100% - 40px)",
+          margin: "0 20px",
+          boxSizing: "border-box",
+          maxWidth: maxWidth,
+          height: INPUT_BAR_HEIGHT,
+          position: "fixed",
+          left: 0,
+          bottom: 30,
+          background: "transparent",
+          borderRadius: borderRadius,
+          zIndex: 20,
+          boxShadow: "none",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <div
+          style={{
+            width: "100%",
+            background: "#fff",
+            borderRadius: borderRadius,
+            borderWidth: focused ? 2 : 0,
+            borderStyle: "solid",
+            borderColor: "transparent",
+            borderImage: focused ? GRADIENT + " 1" : undefined,
+            display: "flex",
+            alignItems: "center",
+            paddingLeft: 14,
+            paddingRight: 14,
+            paddingTop: 8,
+            paddingBottom: 8,
+            boxSizing: "border-box",
+            boxShadow: "0 2px 14px 0 rgba(155,175,205,0.10)",
+          }}
+        >
+          <input
+            type="file"
+            ref={fileInputRef}
+            style={{ display: "none" }}
+            onChange={handleFileChange}
+          />
+
+          <input
+            type="text"
+            value={message}
+            onFocus={() => setFocused(true)}
+            onBlur={() => setFocused(false)}
+            onChange={(e) => setMessage(e.target.value)}
+            placeholder={TEXTS[lang].inputPlaceholder}
+            style={{
+              flex: 1,
+              height: 40,
+              fontSize: "16px",
+              border: "none",
+              outline: "none",
+              background: "transparent",
+              color: NORA_COLOR,
+              boxSizing: "border-box",
+              paddingRight: 8,
+            }}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") handleSendMessage();
+            }}
+            disabled={loading || !!botProgress}
+          />
+
+          {/* файл */}
+          <button
+            onClick={openFileDialog}
+            disabled={loading || !!botProgress}
+            style={{
+              width: ICON_BUTTON_SIZE,
+              height: ICON_BUTTON_SIZE,
+              borderRadius: ICON_BUTTON_SIZE / 2,
+              border: "none",
+              background: "transparent",
+              cursor: loading || !!botProgress ? "not-allowed" : "pointer",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              marginLeft: 4,
+              marginRight: 8,
+            }}
+            title="File"
+          >
+            {IconPaperclip}
+          </button>
+
+          {/* микрофон */}
+          <button
+            onClick={startListening}
+            disabled={loading || !!botProgress}
+            style={{
+              width: ICON_BUTTON_SIZE,
+              height: ICON_BUTTON_SIZE,
+              borderRadius: ICON_BUTTON_SIZE / 2,
+              border: "none",
+              background: "transparent",
+              cursor: loading || !!botProgress ? "not-allowed" : "pointer",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              marginLeft: 4,
+              marginRight: 8,
+              animation: isListening
+                ? "micPulseNora 1.1s infinite ease-out"
+                : "none",
+            }}
+            title={
+              isListening ? TEXTS[lang].speakRecording : TEXTS[lang].speakTitle
+            }
+          >
+            {IconMic}
+          </button>
+
+          {/* отправка – идеальный круг */}
+          <button
+            style={{
+              width: ICON_BUTTON_SIZE,
+              height: ICON_BUTTON_SIZE,
+              background: BABY_GRADIENT,
+              color: "#fff",
+              border: "none",
+              borderRadius: ICON_BUTTON_SIZE / 2,
+              cursor: loading || !!botProgress ? "not-allowed" : "pointer",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              boxShadow: "0 2px 14px 0 rgba(155,175,205,0.18)",
+              marginLeft: 4,
+            }}
+            onClick={handleSendMessage}
+            disabled={loading || !!botProgress}
+          >
+            {ICONS.arrowRight}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Chat;
