@@ -131,6 +131,47 @@ const IconMic = (
   </svg>
 );
 
+// иконки для нижнего меню
+const IconHow = (
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+    <circle cx="12" cy="12" r="9" stroke={ICON_DARK} strokeWidth="1.6" />
+    <path
+      d="M11 10.5C11 9.7 11.5 9.2 12.3 9.2C13.1 9.2 13.6 9.7 13.6 10.4C13.6 11.1 13.2 11.5 12.8 11.8C12.3 12.2 12.1 12.5 12.1 13"
+      stroke={ICON_DARK}
+      strokeWidth="1.6"
+      strokeLinecap="round"
+    />
+    <circle cx="12" cy="15.3" r="0.9" fill={ICON_DARK} />
+  </svg>
+);
+
+const IconReviews = (
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+    <path
+      d="M5 6.5C5 5.7 5.7 5 6.5 5H17.5C18.3 5 19 5.7 19 6.5V13.5C19 14.3 18.3 15 17.5 15H9L6 18V15H6.5C5.7 15 5 14.3 5 13.5V6.5Z"
+      stroke={ICON_DARK}
+      strokeWidth="1.6"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
+
+const IconHistory = (
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+    <circle cx="12" cy="12" r="8" stroke={ICON_DARK} strokeWidth="1.6" />
+    <path
+      d="M12 8.2V12L14.7 13.3"
+      stroke={ICON_DARK}
+      strokeWidth="1.6"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
+
+const IconContacts = IconContact;
+
 // преимущества
 const BENEFITS = [
   {
@@ -259,7 +300,8 @@ const PREMADE_THEMES = [
     emoji: "🤯",
     title: "Тревога и страхи",
     desc: "Помогу успокоиться и разложить всё по полочкам.",
-    question: "Я часто волнуюсь и боюсь за малыша, как справиться с тревогой?",
+    question:
+      "Я часто волнуюсь и боюсь за малыша, как справиться с тревогой?",
   },
 ];
 
@@ -379,7 +421,8 @@ const NoraExampleBlock = () => (
           maxWidth: "90%",
         }}
       >
-        Срок беременности 9 недель, мучает токсикоз. Что можно сделать, чтобы стало легче?
+        Срок беременности 9 недель, мучает токсикоз. Что можно сделать, чтобы
+        стало легче?
       </div>
       <div
         style={{
@@ -407,10 +450,12 @@ const NoraExampleBlock = () => (
           maxWidth: "93%",
         }}
       >
-        Первые недели беременности часто сопровождаются токсикозом — это нормально, но неприятно.
-        Попробуйте есть небольшими порциями каждые 2–3 часа, носить с собой перекус и пить воду
-        маленькими глотками в течение дня. Если рвота становится частой, вы теряете вес или не
-        можете пить — обязательно свяжитесь с врачом, чтобы исключить обезвоживание.
+        Первые недели беременности часто сопровождаются токсикозом — это
+        нормально, но неприятно. Попробуйте есть небольшими порциями каждые
+        2–3 часа, носить с собой перекус и пить воду маленькими глотками в
+        течение дня. Если рвота становится частой, вы теряете вес или не
+        можете пить — обязательно свяжитесь с врачом, чтобы исключить
+        обезвоживание.
       </div>
       <div
         style={{
@@ -686,10 +731,12 @@ const PremadeThemesPanel = ({
             disabled={disabled}
             onClick={() => onSend(question)}
             onMouseDown={(e) => {
-              (e.currentTarget as HTMLButtonElement).style.transform = "scale(0.97)";
+              (e.currentTarget as HTMLButtonElement).style.transform =
+                "scale(0.97)";
             }}
             onMouseUp={(e) => {
-              (e.currentTarget as HTMLButtonElement).style.transform = "scale(1)";
+              (e.currentTarget as HTMLButtonElement).style.transform =
+                "scale(1)";
             }}
           >
             <span style={{ fontSize: 29, marginRight: 2, flexShrink: 0 }}>
@@ -725,11 +772,134 @@ const PremadeThemesPanel = ({
 
 type MenuSection = "how" | "what" | "reviews" | "contacts" | null;
 
+const bottomNavButtonStyle: React.CSSProperties = {
+  flex: 1,
+  border: "none",
+  background: "transparent",
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  justifyContent: "center",
+  padding: 0,
+  cursor: "pointer",
+};
+
+const bottomNavIconWrapStyle: React.CSSProperties = {
+  width: 40,
+  height: 40,
+  borderRadius: 20,
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+};
+
+const bottomNavLabelStyle: React.CSSProperties = {
+  fontSize: 10,
+  color: "#5a6573",
+  marginTop: 4,
+  textAlign: "center",
+  whiteSpace: "pre-line",
+};
+
+const BottomNavBar = ({
+  onOpenHow,
+  onOpenReviews,
+  onOpenContacts,
+  onStartChat,
+}: {
+  onOpenHow: () => void;
+  onOpenReviews: () => void;
+  onOpenContacts: () => void;
+  onStartChat: () => void;
+}) => (
+  <div
+    style={{
+      position: "fixed",
+      left: 0,
+      bottom: 0,
+      width: "100%",
+      background: "#ffffff",
+      boxShadow: "0 -4px 20px rgba(0,0,0,0.06)",
+      zIndex: 25,
+    }}
+  >
+    <div
+      style={{
+        maxWidth,
+        margin: "0 auto",
+        padding: "8px 14px 10px",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        boxSizing: "border-box",
+      }}
+    >
+      {/* Как работает */}
+      <button style={bottomNavButtonStyle} onClick={onOpenHow}>
+        <div style={bottomNavIconWrapStyle}>{IconHow}</div>
+        <span style={bottomNavLabelStyle}>Как это{"\n"}работает</span>
+      </button>
+
+      {/* Отзывы */}
+      <button style={bottomNavButtonStyle} onClick={onOpenReviews}>
+        <div style={bottomNavIconWrapStyle}>{IconReviews}</div>
+        <span style={bottomNavLabelStyle}>Отзывы</span>
+      </button>
+
+      {/* Начать */}
+      <button
+        style={{
+          ...bottomNavButtonStyle,
+          transform: "translateY(-6px)",
+        }}
+        onClick={onStartChat}
+      >
+        <div
+          style={{
+            width: 58,
+            height: 58,
+            borderRadius: 29,
+            background: BABY_GRADIENT,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            boxShadow: "0 6px 26px rgba(200,128,140,0.35)",
+          }}
+        >
+          {ICONS.arrowRight}
+        </div>
+        <span style={{ ...bottomNavLabelStyle, marginTop: 6 }}>Начать</span>
+      </button>
+
+      {/* История */}
+      <button
+        style={bottomNavButtonStyle}
+        onClick={() => {
+          alert("История диалогов появится скоро.");
+        }}
+      >
+        <div style={bottomNavIconWrapStyle}>{IconHistory}</div>
+        <span style={bottomNavLabelStyle}>История</span>
+      </button>
+
+      {/* Контакты */}
+      <button style={bottomNavButtonStyle} onClick={onOpenContacts}>
+        <div style={bottomNavIconWrapStyle}>{IconContacts}</div>
+        <span style={bottomNavLabelStyle}>Контакты</span>
+      </button>
+    </div>
+  </div>
+);
+
+const SEND_BUTTON_SIZE = 46;
+
 const Chat = () => {
   const [showWelcome, setShowWelcome] = useState(true);
   const [preloading, setPreloading] = useState(true);
   const [message, setMessage] = useState("");
-  const [chatHistory, setChatHistory] = useState<{ text: string; sender: string }[]>([]);
+  const [chatHistory, setChatHistory] = useState<
+    { text: string; sender: string }[]
+  >([]);
   const [loading, setLoading] = useState(false);
   const [threadId, setThreadId] = useState<string | null>(null);
   const [botProgress, setBotProgress] = useState("");
@@ -855,7 +1025,8 @@ const Chat = () => {
   const startListening = () => {
     if (typeof window === "undefined") return;
     const SpeechRecognition =
-      (window as any).webkitSpeechRecognition || (window as any).SpeechRecognition;
+      (window as any).webkitSpeechRecognition ||
+      (window as any).SpeechRecognition;
     if (!SpeechRecognition) {
       alert("Ваш браузер не поддерживает голосовой ввод (Web Speech API).");
       return;
@@ -1018,9 +1189,9 @@ const Chat = () => {
               color: "#263540",
             }}
           >
-            Нора задаёт уточняющие вопросы, учитывает ваш срок, жалобы и историю, а затем опирается
-            на клинические рекомендации, чтобы объяснить, что происходит и какие шаги можно
-            предпринять.
+            Нора задаёт уточняющие вопросы, учитывает ваш срок, жалобы и историю,
+            а затем опирается на клинические рекомендации, чтобы объяснить, что
+            происходит и какие шаги можно предпринять.
           </div>
           <NoraExampleBlock />
         </div>
@@ -1037,8 +1208,8 @@ const Chat = () => {
               lineHeight: 1.6,
             }}
           >
-            Возможности Норы помогают не только отвечать на вопросы, но и сопровождать беременность
-            день за днём.
+            Возможности Норы помогают не только отвечать на вопросы, но и
+            сопровождать беременность день за днём.
           </div>
           <WhyNoraBlockContent />
         </div>
@@ -1236,17 +1407,29 @@ const Chat = () => {
           paddingLeft: 5,
         }}
       >
-        <span
+        <button
+          onClick={() => {
+            // ресет на приветственный экран
+            setShowWelcome(true);
+            setChatHistory([]);
+            setBotProgress("");
+          }}
           style={{
+            background: "none",
+            border: "none",
+            padding: 0,
+            margin: 0,
+            cursor: "pointer",
             fontWeight: 800,
             fontSize: "19px",
             lineHeight: 1.06,
             whiteSpace: "nowrap",
             marginBottom: 7,
+            color: NORA_COLOR,
           }}
         >
           Nora Plus
-        </span>
+        </button>
         <span
           style={{
             fontWeight: 400,
@@ -1406,9 +1589,10 @@ const Chat = () => {
               display: "inline-block",
             }}
           >
-            Нора — ассистент, который отвечает на вопросы, успокаивает, напоминает о важных делах
-            и делится рекомендациями на основе медицины Великобритании NHS. Не гуглите в панике —
-            просто спросите Нору.
+            Нора — ассистент, который отвечает на вопросы, успокаивает,
+            напоминает о важных делах и делится рекомендациями на основе
+            медицины Великобритании NHS. Не гуглите в панике — просто спросите
+            Нору.
           </div>
 
           <div style={{ height: 32 }} />
@@ -1453,22 +1637,24 @@ const Chat = () => {
 
           <div
             style={{
-              fontSize: 13,
-              color: "#7c8792",
-              marginBottom: 0,
+              width: "100%",
+              maxWidth,
+              margin: "0 auto",
+              paddingBottom: 20,
             }}
           >
-            Уже более 1&nbsp;000 будущих мам пользуются Норой 🩷
+            <WhyNoraBlockContent />
           </div>
         </div>
       </div>
     );
   }
 
-  // ЧАТ
+  // CHAT SCREEN
   return (
     <div
       style={{
+        fontFamily: "'Manrope', Arial, Helvetica, sans-serif",
         background: "#f8fdff",
         width: "100vw",
         minHeight: "100vh",
@@ -1482,36 +1668,14 @@ const Chat = () => {
       <ModalOverlay />
       <ModalContent />
 
-      <PremadeThemesPanel
-        disabled={loading || !!botProgress}
-        onSend={(q) => {
-          if (!loading && !botProgress) {
-            sendMessageToGPT(q);
-          }
-        }}
-      />
-
-      {chatHistory.length === 0 && !botProgress && (
-        <div
-          style={{
-            fontSize: 14,
-            color: "#7c8792",
-            textAlign: "center",
-            margin: "8px 24px 10px 24px",
-            lineHeight: 1.6,
-          }}
-        >
-          Расскажите Норе о своём самочувствии, сроке беременности или вопросе, который вас
-          волнует — она подскажет, что делать дальше.
-        </div>
-      )}
-
       <div
         style={{
+          width: "100%",
+          maxWidth,
+          margin: "12px auto 0 auto",
           flex: 1,
           display: "flex",
           flexDirection: "column",
-          justifyContent: "flex-end",
         }}
       >
         <div
@@ -1519,92 +1683,156 @@ const Chat = () => {
             width: "100%",
             maxWidth: maxWidth,
             margin: "0 auto",
-            padding: "8px 0 110px 0",
+            padding: "8px 0 180px 0",
+            boxSizing: "border-box",
           }}
         >
-          {chatHistory.map((msg, idx) => (
-            <div
-              key={idx}
-              style={{
-                textAlign: msg.sender === "user" ? "right" : "left",
-                margin: "8px 20px",
-              }}
-            >
-              {msg.sender === "user"
-                ? <span style={userMessageStyle}>{msg.text}</span>
-                : splitBotTextTwoBlocks(msg.text).map((part, sIdx) =>
-                    part.text && (
-                      <div
-                        key={sIdx}
-                        style={{
-                          background: "#f7fafd",
-                          borderRadius: 12,
-                          padding: "10px 15px",
-                          marginBottom: sIdx === 0 ? 18 : 30,
-                          color: NORA_COLOR,
-                          fontSize: 16,
-                          lineHeight: 1.7,
-                          fontWeight: part.bold ? "bold" : "normal",
-                          wordBreak: "break-word",
-                          overflowWrap: "anywhere",
-                        }}
-                      >
-                        {part.text}
-                      </div>
-                    )
-                  )}
-            </div>
-          ))}
+          <PremadeThemesPanel
+            disabled={loading || !!botProgress}
+            onSend={(q) => {
+              if (!loading && !botProgress) {
+                sendMessageToGPT(q);
+              }
+            }}
+          />
 
-          {botProgress &&
-            splitBotTextTwoBlocks(botProgress).map((part, sIdx) =>
-              part.text ? (
+          {/* История чата */}
+          <div
+            style={{
+              width: "100%",
+              maxWidth,
+              margin: "0 auto",
+              padding: "0 14px",
+              boxSizing: "border-box",
+            }}
+          >
+            {chatHistory.map((m, idx) => {
+              if (m.sender === "user") {
+                return (
+                  <div
+                    key={idx}
+                    style={{
+                      textAlign: "right",
+                      marginBottom: 6,
+                    }}
+                  >
+                    <div style={userMessageStyle}>{m.text}</div>
+                    <div
+                      style={{
+                        fontSize: 11,
+                        color: "#9aa3ad",
+                        marginTop: -4,
+                      }}
+                    >
+                      Вы
+                    </div>
+                  </div>
+                );
+              }
+
+              const parts = splitBotTextTwoBlocks(m.text);
+              return (
                 <div
-                  key={sIdx}
+                  key={idx}
                   style={{
-                    background: "#f7fafd",
-                    borderRadius: 12,
-                    padding: "10px 15px",
-                    margin: "0 20px 10px 20px",
-                    color: NORA_COLOR,
-                    fontSize: 16,
-                    lineHeight: 1.7,
-                    fontWeight: part.bold ? "bold" : "normal",
-                    wordBreak: "break-word",
-                    overflowWrap: "anywhere",
+                    textAlign: "left",
+                    marginBottom: 10,
                   }}
                 >
-                  {part.text}
+                  <div
+                    style={{
+                      display: "inline-block",
+                      background: "#ffffff",
+                      borderRadius: 18,
+                      padding: "11px 13px",
+                      fontSize: 15,
+                      lineHeight: 1.8,
+                      boxShadow: "0 2px 18px rgba(150,180,220,0.07)",
+                      maxWidth: "95%",
+                      whiteSpace: "pre-line",
+                    }}
+                  >
+                    {parts.map((p, i) => (
+                      <span
+                        key={i}
+                        style={{
+                          fontWeight: p.bold ? 700 : 400,
+                          display: "inline",
+                        }}
+                      >
+                        {p.text + (i === parts.length - 1 ? "" : " ")}
+                      </span>
+                    ))}
+                  </div>
+                  <div
+                    style={{
+                      fontSize: 11,
+                      color: "#9aa3ad",
+                      marginTop: 4,
+                    }}
+                  >
+                    Нора
+                  </div>
                 </div>
-              ) : null
+              );
+            })}
+
+            {/* прогресс набора текста ботом */}
+            {botProgress && (
+              <div
+                style={{
+                  textAlign: "left",
+                  marginBottom: 12,
+                }}
+              >
+                <div
+                  style={{
+                    display: "inline-block",
+                    background: "#ffffff",
+                    borderRadius: 18,
+                    padding: "11px 13px",
+                    fontSize: 15,
+                    lineHeight: 1.7,
+                    boxShadow: "0 2px 18px rgba(150,180,220,0.07)",
+                    maxWidth: "95%",
+                    whiteSpace: "pre-line",
+                  }}
+                >
+                  {botProgress}
+                </div>
+                <div
+                  style={{
+                    fontSize: 11,
+                    color: "#9aa3ad",
+                    marginTop: 4,
+                  }}
+                >
+                  Нора печатает…
+                </div>
+              </div>
             )}
-          <div ref={messagesEndRef} />
+            <div ref={messagesEndRef} />
+          </div>
         </div>
       </div>
 
-      {/* панель ввода */}
+      {/* инпут + кнопки */}
       <div
         style={{
-          width: "calc(100% - 40px)",
-          margin: "0 20px",
-          boxSizing: "border-box",
-          maxWidth: maxWidth,
-          height: INPUT_BAR_HEIGHT,
           position: "fixed",
           left: 0,
-          bottom: 30,
+          bottom: 70, // чуть выше нижнего меню
+          width: "100%",
           background: "transparent",
-          borderRadius: borderRadius,
-          zIndex: 20,
-          boxShadow: "none",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
+          zIndex: 30,
+          padding: "8px 10px 10px",
+          boxSizing: "border-box",
         }}
       >
         <div
           style={{
-            width: "100%",
+            maxWidth,
+            margin: "0 auto",
             background: "#fff",
             borderRadius: borderRadius,
             borderWidth: focused ? 2 : 1,
@@ -1613,12 +1841,57 @@ const Chat = () => {
             borderImage: focused ? GRADIENT + " 1" : undefined,
             display: "flex",
             alignItems: "center",
-            paddingLeft: 14,
+            paddingLeft: 12,
             paddingRight: 6,
             boxSizing: "border-box",
             boxShadow: "0 2px 14px 0 rgba(155,175,205,0.10)",
+            minHeight: INPUT_BAR_HEIGHT,
           }}
         >
+          {/* input */}
+          <input
+            type="text"
+            placeholder="Задайте вопрос..."
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            onFocus={() => setFocused(true)}
+            onBlur={() => setFocused(false)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                handleSendMessage();
+              }
+            }}
+            style={{
+              flex: 1,
+              border: "none",
+              outline: "none",
+              fontSize: 15,
+              padding: "10px 8px 10px 0",
+              background: "transparent",
+              color: "#1f2933",
+            }}
+          />
+
+          {/* файл */}
+          <button
+            onClick={openFileDialog}
+            style={{
+              width: ICON_BUTTON_SIZE,
+              height: ICON_BUTTON_SIZE,
+              borderRadius: ICON_BUTTON_SIZE / 2,
+              border: "none",
+              background: "#f3f6fb",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              marginRight: 5,
+              cursor: "pointer",
+            }}
+          >
+            {IconPaperclip}
+          </button>
+
           <input
             type="file"
             ref={fileInputRef}
@@ -1626,68 +1899,22 @@ const Chat = () => {
             onChange={handleFileChange}
           />
 
-          <input
-            type="text"
-            value={message}
-            onFocus={() => setFocused(true)}
-            onBlur={() => setFocused(false)}
-            onChange={(e) => setMessage(e.target.value)}
-            placeholder="Задайте вопрос..."
-            style={{
-              flex: 1,
-              height: 52,
-              fontSize: "17px",
-              border: "none",
-              outline: "none",
-              background: "transparent",
-              color: NORA_COLOR,
-              boxSizing: "border-box",
-            }}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") handleSendMessage();
-            }}
-            disabled={loading || !!botProgress}
-          />
-
-          {/* файл */}
-          <button
-            onClick={openFileDialog}
-            disabled={loading || !!botProgress}
-            style={{
-              width: ICON_BUTTON_SIZE,
-              height: ICON_BUTTON_SIZE,
-              borderRadius: ICON_BUTTON_SIZE / 2,
-              border: "none",
-              background: "transparent",
-              cursor: loading || !!botProgress ? "not-allowed" : "pointer",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              marginRight: 4,
-            }}
-            title="Прикрепить файл"
-          >
-            {IconPaperclip}
-          </button>
-
           {/* микрофон */}
           <button
             onClick={startListening}
-            disabled={loading || !!botProgress}
             style={{
               width: ICON_BUTTON_SIZE,
               height: ICON_BUTTON_SIZE,
               borderRadius: ICON_BUTTON_SIZE / 2,
               border: "none",
-              background: "transparent",
-              cursor: loading || !!botProgress ? "not-allowed" : "pointer",
+              background: isListening ? "#ffe7cc" : "#f3f6fb",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              marginRight: 4,
-              animation: isListening ? "micPulseNora 1.1s infinite ease-out" : "none",
+              marginRight: 5,
+              cursor: "pointer",
+              animation: isListening ? "micPulseNora 1.6s infinite" : "none",
             }}
-            title={isListening ? "Идёт запись..." : "Голосовой ввод"}
           >
             {IconMic}
           </button>
@@ -1695,36 +1922,49 @@ const Chat = () => {
           {/* отправка */}
           <button
             style={{
-              width: ICON_BUTTON_SIZE,
-              height: ICON_BUTTON_SIZE,
+              width: SEND_BUTTON_SIZE,
+              height: SEND_BUTTON_SIZE,
               background: BABY_GRADIENT,
               color: "#fff",
               border: "none",
-              borderRadius: ICON_BUTTON_SIZE / 2,
-              fontWeight: 700,
-              fontSize: "17px",
+              borderRadius: SEND_BUTTON_SIZE / 2,
               cursor: loading || !!botProgress ? "not-allowed" : "pointer",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              boxShadow: "0 2px 14px 0 rgba(155,175,205,0.12)",
+              boxShadow: "0 4px 16px rgba(200, 128, 140, 0.35)",
               marginLeft: 2,
+              flexShrink: 0,
             }}
             onClick={handleSendMessage}
             disabled={loading || !!botProgress}
           >
-            <span
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              {ICONS.arrowRight}
-            </span>
+            {ICONS.arrowRight}
           </button>
         </div>
       </div>
+
+      {/* нижнее меню */}
+      <BottomNavBar
+        onOpenHow={() => {
+          setMenuOpen(true);
+          setActiveSection("how");
+        }}
+        onOpenReviews={() => {
+          setMenuOpen(true);
+          setActiveSection("reviews");
+        }}
+        onOpenContacts={() => {
+          setMenuOpen(true);
+          setActiveSection("contacts");
+        }}
+        onStartChat={() => {
+          const input = document.querySelector<HTMLInputElement>(
+            'input[placeholder="Задайте вопрос..."]'
+          );
+          if (input) input.focus();
+        }}
+      />
     </div>
   );
 };
