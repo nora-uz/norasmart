@@ -1,6 +1,3 @@
-Ниже полный обновлённый код компонента с учётом всех правок по языковой кнопке, нижнему меню и полю ввода на втором экране.[1]
-
-```tsx
 "use client";
 import React, { useState, useEffect, useRef } from "react";
 
@@ -2242,6 +2239,3 @@ const Chat = () => {
 };
 
 export default Chat;
-```
-
-[1](https://ppl-ai-file-upload.s3.amazonaws.com/web/direct-files/attachments/5239659/e621ffa2-1ee8-471a-92e9-86e014a6dd11/paste.txt)
