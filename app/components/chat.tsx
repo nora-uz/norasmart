@@ -147,7 +147,7 @@ const TEXTS: Record<Lang, any> = {
       "Maslahatlar Buyuk Britaniya NHS tavsiyalariga asoslangan va sizning hududingizga moslashtirilgan.",
     benefitsTitle2: "24/7 yordam",
     benefitsText2:
-      "Har doim yoningizda — har qanday vaziyatda qo‘llab-quvvatlaydi.",
+      "Har doim yoningizда — har qanday vazиятda qo‘llab-quvvatlaydi.",
     benefitsTitle3: "Muhim eslatmalar",
     benefitsText3:
       "Tahlillar, vitaminlar, qabul vaqtlarini unutib qo‘ymasligingizga yordam beradi.",
@@ -196,33 +196,19 @@ const TEXTS: Record<Lang, any> = {
   },
 };
 
-// новая иконка выбора языка в стиле «обновление»
+// иконка выбора языка – стрелки вверх/вниз в круге
 const IconLangUpdate = (
   <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
     <circle cx="12" cy="12" r="9" stroke="#111827" strokeWidth="1.6" />
     <path
-      d="M8 11a4 4 0 017-2.5"
+      d="M9 11L12 8L15 11"
       stroke="#111827"
       strokeWidth="1.6"
       strokeLinecap="round"
       strokeLinejoin="round"
     />
     <path
-      d="M16 13a4 4 0 01-7 2.5"
-      stroke="#111827"
-      strokeWidth="1.6"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-    <path
-      d="M9 7h3M12 7v-2"
-      stroke="#111827"
-      strokeWidth="1.6"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-    <path
-      d="M15 17h-3M12 17v2"
+      d="M9 13L12 16L15 13"
       stroke="#111827"
       strokeWidth="1.6"
       strokeLinecap="round"
@@ -335,7 +321,7 @@ const IconMic = (
   </svg>
 );
 
-// иконки приложений (минималистичные)
+// иконки приложений
 const IconAndroidMini = (
   <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
     <rect
@@ -394,7 +380,7 @@ const BENEFITS = [
   },
 ];
 
-// отзывы оставляем на русском (как реальные цитаты)
+// отзывы
 const REVIEWS = [
   {
     name: "Анна",
@@ -598,7 +584,7 @@ const WhyNoraBlockContent = ({ lang }: { lang: Lang }) => (
   </div>
 );
 
-// пример диалога Норы (локализован)
+// пример диалога
 const NoraExampleBlock = ({ lang }: { lang: Lang }) => (
   <div
     style={{
@@ -1130,9 +1116,9 @@ const BottomNavBar = ({
       >
         <div
           style={{
-            width: 70,
-            height: 70,
-            borderRadius: 35,
+            width: 78,
+            height: 78,
+            borderRadius: 39,
             background: BABY_GRADIENT,
             display: "flex",
             alignItems: "center",
@@ -1762,7 +1748,7 @@ const Chat = () => {
     );
   }
 
-  // WELCOME
+  // WELCOME экран
   if (showWelcome) {
     return (
       <div
@@ -1780,7 +1766,6 @@ const Chat = () => {
         <ModalOverlay />
         <ModalContent />
 
-        {/* +15px к отступу перед видео */}
         <div style={{ height: 51 }} />
 
         <div
@@ -1870,7 +1855,7 @@ const Chat = () => {
           </div>
         </div>
 
-        {/* блок скачивания приложений — увеличенные кнопки */}
+        {/* блок скачивания приложений */}
         <div
           style={{
             width: "100%",
@@ -1949,14 +1934,13 @@ const Chat = () => {
           }}
           onStartChat={() => {
             setShowWelcome(false);
-            // убран автофокус на инпут, просто переход на второй экран
           }}
         />
       </div>
     );
   }
 
-  // ЧАТ
+  // ЧАТ экран
   return (
     <div
       style={{
@@ -2135,7 +2119,6 @@ const Chat = () => {
             width: "100%",
             background: "#fff",
             borderRadius: borderRadius,
-            // убираем серую границу, при фокусе остаётся цветной бордер
             borderWidth: focused ? 2 : 0,
             borderStyle: "solid",
             borderColor: "transparent",
@@ -2143,7 +2126,9 @@ const Chat = () => {
             display: "flex",
             alignItems: "center",
             paddingLeft: 14,
-            paddingRight: 10,
+            paddingRight: 12,
+            paddingTop: 8,
+            paddingBottom: 8,
             boxSizing: "border-box",
             boxShadow: "0 2px 14px 0 rgba(155,175,205,0.10)",
           }}
@@ -2164,13 +2149,14 @@ const Chat = () => {
             placeholder={TEXTS[lang].inputPlaceholder}
             style={{
               flex: 1,
-              height: 52,
-              fontSize: "17px",
+              height: 40,
+              fontSize: "16px",
               border: "none",
               outline: "none",
               background: "transparent",
               color: NORA_COLOR,
               boxSizing: "border-box",
+              paddingRight: 8,
             }}
             onKeyDown={(e) => {
               if (e.key === "Enter") handleSendMessage();
@@ -2183,16 +2169,16 @@ const Chat = () => {
             onClick={openFileDialog}
             disabled={loading || !!botProgress}
             style={{
-              width: ICON_BUTTON_SIZE + 5,
-              height: ICON_BUTTON_SIZE + 5,
-              borderRadius: (ICON_BUTTON_SIZE + 5) / 2,
+              width: ICON_BUTTON_SIZE,
+              height: ICON_BUTTON_SIZE,
+              borderRadius: ICON_BUTTON_SIZE / 2,
               border: "none",
               background: "transparent",
               cursor: loading || !!botProgress ? "not-allowed" : "pointer",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              marginRight: 8,
+              marginRight: 6,
             }}
             title="File"
           >
@@ -2204,16 +2190,16 @@ const Chat = () => {
             onClick={startListening}
             disabled={loading || !!botProgress}
             style={{
-              width: ICON_BUTTON_SIZE + 5,
-              height: ICON_BUTTON_SIZE + 5,
-              borderRadius: (ICON_BUTTON_SIZE + 5) / 2,
+              width: ICON_BUTTON_SIZE,
+              height: ICON_BUTTON_SIZE,
+              borderRadius: ICON_BUTTON_SIZE / 2,
               border: "none",
               background: "transparent",
               cursor: loading || !!botProgress ? "not-allowed" : "pointer",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              marginRight: 8,
+              marginRight: 6,
               animation: isListening
                 ? "micPulseNora 1.1s infinite ease-out"
                 : "none",
@@ -2228,33 +2214,23 @@ const Chat = () => {
           {/* отправка */}
           <button
             style={{
-              width: ICON_BUTTON_SIZE + 5,
-              height: ICON_BUTTON_SIZE + 5,
+              width: ICON_BUTTON_SIZE,
+              height: ICON_BUTTON_SIZE,
               background: BABY_GRADIENT,
               color: "#fff",
               border: "none",
-              borderRadius: (ICON_BUTTON_SIZE + 5) / 2,
-              fontWeight: 700,
-              fontSize: "17px",
+              borderRadius: ICON_BUTTON_SIZE / 2,
               cursor: loading || !!botProgress ? "not-allowed" : "pointer",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              boxShadow: "0 2px 14px 0 rgba(155,175,205,0.12)",
-              marginLeft: 2,
+              boxShadow: "0 2px 14px 0 rgba(155,175,205,0.18)",
+              marginLeft: 4,
             }}
             onClick={handleSendMessage}
             disabled={loading || !!botProgress}
           >
-            <span
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              {ICONS.arrowRight}
-            </span>
+            {ICONS.arrowRight}
           </button>
         </div>
       </div>
