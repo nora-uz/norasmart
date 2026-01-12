@@ -163,6 +163,37 @@ const IconHistory = (
 
 const IconContacts = IconContact;
 
+// иконки приложений
+const IconAndroid = (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+    <path
+      d="M7.5 9.5V16.5C7.5 17.3 8.1 18 8.9 18H9.7V19.2C9.7 19.8 10.2 20.3 10.8 20.3C11.4 20.3 11.9 19.8 11.9 19.2V18H14.1V19.2C14.1 19.8 14.6 20.3 15.2 20.3C15.8 20.3 16.3 19.8 16.3 19.2V18H17.1C17.9 18 18.5 17.3 18.5 16.5V9.5C18.5 8.7 17.9 8 17.1 8H8.9C8.1 8 7.5 8.7 7.5 9.5Z"
+      fill="#3ddc84"
+    />
+    <circle cx="9.4" cy="6.1" r="0.7" fill="#3ddc84" />
+    <circle cx="16.6" cy="6.1" r="0.7" fill="#3ddc84" />
+    <path
+      d="M10.2 4.2L9.2 3M13.8 4.2L14.8 3"
+      stroke="#3ddc84"
+      strokeWidth="0.9"
+      strokeLinecap="round"
+    />
+  </svg>
+);
+
+const IconApple = (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+    <path
+      d="M16.3 4.1C15.6 4.8 14.7 5.2 13.8 5.1C13.7 4.3 14 3.4 14.6 2.8C15.3 2 16.4 1.6 17.3 1.6C17.4 2.4 17.1 3.3 16.3 4.1Z"
+      fill="#000"
+    />
+    <path
+      d="M18.5 8.5C18.4 8.6 17.4 9.2 17.4 10.4C17.4 11.8 18.6 12.3 18.7 12.4C18.7 12.5 18.5 13.2 18 13.9C17.5 14.7 16.9 15.5 16 15.5C15.1 15.5 14.8 15 13.8 15C12.8 15 12.5 15.5 11.6 15.5C10.7 15.5 10.1 14.7 9.6 14C8.7 12.7 8 10.2 9 8.5C9.5 7.6 10.4 7 11.4 7C12.3 7 13 7.6 13.8 7.6C14.6 7.6 15.1 7 16.1 7C16.9 7 17.8 7.4 18.5 8.5Z"
+      fill="#000"
+    />
+  </svg>
+);
+
 // преимущества
 const BENEFITS = [
   {
@@ -373,7 +404,7 @@ const WhyNoraBlockContent = () => (
   </div>
 );
 
-// пример диалога Норы (упрощённый блок)
+// пример диалога Норы
 const NoraExampleBlock = () => (
   <div
     style={{
@@ -461,7 +492,7 @@ const NoraExampleBlock = () => (
   </div>
 );
 
-// блок отзывов (без заголовка внутри)
+// блок отзывов
 const ReviewBlockContent = () => (
   <div
     style={{
@@ -551,7 +582,7 @@ const ReviewBlockContent = () => (
   </div>
 );
 
-// контакты с кнопками и Яндекс‑картой (iframe конструктор)
+// контакты
 const ContactsBlock = () => (
   <div
     style={{
@@ -776,9 +807,9 @@ const bottomNavButtonStyle: React.CSSProperties = {
 };
 
 const bottomNavIconWrapStyle: React.CSSProperties = {
-  width: 52,
-  height: 52,
-  borderRadius: 26,
+  width: 56,
+  height: 56,
+  borderRadius: 28,
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
@@ -842,15 +873,15 @@ const BottomNavBar = ({
       <button
         style={{
           ...bottomNavButtonStyle,
-          transform: "translateY(-6px)",
+          transform: "translateY(-4px)",
         }}
         onClick={onStartChat}
       >
         <div
           style={{
-            width: 58,
-            height: 58,
-            borderRadius: 29,
+            width: 62,
+            height: 62,
+            borderRadius: 31,
             background: BABY_GRADIENT,
             display: "flex",
             alignItems: "center",
@@ -963,13 +994,9 @@ const Chat = () => {
     }
   };
 
-  const openMenu = () => {
-    setMenuOpen(true);
-    setActiveSection(null);
-  };
-
   const openSection = (section: MenuSection) => {
     setActiveSection(section);
+    setMenuOpen(true);
   };
 
   const sendMessageToGPT = async (text: string) => {
@@ -1542,7 +1569,8 @@ const Chat = () => {
         <ModalOverlay />
         <ModalContent />
 
-        <div style={{ height: 36 }} />
+        {/* отступ до изображения */}
+        <div style={{ height: 51 }} />
 
         <div
           style={{
@@ -1624,18 +1652,81 @@ const Chat = () => {
           </div>
         </div>
 
+        {/* блок скачивания приложений */}
+        <div
+          style={{
+            width: "100%",
+            maxWidth,
+            margin: "10px auto 90px auto",
+            padding: "0 18px",
+            boxSizing: "border-box",
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: 8,
+            }}
+          >
+            <button
+              onClick={() => {
+                window.location.href =
+                  "https://webtoapp.design/apps/download_android_apk/IjE2NDExMSI.MJqUM633YvZ5PgIowcEHc8S6EJE";
+              }}
+              style={{
+                border: "none",
+                borderRadius: 16,
+                padding: "11px 14px",
+                background: "#111827",
+                color: "#ffffff",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontSize: 14,
+                fontWeight: 500,
+                cursor: "pointer",
+                gap: 8,
+              }}
+            >
+              {IconAndroid}
+              <span>Скачать на Android</span>
+            </button>
+
+            <button
+              onClick={() => {
+                alert("Скоро будет доступна версия для iOS.");
+              }}
+              style={{
+                border: "1px solid #d1d5db",
+                borderRadius: 16,
+                padding: "11px 14px",
+                background: "#ffffff",
+                color: "#111827",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontSize: 14,
+                fontWeight: 500,
+                cursor: "pointer",
+                gap: 8,
+              }}
+            >
+              {IconApple}
+              <span>Скачать на iOS</span>
+            </button>
+          </div>
+        </div>
+
         <BottomNavBar
           onOpenHow={() => {
-            setMenuOpen(true);
-            setActiveSection("how");
+            openSection("how");
           }}
           onOpenReviews={() => {
-            setMenuOpen(true);
-            setActiveSection("reviews");
+            openSection("reviews");
           }}
           onOpenContacts={() => {
-            setMenuOpen(true);
-            setActiveSection("contacts");
+            openSection("contacts");
           }}
           onStartChat={() => {
             setShowWelcome(false);
