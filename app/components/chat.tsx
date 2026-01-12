@@ -59,15 +59,6 @@ const IconContact = (
   </svg>
 );
 
-// увеличенная чёрная иконка меню (кнопка остаётся прозрачной)
-const IconMenu = (
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-    <path d="M4 7h16" stroke="#000000" strokeWidth="2" strokeLinecap="round" />
-    <path d="M4 12h16" stroke="#000000" strokeWidth="2" strokeLinecap="round" />
-    <path d="M4 17h16" stroke="#000000" strokeWidth="2" strokeLinecap="round" />
-  </svg>
-);
-
 const ICONS = {
   telegram: "https://cdn-icons-png.flaticon.com/512/1946/1946547.png",
   share: "https://cdn-icons-png.flaticon.com/512/535/535285.png",
@@ -133,7 +124,7 @@ const IconMic = (
 
 // иконки для нижнего меню
 const IconHow = (
-  <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
     <circle cx="12" cy="12" r="9" stroke={ICON_DARK} strokeWidth="1.6" />
     <path
       d="M11 10.5C11 9.7 11.5 9.2 12.3 9.2C13.1 9.2 13.6 9.7 13.6 10.4C13.6 11.1 13.2 11.5 12.8 11.8C12.3 12.2 12.1 12.5 12.1 13"
@@ -146,7 +137,7 @@ const IconHow = (
 );
 
 const IconReviews = (
-  <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
     <path
       d="M5 6.5C5 5.7 5.7 5 6.5 5H17.5C18.3 5 19 5.7 19 6.5V13.5C19 14.3 18.3 15 17.5 15H9L6 18V15H6.5C5.7 15 5 14.3 5 13.5V6.5Z"
       stroke={ICON_DARK}
@@ -158,7 +149,7 @@ const IconReviews = (
 );
 
 const IconHistory = (
-  <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
     <circle cx="12" cy="12" r="8" stroke={ICON_DARK} strokeWidth="1.6" />
     <path
       d="M12 8.2V12L14.7 13.3"
@@ -785,9 +776,9 @@ const bottomNavButtonStyle: React.CSSProperties = {
 };
 
 const bottomNavIconWrapStyle: React.CSSProperties = {
-  width: 46,
-  height: 46,
-  borderRadius: 23,
+  width: 52,
+  height: 52,
+  borderRadius: 26,
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
@@ -798,7 +789,6 @@ const bottomNavLabelStyle: React.CSSProperties = {
   color: "#5a6573",
   marginTop: 4,
   textAlign: "center",
-  whiteSpace: "pre-line",
 };
 
 const BottomNavBar = ({
@@ -821,6 +811,8 @@ const BottomNavBar = ({
       background: "#ffffff",
       boxShadow: "0 -4px 20px rgba(0,0,0,0.06)",
       zIndex: 25,
+      borderTopLeftRadius: 22,
+      borderTopRightRadius: 22,
     }}
   >
     <div
@@ -834,10 +826,10 @@ const BottomNavBar = ({
         boxSizing: "border-box",
       }}
     >
-      {/* Как работает */}
+      {/* Что это? */}
       <button style={bottomNavButtonStyle} onClick={onOpenHow}>
         <div style={bottomNavIconWrapStyle}>{IconHow}</div>
-        <span style={bottomNavLabelStyle}>Как это{"\n"}работает</span>
+        <span style={bottomNavLabelStyle}>Что это?</span>
       </button>
 
       {/* Отзывы */}
@@ -906,6 +898,7 @@ const Chat = () => {
   const [isMobile, setIsMobile] = useState(true);
   const [focused, setFocused] = useState(false);
   const [isListening, setIsListening] = useState(false);
+  const [lang, setLang] = useState<"ru" | "uz">("ru");
 
   const [file, setFile] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
@@ -928,6 +921,16 @@ const Chat = () => {
   useEffect(() => {
     const saved = window.localStorage.getItem(THREAD_KEY);
     if (saved) setThreadId(saved);
+  }, []);
+
+  useEffect(() => {
+    const savedLang = window.localStorage.getItem("nora_lang") as
+      | "ru"
+      | "uz"
+      | null;
+    if (savedLang === "ru" || savedLang === "uz") {
+      setLang(savedLang);
+    }
   }, []);
 
   useEffect(() => {
@@ -1301,82 +1304,6 @@ const Chat = () => {
     );
   };
 
-  if (!isMobile) {
-    return (
-      <div
-        style={{
-          width: "100vw",
-          height: "100vh",
-          background: "#f8fdff",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          position: "fixed",
-          left: 0,
-          top: 0,
-          zIndex: 10000,
-        }}
-      >
-        <div
-          style={{
-            fontWeight: 700,
-            fontSize: "21px",
-            textAlign: "center",
-            color: NORA_COLOR,
-            background: "#fff",
-            borderRadius: 24,
-            padding: "35px 28px",
-            boxShadow: "0 6px 36px 0 rgba(155, 175, 205, 0.12)",
-          }}
-        >
-          Nora Plus — доступна только <br /> на мобильных устройствах
-        </div>
-      </div>
-    );
-  }
-
-  if (preloading) {
-    return (
-      <div
-        style={{
-          background: "#f8fdff",
-          width: "100vw",
-          height: "100vh",
-          minHeight: "100vh",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          position: "fixed",
-          top: 0,
-          left: 0,
-          zIndex: 10000,
-          margin: 0,
-          padding: 0,
-        }}
-      >
-        <span
-          style={{
-            fontWeight: 800,
-            fontSize: "38px",
-            color: NORA_COLOR,
-            letterSpacing: "0.07em",
-            animation: "noraPulse 1.4s infinite linear",
-          }}
-        >
-          Nora Plus
-        </span>
-        <style>{`
-          @keyframes noraPulse {
-            0% { opacity: 0.30; }
-            50% { opacity: 1; }
-            100% { opacity: 0.30; }
-          }
-        `}</style>
-      </div>
-    );
-  }
-
   const HeaderBar = () => (
     <div
       style={{
@@ -1489,25 +1416,113 @@ const Chat = () => {
             style={{ width: ICON_SIZE, height: ICON_SIZE, filter: filterNora }}
           />
         </button>
+        {/* переключатель языка */}
         <button
           style={{
-            background: "transparent",
-            border: "none",
+            background: "#ffffff",
+            border: "1px solid #d2d8e2",
             cursor: "pointer",
-            width: 42,
-            height: 42,
-            borderRadius: 21,
+            width: 44,
+            height: 32,
+            borderRadius: 16,
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
+            fontSize: 14,
+            fontWeight: 700,
+            color: "#1e2933",
+            padding: 0,
           }}
-          onClick={openMenu}
+          onClick={() => {
+            const next = lang === "ru" ? "uz" : "ru";
+            setLang(next);
+            if (typeof window !== "undefined") {
+              window.localStorage.setItem("nora_lang", next);
+              window.location.reload();
+            }
+          }}
         >
-          {IconMenu}
+          {lang === "ru" ? "UZ" : "RU"}
         </button>
       </div>
     </div>
   );
+
+  if (!isMobile) {
+    return (
+      <div
+        style={{
+          width: "100vw",
+          height: "100vh",
+          background: "#f8fdff",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          position: "fixed",
+          left: 0,
+          top: 0,
+          zIndex: 10000,
+        }}
+      >
+        <div
+          style={{
+            fontWeight: 700,
+            fontSize: "21px",
+            textAlign: "center",
+            color: NORA_COLOR,
+            background: "#fff",
+            borderRadius: 24,
+            padding: "35px 28px",
+            boxShadow: "0 6px 36px 0 rgba(155, 175, 205, 0.12)",
+          }}
+        >
+          Nora Plus — доступна только <br /> на мобильных устройствах
+        </div>
+      </div>
+    );
+  }
+
+  if (preloading) {
+    return (
+      <div
+        style={{
+          background: "#f8fdff",
+          width: "100vw",
+          height: "100vh",
+          minHeight: "100vh",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          position: "fixed",
+          top: 0,
+          left: 0,
+          zIndex: 10000,
+          margin: 0,
+          padding: 0,
+        }}
+      >
+        <span
+          style={{
+            fontWeight: 800,
+            fontSize: "38px",
+            color: NORA_COLOR,
+            letterSpacing: "0.07em",
+            animation: "noraPulse 1.4s infinite linear",
+          }}
+        >
+          Nora Plus
+        </span>
+        <style>{`
+          @keyframes noraPulse {
+            0% { opacity: 0.30; }
+            50% { opacity: 1; }
+            100% { opacity: 0.30; }
+          }
+        `}</style>
+      </div>
+    );
+  }
 
   // WELCOME
   if (showWelcome) {
@@ -1593,44 +1608,6 @@ const Chat = () => {
             напоминает о важных делах и делится рекомендациями на основе
             медицины Великобритании NHS. Не гуглите в панике — просто спросите
             Нору.
-          </div>
-
-          <div style={{ height: 32 }} />
-
-          <div style={{ display: "flex", justifyContent: "center", width: "100%" }}>
-            <div style={{ width: "100%", textAlign: "center" }}>
-              <button
-                style={{
-                  width: "100%",
-                  maxWidth: 290,
-                  background: BABY_GRADIENT,
-                  color: "#fff",
-                  border: "none",
-                  borderRadius: borderRadius,
-                  fontWeight: 700,
-                  fontSize: "17px",
-                  padding: "15px 0",
-                  margin: "0 auto",
-                  cursor: "pointer",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  boxShadow: "0 2px 18px 0 rgba(200, 128, 140, 0.09)",
-                }}
-                onClick={() => setShowWelcome(false)}
-              >
-                Начать чат с Норой&nbsp;
-                <span
-                  style={{
-                    marginLeft: 8,
-                    display: "flex",
-                    alignItems: "center",
-                  }}
-                >
-                  {ICONS.arrowRight}
-                </span>
-              </button>
-            </div>
           </div>
 
           <div style={{ height: 32 }} />
@@ -1862,7 +1839,7 @@ const Chat = () => {
         style={{
           position: "fixed",
           left: 0,
-          bottom: 70,
+          bottom: 10,
           width: "100%",
           background: "transparent",
           zIndex: 30,
@@ -1984,28 +1961,6 @@ const Chat = () => {
           </button>
         </div>
       </div>
-
-      {/* нижнее меню */}
-      <BottomNavBar
-        onOpenHow={() => {
-          setMenuOpen(true);
-          setActiveSection("how");
-        }}
-        onOpenReviews={() => {
-          setMenuOpen(true);
-          setActiveSection("reviews");
-        }}
-        onOpenContacts={() => {
-          setMenuOpen(true);
-          setActiveSection("contacts");
-        }}
-        onStartChat={() => {
-          const input = document.querySelector<HTMLInputElement>(
-            'input[placeholder="Задайте вопрос..."]'
-          );
-          if (input) input.focus();
-        }}
-      />
     </div>
   );
 };
