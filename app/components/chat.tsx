@@ -15,7 +15,7 @@ const BLOCK_SIDE_PADDING = 10;
 const CARD_GAP = 10;
 
 // размер круглых кнопок внизу (файл/мик/отправка)
-const ICON_BUTTON_SIZE = 60;
+const ICON_BUTTON_SIZE = 54;
 const ICON_DARK = "#5a6573";
 
 // словарь текстов для RU / UZ
@@ -147,7 +147,7 @@ const TEXTS: Record<Lang, any> = {
       "Maslahatlar Buyuk Britaniya NHS tavsiyalariga asoslangan va sizning hududingizga moslashtirilgan.",
     benefitsTitle2: "24/7 yordam",
     benefitsText2:
-      "Har doim yoningizда — har qanday vazиятda qo‘llab-quvvatlaydi.",
+      "Har doim yoningizda — har qanday vaziyatda qo‘llab-quvvatlaydi.",
     benefitsTitle3: "Muhim eslatmalar",
     benefitsText3:
       "Tahlillar, vitaminlar, qabul vaqtlarini unutib qo‘ymasligingizga yordam beradi.",
@@ -196,7 +196,7 @@ const TEXTS: Record<Lang, any> = {
   },
 };
 
-// НОВАЯ иконка выбора языка: простой глобус
+// новая иконка выбора языка – глобус
 const IconLangUpdate = (
   <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
     <circle cx="12" cy="12" r="9" stroke="#111827" strokeWidth="1.6" />
@@ -206,7 +206,7 @@ const IconLangUpdate = (
       rx="4.5"
       ry="9"
       stroke="#111827"
-      strokeWidth="1.3"
+      strokeWidth="1.2"
     />
     <line
       x1="3"
@@ -214,7 +214,7 @@ const IconLangUpdate = (
       x2="21"
       y2="12"
       stroke="#111827"
-      strokeWidth="1.3"
+      strokeWidth="1.2"
     />
     <path
       d="M5 8C7 9 9 9.5 12 9.5C15 9.5 17 9 19 8"
@@ -276,7 +276,7 @@ const IconContact = (
 // увеличенная стрелка для кнопки "Начать" и отправки
 const ICONS = {
   arrowRight: (
-    <svg width="32" height="32" viewBox="0 0 22 22" fill="none">
+    <svg width="28" height="28" viewBox="0 0 22 22" fill="none">
       <path
         d="M6 11H16M16 11L12 7M16 11L12 15"
         stroke="#fff"
@@ -336,9 +336,9 @@ const IconMic = (
   </svg>
 );
 
-// иконки приложений
+// иконки приложений (увеличены)
 const IconAndroidMini = (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
     <rect
       x="7"
       y="9"
@@ -354,7 +354,7 @@ const IconAndroidMini = (
 );
 
 const IconAppleMini = (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
     <path
       d="M16.3 4.1C15.6 4.8 14.7 5.2 13.8 5.1C13.7 4.3 14 3.4 14.6 2.8C15.3 2 16.4 1.6 17.3 1.6C17.4 2.4 17.1 3.3 16.3 4.1Z"
       fill="#111827"
@@ -514,7 +514,8 @@ const PREMADE_THEMES = [
     titleRu: "Тревога и страхи",
     titleUz: "Xavotir va qo‘rquvlar",
     descRu: "Помогу успокоиться и разложить всё по полочкам.",
-    descUz: "Xavotirlarni kamaytirish va vaziyatni tushuntirishga yordam beraman.",
+    descUz:
+      "Xavotirlarni kamaytirish va vaziyatni tushuntirishga yordam beraman.",
     questionRu:
       "Я часто волнуюсь и боюсь за малыша, как справиться с тревогой?",
     questionUz:
@@ -969,9 +970,7 @@ const PremadeThemesPanel = ({
                     "scale(1)";
                 }}
               >
-                <span
-                  style={{ fontSize: 29, marginRight: 2, flexShrink: 0 }}
-                >
+                <span style={{ fontSize: 29, marginRight: 2, flexShrink: 0 }}>
                   {emoji}
                 </span>
                 <div style={{ textAlign: "left", flex: 1 }}>
@@ -1018,11 +1017,11 @@ const bottomNavButtonStyle: React.CSSProperties = {
   cursor: "pointer",
 };
 
-// увеличены ещё на 5px
+// иконки навигации
 const bottomNavIconWrapStyle: React.CSSProperties = {
-  width: 61,
-  height: 61,
-  borderRadius: 30.5,
+  width: 60,
+  height: 60,
+  borderRadius: 30,
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
@@ -1124,6 +1123,7 @@ const BottomNavBar = ({
         </span>
       </button>
 
+      {/* уменьшенная центральная кнопка "Начать" */}
       <button
         style={{
           ...bottomNavButtonStyle,
@@ -1133,14 +1133,14 @@ const BottomNavBar = ({
       >
         <div
           style={{
-            width: 64,
-            height: 64,
-            borderRadius: 32,
+            width: 70,
+            height: 70,
+            borderRadius: 35,
             background: BABY_GRADIENT,
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            boxShadow: "0 6px 26px rgba(200,128,140,0.35)",
+            boxShadow: "0 6px 22px rgba(200,128,140,0.33)",
           }}
         >
           {ICONS.arrowRight}
@@ -1344,6 +1344,7 @@ const Chat = () => {
 
     const formData = new FormData();
     formData.append("file", selected);
+
     try {
       const res = await fetch("/api/upload", {
         method: "POST",
@@ -1590,7 +1591,7 @@ const Chat = () => {
     );
   };
 
-  // общий HeaderBar (одинаковый стиль для обоих экранов)
+  // HeaderBar: фиксированная типографика, не меняется между экранами
   const HeaderBar = () => (
     <div
       style={{
@@ -1610,6 +1611,7 @@ const Chat = () => {
         paddingBottom: 5,
         boxSizing: "border-box" as const,
         zIndex: 1,
+        fontFamily: "'Manrope', Arial, Helvetica, sans-serif",
       }}
     >
       <div
@@ -1877,7 +1879,7 @@ const Chat = () => {
           </div>
         </div>
 
-        {/* блок скачивания приложений */}
+        {/* блок скачивания приложений – увеличены кнопки и иконки */}
         <div
           style={{
             width: "100%",
@@ -1901,39 +1903,40 @@ const Chat = () => {
               }}
               style={{
                 border: "none",
-                borderRadius: 24,
-                padding: "16px 20px",
+                borderRadius: 26,
+                padding: "18px 22px",
                 background: "#111827",
                 color: "#ffffff",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                fontSize: 16,
+                fontSize: 17,
                 fontWeight: 700,
                 cursor: "pointer",
-                gap: 12,
+                gap: 14,
               }}
             >
               {IconAndroidMini}
               <span>{TEXTS[lang].androidBtn}</span>
             </button>
+
             <button
               onClick={() => {
                 alert(TEXTS[lang].iosSoon);
               }}
               style={{
                 border: "1px solid #d1d5db",
-                borderRadius: 24,
-                padding: "16px 20px",
+                borderRadius: 26,
+                padding: "18px 22px",
                 background: "#ffffff",
                 color: "#111827",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                fontSize: 16,
+                fontSize: 17,
                 fontWeight: 700,
                 cursor: "pointer",
-                gap: 12,
+                gap: 14,
               }}
             >
               {IconAppleMini}
@@ -2115,7 +2118,7 @@ const Chat = () => {
         </div>
       </div>
 
-      {/* панель ввода */}
+      {/* панель ввода – три иконки крупные, равные отступы, отправка круглая и не прижата вправо */}
       <div
         style={{
           width: "calc(100% - 40px)",
@@ -2147,7 +2150,7 @@ const Chat = () => {
             display: "flex",
             alignItems: "center",
             paddingLeft: 14,
-            paddingRight: 12,
+            paddingRight: 14,
             paddingTop: 8,
             paddingBottom: 8,
             boxSizing: "border-box",
@@ -2195,13 +2198,12 @@ const Chat = () => {
               borderRadius: ICON_BUTTON_SIZE / 2,
               border: "none",
               background: "transparent",
-              cursor:
-                loading || !!botProgress ? "not-allowed" : "pointer",
+              cursor: loading || !!botProgress ? "not-allowed" : "pointer",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              marginLeft: 8,
-              marginRight: 8,
+              marginLeft: 4,
+              marginRight: 4,
             }}
             title="File"
           >
@@ -2218,27 +2220,24 @@ const Chat = () => {
               borderRadius: ICON_BUTTON_SIZE / 2,
               border: "none",
               background: "transparent",
-              cursor:
-                loading || !!botProgress ? "not-allowed" : "pointer",
+              cursor: loading || !!botProgress ? "not-allowed" : "pointer",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              marginRight: 8,
-              marginLeft: 8,
+              marginLeft: 4,
+              marginRight: 4,
               animation: isListening
                 ? "micPulseNora 1.1s infinite ease-out"
                 : "none",
             }}
             title={
-              isListening
-                ? TEXTS[lang].speakRecording
-                : TEXTS[lang].speakTitle
+              isListening ? TEXTS[lang].speakRecording : TEXTS[lang].speakTitle
             }
           >
             {IconMic}
           </button>
 
-          {/* отправка — круглая, с увеличенной стрелкой */}
+          {/* отправка – круглая, по центру своей ячейки */}
           <button
             style={{
               width: ICON_BUTTON_SIZE,
@@ -2247,13 +2246,12 @@ const Chat = () => {
               color: "#fff",
               border: "none",
               borderRadius: ICON_BUTTON_SIZE / 2,
-              cursor:
-                loading || !!botProgress ? "not-allowed" : "pointer",
+              cursor: loading || !!botProgress ? "not-allowed" : "pointer",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
               boxShadow: "0 2px 14px 0 rgba(155,175,205,0.18)",
-              marginLeft: 8,
+              marginLeft: 4,
             }}
             onClick={handleSendMessage}
             disabled={loading || !!botProgress}
