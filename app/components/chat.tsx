@@ -9,13 +9,13 @@ const maxWidth = 560;
 const videoMaxWidth = 314;
 const GRADIENT = "linear-gradient(90deg, #eff5fe 0%, #e5e8ed 100%)";
 const BABY_GRADIENT = "linear-gradient(90deg, #e39290 0%, #efb1b6 100%)";
-const INPUT_BAR_HEIGHT = 80;
+const INPUT_BAR_HEIGHT = 68;
 const PANEL_SIDE_PADDING = 15;
 const BLOCK_SIDE_PADDING = 10;
 const CARD_GAP = 10;
 
 // размер круглых кнопок внизу (файл/мик/отправка)
-const ICON_BUTTON_SIZE = 52;
+const ICON_BUTTON_SIZE = 48;
 const ICON_DARK = "#5a6573";
 
 const IconShield = (
@@ -785,9 +785,9 @@ const bottomNavButtonStyle: React.CSSProperties = {
 };
 
 const bottomNavIconWrapStyle: React.CSSProperties = {
-  width: 40,
-  height: 40,
-  borderRadius: 20,
+  width: 46,
+  height: 46,
+  borderRadius: 23,
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
@@ -1409,7 +1409,6 @@ const Chat = () => {
       >
         <button
           onClick={() => {
-            // ресет на приветственный экран
             setShowWelcome(true);
             setChatHistory([]);
             setBotProgress("");
@@ -1519,6 +1518,7 @@ const Chat = () => {
           background: "#f8fdff",
           width: "100vw",
           minHeight: "100vh",
+          paddingBottom: 80,
         }}
       >
         <MicPulseStyle />
@@ -1646,6 +1646,30 @@ const Chat = () => {
             <WhyNoraBlockContent />
           </div>
         </div>
+
+        <BottomNavBar
+          onOpenHow={() => {
+            setMenuOpen(true);
+            setActiveSection("how");
+          }}
+          onOpenReviews={() => {
+            setMenuOpen(true);
+            setActiveSection("reviews");
+          }}
+          onOpenContacts={() => {
+            setMenuOpen(true);
+            setActiveSection("contacts");
+          }}
+          onStartChat={() => {
+            setShowWelcome(false);
+            setTimeout(() => {
+              const input = document.querySelector<HTMLInputElement>(
+                'input[placeholder="Задайте вопрос..."]'
+              );
+              if (input) input.focus();
+            }, 200);
+          }}
+        />
       </div>
     );
   }
@@ -1660,6 +1684,7 @@ const Chat = () => {
         minHeight: "100vh",
         display: "flex",
         flexDirection: "column",
+        paddingBottom: 80,
       }}
     >
       <MicPulseStyle />
@@ -1695,6 +1720,22 @@ const Chat = () => {
               }
             }}
           />
+
+          <div
+            style={{
+              width: "100%",
+              maxWidth,
+              margin: "0 auto",
+              padding: "0 18px 10px 18px",
+              boxSizing: "border-box",
+              fontSize: 13,
+              color: "#7c8792",
+              lineHeight: 1.6,
+            }}
+          >
+            Выберите готовый вопрос или задайте свой — Нора уточнит детали и
+            подстроит рекомендации под ваш срок и самочувствие.
+          </div>
 
           {/* История чата */}
           <div
@@ -1816,16 +1857,16 @@ const Chat = () => {
         </div>
       </div>
 
-      {/* инпут + кнопки */}
+      {/* панель ввода */}
       <div
         style={{
           position: "fixed",
           left: 0,
-          bottom: 70, // чуть выше нижнего меню
+          bottom: 70,
           width: "100%",
           background: "transparent",
           zIndex: 30,
-          padding: "8px 10px 10px",
+          padding: "6px 10px 8px",
           boxSizing: "border-box",
         }}
       >
@@ -1867,7 +1908,7 @@ const Chat = () => {
               border: "none",
               outline: "none",
               fontSize: 15,
-              padding: "10px 8px 10px 0",
+              padding: "6px 8px 6px 0",
               background: "transparent",
               color: "#1f2933",
             }}
@@ -1885,7 +1926,7 @@ const Chat = () => {
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              marginRight: 5,
+              marginRight: 6,
               cursor: "pointer",
             }}
           >
@@ -1911,7 +1952,7 @@ const Chat = () => {
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              marginRight: 5,
+              marginRight: 6,
               cursor: "pointer",
               animation: isListening ? "micPulseNora 1.6s infinite" : "none",
             }}
