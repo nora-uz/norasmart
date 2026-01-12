@@ -196,27 +196,37 @@ const TEXTS: Record<Lang, any> = {
   },
 };
 
-// иконка перевода языка (минималистичная)
-const IconLang = (
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+// новая иконка выбора языка в стиле «обновление»
+const IconLangUpdate = (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
     <circle cx="12" cy="12" r="9" stroke="#111827" strokeWidth="1.6" />
     <path
-      d="M7 9H17"
+      d="M8 11a4 4 0 017-2.5"
       stroke="#111827"
-      strokeWidth="1.4"
+      strokeWidth="1.6"
       strokeLinecap="round"
+      strokeLinejoin="round"
     />
     <path
-      d="M9 6H15"
+      d="M16 13a4 4 0 01-7 2.5"
       stroke="#111827"
-      strokeWidth="1.4"
+      strokeWidth="1.6"
       strokeLinecap="round"
+      strokeLinejoin="round"
     />
     <path
-      d="M9 18C10 15.5 11 14.2 12 14"
+      d="M9 7h3M12 7v-2"
       stroke="#111827"
-      strokeWidth="1.4"
+      strokeWidth="1.6"
       strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <path
+      d="M15 17h-3M12 17v2"
+      stroke="#111827"
+      strokeWidth="1.6"
+      strokeLinecap="round"
+      strokeLinejoin="round"
     />
   </svg>
 );
@@ -243,8 +253,9 @@ const IconPartner = (
     />
   </svg>
 );
+
 const IconContact = (
-  <svg width="18" height="18" fill="none" viewBox="0 0 20 20">
+  <svg width="30" height="30" fill="none" viewBox="0 0 20 20">
     <rect
       x="2.8"
       y="3.5"
@@ -259,14 +270,6 @@ const IconContact = (
       stroke="#5a6573"
       strokeWidth="1.5"
     />
-  </svg>
-);
-
-const IconMenu = (
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-    <path d="M4 7h16" stroke="#000000" strokeWidth="2" strokeLinecap="round" />
-    <path d="M4 12h16" stroke="#000000" strokeWidth="2" strokeLinecap="round" />
-    <path d="M4 17h16" stroke="#000000" strokeWidth="2" strokeLinecap="round" />
   </svg>
 );
 
@@ -334,7 +337,7 @@ const IconMic = (
 
 // иконки приложений (минималистичные)
 const IconAndroidMini = (
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
     <rect
       x="7"
       y="9"
@@ -350,7 +353,7 @@ const IconAndroidMini = (
 );
 
 const IconAppleMini = (
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
     <path
       d="M16.3 4.1C15.6 4.8 14.7 5.2 13.8 5.1C13.7 4.3 14 3.4 14.6 2.8C15.3 2 16.4 1.6 17.3 1.6C17.4 2.4 17.1 3.3 16.3 4.1Z"
       fill="#111827"
@@ -1030,7 +1033,7 @@ const bottomNavLabelStyle: React.CSSProperties = {
 };
 
 const IconHow = (
-  <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
+  <svg width="30" height="30" viewBox="0 0 24 24" fill="none">
     <circle cx="12" cy="12" r="9" stroke={ICON_DARK} strokeWidth="1.6" />
     <path
       d="M11 10.5C11 9.7 11.5 9.2 12.3 9.2C13.1 9.2 13.6 9.7 13.6 10.4C13.6 11.1 13.2 11.5 12.8 11.8C12.3 12.2 12.1 12.5 12.1 13"
@@ -1043,7 +1046,7 @@ const IconHow = (
 );
 
 const IconReviews = (
-  <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
+  <svg width="30" height="30" viewBox="0 0 24 24" fill="none">
     <path
       d="M5 6.5C5 5.7 5.7 5 6.5 5H17.5C18.3 5 19 5.7 19 6.5V13.5C19 14.3 18.3 15 17.5 15H9L6 18V15H6.5C5.7 15 5 14.3 5 13.5V6.5Z"
       stroke={ICON_DARK}
@@ -1055,7 +1058,7 @@ const IconReviews = (
 );
 
 const IconHistory = (
-  <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
+  <svg width="30" height="30" viewBox="0 0 24 24" fill="none">
     <circle cx="12" cy="12" r="8" stroke={ICON_DARK} strokeWidth="1.6" />
     <path
       d="M12 8.2V12L14.7 13.3"
@@ -1127,9 +1130,9 @@ const BottomNavBar = ({
       >
         <div
           style={{
-            width: 66,
-            height: 66,
-            borderRadius: 33,
+            width: 70,
+            height: 70,
+            borderRadius: 35,
             background: BABY_GRADIENT,
             display: "flex",
             alignItems: "center",
@@ -1648,53 +1651,35 @@ const Chat = () => {
         style={{
           display: "flex",
           alignItems: "center",
-          gap: 6,
           marginLeft: 12,
+          justifyContent: "flex-end",
+          flexShrink: 0,
         }}
       >
-        {/* кнопка смены языка (другая локаль) */}
         <button
           style={{
             background: "#ffffff",
             border: "1px solid #d2d8e2",
             cursor: "pointer",
-            borderRadius: 18,
+            borderRadius: 20,
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            fontSize: 13,
+            fontSize: 14,
             fontWeight: 600,
             color: "#1e2933",
-            padding: "6px 10px",
-            gap: 6,
-            minWidth: 110,
+            padding: "7px 14px",
+            gap: 8,
+            minWidth: 120,
           }}
           onClick={() => changeLang(lang === "ru" ? "uz" : "ru")}
         >
-          <span>{IconLang}</span>
+          <span>{IconLangUpdate}</span>
           <span>
             {lang === "ru"
               ? TEXTS[lang].langButtonOther
               : TEXTS[lang].langButtonOther}
           </span>
-        </button>
-
-        {/* просто иконка меню */}
-        <button
-          style={{
-            background: "transparent",
-            border: "none",
-            cursor: "pointer",
-            width: 42,
-            height: 42,
-            borderRadius: 21,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-          onClick={() => setMenuOpen(true)}
-        >
-          {IconMenu}
         </button>
       </div>
     </div>
@@ -1909,17 +1894,17 @@ const Chat = () => {
               }}
               style={{
                 border: "none",
-                borderRadius: 20,
-                padding: "13px 16px",
+                borderRadius: 24,
+                padding: "16px 20px",
                 background: "#111827",
                 color: "#ffffff",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                fontSize: 15,
-                fontWeight: 600,
+                fontSize: 16,
+                fontWeight: 700,
                 cursor: "pointer",
-                gap: 10,
+                gap: 12,
               }}
             >
               {IconAndroidMini}
@@ -1932,17 +1917,17 @@ const Chat = () => {
               }}
               style={{
                 border: "1px solid #d1d5db",
-                borderRadius: 20,
-                padding: "13px 16px",
+                borderRadius: 24,
+                padding: "16px 20px",
                 background: "#ffffff",
                 color: "#111827",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                fontSize: 15,
-                fontWeight: 600,
+                fontSize: 16,
+                fontWeight: 700,
                 cursor: "pointer",
-                gap: 10,
+                gap: 12,
               }}
             >
               {IconAppleMini}
@@ -1964,12 +1949,7 @@ const Chat = () => {
           }}
           onStartChat={() => {
             setShowWelcome(false);
-            setTimeout(() => {
-              const input = document.querySelector<HTMLInputElement>(
-                'input[placeholder]'
-              );
-              if (input) input.focus();
-            }, 200);
+            // убран автофокус на инпут, просто переход на второй экран
           }}
         />
       </div>
@@ -2155,14 +2135,15 @@ const Chat = () => {
             width: "100%",
             background: "#fff",
             borderRadius: borderRadius,
-            borderWidth: focused ? 2 : 1,
+            // убираем серую границу, при фокусе остаётся цветной бордер
+            borderWidth: focused ? 2 : 0,
             borderStyle: "solid",
-            borderColor: focused ? "transparent" : "#e5e8ed",
+            borderColor: "transparent",
             borderImage: focused ? GRADIENT + " 1" : undefined,
             display: "flex",
             alignItems: "center",
             paddingLeft: 14,
-            paddingRight: 6,
+            paddingRight: 10,
             boxSizing: "border-box",
             boxShadow: "0 2px 14px 0 rgba(155,175,205,0.10)",
           }}
@@ -2211,7 +2192,7 @@ const Chat = () => {
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              marginRight: 4,
+              marginRight: 8,
             }}
             title="File"
           >
@@ -2232,7 +2213,7 @@ const Chat = () => {
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              marginRight: 4,
+              marginRight: 8,
               animation: isListening
                 ? "micPulseNora 1.1s infinite ease-out"
                 : "none",
