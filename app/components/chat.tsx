@@ -15,7 +15,7 @@ const BLOCK_SIDE_PADDING = 10;
 const CARD_GAP = 10;
 
 // размер круглых кнопок внизу (файл/мик/отправка)
-const ICON_BUTTON_SIZE = 52;
+const ICON_BUTTON_SIZE = 60;
 const ICON_DARK = "#5a6573";
 
 // словарь текстов для RU / UZ
@@ -196,23 +196,37 @@ const TEXTS: Record<Lang, any> = {
   },
 };
 
-// иконка выбора языка – стрелки вверх/вниз в круге
+// НОВАЯ иконка выбора языка: простой глобус
 const IconLangUpdate = (
   <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
     <circle cx="12" cy="12" r="9" stroke="#111827" strokeWidth="1.6" />
-    <path
-      d="M9 11L12 8L15 11"
+    <ellipse
+      cx="12"
+      cy="12"
+      rx="4.5"
+      ry="9"
       stroke="#111827"
-      strokeWidth="1.6"
-      strokeLinecap="round"
-      strokeLinejoin="round"
+      strokeWidth="1.3"
+    />
+    <line
+      x1="3"
+      y1="12"
+      x2="21"
+      y2="12"
+      stroke="#111827"
+      strokeWidth="1.3"
     />
     <path
-      d="M9 13L12 16L15 13"
+      d="M5 8C7 9 9 9.5 12 9.5C15 9.5 17 9 19 8"
       stroke="#111827"
-      strokeWidth="1.6"
+      strokeWidth="1.1"
       strokeLinecap="round"
-      strokeLinejoin="round"
+    />
+    <path
+      d="M5 16C7 15 9 14.5 12 14.5C15 14.5 17 15 19 16"
+      stroke="#111827"
+      strokeWidth="1.1"
+      strokeLinecap="round"
     />
   </svg>
 );
@@ -259,13 +273,14 @@ const IconContact = (
   </svg>
 );
 
+// увеличенная стрелка для кнопки "Начать" и отправки
 const ICONS = {
   arrowRight: (
-    <svg width="24" height="24" viewBox="0 0 22 22" fill="none">
+    <svg width="32" height="32" viewBox="0 0 22 22" fill="none">
       <path
         d="M6 11H16M16 11L12 7M16 11L12 15"
         stroke="#fff"
-        strokeWidth="2"
+        strokeWidth="2.1"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
@@ -278,7 +293,7 @@ const filterNora =
 
 // увеличенные иконки для файла и микрофона
 const IconPaperclip = (
-  <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
     <path
       d="M8.5 12.5L14 7C15.1 5.9 16.9 5.9 18 7C19.1 8.1 19.1 9.9 18 11L11 18C9.3 19.7 6.5 19.7 4.8 18C3.1 16.3 3.1 13.5 4.8 11.8L11.5 5"
       stroke={ICON_DARK}
@@ -290,7 +305,7 @@ const IconPaperclip = (
 );
 
 const IconMic = (
-  <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
     <rect
       x="9"
       y="4"
@@ -954,7 +969,9 @@ const PremadeThemesPanel = ({
                     "scale(1)";
                 }}
               >
-                <span style={{ fontSize: 29, marginRight: 2, flexShrink: 0 }}>
+                <span
+                  style={{ fontSize: 29, marginRight: 2, flexShrink: 0 }}
+                >
                   {emoji}
                 </span>
                 <div style={{ textAlign: "left", flex: 1 }}>
@@ -1110,15 +1127,15 @@ const BottomNavBar = ({
       <button
         style={{
           ...bottomNavButtonStyle,
-          transform: "translateY(-4px)",
+          transform: "translateY(-2px)",
         }}
         onClick={onStartChat}
       >
         <div
           style={{
-            width: 78,
-            height: 78,
-            borderRadius: 39,
+            width: 64,
+            height: 64,
+            borderRadius: 32,
             background: BABY_GRADIENT,
             display: "flex",
             alignItems: "center",
@@ -1262,7 +1279,10 @@ const Chat = () => {
         i++;
         if (i > botReply.length) {
           clearInterval(interval);
-          setChatHistory((prev) => [...prev, { text: botReply, sender: "bot" }]);
+          setChatHistory((prev) => [
+            ...prev,
+            { text: botReply, sender: "bot" },
+          ]);
           setBotProgress("");
           setLoading(false);
         }
@@ -1315,14 +1335,15 @@ const Chat = () => {
     recognition.start();
   };
 
-  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const selected = e.target.files?.[0];
     if (!selected) return;
     setFile(selected);
 
     const formData = new FormData();
     formData.append("file", selected);
-
     try {
       const res = await fetch("/api/upload", {
         method: "POST",
@@ -1569,6 +1590,7 @@ const Chat = () => {
     );
   };
 
+  // общий HeaderBar (одинаковый стиль для обоих экранов)
   const HeaderBar = () => (
     <div
       style={{
@@ -1895,7 +1917,6 @@ const Chat = () => {
               {IconAndroidMini}
               <span>{TEXTS[lang].androidBtn}</span>
             </button>
-
             <button
               onClick={() => {
                 alert(TEXTS[lang].iosSoon);
@@ -2174,11 +2195,13 @@ const Chat = () => {
               borderRadius: ICON_BUTTON_SIZE / 2,
               border: "none",
               background: "transparent",
-              cursor: loading || !!botProgress ? "not-allowed" : "pointer",
+              cursor:
+                loading || !!botProgress ? "not-allowed" : "pointer",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              marginRight: 6,
+              marginLeft: 8,
+              marginRight: 8,
             }}
             title="File"
           >
@@ -2195,23 +2218,27 @@ const Chat = () => {
               borderRadius: ICON_BUTTON_SIZE / 2,
               border: "none",
               background: "transparent",
-              cursor: loading || !!botProgress ? "not-allowed" : "pointer",
+              cursor:
+                loading || !!botProgress ? "not-allowed" : "pointer",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              marginRight: 6,
+              marginRight: 8,
+              marginLeft: 8,
               animation: isListening
                 ? "micPulseNora 1.1s infinite ease-out"
                 : "none",
             }}
             title={
-              isListening ? TEXTS[lang].speakRecording : TEXTS[lang].speakTitle
+              isListening
+                ? TEXTS[lang].speakRecording
+                : TEXTS[lang].speakTitle
             }
           >
             {IconMic}
           </button>
 
-          {/* отправка */}
+          {/* отправка — круглая, с увеличенной стрелкой */}
           <button
             style={{
               width: ICON_BUTTON_SIZE,
@@ -2220,12 +2247,13 @@ const Chat = () => {
               color: "#fff",
               border: "none",
               borderRadius: ICON_BUTTON_SIZE / 2,
-              cursor: loading || !!botProgress ? "not-allowed" : "pointer",
+              cursor:
+                loading || !!botProgress ? "not-allowed" : "pointer",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
               boxShadow: "0 2px 14px 0 rgba(155,175,205,0.18)",
-              marginLeft: 4,
+              marginLeft: 8,
             }}
             onClick={handleSendMessage}
             disabled={loading || !!botProgress}
