@@ -1,3 +1,6 @@
+Ниже полный обновлённый код компонента с учётом всех правок по языковой кнопке, нижнему меню и полю ввода на втором экране.[1]
+
+```tsx
 "use client";
 import React, { useState, useEffect, useRef } from "react";
 
@@ -147,7 +150,7 @@ const TEXTS: Record<Lang, any> = {
       "Maslahatlar Buyuk Britaniya NHS tavsiyalariga asoslangan va sizning hududingizga moslashtirilgan.",
     benefitsTitle2: "24/7 yordam",
     benefitsText2:
-      "Har doim yoningizда — har qanday vaziyatda qo‘llab-quvvatlaydi.",
+      "Har doim yoningizда — har qanday vazиятda qo‘llab-quvvatlaydi.",
     benefitsTitle3: "Muhim eslatmalar",
     benefitsText3:
       "Tahlillar, vitaminlar, qabul vaqtlarini unutib qo‘ymasligingizga yordam beradi.",
@@ -196,33 +199,23 @@ const TEXTS: Record<Lang, any> = {
   },
 };
 
-// иконка языка – reload в круге
-const IconLangReload = (
+// иконка выбора языка – стрелки вверх/вниз в круге
+const IconLangUpdate = (
   <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
     <circle cx="12" cy="12" r="9" stroke="#111827" strokeWidth="1.6" />
     <path
-      d="M9 11C9 9.3 10.3 8 12 8C13.2 8 14.3 8.7 14.8 9.8"
+      d="M9 11L12 8L15 11"
       stroke="#111827"
       strokeWidth="1.6"
       strokeLinecap="round"
+      strokeLinejoin="round"
     />
     <path
-      d="M9 9V6.8"
+      d="M9 13L12 16L15 13"
       stroke="#111827"
       strokeWidth="1.6"
       strokeLinecap="round"
-    />
-    <path
-      d="M15 13C15 14.7 13.7 16 12 16C10.8 16 9.7 15.3 9.2 14.2"
-      stroke="#111827"
-      strokeWidth="1.6"
-      strokeLinecap="round"
-    />
-    <path
-      d="M15 15.2V17.4"
-      stroke="#111827"
-      strokeWidth="1.6"
-      strokeLinecap="round"
+      strokeLinejoin="round"
     />
   </svg>
 );
@@ -251,7 +244,7 @@ const IconPartner = (
 );
 
 const IconContact = (
-  <svg width="18" height="18" fill="none" viewBox="0 0 20 20">
+  <svg width="30" height="30" fill="none" viewBox="0 0 20 20">
     <rect
       x="2.8"
       y="3.5"
@@ -269,17 +262,9 @@ const IconContact = (
   </svg>
 );
 
-const IconMenu = (
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-    <path d="M4 7h16" stroke="#000000" strokeWidth="2" strokeLinecap="round" />
-    <path d="M4 12h16" stroke="#000000" strokeWidth="2" strokeLinecap="round" />
-    <path d="M4 17h16" stroke="#000000" strokeWidth="2" strokeLinecap="round" />
-  </svg>
-);
-
 const ICONS = {
   arrowRight: (
-    <svg width="26" height="26" viewBox="0 0 22 22" fill="none">
+    <svg width="24" height="24" viewBox="0 0 22 22" fill="none">
       <path
         d="M6 11H16M16 11L12 7M16 11L12 15"
         stroke="#fff"
@@ -296,11 +281,11 @@ const filterNora =
 
 // увеличенные иконки для файла и микрофона
 const IconPaperclip = (
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
     <path
       d="M8.5 12.5L14 7C15.1 5.9 16.9 5.9 18 7C19.1 8.1 19.1 9.9 18 11L11 18C9.3 19.7 6.5 19.7 4.8 18C3.1 16.3 3.1 13.5 4.8 11.8L11.5 5"
       stroke={ICON_DARK}
-      strokeWidth="1.8"
+      strokeWidth="1.7"
       strokeLinecap="round"
       strokeLinejoin="round"
     />
@@ -308,7 +293,7 @@ const IconPaperclip = (
 );
 
 const IconMic = (
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
     <rect
       x="9"
       y="4"
@@ -316,24 +301,24 @@ const IconMic = (
       height="10"
       rx="3"
       stroke={ICON_DARK}
-      strokeWidth="1.8"
+      strokeWidth="1.7"
     />
     <path
       d="M7 11C7 13.2 8.8 15 11 15H13C15.2 15 17 13.2 17 11"
       stroke={ICON_DARK}
-      strokeWidth="1.8"
+      strokeWidth="1.7"
       strokeLinecap="round"
     />
     <path
       d="M12 15V19"
       stroke={ICON_DARK}
-      strokeWidth="1.8"
+      strokeWidth="1.7"
       strokeLinecap="round"
     />
     <path
       d="M9.5 19H14.5"
       stroke={ICON_DARK}
-      strokeWidth="1.8"
+      strokeWidth="1.7"
       strokeLinecap="round"
     />
   </svg>
@@ -341,7 +326,7 @@ const IconMic = (
 
 // иконки приложений
 const IconAndroidMini = (
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
     <rect
       x="7"
       y="9"
@@ -357,7 +342,7 @@ const IconAndroidMini = (
 );
 
 const IconAppleMini = (
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
     <path
       d="M16.3 4.1C15.6 4.8 14.7 5.2 13.8 5.1C13.7 4.3 14 3.4 14.6 2.8C15.3 2 16.4 1.6 17.3 1.6C17.4 2.4 17.1 3.3 16.3 4.1Z"
       fill="#111827"
@@ -517,7 +502,7 @@ const PREMADE_THEMES = [
     titleRu: "Тревога и страхи",
     titleUz: "Xavotir va qo‘rquvlar",
     descRu: "Помогу успокоиться и разложить всё по полочкам.",
-    descUz: "Xavotirlarni kamaytirish va vaziyatni tushuntirishга yordam beraman.",
+    descUz: "Xavotirlarni kamaytirish va vaziyatni tushuntirishga yordam beraman.",
     questionRu:
       "Я часто волнуюсь и боюсь за малыша, как справиться с тревогой?",
     questionUz:
@@ -1019,10 +1004,11 @@ const bottomNavButtonStyle: React.CSSProperties = {
   cursor: "pointer",
 };
 
+// увеличены ещё на 5px
 const bottomNavIconWrapStyle: React.CSSProperties = {
-  width: 56,
-  height: 56,
-  borderRadius: 28,
+  width: 61,
+  height: 61,
+  borderRadius: 30.5,
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
@@ -1036,7 +1022,7 @@ const bottomNavLabelStyle: React.CSSProperties = {
 };
 
 const IconHow = (
-  <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
+  <svg width="30" height="30" viewBox="0 0 24 24" fill="none">
     <circle cx="12" cy="12" r="9" stroke={ICON_DARK} strokeWidth="1.6" />
     <path
       d="M11 10.5C11 9.7 11.5 9.2 12.3 9.2C13.1 9.2 13.6 9.7 13.6 10.4C13.6 11.1 13.2 11.5 12.8 11.8C12.3 12.2 12.1 12.5 12.1 13"
@@ -1049,7 +1035,7 @@ const IconHow = (
 );
 
 const IconReviews = (
-  <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
+  <svg width="30" height="30" viewBox="0 0 24 24" fill="none">
     <path
       d="M5 6.5C5 5.7 5.7 5 6.5 5H17.5C18.3 5 19 5.7 19 6.5V13.5C19 14.3 18.3 15 17.5 15H9L6 18V15H6.5C5.7 15 5 14.3 5 13.5V6.5Z"
       stroke={ICON_DARK}
@@ -1061,7 +1047,7 @@ const IconReviews = (
 );
 
 const IconHistory = (
-  <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
+  <svg width="30" height="30" viewBox="0 0 24 24" fill="none">
     <circle cx="12" cy="12" r="8" stroke={ICON_DARK} strokeWidth="1.6" />
     <path
       d="M12 8.2V12L14.7 13.3"
@@ -1127,20 +1113,20 @@ const BottomNavBar = ({
       <button
         style={{
           ...bottomNavButtonStyle,
-          transform: "translateY(-3px)",
+          transform: "translateY(-4px)",
         }}
         onClick={onStartChat}
       >
         <div
           style={{
-            width: 68,
-            height: 68,
-            borderRadius: 34,
+            width: 78,
+            height: 78,
+            borderRadius: 39,
             background: BABY_GRADIENT,
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            boxShadow: "0 5px 22px rgba(200,128,140,0.35)",
+            boxShadow: "0 6px 26px rgba(200,128,140,0.35)",
           }}
         >
           {ICONS.arrowRight}
@@ -1654,11 +1640,11 @@ const Chat = () => {
         style={{
           display: "flex",
           alignItems: "center",
-          gap: 6,
           marginLeft: 12,
+          justifyContent: "flex-end",
+          flexShrink: 0,
         }}
       >
-        {/* кнопка смены языка */}
         <button
           style={{
             background: "#ffffff",
@@ -1668,39 +1654,21 @@ const Chat = () => {
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            fontSize: 13,
+            fontSize: 14,
             fontWeight: 600,
             color: "#1e2933",
-            padding: "7px 12px",
+            padding: "7px 14px",
             gap: 8,
-            minWidth: 110,
+            minWidth: 120,
           }}
           onClick={() => changeLang(lang === "ru" ? "uz" : "ru")}
         >
-          <span>{IconLangReload}</span>
+          <span>{IconLangUpdate}</span>
           <span>
             {lang === "ru"
               ? TEXTS[lang].langButtonOther
               : TEXTS[lang].langButtonOther}
           </span>
-        </button>
-
-        {/* иконка меню */}
-        <button
-          style={{
-            background: "transparent",
-            border: "none",
-            cursor: "pointer",
-            width: 42,
-            height: 42,
-            borderRadius: 21,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-          onClick={() => setMenuOpen(true)}
-        >
-          {IconMenu}
         </button>
       </div>
     </div>
@@ -1783,7 +1751,7 @@ const Chat = () => {
     );
   }
 
-  // WELCOME
+  // WELCOME экран
   if (showWelcome) {
     return (
       <div
@@ -1914,17 +1882,17 @@ const Chat = () => {
               }}
               style={{
                 border: "none",
-                borderRadius: 20,
-                padding: "13px 16px",
+                borderRadius: 24,
+                padding: "16px 20px",
                 background: "#111827",
                 color: "#ffffff",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                fontSize: 15,
-                fontWeight: 600,
+                fontSize: 16,
+                fontWeight: 700,
                 cursor: "pointer",
-                gap: 10,
+                gap: 12,
               }}
             >
               {IconAndroidMini}
@@ -1937,17 +1905,17 @@ const Chat = () => {
               }}
               style={{
                 border: "1px solid #d1d5db",
-                borderRadius: 20,
-                padding: "13px 16px",
+                borderRadius: 24,
+                padding: "16px 20px",
                 background: "#ffffff",
                 color: "#111827",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                fontSize: 15,
-                fontWeight: 600,
+                fontSize: 16,
+                fontWeight: 700,
                 cursor: "pointer",
-                gap: 10,
+                gap: 12,
               }}
             >
               {IconAppleMini}
@@ -1975,7 +1943,7 @@ const Chat = () => {
     );
   }
 
-  // ЧАТ
+  // ЧАТ экран
   return (
     <div
       style={{
@@ -2154,14 +2122,14 @@ const Chat = () => {
             width: "100%",
             background: "#fff",
             borderRadius: borderRadius,
-            borderWidth: focused ? 2 : 1,
+            borderWidth: focused ? 2 : 0,
             borderStyle: "solid",
-            borderColor: focused ? "transparent" : "#e5e8ed",
+            borderColor: "transparent",
             borderImage: focused ? GRADIENT + " 1" : undefined,
             display: "flex",
             alignItems: "center",
             paddingLeft: 14,
-            paddingRight: 10,
+            paddingRight: 12,
             paddingTop: 8,
             paddingBottom: 8,
             boxSizing: "border-box",
@@ -2185,7 +2153,7 @@ const Chat = () => {
             style={{
               flex: 1,
               height: 40,
-              fontSize: "17px",
+              fontSize: "16px",
               border: "none",
               outline: "none",
               background: "transparent",
@@ -2204,16 +2172,16 @@ const Chat = () => {
             onClick={openFileDialog}
             disabled={loading || !!botProgress}
             style={{
-              width: ICON_BUTTON_SIZE + 4,
-              height: ICON_BUTTON_SIZE + 4,
-              borderRadius: (ICON_BUTTON_SIZE + 4) / 2,
+              width: ICON_BUTTON_SIZE,
+              height: ICON_BUTTON_SIZE,
+              borderRadius: ICON_BUTTON_SIZE / 2,
               border: "none",
               background: "transparent",
               cursor: loading || !!botProgress ? "not-allowed" : "pointer",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              marginRight: 4,
+              marginRight: 6,
             }}
             title="File"
           >
@@ -2225,9 +2193,9 @@ const Chat = () => {
             onClick={startListening}
             disabled={loading || !!botProgress}
             style={{
-              width: ICON_BUTTON_SIZE + 4,
-              height: ICON_BUTTON_SIZE + 4,
-              borderRadius: (ICON_BUTTON_SIZE + 4) / 2,
+              width: ICON_BUTTON_SIZE,
+              height: ICON_BUTTON_SIZE,
+              borderRadius: ICON_BUTTON_SIZE / 2,
               border: "none",
               background: "transparent",
               cursor: loading || !!botProgress ? "not-allowed" : "pointer",
@@ -2246,21 +2214,21 @@ const Chat = () => {
             {IconMic}
           </button>
 
-          {/* отправка – идеально круглая */}
+          {/* отправка */}
           <button
             style={{
-              width: ICON_BUTTON_SIZE + 6,
-              height: ICON_BUTTON_SIZE + 6,
+              width: ICON_BUTTON_SIZE,
+              height: ICON_BUTTON_SIZE,
               background: BABY_GRADIENT,
               color: "#fff",
               border: "none",
-              borderRadius: (ICON_BUTTON_SIZE + 6) / 2,
+              borderRadius: ICON_BUTTON_SIZE / 2,
               cursor: loading || !!botProgress ? "not-allowed" : "pointer",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
               boxShadow: "0 2px 14px 0 rgba(155,175,205,0.18)",
-              marginLeft: 0,
+              marginLeft: 4,
             }}
             onClick={handleSendMessage}
             disabled={loading || !!botProgress}
@@ -2274,3 +2242,6 @@ const Chat = () => {
 };
 
 export default Chat;
+```
+
+[1](https://ppl-ai-file-upload.s3.amazonaws.com/web/direct-files/attachments/5239659/e621ffa2-1ee8-471a-92e9-86e014a6dd11/paste.txt)
