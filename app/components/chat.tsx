@@ -18,7 +18,6 @@ const CARD_GAP = 10;
 const ICON_BUTTON_SIZE = 54;
 const ICON_DARK = "#5a6573";
 
-// словарь текстов для RU / UZ
 type Lang = "ru" | "uz";
 
 const TEXTS: Record<Lang, any> = {
@@ -196,7 +195,7 @@ const TEXTS: Record<Lang, any> = {
   },
 };
 
-// новая иконка выбора языка – глобус
+// глобус для переключения языка
 const IconLangUpdate = (
   <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
     <circle cx="12" cy="12" r="9" stroke="#111827" strokeWidth="1.6" />
@@ -273,7 +272,7 @@ const IconContact = (
   </svg>
 );
 
-// увеличенная стрелка для кнопки "Начать" и отправки
+// стрелка для "Начать" и отправки
 const ICONS = {
   arrowRight: (
     <svg width="28" height="28" viewBox="0 0 22 22" fill="none">
@@ -291,7 +290,6 @@ const ICONS = {
 const filterNora =
   "invert(13%) sepia(4%) saturate(271%) hue-rotate(175deg) brightness(92%) contrast(93%)";
 
-// увеличенные иконки для файла и микрофона
 const IconPaperclip = (
   <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
     <path
@@ -336,7 +334,7 @@ const IconMic = (
   </svg>
 );
 
-// иконки приложений (увеличены)
+// иконка Android — «андроидная»
 const IconAndroidMini = (
   <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
     <rect
@@ -350,9 +348,12 @@ const IconAndroidMini = (
     />
     <circle cx="10" cy="7" r="0.8" fill="#ffffff" />
     <circle cx="14" cy="7" r="0.8" fill="#ffffff" />
+    <line x1="9" y1="4" x2="8" y2="6" stroke="#ffffff" strokeWidth="1.3" />
+    <line x1="15" y1="4" x2="16" y2="6" stroke="#ffffff" strokeWidth="1.3" />
   </svg>
 );
 
+// Apple оставляем как есть
 const IconAppleMini = (
   <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
     <path
@@ -366,36 +367,14 @@ const IconAppleMini = (
   </svg>
 );
 
-// преимущества
 const BENEFITS = [
-  {
-    emoji: "🩺",
-    keyTitle: "benefitsTitle1",
-    keyText: "benefitsText1",
-  },
-  {
-    emoji: "🤝",
-    keyTitle: "benefitsTitle2",
-    keyText: "benefitsText2",
-  },
-  {
-    emoji: "⏰",
-    keyTitle: "benefitsTitle3",
-    keyText: "benefitsText3",
-  },
-  {
-    emoji: "🔒",
-    keyTitle: "benefitsTitle4",
-    keyText: "benefitsText4",
-  },
-  {
-    emoji: "⚡️",
-    keyTitle: "benefitsTitle5",
-    keyText: "benefitsText5",
-  },
+  { emoji: "🩺", keyTitle: "benefitsTitle1", keyText: "benefitsText1" },
+  { emoji: "🤝", keyTitle: "benefitsTitle2", keyText: "benefitsText2" },
+  { emoji: "⏰", keyTitle: "benefitsTitle3", keyText: "benefitsText3" },
+  { emoji: "🔒", keyTitle: "benefitsTitle4", keyText: "benefitsText4" },
+  { emoji: "⚡️", keyTitle: "benefitsTitle5", keyText: "benefitsText5" },
 ];
 
-// отзывы
 const REVIEWS = [
   {
     name: "Анна",
@@ -465,7 +444,6 @@ const REVIEWS = [
   },
 ];
 
-// стартовые темы
 const PREMADE_THEMES = [
   {
     emoji: "🤢",
@@ -1017,7 +995,6 @@ const bottomNavButtonStyle: React.CSSProperties = {
   cursor: "pointer",
 };
 
-// иконки навигации
 const bottomNavIconWrapStyle: React.CSSProperties = {
   width: 60,
   height: 60,
@@ -1123,7 +1100,7 @@ const BottomNavBar = ({
         </span>
       </button>
 
-      {/* уменьшенная центральная кнопка "Начать" */}
+      {/* центральная кнопка "Начать" чуть меньше, чем могла бы быть */}
       <button
         style={{
           ...bottomNavButtonStyle,
@@ -1591,7 +1568,7 @@ const Chat = () => {
     );
   };
 
-  // HeaderBar: фиксированная типографика, не меняется между экранами
+  // HeaderBar – уменьшаем верхний отступ на 5px
   const HeaderBar = () => (
     <div
       style={{
@@ -1600,7 +1577,7 @@ const Chat = () => {
         minHeight: panelHeight,
         background: GRADIENT,
         color: NORA_COLOR,
-        margin: "20px auto 0 auto",
+        margin: "15px auto 0 auto",
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
@@ -1741,527 +1718,4 @@ const Chat = () => {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          justifyContent: "center",
-          position: "fixed",
-          top: 0,
-          left: 0,
-          zIndex: 10000,
-          margin: 0,
-          padding: 0,
-        }}
-      >
-        <span
-          style={{
-            fontWeight: 800,
-            fontSize: "38px",
-            color: NORA_COLOR,
-            letterSpacing: "0.07em",
-            animation: "noraPulse 1.4s infinite linear",
-          }}
-        >
-          {TEXTS[lang].appName}
-        </span>
-        <style>{`
-          @keyframes noraPulse {
-            0% { opacity: 0.30; }
-            50% { opacity: 1; }
-            100% { opacity: 0.30; }
-          }
-        `}</style>
-      </div>
-    );
-  }
-
-  // WELCOME экран
-  if (showWelcome) {
-    return (
-      <div
-        style={{
-          fontFamily: "'Manrope', Arial, Helvetica, sans-serif",
-          background: "#f8fdff",
-          width: "100vw",
-          minHeight: "100vh",
-          paddingBottom: 90,
-        }}
-      >
-        <MicPulseStyle />
-        <HeaderBar />
-
-        <ModalOverlay />
-        <ModalContent />
-
-        <div style={{ height: 51 }} />
-
-        <div
-          style={{
-            width: "100%",
-            maxWidth: maxWidth,
-            margin: "0 auto",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <video
-            src="/nora.mp4"
-            style={{
-              width: "100%",
-              maxWidth: videoMaxWidth,
-              display: "block",
-              borderRadius: 24,
-            }}
-            autoPlay
-            playsInline
-            muted
-            loop
-            preload="auto"
-          />
-        </div>
-
-        <div style={{ height: 36 }} />
-
-        <div
-          style={{
-            width: `calc(100% - ${BLOCK_SIDE_PADDING * 2}px)`,
-            maxWidth,
-            textAlign: "center",
-            margin: "0 auto",
-          }}
-        >
-          <div
-            style={{
-              fontWeight: 800,
-              fontSize: "22px",
-              color: NORA_COLOR,
-              marginBottom: 12,
-              padding: "0 18px",
-              lineHeight: 1.35,
-            }}
-          >
-            {TEXTS[lang].heroTitle}
-          </div>
-          <div
-            style={{
-              fontWeight: 400,
-              fontSize: "15px",
-              margin: "0 auto",
-              maxWidth: 400,
-              padding: "0 18px",
-              lineHeight: 1.75,
-              color: NORA_COLOR,
-              display: "inline-block",
-            }}
-          >
-            {TEXTS[lang].heroBody}
-          </div>
-
-          <div style={{ height: 32 }} />
-
-          <div
-            style={{
-              fontSize: 13,
-              color: "#7c8792",
-              marginBottom: 12,
-            }}
-          >
-            {TEXTS[lang].welcomeStat}
-          </div>
-
-          <div
-            style={{
-              width: "100%",
-              maxWidth,
-              margin: "0 auto",
-              paddingBottom: 16,
-            }}
-          >
-            <WhyNoraBlockContent lang={lang} />
-          </div>
-        </div>
-
-        {/* блок скачивания приложений – увеличены кнопки и иконки */}
-        <div
-          style={{
-            width: "100%",
-            maxWidth,
-            margin: "10px auto 90px auto",
-            padding: "0 18px",
-            boxSizing: "border-box",
-          }}
-        >
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: 10,
-            }}
-          >
-            <button
-              onClick={() => {
-                window.location.href =
-                  "https://webtoapp.design/apps/download_android_apk/IjE2NDExMSI.MJqUM633YvZ5PgIowcEHc8S6EJE";
-              }}
-              style={{
-                border: "none",
-                borderRadius: 26,
-                padding: "18px 22px",
-                background: "#111827",
-                color: "#ffffff",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontSize: 17,
-                fontWeight: 700,
-                cursor: "pointer",
-                gap: 14,
-              }}
-            >
-              {IconAndroidMini}
-              <span>{TEXTS[lang].androidBtn}</span>
-            </button>
-
-            <button
-              onClick={() => {
-                alert(TEXTS[lang].iosSoon);
-              }}
-              style={{
-                border: "1px solid #d1d5db",
-                borderRadius: 26,
-                padding: "18px 22px",
-                background: "#ffffff",
-                color: "#111827",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontSize: 17,
-                fontWeight: 700,
-                cursor: "pointer",
-                gap: 14,
-              }}
-            >
-              {IconAppleMini}
-              <span>{TEXTS[lang].iosBtn}</span>
-            </button>
-          </div>
-        </div>
-
-        <BottomNavBar
-          lang={lang}
-          onOpenHow={() => {
-            openSection("how");
-          }}
-          onOpenReviews={() => {
-            openSection("reviews");
-          }}
-          onOpenContacts={() => {
-            openSection("contacts");
-          }}
-          onStartChat={() => {
-            setShowWelcome(false);
-          }}
-        />
-      </div>
-    );
-  }
-
-  // ЧАТ экран
-  return (
-    <div
-      style={{
-        background: "#f8fdff",
-        width: "100vw",
-        minHeight: "100vh",
-        display: "flex",
-        flexDirection: "column",
-      }}
-    >
-      <MicPulseStyle />
-      <HeaderBar />
-
-      <ModalOverlay />
-      <ModalContent />
-
-      <PremadeThemesPanel
-        lang={lang}
-        disabled={loading || !!botProgress}
-        onSend={(q) => {
-          if (!loading && !botProgress) {
-            sendMessageToGPT(q);
-          }
-        }}
-      />
-
-      {chatHistory.length === 0 && !botProgress && (
-        <div
-          style={{
-            fontSize: 14,
-            color: "#7c8792",
-            textAlign: "center",
-            margin: "8px 24px 10px 24px",
-            lineHeight: 1.6,
-          }}
-        >
-          {TEXTS[lang].bottomHint}
-        </div>
-      )}
-
-      <div
-        style={{
-          flex: 1,
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "flex-end",
-        }}
-      >
-        <div
-          style={{
-            width: "100%",
-            maxWidth: maxWidth,
-            margin: "0 auto",
-            padding: "8px 0 110px 0",
-          }}
-        >
-          {chatHistory.map((msg, idx) => (
-            <div
-              key={idx}
-              style={{
-                textAlign: msg.sender === "user" ? "right" : "left",
-                margin: "8px 20px",
-              }}
-            >
-              {msg.sender === "user" ? (
-                <>
-                  <span style={userMessageStyle}>{msg.text}</span>
-                  <div
-                    style={{
-                      fontSize: 11,
-                      color: "#9aa3ad",
-                      marginTop: -4,
-                    }}
-                  >
-                    {TEXTS[lang].userLabel}
-                  </div>
-                </>
-              ) : (
-                <>
-                  {splitBotTextTwoBlocks(msg.text).map((part, sIdx) =>
-                    part.text ? (
-                      <div
-                        key={sIdx}
-                        style={{
-                          background: "#f7fafd",
-                          borderRadius: 12,
-                          padding: "10px 15px",
-                          marginBottom: sIdx === 0 ? 18 : 30,
-                          color: NORA_COLOR,
-                          fontSize: 16,
-                          lineHeight: 1.7,
-                          fontWeight: part.bold ? "bold" : "normal",
-                          wordBreak: "break-word",
-                          overflowWrap: "anywhere",
-                        }}
-                      >
-                        {part.text}
-                      </div>
-                    ) : null
-                  )}
-                  <div
-                    style={{
-                      fontSize: 11,
-                      color: "#9aa3ad",
-                      marginTop: -6,
-                    }}
-                  >
-                    {TEXTS[lang].noraLabel}
-                  </div>
-                </>
-              )}
-            </div>
-          ))}
-
-          {botProgress &&
-            splitBotTextTwoBlocks(botProgress).map((part, sIdx) =>
-              part.text ? (
-                <div
-                  key={sIdx}
-                  style={{
-                    background: "#f7fafd",
-                    borderRadius: 12,
-                    padding: "10px 15px",
-                    margin: "0 20px 10px 20px",
-                    color: NORA_COLOR,
-                    fontSize: 16,
-                    lineHeight: 1.7,
-                    fontWeight: part.bold ? "bold" : "normal",
-                    wordBreak: "break-word",
-                    overflowWrap: "anywhere",
-                  }}
-                >
-                  {part.text}
-                </div>
-              ) : null
-            )}
-
-          {botProgress && (
-            <div
-              style={{
-                fontSize: 11,
-                color: "#9aa3ad",
-                margin: "0 20px 6px 20px",
-              }}
-            >
-              {TEXTS[lang].noraTyping}
-            </div>
-          )}
-
-          <div ref={messagesEndRef} />
-        </div>
-      </div>
-
-      {/* панель ввода – три иконки крупные, равные отступы, отправка круглая и не прижата вправо */}
-      <div
-        style={{
-          width: "calc(100% - 40px)",
-          margin: "0 20px",
-          boxSizing: "border-box",
-          maxWidth: maxWidth,
-          height: INPUT_BAR_HEIGHT,
-          position: "fixed",
-          left: 0,
-          bottom: 30,
-          background: "transparent",
-          borderRadius: borderRadius,
-          zIndex: 20,
-          boxShadow: "none",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        <div
-          style={{
-            width: "100%",
-            background: "#fff",
-            borderRadius: borderRadius,
-            borderWidth: focused ? 2 : 0,
-            borderStyle: "solid",
-            borderColor: "transparent",
-            borderImage: focused ? GRADIENT + " 1" : undefined,
-            display: "flex",
-            alignItems: "center",
-            paddingLeft: 14,
-            paddingRight: 14,
-            paddingTop: 8,
-            paddingBottom: 8,
-            boxSizing: "border-box",
-            boxShadow: "0 2px 14px 0 rgba(155,175,205,0.10)",
-          }}
-        >
-          <input
-            type="file"
-            ref={fileInputRef}
-            style={{ display: "none" }}
-            onChange={handleFileChange}
-          />
-
-          <input
-            type="text"
-            value={message}
-            onFocus={() => setFocused(true)}
-            onBlur={() => setFocused(false)}
-            onChange={(e) => setMessage(e.target.value)}
-            placeholder={TEXTS[lang].inputPlaceholder}
-            style={{
-              flex: 1,
-              height: 40,
-              fontSize: "16px",
-              border: "none",
-              outline: "none",
-              background: "transparent",
-              color: NORA_COLOR,
-              boxSizing: "border-box",
-              paddingRight: 8,
-            }}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") handleSendMessage();
-            }}
-            disabled={loading || !!botProgress}
-          />
-
-          {/* файл */}
-          <button
-            onClick={openFileDialog}
-            disabled={loading || !!botProgress}
-            style={{
-              width: ICON_BUTTON_SIZE,
-              height: ICON_BUTTON_SIZE,
-              borderRadius: ICON_BUTTON_SIZE / 2,
-              border: "none",
-              background: "transparent",
-              cursor: loading || !!botProgress ? "not-allowed" : "pointer",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              marginLeft: 4,
-              marginRight: 4,
-            }}
-            title="File"
-          >
-            {IconPaperclip}
-          </button>
-
-          {/* микрофон */}
-          <button
-            onClick={startListening}
-            disabled={loading || !!botProgress}
-            style={{
-              width: ICON_BUTTON_SIZE,
-              height: ICON_BUTTON_SIZE,
-              borderRadius: ICON_BUTTON_SIZE / 2,
-              border: "none",
-              background: "transparent",
-              cursor: loading || !!botProgress ? "not-allowed" : "pointer",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              marginLeft: 4,
-              marginRight: 4,
-              animation: isListening
-                ? "micPulseNora 1.1s infinite ease-out"
-                : "none",
-            }}
-            title={
-              isListening ? TEXTS[lang].speakRecording : TEXTS[lang].speakTitle
-            }
-          >
-            {IconMic}
-          </button>
-
-          {/* отправка – круглая, по центру своей ячейки */}
-          <button
-            style={{
-              width: ICON_BUTTON_SIZE,
-              height: ICON_BUTTON_SIZE,
-              background: BABY_GRADIENT,
-              color: "#fff",
-              border: "none",
-              borderRadius: ICON_BUTTON_SIZE / 2,
-              cursor: loading || !!botProgress ? "not-allowed" : "pointer",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              boxShadow: "0 2px 14px 0 rgba(155,175,205,0.18)",
-              marginLeft: 4,
-            }}
-            onClick={handleSendMessage}
-            disabled={loading || !!botProgress}
-          >
-            {ICONS.arrowRight}
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-export default Chat;
+          justifyCon
