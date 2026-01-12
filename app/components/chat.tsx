@@ -14,7 +14,7 @@ const PANEL_SIDE_PADDING = 15;
 const BLOCK_SIDE_PADDING = 10;
 const CARD_GAP = 10;
 
-// размер круглых кнопок внизу (файл/мик/отправка)
+// размер круглых кнопок (файл/мик/отправка)
 const ICON_BUTTON_SIZE = 54;
 const ICON_DARK = "#5a6573";
 
@@ -146,7 +146,7 @@ const TEXTS: Record<Lang, any> = {
       "Maslahatlar Buyuk Britaniya NHS tavsiyalariga asoslangan va sizning hududingizga moslashtirilgan.",
     benefitsTitle2: "24/7 yordam",
     benefitsText2:
-      "Har doim yoningizda — har qanday vaziyatda qo‘llab-quvvatlaydi.",
+      "Har doim yoningizда — har qanday vaziyatда qo‘llab-quvvatlaydi.",
     benefitsTitle3: "Muhim eslatmalar",
     benefitsText3:
       "Tahlillar, vitaminlar, qabul vaqtlarini unutib qo‘ymasligingizga yordam beradi.",
@@ -184,9 +184,9 @@ const TEXTS: Record<Lang, any> = {
     serverError: (err?: string) =>
       err
         ? `Server xatosi: ${err}`
-        : "Yordamchi javob bermadi (server xatosi).",
-    noAnswer: "Kechirasiz, yordamchidan javob kelmadi.",
-    genericError: "Xato: javobni olish imkonsiz.",
+        : "Yordamchi javob bermади (server xatosi).",
+    noAnswer: "Kechirasiz, yordamchидан javоб kelмadi.",
+    genericError: "Xato: javобни olish imkonsiz.",
     mobileOnly:
       "Nora Plus faqat \n mobil qurilmalarda mavjud",
     askNora: "Shunchaki Nora’dan so‘rang.",
@@ -195,39 +195,25 @@ const TEXTS: Record<Lang, any> = {
   },
 };
 
-// глобус для переключения языка
-const IconLangUpdate = (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-    <circle cx="12" cy="12" r="9" stroke="#111827" strokeWidth="1.6" />
-    <ellipse
-      cx="12"
-      cy="12"
-      rx="4.5"
-      ry="9"
-      stroke="#111827"
-      strokeWidth="1.2"
-    />
-    <line
-      x1="3"
-      y1="12"
-      x2="21"
-      y2="12"
-      stroke="#111827"
-      strokeWidth="1.2"
-    />
-    <path
-      d="M5 8C7 9 9 9.5 12 9.5C15 9.5 17 9 19 8"
-      stroke="#111827"
-      strokeWidth="1.1"
-      strokeLinecap="round"
-    />
-    <path
-      d="M5 16C7 15 9 14.5 12 14.5C15 14.5 17 15 19 16"
-      stroke="#111827"
-      strokeWidth="1.1"
-      strokeLinecap="round"
-    />
-  </svg>
+// новая иконка выбора языка – RU / UZ в кружке
+const IconLangUpdate = (lang: Lang) => (
+  <div
+    style={{
+      width: 22,
+      height: 22,
+      borderRadius: 11,
+      border: "1px solid #111827",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      fontSize: 10,
+      fontWeight: 700,
+      color: "#111827",
+      background: "#ffffff",
+    }}
+  >
+    {lang === "ru" ? "RU" : "UZ"}
+  </div>
 );
 
 const IconShield = (
@@ -272,7 +258,6 @@ const IconContact = (
   </svg>
 );
 
-// стрелка для "Начать" и отправки
 const ICONS = {
   arrowRight: (
     <svg width="28" height="28" viewBox="0 0 22 22" fill="none">
@@ -334,7 +319,7 @@ const IconMic = (
   </svg>
 );
 
-// иконка Android — «андроидная»
+// Android – «андроидная» иконка, размер оставляем
 const IconAndroidMini = (
   <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
     <rect
@@ -353,7 +338,7 @@ const IconAndroidMini = (
   </svg>
 );
 
-// Apple оставляем как есть
+// Apple – без изменений
 const IconAppleMini = (
   <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
     <path
@@ -464,7 +449,7 @@ const PREMADE_THEMES = [
     questionRu:
       "Срок беременности: 5 месяц, хочу обсудить сон и бессонницу.",
     questionUz:
-      "Homiladorligim 5-oyda, uyqu va uyqusizlik haqida gaplashmoqchiman.",
+      "Homiladorligim 5-oyда, uyqu va uyqusizlik haqida gaplashmoqchiman.",
   },
   {
     emoji: "🥗",
@@ -493,7 +478,7 @@ const PREMADE_THEMES = [
     titleUz: "Xavotir va qo‘rquvlar",
     descRu: "Помогу успокоиться и разложить всё по полочкам.",
     descUz:
-      "Xavotirlarni kamaytirish va vaziyatni tushuntirishga yordam beraman.",
+      "Xavotirlarni kamaytirish va vaziyatni tushuntirishга yordam beraman.",
     questionRu:
       "Я часто волнуюсь и боюсь за малыша, как справиться с тревогой?",
     questionUz:
@@ -1100,7 +1085,7 @@ const BottomNavBar = ({
         </span>
       </button>
 
-      {/* центральная кнопка "Начать" чуть меньше, чем могла бы быть */}
+      {/* центральная кнопка "Начать" – уменьшена, иконка прежняя */}
       <button
         style={{
           ...bottomNavButtonStyle,
@@ -1110,9 +1095,9 @@ const BottomNavBar = ({
       >
         <div
           style={{
-            width: 70,
-            height: 70,
-            borderRadius: 35,
+            width: 60,
+            height: 60,
+            borderRadius: 30,
             background: BABY_GRADIENT,
             display: "flex",
             alignItems: "center",
@@ -1568,7 +1553,7 @@ const Chat = () => {
     );
   };
 
-  // HeaderBar – уменьшаем верхний отступ на 5px
+  // HeaderBar – отступ сверху уменьшен до 15
   const HeaderBar = () => (
     <div
       style={{
@@ -1661,7 +1646,7 @@ const Chat = () => {
           }}
           onClick={() => changeLang(lang === "ru" ? "uz" : "ru")}
         >
-          <span>{IconLangUpdate}</span>
+          {IconLangUpdate(lang)}
           <span>
             {lang === "ru"
               ? TEXTS[lang].langButtonOther
@@ -2094,7 +2079,7 @@ const Chat = () => {
         </div>
       </div>
 
-      {/* панель ввода – иконки крупные, отправка круглая */}
+      {/* панель ввода – иконки крупные, круглая кнопка с большим отступом слева */}
       <div
         style={{
           width: "calc(100% - 40px)",
@@ -2213,7 +2198,7 @@ const Chat = () => {
             {IconMic}
           </button>
 
-          {/* отправка – идеальный круг */}
+          {/* отправка – идеальный круг, больше отступ слева от микрофона */}
           <button
             style={{
               width: ICON_BUTTON_SIZE,
@@ -2227,7 +2212,7 @@ const Chat = () => {
               alignItems: "center",
               justifyContent: "center",
               boxShadow: "0 2px 14px 0 rgba(155,175,205,0.18)",
-              marginLeft: 4,
+              marginLeft: 12,
             }}
             onClick={handleSendMessage}
             disabled={loading || !!botProgress}
